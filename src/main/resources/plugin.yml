@@ -1,0 +1,9 @@
+name: Gateway
+version: 1.3.2
+main: com.rose.gateway.GatewayPlugin
+api-version: 1.16
+authors: [ 'Nicholas Rose' ]
+commands:
+  discord:
+    description: Gives help for Minecraft to Discord chat shortcuts.
+    usage: /discord
