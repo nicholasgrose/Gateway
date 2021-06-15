@@ -18,7 +18,7 @@ object Configurator {
     val config by lazy {
         runCatching {
             Config { addSpec(PluginSpec) }
-                .from.yaml.watchFile("plugins/DiscordBot/DiscordBot.yaml")
+                .from.yaml.watchFile("plugins/Gateway/Gateway.yaml")
         }.onFailure { error ->
             giveConfigErrorReport(
                 error as Exception,

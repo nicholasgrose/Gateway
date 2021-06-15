@@ -1,0 +1,45 @@
+# Settings for the DiscordBot plugin.
+plugin:
+
+  # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.
+  botToken: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+  # Settings for how the Discord bot, functions.
+  bot:
+
+    # The prefix used to mark commands. Defaults to '!'.
+    commandPrefix: '!'
+
+    # The length of time in milliseconds that commands live for before being cleared.
+    commandTimeout: 5_000
+
+    # The names of the channels in which the bot should respond to commands and post/accept chat messages.
+    botChannels:
+      - speakers-of-the-gateway
+
+    # The maximum number of users that can be queried for when search for a user by name.
+    memberQueryMax: 100
+
+    # The extensions this bot will use. Can be individually enabled or disabled.
+    enabledExtensions:
+
+      # Adds the whitelist control commands.
+      whitelistExtension: true
+
+      # Adds the commands to list online users.
+      listExtension: true
+
+      # Adds commands giving information about the bot.
+      aboutExtension: true
+
+      # Adds the Minecraft chat integration.
+      chatExtension: true
+
+  # Settings for how the plugin functions on the Minecraft server.
+  minecraft:
+
+    # The hex code for the color for the Discord users as they appear in the Minecraft chat.
+    discordUserColor: '#7289DA'
+
+    # The hex code for the color for the Discord mentions as they appear in the Minecraft chat.
+    discordMentionColor: '#56EE5C'
