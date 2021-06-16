@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerAdvancementDoneEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -77,6 +78,17 @@ object ChatListener : Listener {
         runBlocking {
             val message = MinecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
             DiscordBot.bot.send(GameChatEvent(message))
+        }
+    }
+
+    @EventHandler
+    fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
+        val advancementMessage = event.message() ?: return
+
+        runBlocking {
+            DiscordBot.bot.send(GameChatEvent {
+                content = PaperComponents.plainSerializer().serialize(advancementMessage)
+            })
         }
     }
 }
