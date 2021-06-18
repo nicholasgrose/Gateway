@@ -17,7 +17,8 @@ class AboutExtension : Extension() {
             action {
                 Logger.log("${user?.username} requested plugin version!")
                 message.respondWithLifetime {
-                    content = "I am currently version ${GatewayPlugin.VERSION}."
+                    content =
+                        "I am currently version ${GatewayPlugin.VERSION}. All versions are available at https://github.com/nicholasgrose/Gateway/."
                 }
             }
         }
