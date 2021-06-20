@@ -9,4 +9,4 @@ commands:
     usage: /discord
   bot:
     description: Controls the Gateway discord bot.
-    usage: /bot
+    usage: /bot [restart]

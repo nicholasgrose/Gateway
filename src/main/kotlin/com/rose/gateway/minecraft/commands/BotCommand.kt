@@ -12,23 +12,34 @@ class BotCommand : CommandExecutor, TabCompleter {
         const val COMMAND_NAME = "bot"
     }
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
-        Logger.log("${sender.name} restarted the Discord bot!")
-        GatewayPlugin.plugin.restartBot()
+    private val availableSubcommands = mapOf(
+        "restart" to ::restartSubcommand
+    )
 
-        return true
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        if (args.isEmpty() || availableSubcommands[args[0]] == null) {
+            return false
+        }
+
+        return availableSubcommands[args[0]]!!()
     }
 
     override fun onTabComplete(
         sender: CommandSender,
         command: Command,
         alias: String,
-        args: Array<out String>
+        args: Array<String>
     ): MutableList<String>? {
         if (command.name == COMMAND_NAME && args.size <= 1) {
             return mutableListOf("restart")
         }
 
         return null
+    }
+
+    private fun restartSubcommand(): Boolean {
+        Logger.log("Restarting the Discord bot!")
+        GatewayPlugin.plugin.restartBot()
+        return true
     }
 }
