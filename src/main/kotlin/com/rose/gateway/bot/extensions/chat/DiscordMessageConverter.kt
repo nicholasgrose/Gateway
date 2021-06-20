@@ -1,7 +1,6 @@
 package com.rose.gateway.bot.extensions.chat
 
-import com.rose.gateway.bot.DiscordBotConstants.DISCORD_COLOR
-import com.rose.gateway.bot.DiscordBotConstants.MENTION_COLOR
+import com.rose.gateway.bot.DiscordBot
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
 import guru.zoroark.lixy.LixyToken
@@ -27,7 +26,7 @@ object MinecraftChatMaker {
         return Component.join(
             Component.empty(),
             Component.text("<"),
-            Component.text(username, DISCORD_COLOR),
+            Component.text(username, DiscordBot.getDiscordColor()),
             Component.text("> ")
         )
     }
@@ -38,7 +37,7 @@ object MinecraftChatMaker {
         val guild = event.getGuild() ?: return Component.empty()
         val name = guild.getMemberOrNull(referencedAuthor)?.displayName ?: return Component.empty()
 
-        return Component.text("(Replying to @$name) ", MENTION_COLOR)
+        return Component.text("(Replying to @$name) ", DiscordBot.getMentionColor())
     }
 
     enum class DisplayComponent : LixyTokenType {
@@ -80,7 +79,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val member = event.getGuild()!!.getMemberOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${member.displayName}", MENTION_COLOR)
+        return Component.text("@${member.displayName}", DiscordBot.getMentionColor())
     }
 
     private suspend fun processRoleMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {
@@ -88,7 +87,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val role = event.getGuild()!!.getRoleOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${role.name}", MENTION_COLOR)
+        return Component.text("@${role.name}", DiscordBot.getMentionColor())
     }
 
     private suspend fun processChannelMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {
@@ -96,7 +95,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val channel = event.getGuild()!!.getChannelOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("#${channel.name}", MENTION_COLOR)
+        return Component.text("#${channel.name}", DiscordBot.getMentionColor())
     }
 
     @Suppress("RedundantSuspendModifier", "UNUSED_PARAMETER")

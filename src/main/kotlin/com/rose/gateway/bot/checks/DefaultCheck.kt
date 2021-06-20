@@ -12,7 +12,7 @@ object DefaultCheck {
 
         return when {
             isBot(event) -> false
-            !DiscordBot.botChannels.contains(channel) -> false
+            !DiscordBot.getBotChannels().contains(channel) -> false
             else -> true
         }
     }

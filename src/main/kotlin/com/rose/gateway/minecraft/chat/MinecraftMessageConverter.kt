@@ -1,8 +1,6 @@
 package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.bot.DiscordBotConstants
-import com.rose.gateway.bot.DiscordBotConstants.MENTION_COLOR
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.entity.ChannelType
 import dev.kord.rest.builder.message.MessageCreateBuilder
@@ -80,7 +78,7 @@ object MinecraftMessageConverter {
                 components.add(Component.text(tokenString))
                 tokenString
             } else {
-                components.add(Component.text(tokenString, MENTION_COLOR))
+                components.add(Component.text(tokenString, DiscordBot.getMentionColor()))
                 mention
             }
         }
@@ -91,8 +89,8 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createUserMention(nameString: String): String? {
-        for (guild in DiscordBot.botGuilds) {
-            val members = guild.getMembers(nameString, DiscordBotConstants.MEMBER_QUERY_MAX)
+        for (guild in DiscordBot.getBotGuilds()) {
+            val members = guild.getMembers(nameString, DiscordBot.getMemberQueryMax())
             val id = members.firstOrNull()?.id?.asString ?: return null
             return "<@!$id>"
         }
@@ -101,7 +99,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createRoleMention(nameString: String): String? {
-        for (guild in DiscordBot.botGuilds) {
+        for (guild in DiscordBot.getBotGuilds()) {
             for (role in guild.roles.toSet()) {
                 if (role.name == nameString) return "<@&${role.id.asString}>"
             }
@@ -111,7 +109,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createTextChannelMention(nameString: String): String? {
-        for (guild in DiscordBot.botGuilds) {
+        for (guild in DiscordBot.getBotGuilds()) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildText) continue
                 if (channel.name == nameString) return "<#${channel.id.asString}>"
@@ -122,7 +120,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createVoiceChannelMention(nameString: String): String? {
-        for (guild in DiscordBot.botGuilds) {
+        for (guild in DiscordBot.getBotGuilds()) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildVoice) continue
                 if (channel.name == nameString) return "<#${channel.id.asString}>"

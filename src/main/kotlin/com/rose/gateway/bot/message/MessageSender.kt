@@ -10,7 +10,7 @@ object MessageSender {
     }
 
     private suspend fun sendToAllBotChannels(builder: MessageCreateBuilder.() -> Unit) {
-        DiscordBot.botChannels.forEach {
+        DiscordBot.getBotChannels().forEach {
             it.createMessage(builder)
         }
     }

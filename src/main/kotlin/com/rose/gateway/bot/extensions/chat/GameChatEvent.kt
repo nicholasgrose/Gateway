@@ -5,5 +5,5 @@ import com.rose.gateway.bot.DiscordBot
 import dev.kord.rest.builder.message.MessageCreateBuilder
 
 class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : ExtensionEvent {
-    override val bot by lazy { DiscordBot.bot }
+    override val bot by lazy { DiscordBot.getBot() }
 }

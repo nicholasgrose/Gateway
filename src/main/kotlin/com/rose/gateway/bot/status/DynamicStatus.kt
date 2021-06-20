@@ -6,7 +6,7 @@ object DynamicStatus {
     var playerCount = 0
 
     suspend fun updateStatusPlayerCount() {
-        DiscordBot.kordClient.editPresence {
+        DiscordBot.getKordClient().editPresence {
             playing(statusForPlayerCount())
         }
     }

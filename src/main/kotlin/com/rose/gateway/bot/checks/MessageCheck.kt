@@ -14,6 +14,6 @@ object MessageCheck {
 
     suspend fun notSelf(event: Event): Boolean {
         val author = messageFor(event)?.asMessageOrNull()?.author ?: return false
-        return author.id != DiscordBot.kordClient.selfId
+        return author.id != DiscordBot.getKordClient().selfId
     }
 }

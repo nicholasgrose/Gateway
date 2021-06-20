@@ -14,7 +14,7 @@ class GatewayPlugin : JavaPlugin() {
         lateinit var plugin: GatewayPlugin
     }
 
-    private val discordBot = DiscordBot()
+    var discordBot = DiscordBot()
 
     override fun onEnable() {
         Logger.log("Starting Gateway!")
@@ -38,5 +38,13 @@ class GatewayPlugin : JavaPlugin() {
         }
 
         Logger.log("Gateway stopped!")
+    }
+
+    fun restartBot() {
+        runBlocking {
+            discordBot.stop()
+            discordBot = DiscordBot()
+            discordBot.start()
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.DISCORD_GREEN
 import com.kotlindiscord.kord.extensions.ExtensibleBot
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.checks.DefaultCheck
 import com.rose.gateway.bot.client.ClientInfo
@@ -14,53 +15,87 @@ import dev.kord.core.entity.channel.TextChannel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.datetime.Clock
+import net.kyori.adventure.text.format.TextColor
+import org.koin.core.context.stopKoin
 
 class DiscordBot {
     companion object {
-        val bot by lazy {
-            runBlocking {
-                createBot(Configurator.config[PluginSpec.botToken])
-            }
+        fun getBotChannels(): Set<TextChannel> {
+            return GatewayPlugin.plugin.discordBot.botChannels
         }
 
-        val kordClient by lazy {
-            bot.getKoin().get<Kord>()
+        fun getBotGuilds(): Set<Guild> {
+            return GatewayPlugin.plugin.discordBot.botGuilds
         }
 
-        private suspend fun createBot(token: String): ExtensibleBot {
-            return ExtensibleBot(token) {
-                hooks {
-                    kordShutdownHook = false
-                }
-                presence {
-                    since = Clock.System.now()
-                    playing(DynamicStatus.statusForPlayerCount())
-                }
-                messageCommands {
-                    defaultPrefix = Configurator.config[PluginSpec.BotSpec.commandPrefix]
-                    invokeOnMention = true
-                    check(DefaultCheck::defaultCheck)
-                }
-                slashCommands {
-                    enabled = false
-                }
-                extensions {
-                    DiscordBotConstants.BOT_EXTENSIONS.filter { Configurator.extensionEnabled(it) }.forEach { add(it) }
-
-                    help {
-                        paginatorTimeout = Configurator.config[PluginSpec.BotSpec.commandTimeout]
-                        deletePaginatorOnTimeout = true
-                        deleteInvocationOnPaginatorTimeout = true
-                        colour { DISCORD_GREEN }
-                    }
-                }
-            }
+        fun getKordClient(): Kord {
+            return GatewayPlugin.plugin.discordBot.kordClient
         }
 
-        val botChannels = mutableSetOf<TextChannel>()
-        val botGuilds = mutableSetOf<Guild>()
-        private var job: Job? = null
+        fun getBot(): ExtensibleBot {
+            return GatewayPlugin.plugin.discordBot.bot
+        }
+
+        fun getMemberQueryMax(): Int {
+            return GatewayPlugin.plugin.discordBot.memberQueryMax
+        }
+
+        fun getDiscordColor(): TextColor {
+            return GatewayPlugin.plugin.discordBot.discordColor
+        }
+
+        fun getMentionColor(): TextColor {
+            return GatewayPlugin.plugin.discordBot.mentionColor
+        }
     }
+
+    private val bot by lazy {
+        runBlocking {
+            createBot(Configurator.config[PluginSpec.botToken])
+        }
+    }
+
+    private val kordClient by lazy {
+        bot.getKoin().get<Kord>()
+    }
+
+    private suspend fun createBot(token: String): ExtensibleBot {
+        return ExtensibleBot(token) {
+            hooks {
+                kordShutdownHook = false
+            }
+            presence {
+                since = Clock.System.now()
+                playing(DynamicStatus.statusForPlayerCount())
+            }
+            messageCommands {
+                defaultPrefix = Configurator.config[PluginSpec.BotSpec.commandPrefix]
+                invokeOnMention = true
+                check(DefaultCheck::defaultCheck)
+            }
+            slashCommands {
+                enabled = false
+            }
+            extensions {
+                DiscordBotConstants.BOT_EXTENSIONS.filter { Configurator.extensionEnabled(it) }.forEach { add(it) }
+
+                help {
+                    paginatorTimeout = Configurator.config[PluginSpec.BotSpec.commandTimeout]
+                    deletePaginatorOnTimeout = true
+                    deleteInvocationOnPaginatorTimeout = true
+                    colour { DISCORD_GREEN }
+                }
+            }
+        }
+    }
+
+    private val botChannels = mutableSetOf<TextChannel>()
+    private val botGuilds = mutableSetOf<Guild>()
+    private var job: Job? = null
+
+    val memberQueryMax by lazy { Configurator.config[PluginSpec.BotSpec.memberQueryMax] }
+    val discordColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordUserColor])!! }
+    val mentionColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordMentionColor])!! }
 
     suspend fun start() {
         fillBotChannels()
@@ -92,5 +127,6 @@ class DiscordBot {
         kordClient.shutdown()
         kordClient.coroutineContext.job.join()
         job?.join()
+        stopKoin()
     }
 }

@@ -21,7 +21,7 @@ object ChatListener : Listener {
 
         runBlocking {
             val message = MinecraftMessageConverter.convertToDiscordMessage(messageText, event) ?: return@runBlocking
-            DiscordBot.bot.send(GameChatEvent(message))
+            DiscordBot.getBot().send(GameChatEvent(message))
         }
     }
 
@@ -29,7 +29,7 @@ object ChatListener : Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val joinMessage = event.joinMessage() ?: return
         runBlocking {
-            DiscordBot.bot.send(GameChatEvent {
+            DiscordBot.getBot().send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(joinMessage)
             })
         }
@@ -40,7 +40,7 @@ object ChatListener : Listener {
         val quitMessage = event.quitMessage() ?: return
 
         runBlocking {
-            DiscordBot.bot.send(GameChatEvent {
+            DiscordBot.getBot().send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(quitMessage)
             })
         }
@@ -51,7 +51,7 @@ object ChatListener : Listener {
         val deathMessage = event.deathMessage() ?: return
 
         runBlocking {
-            DiscordBot.bot.send(GameChatEvent {
+            DiscordBot.getBot().send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(deathMessage)
             })
         }
@@ -65,7 +65,7 @@ object ChatListener : Listener {
 
         runBlocking {
             val message = MinecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
-            DiscordBot.bot.send(GameChatEvent(message))
+            DiscordBot.getBot().send(GameChatEvent(message))
         }
     }
 
@@ -77,7 +77,7 @@ object ChatListener : Listener {
 
         runBlocking {
             val message = MinecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
-            DiscordBot.bot.send(GameChatEvent(message))
+            DiscordBot.getBot().send(GameChatEvent(message))
         }
     }
 
@@ -86,7 +86,7 @@ object ChatListener : Listener {
         val advancementMessage = event.message() ?: return
 
         runBlocking {
-            DiscordBot.bot.send(GameChatEvent {
+            DiscordBot.getBot().send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(advancementMessage)
             })
         }

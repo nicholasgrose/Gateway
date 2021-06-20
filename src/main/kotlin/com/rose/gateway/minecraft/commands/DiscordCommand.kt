@@ -5,7 +5,11 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
 class DiscordCommand : CommandExecutor {
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+    companion object {
+        const val COMMAND_NAME = "discord"
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         sender.sendMessage(
             """You can mention in Discord in the following ways:
             |* Include @USER or @"USER" to mention a user.
@@ -17,5 +21,4 @@ class DiscordCommand : CommandExecutor {
 
         return true
     }
-
 }
