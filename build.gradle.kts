@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "com.destroystokyo.paper", name = "paper-api", version = "1.16.5-R0.1-SNAPSHOT")
+    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
     implementation(group = "com.gitlab.kordlib", name = "kordx.emoji", version = "0.4.0")
     implementation(
@@ -68,7 +68,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.16.5")
+        minecraftVersion("1.17")
     }
 
     clean {
