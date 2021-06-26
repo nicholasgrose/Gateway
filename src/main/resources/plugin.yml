@@ -7,6 +7,6 @@ commands:
   discord:
     description: Gives help for Minecraft to Discord chat shortcuts.
     usage: /discord
-  bot:
-    description: Controls the Gateway discord bot.
-    usage: /bot [restart]
+  gateway:
+    description: Modifies the gateway plugin.
+    usage: /gateway
