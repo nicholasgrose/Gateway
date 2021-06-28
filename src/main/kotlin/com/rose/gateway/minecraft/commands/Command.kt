@@ -24,6 +24,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
                     sender = sender,
                     command = command,
                     label = label,
+                    rawCommandArguments = args.toList(),
                     commandArguments = convertedArguments
                 )
             )
@@ -43,7 +44,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         sender: CommandSender,
         command: org.bukkit.command.Command,
         alias: String,
-        args: Array<out String>
+        args: Array<String>
     ): MutableList<String>? {
         return null
     }
@@ -58,7 +59,7 @@ data class CommandDefinition(
     val usage: String,
     val checker: Checker,
     val runner: ((CommandContext) -> Boolean),
-    val completions: List<String>
+    val completions: Map<String, CommandDefinition>
 )
 
 data class CommandContext(
@@ -70,12 +71,23 @@ data class CommandContext(
     val commandArguments: List<*>
 )
 
-class Checker(val converters: Array<out ArgumentConverter<*>>) {
+class Checker(
+    val converters: Array<out ArgumentConverter<*>>,
+    private val variableArgumentNumberAllowed: Boolean
+) {
     fun convertArguments(arguments: Array<String>): List<*>? {
-        if (converters.size != arguments.size) return null
+        if (argumentCountIncorrect(arguments)) return null
 
         return converters.mapIndexed { index, converter ->
             converter.fromString(arguments[index]) ?: return@convertArguments null
+        }
+    }
+
+    private fun argumentCountIncorrect(arguments: Array<String>): Boolean {
+        return if (variableArgumentNumberAllowed) {
+            converters.size <= arguments.size
+        } else {
+            converters.size != arguments.size
         }
     }
 }
@@ -106,7 +118,7 @@ class CommandBuilder(private val name: String) {
                     usage = generateUsage(builder, checker),
                     checker = checker,
                     runner = getRunner(builder),
-                    completions = builder.children.map { child -> child.definition.name }
+                    completions = builder.children.associate { child -> child.definition.name to child.definition }
                 )
             )
         }
@@ -114,8 +126,11 @@ class CommandBuilder(private val name: String) {
         private fun getChecker(builder: CommandBuilder): Checker {
             return when {
                 builder.checker != null -> builder.checker!!
-                builder.commandRunner == null -> Checker(arrayOf(StringArg("subcommand")))
-                else -> Checker(arrayOf())
+                builder.commandRunner == null -> Checker(
+                    arrayOf(StringArg("subcommand")),
+                    true
+                )
+                else -> Checker(arrayOf(), false)
             }
         }
 
@@ -163,18 +178,15 @@ class CommandBuilder(private val name: String) {
             return { context ->
                 val subcommand = context.commandArguments[0] as String
                 val childCommand = childMap[subcommand]
-                val arguments = context.commandArguments
+                val arguments = context.rawCommandArguments
 
                 if (childCommand == null) false
                 else {
-                    childCommand.definition.runner(
-                        CommandContext(
-                            command = context.command,
-                            label = context.label,
-                            sender = context.sender,
-                            commandArguments = arguments.subList(1, arguments.size),
-                            definition = childCommand.definition
-                        )
+                    childCommand.onCommand(
+                        sender = context.sender,
+                        command = context.command,
+                        label = context.label,
+                        args = arguments.subList(1, arguments.size).toTypedArray()
                     )
                     true
                 }
@@ -193,8 +205,8 @@ class CommandBuilder(private val name: String) {
         children.add(build(newCommandBuilder))
     }
 
-    fun runner(vararg arguments: ArgumentConverter<*>, commandFunction: (CommandContext) -> Boolean) {
-        checker = Checker(arguments)
+    fun runner(vararg arguments: ArgumentConverter<*>, allowVariableNumberOfArguments: Boolean = false, commandFunction: (CommandContext) -> Boolean) {
+        checker = Checker(arguments, allowVariableNumberOfArguments)
         commandRunner = commandFunction
     }
 }
