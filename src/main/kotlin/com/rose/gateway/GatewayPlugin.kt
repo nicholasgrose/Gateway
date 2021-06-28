@@ -25,7 +25,7 @@ class GatewayPlugin : JavaPlugin() {
             discordBot.start()
         }
         EventListeners.registerListeners(server)
-        CommandRegistry.registerCommands(this)
+        CommandRegistry.registerCommands()
 
         Logger.log("Gateway started!")
     }
