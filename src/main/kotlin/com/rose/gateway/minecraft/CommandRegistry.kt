@@ -1,17 +1,14 @@
 package com.rose.gateway.minecraft
 
-import com.rose.gateway.minecraft.commands.BotCommand
-import com.rose.gateway.minecraft.commands.DiscordCommand
 import com.rose.gateway.minecraft.commands.StringArg
 import com.rose.gateway.minecraft.commands.minecraftCommand
-import org.bukkit.plugin.java.JavaPlugin
 
 object CommandRegistry {
     fun registerCommands() {
         commands.forEach { command -> command.registerCommand() }
     }
 
-    val commands = listOf(
+    private val commands = listOf(
         minecraftCommand("discord") {
             runner {
                 it.sender.sendMessage("discord help")

@@ -36,7 +36,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
     }
 
     private fun sendArgumentErrorMessage(sender: CommandSender) {
-        val message = "Arguments are incorrect.\nUsage:${definition.usage}"
+        val message = "Usage: ${definition.usage}"
         sender.sendMessage(message)
     }
 
@@ -46,7 +46,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         alias: String,
         args: Array<String>
     ): MutableList<String>? {
-        return null
+        return definition.subcommandCompletions.keys.toMutableList()
     }
 
     fun registerCommand() {
@@ -59,7 +59,7 @@ data class CommandDefinition(
     val usage: String,
     val checker: Checker,
     val runner: ((CommandContext) -> Boolean),
-    val completions: Map<String, CommandDefinition>
+    val subcommandCompletions: Map<String, Command>
 )
 
 data class CommandContext(
@@ -85,7 +85,7 @@ class Checker(
 
     private fun argumentCountIncorrect(arguments: Array<String>): Boolean {
         return if (variableArgumentNumberAllowed) {
-            converters.size <= arguments.size
+            converters.size > arguments.size
         } else {
             converters.size != arguments.size
         }
@@ -118,7 +118,7 @@ class CommandBuilder(private val name: String) {
                     usage = generateUsage(builder, checker),
                     checker = checker,
                     runner = getRunner(builder),
-                    completions = builder.children.associate { child -> child.definition.name to child.definition }
+                    subcommandCompletions = builder.children.associateBy { child -> child.definition.name }
                 )
             )
         }
@@ -153,7 +153,7 @@ class CommandBuilder(private val name: String) {
                     ""
                 } else {
                     builder.children.joinToString(
-                        separator = "|",
+                        separator = " | ",
                         prefix = "[",
                         postfix = "]"
                     ) { child -> child.definition.name }
@@ -168,16 +168,13 @@ class CommandBuilder(private val name: String) {
         }
 
         private fun getRunner(builder: CommandBuilder): (CommandContext) -> Boolean {
-            return builder.commandRunner ?: createRunner(builder)
+            return builder.commandRunner ?: createRunner()
         }
 
-        private fun createRunner(builder: CommandBuilder): (CommandContext) -> Boolean {
-            val childMap = builder.children.associateBy { child ->
-                child.definition.name
-            }
+        private fun createRunner(): (CommandContext) -> Boolean {
             return { context ->
                 val subcommand = context.commandArguments[0] as String
-                val childCommand = childMap[subcommand]
+                val childCommand = context.definition.subcommandCompletions[subcommand]
                 val arguments = context.rawCommandArguments
 
                 if (childCommand == null) false
@@ -200,8 +197,9 @@ class CommandBuilder(private val name: String) {
     private var checker: Checker? = null
 
     fun command(name: String, initializer: CommandBuilder.() -> Unit) {
-        val newCommandBuilder = CommandBuilder(name).apply(initializer)
+        val newCommandBuilder = CommandBuilder(name)
         newCommandBuilder.parent = this
+        newCommandBuilder.apply(initializer)
         children.add(build(newCommandBuilder))
     }
 
