@@ -18,7 +18,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
 
         if (convertedArguments == null) sendArgumentErrorMessage(sender)
         else try {
-            return definition.runner(
+            val success = definition.runner(
                 CommandContext(
                     definition = definition,
                     sender = sender,
@@ -28,15 +28,18 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
                     commandArguments = convertedArguments
                 )
             )
+
+            if (!success) sendArgumentErrorMessage(sender)
         } catch (e: Error) {
             sender.sendMessage(Component.text("Error: ${e.message}", TextColor.fromHexString("#FF0000")))
+            sendArgumentErrorMessage(sender)
         }
 
         return true
     }
 
     private fun sendArgumentErrorMessage(sender: CommandSender) {
-        val message = "Usage: ${definition.usage}"
+        val message = "Correct usage: ${definition.usage}"
         sender.sendMessage(message)
     }
 
@@ -46,7 +49,8 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         alias: String,
         args: Array<String>
     ): MutableList<String>? {
-        return definition.subcommandCompletions.keys.toMutableList()
+//        return definition.subcommandCompletions.keys.toMutableList()
+        return null
     }
 
     fun registerCommand() {
