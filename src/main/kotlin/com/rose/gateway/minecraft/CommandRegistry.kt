@@ -1,5 +1,8 @@
 package com.rose.gateway.minecraft
 
+import com.rose.gateway.minecraft.commands.BotCommands
+import com.rose.gateway.minecraft.commands.ConfigCommands
+import com.rose.gateway.minecraft.commands.GeneralCommands
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
@@ -9,45 +12,41 @@ object CommandRegistry {
     }
 
     private val commands = minecraftCommands {
-        baseCommand("discord") {
-            runner {
-                it.sender.sendMessage("discord help")
-                true
+        command("discord") {
+            runner { context ->
+                GeneralCommands.discordHelp(context)
             }
         }
 
-        baseCommand("gateway") {
-            command("bot") {
-                command("restart") {
-                    runner {
-                        it.sender.sendMessage("bot restart")
-                        true
-                    }
+        command("gateway") {
+            subcommand("bot") {
+                subcommand("restart") {
+                    runner { BotCommands.restartBot() }
                 }
             }
-            command("config") {
-                command("set") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
-                        it.sender.sendMessage("config set")
-                        true
+
+            subcommand("config") {
+                subcommand("set") {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                        ConfigCommands.setConfiguration(context)
                     }
                 }
-                command("add") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
-                        it.sender.sendMessage("config add")
-                        true
+
+                subcommand("add") {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                        ConfigCommands.addConfiguration(context)
                     }
                 }
-                command("remove") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
-                        it.sender.sendMessage("config remove")
-                        true
+
+                subcommand("remove") {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                        ConfigCommands.removeConfiguration(context)
                     }
                 }
-                command("help") {
-                    runner {
-                        it.sender.sendMessage("config help")
-                        true
+
+                subcommand("help") {
+                    runner { context ->
+                        ConfigCommands.configurationHelp(context)
                     }
                 }
             }

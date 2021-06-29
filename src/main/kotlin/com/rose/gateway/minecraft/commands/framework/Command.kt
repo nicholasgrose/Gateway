@@ -8,13 +8,32 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 
 class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter {
+    companion object {
+        fun subcommandRunner(context: CommandContext): Boolean {
+            val subcommand = context.commandArguments[0] as String
+            val childCommand = context.definition.subcommands[subcommand]
+            val arguments = context.rawCommandArguments
+
+            return if (childCommand == null) false
+            else {
+                childCommand.onCommand(
+                    sender = context.sender,
+                    command = context.command,
+                    label = context.label,
+                    args = arguments.subList(1, arguments.size).toTypedArray()
+                )
+                true
+            }
+        }
+    }
+
     override fun onCommand(
         sender: CommandSender,
         command: org.bukkit.command.Command,
         label: String,
         args: Array<String>
     ): Boolean {
-        val convertedArguments = definition.checker.convertArguments(args)
+        val convertedArguments = definition.argumentParser.parseArguments(args)
 
         if (convertedArguments == null) sendArgumentErrorMessage(sender)
         else try {

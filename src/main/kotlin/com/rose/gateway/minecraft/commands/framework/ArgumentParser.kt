@@ -1,14 +1,14 @@
 package com.rose.gateway.minecraft.commands.framework
 
-class Checker(
-    val converters: Array<out ArgumentConverter<*>>,
+class ArgumentParser(
+    val converters: Array<out Parser<*>>,
     private val variableArgumentNumberAllowed: Boolean
 ) {
-    fun convertArguments(arguments: Array<String>): List<*>? {
+    fun parseArguments(arguments: Array<String>): List<*>? {
         if (argumentCountIncorrect(arguments)) return null
 
         return converters.mapIndexed { index, converter ->
-            converter.fromString(arguments[index]) ?: return@convertArguments null
+            converter.fromString(arguments[index]) ?: return@parseArguments null
         }
     }
 

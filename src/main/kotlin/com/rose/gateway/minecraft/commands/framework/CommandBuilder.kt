@@ -11,26 +11,26 @@ class CommandBuilder(private val name: String) {
                 CommandDefinition(
                     name = builder.name,
                     usage = generateUsage(builder, checker),
-                    checker = checker,
+                    argumentParser = checker,
                     runner = getRunner(builder),
                     subcommands = builder.children.associateBy { child -> child.definition.name }
                 )
             )
         }
 
-        private fun getChecker(builder: CommandBuilder): Checker {
+        private fun getChecker(builder: CommandBuilder): ArgumentParser {
             return when {
-                builder.checker != null -> builder.checker!!
-                builder.commandRunner == null -> Checker(
+                builder.argumentParser != null -> builder.argumentParser!!
+                builder.commandRunner == null -> ArgumentParser(
                     arrayOf(StringArg("SUBCOMMAND")),
                     true
                 )
-                else -> Checker(arrayOf(), false)
+                else -> ArgumentParser(arrayOf(), false)
             }
         }
 
-        private fun generateUsage(builder: CommandBuilder, checker: Checker): String {
-            val usageEnding = generateUsageEnding(builder, checker)
+        private fun generateUsage(builder: CommandBuilder, argumentParser: ArgumentParser): String {
+            val usageEnding = generateUsageEnding(builder, argumentParser)
             val commandUsageParts = if (usageEnding.isEmpty()) mutableListOf() else mutableListOf(usageEnding)
             var currentBuilder: CommandBuilder? = builder
 
@@ -42,7 +42,7 @@ class CommandBuilder(private val name: String) {
             return commandUsageParts.joinToString(separator = " ", prefix = "/")
         }
 
-        private fun generateUsageEnding(builder: CommandBuilder, checker: Checker): String {
+        private fun generateUsageEnding(builder: CommandBuilder, argumentParser: ArgumentParser): String {
             return if (builder.commandRunner == null) {
                 if (builder.children.isEmpty()) {
                     ""
@@ -54,44 +54,25 @@ class CommandBuilder(private val name: String) {
                     ) { child -> child.definition.name }
                 }
             } else {
-                if (checker.converters.isEmpty()) {
+                if (argumentParser.converters.isEmpty()) {
                     ""
                 } else {
-                    checker.converters.joinToString(separator = " ") { converter -> converter.getName() }
+                    argumentParser.converters.joinToString(separator = " ") { converter -> converter.getName() }
                 }
             }
         }
 
         private fun getRunner(builder: CommandBuilder): (CommandContext) -> Boolean {
-            return builder.commandRunner ?: createRunner()
-        }
-
-        private fun createRunner(): (CommandContext) -> Boolean {
-            return { context ->
-                val subcommand = context.commandArguments[0] as String
-                val childCommand = context.definition.subcommands[subcommand]
-                val arguments = context.rawCommandArguments
-
-                if (childCommand == null) false
-                else {
-                    childCommand.onCommand(
-                        sender = context.sender,
-                        command = context.command,
-                        label = context.label,
-                        args = arguments.subList(1, arguments.size).toTypedArray()
-                    )
-                    true
-                }
-            }
+            return builder.commandRunner ?: Command::subcommandRunner
         }
     }
 
     private var parent: CommandBuilder? = null
     private val children = mutableListOf<Command>()
     private var commandRunner: ((CommandContext) -> Boolean)? = null
-    private var checker: Checker? = null
+    private var argumentParser: ArgumentParser? = null
 
-    fun command(name: String, initializer: CommandBuilder.() -> Unit) {
+    fun subcommand(name: String, initializer: CommandBuilder.() -> Unit) {
         val newCommandBuilder = CommandBuilder(name)
         newCommandBuilder.parent = this
         newCommandBuilder.apply(initializer)
@@ -99,11 +80,11 @@ class CommandBuilder(private val name: String) {
     }
 
     fun runner(
-        vararg arguments: ArgumentConverter<*>,
+        vararg arguments: Parser<*>,
         allowVariableNumberOfArguments: Boolean = false,
         commandFunction: (CommandContext) -> Boolean
     ) {
-        checker = Checker(arguments, allowVariableNumberOfArguments)
+        argumentParser = ArgumentParser(arguments, allowVariableNumberOfArguments)
         commandRunner = commandFunction
     }
 }

@@ -13,7 +13,7 @@ class MinecraftCommandsBuilder {
 
     val commands = mutableListOf<Command>()
 
-    fun baseCommand(name: String, initializer: CommandBuilder.() -> Unit) {
+    fun command(name: String, initializer: CommandBuilder.() -> Unit) {
         commands.add(CommandBuilder.build(CommandBuilder(name).apply(initializer)))
     }
 }
