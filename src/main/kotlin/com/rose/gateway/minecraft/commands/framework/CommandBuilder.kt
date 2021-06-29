@@ -57,7 +57,13 @@ class CommandBuilder(private val name: String) {
                 if (argumentParser.converters.isEmpty()) {
                     ""
                 } else {
-                    argumentParser.converters.joinToString(separator = " ") { converter -> converter.getName() }
+                    argumentParser.converters.joinToString(
+                        separator = "] [",
+                        prefix = "[",
+                        postfix = "]"
+                    ) { converter ->
+                        converter.getName()
+                    }
                 }
             }
         }
