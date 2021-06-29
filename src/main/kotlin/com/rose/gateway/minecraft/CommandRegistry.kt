@@ -1,21 +1,22 @@
 package com.rose.gateway.minecraft
 
-import com.rose.gateway.minecraft.commands.StringArg
-import com.rose.gateway.minecraft.commands.minecraftCommand
+import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 object CommandRegistry {
     fun registerCommands() {
-        commands.forEach { command -> command.registerCommand() }
+        commands.registerCommands()
     }
 
-    private val commands = listOf(
-        minecraftCommand("discord") {
+    private val commands = minecraftCommands {
+        baseCommand("discord") {
             runner {
                 it.sender.sendMessage("discord help")
                 true
             }
-        },
-        minecraftCommand("gateway") {
+        }
+
+        baseCommand("gateway") {
             command("bot") {
                 command("restart") {
                     runner {
@@ -26,30 +27,30 @@ object CommandRegistry {
             }
             command("config") {
                 command("set") {
-                    runner(StringArg("configurationPath"), StringArg("value")) {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
                         it.sender.sendMessage("config set")
                         true
                     }
                 }
                 command("add") {
-                    runner(StringArg("configurationPath"), StringArg("value")) {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
                         it.sender.sendMessage("config add")
                         true
                     }
                 }
                 command("remove") {
-                    runner(StringArg("configurationPath"), StringArg("value")) {
+                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) {
                         it.sender.sendMessage("config remove")
                         true
                     }
                 }
                 command("help") {
-                    runner() {
+                    runner {
                         it.sender.sendMessage("config help")
                         true
                     }
                 }
             }
         }
-    )
+    }
 }
