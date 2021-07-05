@@ -9,12 +9,57 @@ import com.rose.gateway.bot.extensions.list.ListExtension
 import com.rose.gateway.bot.extensions.whitelist.WhitelistExtension
 import com.rose.gateway.minecraft.server.Scheduler
 import com.uchuhimo.konf.Config
+import com.uchuhimo.konf.Item
+import com.uchuhimo.konf.Spec
 import com.uchuhimo.konf.UnsetValueException
 import com.uchuhimo.konf.source.yaml
 import org.bukkit.Bukkit
 import kotlin.reflect.KFunction
 
 object Configurator {
+    private val pluginSpecificationMap = buildSpecificationMap(PluginSpec)
+
+    sealed class SpecificationMap {
+        class InnerSpecification(val specification: Map<String, SpecificationMap>) : SpecificationMap()
+        class SpecificationItem(val item: Item<*>) : SpecificationMap()
+    }
+
+    private fun buildSpecificationMap(pluginSpec: Spec): Map<String, SpecificationMap> {
+        val result = mutableMapOf<String, SpecificationMap>()
+
+        for (item in pluginSpec.items) {
+            result[item.name] = SpecificationMap.SpecificationItem(item)
+        }
+
+        for (specification in pluginSpec.innerSpecs) {
+            result[specification.prefix] = SpecificationMap.InnerSpecification(buildSpecificationMap(specification))
+        }
+
+        return mapOf(pluginSpec.prefix to SpecificationMap.InnerSpecification(result))
+    }
+
+    fun getConfigurationInformation(configurationPath: String): Item<*>? {
+        val configurationPathParts = configurationPath.split('.')
+        var currentMap = pluginSpecificationMap
+        var item: Item<*>? = null
+
+        for ((index, configuration) in configurationPathParts.withIndex()) {
+            val result = currentMap[configuration] ?: return null
+
+            when (result) {
+                is SpecificationMap.InnerSpecification -> {
+                    currentMap = result.specification
+                }
+                is SpecificationMap.SpecificationItem -> {
+                    if (index == configurationPathParts.size - 1) item = result.item
+                    else break
+                }
+            }
+        }
+
+        return item
+    }
+
     val config by lazy {
         runCatching {
             Config { addSpec(PluginSpec) }
@@ -54,6 +99,7 @@ object Configurator {
 
     fun extensionEnabled(extension: KFunction<Extension>): Boolean {
         val spec = extensionSpecs[extension] ?: return false
+
         return config[spec]
     }
 }

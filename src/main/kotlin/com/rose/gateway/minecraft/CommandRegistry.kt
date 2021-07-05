@@ -39,15 +39,20 @@ object CommandRegistry {
                 }
 
                 subcommand("remove") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                    runner(StringArg("CONFIGURATION_PATH"), StringArg("VALUE")) { context ->
                         ConfigCommands.removeConfiguration(context)
                     }
                 }
 
                 subcommand("help") {
-                    runner { context ->
+                    runner(StringArg("CONFIGURATION_PATH")) { context ->
                         ConfigCommands.configurationHelp(context)
                     }
+
+//                    TODO: Add support for multiple runners with different argument signatures.
+//                    runner { context ->
+//                        ConfigCommands.configurationHelp(context)
+//                    }
                 }
             }
         }
