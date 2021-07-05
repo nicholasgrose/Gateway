@@ -24,18 +24,24 @@ object Configurator {
         class SpecificationItem(val item: Item<*>) : SpecificationMap()
     }
 
-    private fun buildSpecificationMap(pluginSpec: Spec): Map<String, SpecificationMap> {
+    private fun buildSpecificationMap(
+        specification: Spec,
+        wrapSpecification: Boolean = true
+    ): Map<String, SpecificationMap> {
         val result = mutableMapOf<String, SpecificationMap>()
 
-        for (item in pluginSpec.items) {
+        for (item in specification.items) {
             result[item.name] = SpecificationMap.SpecificationItem(item)
         }
 
-        for (specification in pluginSpec.innerSpecs) {
-            result[specification.prefix] = SpecificationMap.InnerSpecification(buildSpecificationMap(specification))
+        for (innerSpecification in specification.innerSpecs) {
+            result[innerSpecification.prefix] =
+                SpecificationMap.InnerSpecification(buildSpecificationMap(innerSpecification, false))
         }
 
-        return mapOf(pluginSpec.prefix to SpecificationMap.InnerSpecification(result))
+        return if (wrapSpecification) {
+            mapOf(specification.prefix to SpecificationMap.InnerSpecification(result))
+        } else result
     }
 
     fun getConfigurationInformation(configurationPath: String): Item<*>? {

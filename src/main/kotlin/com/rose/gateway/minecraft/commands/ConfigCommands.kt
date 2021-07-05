@@ -29,10 +29,11 @@ object ConfigCommands {
         } else {
             context.sender.sendMessage(
                 """
-            Name: $path
-            Type: ${configuration.type.rawClass.simpleName}${if (configuration.nullable) "?" else ""}
-            Description: ${configuration.description}
-            """.trimIndent()
+                Name: $path
+                Type: ${configuration.type.rawClass.simpleName}${if (configuration.nullable) "?" else ""}
+                Current Value: ${Configurator.config[configuration]}
+                Description: ${configuration.description}
+                """.trimIndent()
             )
             true
         }
