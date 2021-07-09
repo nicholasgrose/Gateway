@@ -4,17 +4,13 @@ import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandBuilder(private val name: String) {
     companion object {
+        val subcommandExecutor = CommandExecutor(
+            Command::subcommandRunner,
+            ArgumentParser(arrayOf(StringArg("SUBCOMMAND")), true)
+        )
 
         fun build(builder: CommandBuilder): Command {
-            if (builder.executors.isEmpty()) builder.executors.add(
-                CommandExecutor(
-                    Command::subcommandRunner,
-                    ArgumentParser(
-                        builder.children.map { subcommand -> StringArg(subcommand.definition.name) }.toTypedArray(),
-                        true
-                    )
-                )
-            )
+            if (builder.executors.isEmpty()) builder.executors.add(subcommandExecutor)
 
             return Command(
                 CommandDefinition(
@@ -39,7 +35,9 @@ class CommandBuilder(private val name: String) {
         }
 
         private fun generateExecutorUsage(executor: CommandExecutor, builder: CommandBuilder): String {
-            val usageEnding = generateUsageEnding(executor)
+            val usageEnding =
+                if (usesSubcommandRunner(builder)) generateSubcommandUsageEnding(builder)
+                else generateUsageEnding(executor)
             val commandUsageParts = if (usageEnding.isEmpty()) mutableListOf() else mutableListOf(usageEnding)
             var currentBuilder: CommandBuilder? = builder
 
@@ -51,6 +49,18 @@ class CommandBuilder(private val name: String) {
             val usage = commandUsageParts.joinToString(separator = " ", prefix = "/")
 
             return "Correct Usage: $usage"
+        }
+
+        private fun usesSubcommandRunner(builder: CommandBuilder): Boolean {
+            return builder.executors.size == 1 && builder.executors[0] == subcommandExecutor
+        }
+
+        private fun generateSubcommandUsageEnding(builder: CommandBuilder): String {
+            return builder.children.joinToString(
+                separator = " | ",
+                prefix = "[",
+                postfix = "]"
+            ) { child -> child.definition.name }
         }
 
         private fun generateUsageEnding(executor: CommandExecutor): String {

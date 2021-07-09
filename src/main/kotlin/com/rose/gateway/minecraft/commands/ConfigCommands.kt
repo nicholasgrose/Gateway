@@ -20,6 +20,11 @@ object ConfigCommands {
     }
 
     fun configurationHelp(context: CommandContext): Boolean {
+        if (context.commandArguments.isEmpty()) {
+            context.sender.sendMessage("Hi!")
+            return true
+        }
+
         val path = context.commandArguments[0] as String
         val configuration = Configurator.getConfigurationInformation(path)
 
