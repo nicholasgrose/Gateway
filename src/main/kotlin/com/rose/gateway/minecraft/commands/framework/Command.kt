@@ -33,20 +33,25 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         label: String,
         args: Array<String>
     ): Boolean {
-        val convertedArguments = definition.argumentParser.parseArguments(args)
+        try {
+            var success = false
 
-        if (convertedArguments == null) sendArgumentErrorMessage(sender)
-        else try {
-            val success = definition.runner(
-                CommandContext(
-                    definition = definition,
-                    sender = sender,
-                    command = command,
-                    label = label,
-                    rawCommandArguments = args.toList(),
-                    commandArguments = convertedArguments
+            for (executor in definition.executors) {
+                val convertedArguments = executor.argumentParser.parseArguments(args) ?: continue
+
+                success = executor.executor(
+                    CommandContext(
+                        definition = definition,
+                        sender = sender,
+                        command = command,
+                        label = label,
+                        rawCommandArguments = args.toList(),
+                        commandArguments = convertedArguments
+                    )
                 )
-            )
+
+                if (!success) break
+            }
 
             if (!success) sendArgumentErrorMessage(sender)
         } catch (e: Error) {
@@ -58,8 +63,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
     }
 
     private fun sendArgumentErrorMessage(sender: CommandSender) {
-        val message = "Correct usage: ${definition.usage}"
-        sender.sendMessage(message)
+        sender.sendMessage(definition.documentation)
     }
 
     override fun onTabComplete(

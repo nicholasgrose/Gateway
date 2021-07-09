@@ -4,33 +4,42 @@ import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandBuilder(private val name: String) {
     companion object {
+
         fun build(builder: CommandBuilder): Command {
-            val checker = getChecker(builder)
+            if (builder.executors.isEmpty()) builder.executors.add(
+                CommandExecutor(
+                    Command::subcommandRunner,
+                    ArgumentParser(
+                        builder.children.map { subcommand -> StringArg(subcommand.definition.name) }.toTypedArray(),
+                        true
+                    )
+                )
+            )
 
             return Command(
                 CommandDefinition(
                     name = builder.name,
-                    usage = generateUsage(builder, checker),
-                    argumentParser = checker,
-                    runner = getRunner(builder),
+                    documentation = generateBuilderDocumentation(builder),
+                    executors = builder.executors,
                     subcommands = builder.children.associateBy { child -> child.definition.name }
                 )
             )
         }
 
-        private fun getChecker(builder: CommandBuilder): ArgumentParser {
-            return when {
-                builder.argumentParser != null -> builder.argumentParser!!
-                builder.commandRunner == null -> ArgumentParser(
-                    arrayOf(StringArg("SUBCOMMAND")),
-                    true
-                )
-                else -> ArgumentParser(arrayOf(), false)
+        private fun generateBuilderDocumentation(builder: CommandBuilder): String {
+            val usages = builder.executors.joinToString(separator = "") { executor ->
+                generateExecutorUsage(executor, builder)
+            }
+
+            return if (builder.executors.size == 1) {
+                "Correct Usage: $usages"
+            } else {
+                "Correct Usages:\n$usages"
             }
         }
 
-        private fun generateUsage(builder: CommandBuilder, argumentParser: ArgumentParser): String {
-            val usageEnding = generateUsageEnding(builder, argumentParser)
+        private fun generateExecutorUsage(executor: CommandExecutor, builder: CommandBuilder): String {
+            val usageEnding = generateUsageEnding(executor)
             val commandUsageParts = if (usageEnding.isEmpty()) mutableListOf() else mutableListOf(usageEnding)
             var currentBuilder: CommandBuilder? = builder
 
@@ -39,44 +48,27 @@ class CommandBuilder(private val name: String) {
                 currentBuilder = currentBuilder.parent
             }
 
-            return commandUsageParts.joinToString(separator = " ", prefix = "/")
+            val usage = commandUsageParts.joinToString(separator = " ", prefix = "/")
+
+            return "Correct Usage: $usage"
         }
 
-        private fun generateUsageEnding(builder: CommandBuilder, argumentParser: ArgumentParser): String {
-            return if (builder.commandRunner == null) {
-                if (builder.children.isEmpty()) {
-                    ""
-                } else {
-                    builder.children.joinToString(
-                        separator = " | ",
-                        prefix = "[",
-                        postfix = "]"
-                    ) { child -> child.definition.name }
-                }
-            } else {
-                if (argumentParser.converters.isEmpty()) {
-                    ""
-                } else {
-                    argumentParser.converters.joinToString(
-                        separator = "] [",
-                        prefix = "[",
-                        postfix = "]"
-                    ) { converter ->
-                        converter.getName()
-                    }
-                }
+        private fun generateUsageEnding(executor: CommandExecutor): String {
+            val usageEnding = executor.argumentParser.converters.joinToString(
+                separator = " | ",
+                prefix = "[",
+                postfix = "]"
+            ) { argument ->
+                argument.getName()
             }
-        }
 
-        private fun getRunner(builder: CommandBuilder): (CommandContext) -> Boolean {
-            return builder.commandRunner ?: Command::subcommandRunner
+            return if (usageEnding.length == 2) "" else usageEnding
         }
     }
 
     private var parent: CommandBuilder? = null
     private val children = mutableListOf<Command>()
-    private var commandRunner: ((CommandContext) -> Boolean)? = null
-    private var argumentParser: ArgumentParser? = null
+    private val executors = mutableListOf<CommandExecutor>()
 
     fun subcommand(name: String, initializer: CommandBuilder.() -> Unit) {
         val newCommandBuilder = CommandBuilder(name)
@@ -90,7 +82,6 @@ class CommandBuilder(private val name: String) {
         allowVariableNumberOfArguments: Boolean = false,
         commandFunction: (CommandContext) -> Boolean
     ) {
-        argumentParser = ArgumentParser(arguments, allowVariableNumberOfArguments)
-        commandRunner = commandFunction
+        executors.add(CommandExecutor(commandFunction, ArgumentParser(arguments, allowVariableNumberOfArguments)))
     }
 }

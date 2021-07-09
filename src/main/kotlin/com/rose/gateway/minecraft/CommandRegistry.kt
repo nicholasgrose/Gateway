@@ -48,11 +48,9 @@ object CommandRegistry {
                     runner(StringArg("CONFIGURATION_PATH")) { context ->
                         ConfigCommands.configurationHelp(context)
                     }
-
-//                    TODO: Add support for multiple runners with different argument signatures.
-//                    runner { context ->
-//                        ConfigCommands.configurationHelp(context)
-//                    }
+                    runner { context ->
+                        ConfigCommands.configurationHelp(context)
+                    }
                 }
             }
         }
