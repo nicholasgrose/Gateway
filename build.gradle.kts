@@ -31,7 +31,7 @@ repositories {
 dependencies {
     compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17.1-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
-    implementation(group = "com.gitlab.kordlib", name = "kordx.emoji", version = "0.5.0")
+    implementation(group = "dev.kord.x", name = "emoji", version = "0.5.0")
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
