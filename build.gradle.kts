@@ -29,13 +29,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17-R0.1-SNAPSHOT")
+    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17.1-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
-    implementation(group = "com.gitlab.kordlib", name = "kordx.emoji", version = "0.4.0")
+    implementation(group = "com.gitlab.kordlib", name = "kordx.emoji", version = "0.5.0")
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.4.1-SNAPSHOT"
+        version = "1.4.1"
     )
     implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
 }
