@@ -39,9 +39,9 @@ object ConfigCommands {
         } else {
             sender.sendMessage(
                 """
-                Similar configurations:
-                ${matchingConfigurations.joinToString(prefix = "* ", separator = "\n* ")}}
-                """.trimIndent()
+                |Available configurations:
+                |${matchingConfigurations.joinToString(prefix = "* ", separator = "\n* ")}
+                """.trimMargin()
             )
         }
 

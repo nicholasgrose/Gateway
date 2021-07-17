@@ -87,7 +87,8 @@ class Trie : MutableSet<String> {
         var success = false
 
         for (element in elements) {
-            success = success || add(element)
+            val elementAdded = add(element)
+            success = success || elementAdded
         }
 
         return success
@@ -128,7 +129,8 @@ class Trie : MutableSet<String> {
         var success = false
 
         for (element in elements) {
-            success = success || remove(element)
+            val elementRemoved = remove(element)
+            success = success || elementRemoved
         }
 
         return success
@@ -136,11 +138,11 @@ class Trie : MutableSet<String> {
 
     override fun retainAll(elements: Collection<String>): Boolean {
         val contents = getAll()
-        val elementsSet = elements.toSet()
+        val keepSet = elements.toSet()
         var success = false
 
         for (element in contents) {
-            val elementRemoved = if (!elementsSet.contains(element)) {
+            val elementRemoved = if (!keepSet.contains(element)) {
                 remove(element)
             } else false
             success = success || elementRemoved
