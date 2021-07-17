@@ -8,6 +8,7 @@ import com.rose.gateway.bot.extensions.chat.ChatExtension
 import com.rose.gateway.bot.extensions.list.ListExtension
 import com.rose.gateway.bot.extensions.whitelist.WhitelistExtension
 import com.rose.gateway.minecraft.server.Scheduler
+import com.rose.gateway.shared.trie.Trie
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.Item
 import com.uchuhimo.konf.Spec
@@ -18,6 +19,7 @@ import kotlin.reflect.KFunction
 
 object Configurator {
     private val pluginSpecificationMap = buildSpecificationMap(PluginSpec)
+    private val configurationTrie = buildConfigurationTrie()
 
     sealed class SpecificationMap {
         class InnerSpecification(val specification: Map<String, SpecificationMap>) : SpecificationMap()
@@ -42,6 +44,33 @@ object Configurator {
         return if (wrapSpecification) {
             mapOf(specification.prefix to SpecificationMap.InnerSpecification(result))
         } else result
+    }
+
+    private fun buildConfigurationTrie(): Trie {
+        val configurationTrie = Trie()
+
+        val configurations = convertSpecificationMapToStrings(pluginSpecificationMap)
+        configurationTrie.addAll(configurations)
+
+        return configurationTrie
+    }
+
+    private fun convertSpecificationMapToStrings(specificationMap: Map<String, SpecificationMap>): List<String> {
+        val result = mutableListOf<String>()
+
+        for ((prefix, map) in specificationMap) {
+            val mapStrings = when (map) {
+                is SpecificationMap.InnerSpecification -> convertSpecificationMapToStrings(map.specification).map { config -> "$prefix.$config" }
+                is SpecificationMap.SpecificationItem -> listOf(prefix)
+            }
+            result.addAll(mapStrings)
+        }
+
+        return result
+    }
+
+    fun searchForMatchingConfigurations(configuration: String): List<String> {
+        return configurationTrie.searchForElementsWithPrefix(configuration)
     }
 
     fun getConfigurationInformation(configurationPath: String): Item<*>? {

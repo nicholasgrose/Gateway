@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft.commands
 
 import com.rose.gateway.configuration.Configurator
 import com.rose.gateway.minecraft.commands.framework.CommandContext
+import org.bukkit.command.CommandSender
 
 object ConfigCommands {
     fun setConfiguration(context: CommandContext): Boolean {
@@ -19,20 +20,15 @@ object ConfigCommands {
         return true
     }
 
-    fun configurationHelp(context: CommandContext): Boolean {
-        if (context.commandArguments.isEmpty()) {
-            context.sender.sendMessage("Hi!")
-            return true
-        }
+    fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
+        var matchingConfigurations = Configurator.searchForMatchingConfigurations(configSearchString)
+        if (matchingConfigurations.isEmpty()) matchingConfigurations = Configurator.searchForMatchingConfigurations("")
 
-        val path = context.commandArguments[0] as String
-        val configuration = Configurator.getConfigurationInformation(path)
+        if (matchingConfigurations.size == 1) {
+            val path = matchingConfigurations[0]
+            val configuration = Configurator.getConfigurationInformation(path)!!
 
-        return if (configuration == null) {
-            context.sender.sendMessage("ERROR: Invalid configuration path provided.")
-            false
-        } else {
-            context.sender.sendMessage(
+            sender.sendMessage(
                 """
                 Name: $path
                 Type: ${configuration.type.rawClass.simpleName}${if (configuration.nullable) "?" else ""}
@@ -40,7 +36,15 @@ object ConfigCommands {
                 Description: ${configuration.description}
                 """.trimIndent()
             )
-            true
+        } else {
+            sender.sendMessage(
+                """
+                Similar configurations:
+                ${matchingConfigurations.joinToString(prefix = "* ", separator = "\n* ")}}
+                """.trimIndent()
+            )
         }
+
+        return true
     }
 }

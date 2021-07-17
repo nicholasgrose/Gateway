@@ -20,7 +20,9 @@ class GatewayPlugin : JavaPlugin() {
         Logger.log("Starting Gateway!")
 
         plugin = this
+
         if (!Configurator.ensureProperConfiguration()) return
+
         runBlocking {
             discordBot.start()
         }
