@@ -126,14 +126,14 @@ object Configurator {
     }
 
     private val extensionSpecs = mapOf(
-        ::WhitelistExtension to PluginSpec.BotSpec.EnabledExtensionsSpec.whitelistExtension,
-        ::ListExtension to PluginSpec.BotSpec.EnabledExtensionsSpec.listExtension,
-        ::AboutExtension to PluginSpec.BotSpec.EnabledExtensionsSpec.aboutExtension,
-        ::ChatExtension to PluginSpec.BotSpec.EnabledExtensionsSpec.chatExtension
+        ::WhitelistExtension to PluginSpec.BotSpec.ExtensionsSpec.WhitelistSpec,
+        ::ListExtension to PluginSpec.BotSpec.ExtensionsSpec.ListSpec,
+        ::AboutExtension to PluginSpec.BotSpec.ExtensionsSpec.AboutSpec,
+        ::ChatExtension to PluginSpec.BotSpec.ExtensionsSpec.ChatSpec
     )
 
     fun extensionEnabled(extension: KFunction<Extension>): Boolean {
-        val spec = extensionSpecs[extension] ?: return false
+        val spec = extensionSpecs[extension]?.enabled ?: return false
 
         return config[spec]
     }

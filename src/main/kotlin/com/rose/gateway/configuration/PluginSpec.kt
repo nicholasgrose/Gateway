@@ -8,24 +8,25 @@ object PluginSpec : ConfigSpec() {
     )
 
     object BotSpec : ConfigSpec() {
-        val commandPrefix by optional("!", description = "The prefix used to mark commands.")
+        val commandPrefix by optional("!", description = "The prefix used to mark commands. Defaults to '!'.")
         val commandTimeout by optional(
             5_000.toLong(),
-            description = "The length of time that commands live for before being cleared."
+            description = "The length of time in milliseconds that commands live for before being cleared."
         )
-        val botChannels by required<List<String>>(
+        val botChannels by optional(
+            listOf<String>(),
             description = "The names of the channels in which the bot should respond to commands and post/accept chat messages."
         )
         val memberQueryMax by optional(
             100,
-            description = "The max number of users that can be queried when search for a user."
+            description = "The maximum number of users that can be queried for when searching for a user by name."
         )
 
-        object EnabledExtensionsSpec : ConfigSpec() {
-            val whitelistExtension by optional(true, description = "Whether the whitelist extension should be enabled.")
-            val listExtension by optional(true, description = "Whether the player list extension should be enabled.")
-            val aboutExtension by optional(true, description = "Whether the about extension should be enabled.")
-            val chatExtension by optional(true, description = "Whether the chat extension should be enabled.")
+        object ExtensionsSpec : ConfigSpec() {
+            object WhitelistSpec : CommonExtensionSpec()
+            object ListSpec : CommonExtensionSpec()
+            object AboutSpec : CommonExtensionSpec()
+            object ChatSpec : CommonExtensionSpec()
         }
     }
 
