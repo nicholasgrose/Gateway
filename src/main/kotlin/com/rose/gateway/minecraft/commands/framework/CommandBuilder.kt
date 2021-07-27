@@ -5,7 +5,7 @@ import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandBuilder(private val name: String) {
     companion object {
-        val subcommandExecutor = CommandExecutor(
+        private val subcommandExecutor = CommandExecutor(
             Command::subcommandRunner,
             ArgumentParser(arrayOf(StringArg("SUBCOMMAND", ::subcommandCompleter)), true)
         )
