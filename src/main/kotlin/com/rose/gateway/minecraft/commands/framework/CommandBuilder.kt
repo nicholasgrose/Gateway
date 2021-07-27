@@ -1,12 +1,13 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.CommandArgument.Companion.subcommandCompleter
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandBuilder(private val name: String) {
     companion object {
         val subcommandExecutor = CommandExecutor(
             Command::subcommandRunner,
-            ArgumentParser(arrayOf(StringArg("SUBCOMMAND")), true)
+            ArgumentParser(arrayOf(StringArg("SUBCOMMAND", ::subcommandCompleter)), true)
         )
 
         fun build(builder: CommandBuilder): Command {
@@ -88,7 +89,7 @@ class CommandBuilder(private val name: String) {
     }
 
     fun runner(
-        vararg arguments: Parser<*>,
+        vararg arguments: CommandArgument<*>,
         allowVariableNumberOfArguments: Boolean = false,
         commandFunction: (CommandContext) -> Boolean
     ) {

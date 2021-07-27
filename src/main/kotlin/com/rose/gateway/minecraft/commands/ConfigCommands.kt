@@ -6,17 +6,17 @@ import org.bukkit.command.CommandSender
 
 object ConfigCommands {
     fun setConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config set")
+        context.sender.sendMessage("config set is not yet implemented")
         return true
     }
 
     fun addConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config add")
+        context.sender.sendMessage("config add is not yet implemented")
         return true
     }
 
     fun removeConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config remove")
+        context.sender.sendMessage("config remove is not yet implemented")
         return true
     }
 

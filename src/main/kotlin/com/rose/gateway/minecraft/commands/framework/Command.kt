@@ -72,12 +72,23 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         alias: String,
         args: Array<String>
     ): MutableList<String>? {
-        if (definition.subcommands.isEmpty()) return null
+        for (executor in definition.executors) {
+            val parsedArguments = executor.argumentParser.parseArguments(args) ?: continue
+            val tabCompletions = executor.argumentParser.getTabCompletions(
+                TabCompletionContext(
+                    sender = sender,
+                    command = command,
+                    alias = alias,
+                    rawArguments = args.toList(),
+                    parsedArguments = parsedArguments,
+                    commandDefinition = definition
+                )
+            )
 
-        return if (args.size > 1) {
-            val subcommand = definition.subcommands[args[0]]
-            subcommand?.onTabComplete(sender, command, alias, args.sliceArray(1 until args.size))
-        } else definition.subcommands.keys.toMutableList()
+            if (tabCompletions != null) return tabCompletions
+        }
+
+        return null
     }
 
     fun registerCommand() {
