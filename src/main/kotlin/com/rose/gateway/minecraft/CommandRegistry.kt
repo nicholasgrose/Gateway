@@ -45,10 +45,11 @@ object CommandRegistry {
                 }
 
                 subcommand("help") {
-                    runner(StringArg("CONFIGURATION_PATH")) { context ->
+                    runner(StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion)) { context ->
                         val configuration = context.commandArguments[0] as String
                         ConfigCommands.sendConfigurationHelp(context.sender, configuration)
                     }
+
                     runner { context ->
                         ConfigCommands.sendConfigurationHelp(context.sender, "")
                     }

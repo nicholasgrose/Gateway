@@ -7,7 +7,7 @@ interface CommandArgument<T> {
             return null
         }
 
-        fun subcommandCompleter(tabCompletionContext: TabCompletionContext): MutableList<String>? {
+        fun subcommandCompleter(tabCompletionContext: TabCompletionContext): List<String>? {
             val rawArguments = tabCompletionContext.rawArguments
             val definition = tabCompletionContext.commandDefinition
 
@@ -19,11 +19,11 @@ interface CommandArgument<T> {
                     tabCompletionContext.alias,
                     rawArguments.subList(1, rawArguments.size).toTypedArray()
                 )
-            } else definition.subcommands.keys.toMutableList()
+            } else definition.subcommandNames.searchOrGetAll(rawArguments[0])
         }
     }
 
     fun fromString(string: String): T?
     fun getName(): String
-    fun completeTab(tabCompletionContext: TabCompletionContext): MutableList<String>?
+    fun completeTab(tabCompletionContext: TabCompletionContext): List<String>?
 }

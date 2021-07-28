@@ -1,6 +1,7 @@
 package com.rose.gateway.shared.trie
 
 class Trie : MutableSet<String> {
+
     private val rootNode = TrieNode("", null)
     override var size = 0
 
@@ -22,7 +23,12 @@ class Trie : MutableSet<String> {
         }
     }
 
-    fun searchForElementsWithPrefix(prefix: String): List<String> {
+    fun searchOrGetAll(prefix: String): List<String> {
+        val searchResult = search(prefix)
+        return searchResult.ifEmpty { getAll() }
+    }
+
+    fun search(prefix: String): List<String> {
         val startNode = followSearchString(prefix) ?: return listOf()
         return depthFirstSearch(startNode)
     }

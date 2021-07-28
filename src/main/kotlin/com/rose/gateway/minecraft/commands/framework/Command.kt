@@ -71,7 +71,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         command: org.bukkit.command.Command,
         alias: String,
         args: Array<String>
-    ): MutableList<String>? {
+    ): List<String>? {
         for (executor in definition.executors) {
             val parsedArguments = executor.argumentParser.parseArguments(args) ?: continue
             val tabCompletions = executor.argumentParser.getTabCompletions(

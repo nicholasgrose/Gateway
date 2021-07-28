@@ -19,7 +19,7 @@ import kotlin.reflect.KFunction
 
 object Configurator {
     private val pluginSpecificationMap = buildSpecificationMap(PluginSpec)
-    private val configurationTrie = buildConfigurationTrie()
+    val configurationTrie = buildConfigurationTrie()
 
     sealed class SpecificationMap {
         class InnerSpecification(val specification: Map<String, SpecificationMap>) : SpecificationMap()
@@ -67,10 +67,6 @@ object Configurator {
         }
 
         return result
-    }
-
-    fun searchForMatchingConfigurations(configuration: String): List<String> {
-        return configurationTrie.searchForElementsWithPrefix(configuration)
     }
 
     fun getConfigurationInformation(configurationPath: String): Item<*>? {

@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft.commands.framework
 
 import com.rose.gateway.minecraft.commands.framework.CommandArgument.Companion.subcommandCompleter
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
+import com.rose.gateway.shared.trie.Trie
 
 class CommandBuilder(private val name: String) {
     companion object {
@@ -12,13 +13,16 @@ class CommandBuilder(private val name: String) {
 
         fun build(builder: CommandBuilder): Command {
             if (builder.executors.isEmpty()) builder.executors.add(subcommandExecutor)
+            val subcommandNames = Trie()
+            subcommandNames.addAll(builder.children.map { child -> child.definition.name })
 
             return Command(
                 CommandDefinition(
                     name = builder.name,
                     documentation = generateBuilderDocumentation(builder),
                     executors = builder.executors,
-                    subcommands = builder.children.associateBy { child -> child.definition.name }
+                    subcommands = builder.children.associateBy { child -> child.definition.name },
+                    subcommandNames = subcommandNames
                 )
             )
         }

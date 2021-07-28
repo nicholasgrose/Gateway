@@ -6,7 +6,7 @@ import com.rose.gateway.minecraft.commands.framework.TabCompletionContext
 
 class StringArg(
     private val name: String,
-    private val tabCompleter: (TabCompletionContext) -> MutableList<String>? = ::noCompletionCompleter
+    private val tabCompleter: (TabCompletionContext) -> List<String>? = ::noCompletionCompleter
 ) : CommandArgument<String> {
     override fun fromString(string: String): String {
         return string
@@ -16,7 +16,7 @@ class StringArg(
         return name
     }
 
-    override fun completeTab(tabCompletionContext: TabCompletionContext): MutableList<String>? {
+    override fun completeTab(tabCompletionContext: TabCompletionContext): List<String>? {
         return tabCompleter(tabCompletionContext)
     }
 }
