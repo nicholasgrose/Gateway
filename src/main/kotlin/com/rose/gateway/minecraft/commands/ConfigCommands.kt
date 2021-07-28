@@ -79,7 +79,6 @@ object ConfigCommands {
                     Component.text(
                         config,
                         DiscordBot.getMentionColor(),
-//                        TextDecoration.UNDERLINED,
                         TextDecoration.ITALIC
                     )
                         .hoverEvent(
