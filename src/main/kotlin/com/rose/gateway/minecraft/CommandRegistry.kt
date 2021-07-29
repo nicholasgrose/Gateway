@@ -21,7 +21,11 @@ object CommandRegistry {
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
-                    runner { BotCommands.restartBot() }
+                    runner { context -> BotCommands.restartBot(context) }
+                }
+
+                subcommand("status") {
+                    runner { context -> BotCommands.botStatus(context) }
                 }
             }
 

@@ -55,10 +55,6 @@ class DiscordBot {
         }
     }
 
-    private val kordClient by lazy {
-        bot.getKoin().get<Kord>()
-    }
-
     private suspend fun createBot(token: String): ExtensibleBot {
         return ExtensibleBot(token) {
             hooks {
@@ -89,6 +85,9 @@ class DiscordBot {
         }
     }
 
+    private val kordClient by lazy {
+        bot.getKoin().get<Kord>()
+    }
     private val botChannels = mutableSetOf<TextChannel>()
     private val botGuilds = mutableSetOf<Guild>()
     private var job: Job? = null
@@ -96,12 +95,21 @@ class DiscordBot {
     val memberQueryMax by lazy { Configurator.config[PluginSpec.BotSpec.memberQueryMax] }
     val discordColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordUserColor])!! }
     val mentionColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordMentionColor])!! }
+    var botStatus = "Not Started"
 
     suspend fun start() {
+        botStatus = "Starting"
         fillBotChannels()
 
         job = CoroutineScope(Dispatchers.Default).launch {
-            bot.start()
+            try {
+                botStatus = "Running"
+                bot.start()
+            } catch (exception: Error) {
+                val message = exception.message
+                Logger.log("An error occurred while running bot: $message")
+                botStatus = "Stopped (Reason: $message)"
+            }
         }
 
         Logger.log("Bot ready!")
@@ -124,9 +132,11 @@ class DiscordBot {
     }
 
     suspend fun stop() {
+        botStatus = "Stopping"
         kordClient.shutdown()
         kordClient.coroutineContext.job.join()
         job?.join()
         stopKoin()
+        botStatus = "Stopped"
     }
 }
