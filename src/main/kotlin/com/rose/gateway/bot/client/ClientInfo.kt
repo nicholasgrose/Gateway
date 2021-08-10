@@ -1,5 +1,6 @@
 package com.rose.gateway.bot.client
 
+import com.kotlindiscord.kord.extensions.utils.permissionsForMember
 import com.rose.gateway.bot.DiscordBot
 import dev.kord.common.entity.Permissions
 import dev.kord.core.entity.channel.GuildChannel
@@ -11,6 +12,6 @@ object ClientInfo {
     }
 
     private suspend fun getPermissionsForChannel(channel: GuildChannel): Permissions {
-        return channel.getEffectivePermissions(DiscordBot.getKordClient().selfId)
+        return channel.permissionsForMember(DiscordBot.getKordClient().selfId)
     }
 }

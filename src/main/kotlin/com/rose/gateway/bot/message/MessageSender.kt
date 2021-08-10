@@ -2,7 +2,7 @@ package com.rose.gateway.bot.message
 
 import com.rose.gateway.bot.DiscordBot
 import dev.kord.core.behavior.channel.createMessage
-import dev.kord.rest.builder.message.MessageCreateBuilder
+import dev.kord.rest.builder.message.create.MessageCreateBuilder
 
 object MessageSender {
     suspend fun sendGameChatMessage(message: MessageCreateBuilder.() -> Unit) {

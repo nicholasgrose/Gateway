@@ -26,6 +26,7 @@ class GatewayPlugin : JavaPlugin() {
         runBlocking {
             discordBot.start()
         }
+
         EventListeners.registerListeners(server)
         CommandRegistry.registerCommands()
 

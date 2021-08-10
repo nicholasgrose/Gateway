@@ -12,7 +12,7 @@ class ChatExtension : Extension() {
 
     override suspend fun setup() {
         event<MessageCreateEvent> {
-            check(DefaultCheck::defaultCheck, MessageCheck::notCommand, MessageCheck::notSelf)
+            check(DefaultCheck.defaultCheck, MessageCheck.notCommand, MessageCheck.notSelf)
 
             action {
                 val message = MinecraftChatMaker.createMessage(event)

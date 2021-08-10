@@ -4,7 +4,7 @@ import com.kotlindiscord.kord.extensions.utils.respond
 import com.rose.gateway.configuration.Configurator
 import com.rose.gateway.configuration.PluginSpec
 import dev.kord.core.entity.Message
-import dev.kord.rest.builder.message.MessageCreateBuilder
+import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import kotlinx.coroutines.delay
 
 object MessageLifetime {

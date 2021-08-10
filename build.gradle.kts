@@ -1,7 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.21"
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("xyz.jpenilla.run-paper") version "1.0.1-SNAPSHOT"
+    id("xyz.jpenilla.run-paper") version "1.0.3"
 }
 
 group = "com.rose"
@@ -31,11 +31,12 @@ repositories {
 dependencies {
     compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17.1-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
-    implementation(group = "dev.kord.x", name = "emoji", version = "0.5.0")
+//    This is potentially useful, but not currently needed.
+//    implementation(group = "dev.kord.x", name = "emoji", version = "0.5.0")
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.4.1"
+        version = "1.4.4-RC3"
     )
     implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
 }

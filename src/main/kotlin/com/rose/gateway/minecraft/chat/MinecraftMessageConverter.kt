@@ -3,7 +3,7 @@ package com.rose.gateway.minecraft.chat
 import com.rose.gateway.bot.DiscordBot
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.entity.ChannelType
-import dev.kord.rest.builder.message.MessageCreateBuilder
+import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import guru.zoroark.lixy.LixyTokenType
 import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
