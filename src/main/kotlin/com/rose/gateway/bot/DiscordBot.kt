@@ -7,12 +7,13 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.checks.DefaultCheck
 import com.rose.gateway.bot.client.ClientInfo
-import com.rose.gateway.bot.status.DynamicStatus
+import com.rose.gateway.bot.presence.DynamicPresence
 import com.rose.gateway.configuration.Configurator
 import com.rose.gateway.configuration.PluginSpec
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
+import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.datetime.Clock
@@ -29,12 +30,12 @@ class DiscordBot {
             return GatewayPlugin.plugin.discordBot.botGuilds
         }
 
-        fun getKordClient(): Kord {
-            return GatewayPlugin.plugin.discordBot.kordClient!!
+        fun getKordClient(): Kord? {
+            return GatewayPlugin.plugin.discordBot.kordClient
         }
 
-        fun getBot(): ExtensibleBot {
-            return GatewayPlugin.plugin.discordBot.bot!!
+        fun getBot(): ExtensibleBot? {
+            return GatewayPlugin.plugin.discordBot.bot
         }
 
         fun getMemberQueryMax(): Int {
@@ -50,18 +51,20 @@ class DiscordBot {
         }
     }
 
-    private val bot by lazy {
-        runBlocking {
-            try {
-                botStatus = "Running"
-                createBot(Configurator.config[PluginSpec.botToken])
-            } catch (error: Error) {
-                val message = error.message
-                Logger.log("An error occurred while creating bot: $message")
-                botStatus = "Stopped (Reason: $message)"
-                null
-            }
-        }
+    private val botChannels = mutableSetOf<TextChannel>()
+    private val botGuilds = mutableSetOf<Guild>()
+    private var job: Job? = null
+
+    val memberQueryMax by lazy { Configurator.config[PluginSpec.BotSpec.memberQueryMax] }
+    val discordColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordUserColor])!! }
+    val mentionColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordMentionColor])!! }
+    var botStatus = BotStatus.NOT_STARTED
+
+    private val bot = try {
+        runBlocking { createBot(Configurator.config[PluginSpec.botToken]) }
+    } catch (e: KordInitializationException) {
+        botStatus = BotStatus.STOPPED because e.localizedMessage
+        null
     }
 
     private suspend fun createBot(token: String): ExtensibleBot {
@@ -71,7 +74,7 @@ class DiscordBot {
             }
             presence {
                 since = Clock.System.now()
-                playing(DynamicStatus.statusForPlayerCount())
+                playing(DynamicPresence.presenceForPlayerCount())
             }
             messageCommands {
                 defaultPrefix = Configurator.config[PluginSpec.BotSpec.commandPrefix]
@@ -94,30 +97,25 @@ class DiscordBot {
         }
     }
 
-    private val kordClient by lazy {
-        bot?.getKoin()?.get<Kord>()
-    }
-    private val botChannels = mutableSetOf<TextChannel>()
-    private val botGuilds = mutableSetOf<Guild>()
-    private var job: Job? = null
-
-    val memberQueryMax by lazy { Configurator.config[PluginSpec.BotSpec.memberQueryMax] }
-    val discordColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordUserColor])!! }
-    val mentionColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordMentionColor])!! }
-    var botStatus = "Not Started"
+    private val kordClient = bot?.getKoin()?.get<Kord>()
 
     suspend fun start() {
-        botStatus = "Starting"
+        if (bot == null) {
+            return
+        }
+
+        botStatus = BotStatus.STARTING
+
         fillBotChannels()
 
         job = CoroutineScope(Dispatchers.Default).launch {
             try {
-                botStatus = "Running"
-                bot?.start()
-            } catch (error: Error) {
-                val message = error.message
-                Logger.log("An error occurred while running bot: $message")
-                botStatus = "Stopped (Reason: $message)"
+                botStatus = BotStatus.RUNNING
+                bot.start()
+            } catch (error: KordInitializationException) {
+                val message = "An error occurred while running bot: ${error.message}"
+                Logger.log(message)
+                botStatus = BotStatus.STOPPED because message
             }
         }
 
@@ -126,7 +124,7 @@ class DiscordBot {
 
     private suspend fun fillBotChannels() {
         val validBotChannels = Configurator.config[PluginSpec.BotSpec.botChannels]
-        kordClient?.guilds?.collect { guild: Guild ->
+        kordClient!!.guilds.collect { guild: Guild ->
             guild.channels.collect { channel ->
                 if (
                     ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS)
@@ -141,11 +139,15 @@ class DiscordBot {
     }
 
     suspend fun stop() {
-        botStatus = "Stopping"
-        kordClient?.shutdown()
-        kordClient?.coroutineContext?.job?.join()
+        botStatus = BotStatus.STOPPING
+
+        if (kordClient != null) {
+            kordClient.shutdown()
+            kordClient.coroutineContext.job.join()
+        }
+
         job?.join()
         stopKoin()
-        botStatus = "Stopped"
+        botStatus = BotStatus.STOPPED because "Player stopped bot"
     }
 }

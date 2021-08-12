@@ -22,7 +22,7 @@ object MessageCheck {
 
         when {
             author == null -> fail("No author found.")
-            author.id == DiscordBot.getKordClient().selfId -> fail("Is self.")
+            author.id == DiscordBot.getKordClient()!!.selfId -> fail("Is self.")
             else -> pass()
         }
     }

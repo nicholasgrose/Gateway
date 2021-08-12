@@ -12,6 +12,6 @@ object ClientInfo {
     }
 
     private suspend fun getPermissionsForChannel(channel: GuildChannel): Permissions {
-        return channel.permissionsForMember(DiscordBot.getKordClient().selfId)
+        return channel.permissionsForMember(DiscordBot.getKordClient()!!.selfId)
     }
 }

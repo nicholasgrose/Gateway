@@ -24,11 +24,12 @@ object BotCommands {
     }
 
     fun botStatus(context: CommandContext): Boolean {
+        val status = GatewayPlugin.plugin.discordBot.botStatus
         context.sender.sendMessage(
             Component.join(
                 Component.empty(),
                 Component.text("Bot Status: ", DiscordBot.getMentionColor()),
-                Component.text(GatewayPlugin.plugin.discordBot.botStatus)
+                Component.text("${status.status} (${status.reason})")
             )
         )
 

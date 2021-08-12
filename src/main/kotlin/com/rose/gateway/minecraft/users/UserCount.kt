@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.users
 
-import com.rose.gateway.bot.status.DynamicStatus
+import com.rose.gateway.bot.presence.DynamicPresence
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,18 +11,18 @@ object UserCount : Listener {
     @EventHandler
     @Suppress("UNUSED_PARAMETER")
     fun onJoin(event: PlayerJoinEvent) {
-        DynamicStatus.playerCount += 1
+        DynamicPresence.playerCount += 1
         runBlocking {
-            DynamicStatus.updateStatusPlayerCount()
+            DynamicPresence.updatePresencePlayerCount()
         }
     }
 
     @EventHandler
     @Suppress("UNUSED_PARAMETER")
     fun onLeave(event: PlayerQuitEvent) {
-        DynamicStatus.playerCount -= 1
+        DynamicPresence.playerCount -= 1
         runBlocking {
-            DynamicStatus.updateStatusPlayerCount()
+            DynamicPresence.updatePresencePlayerCount()
         }
     }
 }
