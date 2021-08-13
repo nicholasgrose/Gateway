@@ -4,6 +4,7 @@ import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.Configurator
 import com.rose.gateway.minecraft.commands.framework.CommandContext
 import com.rose.gateway.minecraft.commands.framework.TabCompletionContext
+import com.uchuhimo.konf.Item
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
@@ -12,9 +13,39 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 
 object ConfigCommands {
+    private val PURPLE = TextColor.fromHexString("#F526ED")
+    private val RED = TextColor.fromHexString("#EB4325")
+
     fun setConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config set is not yet implemented")
+        val path = context.commandArguments[0] as String
+        val configuration = Configurator.getConfigurationInformation(path)
+
+        if (configuration == null) {
+            context.sender.sendMessage("Configuration not found. Please try again.")
+            return true
+        }
+
+        val newValue = context.commandArguments[1]
+        setConfiguration(configuration, newValue)
+
+        context.sender.sendMessage(
+            Component.join(
+                Component.text(" "),
+                Component.text(path, PURPLE, TextDecoration.ITALIC),
+                Component.text("set to"),
+                Component.text(newValue.toString(), DiscordBot.getMentionColor(), TextDecoration.ITALIC),
+                Component.text("successfully!")
+            )
+        )
+
         return true
+    }
+
+    private fun <T> setConfiguration(item: Item<T>, newValue: Any?) {
+        if (item.type.rawClass.isInstance(newValue)) {
+            @Suppress("UNCHECKED_CAST")
+            Configurator.config[item] = newValue as T
+        }
     }
 
     fun addConfiguration(context: CommandContext): Boolean {
@@ -26,9 +57,6 @@ object ConfigCommands {
         context.sender.sendMessage("config remove is not yet implemented")
         return true
     }
-
-    private val PURPLE = TextColor.fromHexString("#F526ED")
-    private val RED = TextColor.fromHexString("#EB4325")
 
     fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
         val matchingConfigurations = Configurator.configurationTrie.searchOrGetAll(configSearchString)
@@ -107,7 +135,7 @@ object ConfigCommands {
     }
 
     fun configCompletion(context: TabCompletionContext): List<String> {
-        val currentConfigurationArgument = context.parsedArguments[0] as String
+        val currentConfigurationArgument = context.parsedArguments.last() as String
 
         return Configurator.configurationTrie.searchOrGetAll(currentConfigurationArgument)
     }

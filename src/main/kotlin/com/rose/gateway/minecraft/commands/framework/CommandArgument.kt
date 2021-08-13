@@ -12,14 +12,14 @@ interface CommandArgument<T> {
             val definition = tabCompletionContext.commandDefinition
 
             return if (rawArguments.size > 1) {
-                val subcommand = definition.subcommands[rawArguments[0]]
+                val subcommand = definition.subcommands[rawArguments.first()]
                 subcommand?.onTabComplete(
                     tabCompletionContext.sender,
                     tabCompletionContext.command,
                     tabCompletionContext.alias,
                     rawArguments.subList(1, rawArguments.size).toTypedArray()
                 )
-            } else definition.subcommandNames.searchOrGetAll(rawArguments[0])
+            } else definition.subcommandNames.searchOrGetAll(rawArguments.first())
         }
     }
 

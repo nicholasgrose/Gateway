@@ -37,7 +37,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
             var success = false
 
             for (executor in definition.executors) {
-                val convertedArguments = executor.argumentParser.parseArguments(args) ?: continue
+                val convertedArguments = executor.argumentParser.parseAllArguments(args) ?: continue
 
                 success = executor.executor(
                     CommandContext(
@@ -73,7 +73,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         args: Array<String>
     ): List<String>? {
         for (executor in definition.executors) {
-            val parsedArguments = executor.argumentParser.parseArguments(args) ?: continue
+            val parsedArguments = executor.argumentParser.parseArgumentSubset(args) ?: continue
             val tabCompletions = executor.argumentParser.getTabCompletions(
                 TabCompletionContext(
                     sender = sender,

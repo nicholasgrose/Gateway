@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 
 object MessageLifetime {
     private suspend fun deleteAfterDelay(vararg messages: Message) {
-        delay(Configurator.config[PluginSpec.BotSpec.commandTimeout])
+        delay(Configurator.config[PluginSpec.BotSpec.commandTimeout].toLong())
         messages.forEach { it.delete() }
     }
 

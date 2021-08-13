@@ -88,7 +88,7 @@ class DiscordBot {
                 DiscordBotConstants.BOT_EXTENSIONS.filter { Configurator.extensionEnabled(it) }.forEach { add(it) }
 
                 help {
-                    paginatorTimeout = Configurator.config[PluginSpec.BotSpec.commandTimeout]
+                    paginatorTimeout = Configurator.config[PluginSpec.BotSpec.commandTimeout].toLong()
                     deletePaginatorOnTimeout = true
                     deleteInvocationOnPaginatorTimeout = true
                     colour { DISCORD_GREEN }
@@ -148,6 +148,7 @@ class DiscordBot {
 
         job?.join()
         stopKoin()
-        botStatus = BotStatus.STOPPED because "Player stopped bot"
+
+        botStatus = BotStatus.STOPPED
     }
 }

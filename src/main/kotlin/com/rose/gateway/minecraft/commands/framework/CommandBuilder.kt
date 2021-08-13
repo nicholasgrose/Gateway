@@ -69,15 +69,12 @@ class CommandBuilder(private val name: String) {
         }
 
         private fun generateUsageEnding(executor: CommandExecutor): String {
-            val usageEnding = executor.argumentParser.converters.joinToString(
-                separator = " | ",
+            return if (executor.argumentParser.converters.isEmpty()) ""
+            else executor.argumentParser.converters.joinToString(
+                separator = "] [",
                 prefix = "[",
                 postfix = "]"
-            ) { argument ->
-                argument.getName()
-            }
-
-            return if (usageEnding.length == 2) "" else usageEnding
+            ) { argument -> argument.getName() }
         }
     }
 

@@ -10,7 +10,7 @@ object PluginSpec : ConfigSpec() {
     object BotSpec : ConfigSpec() {
         val commandPrefix by optional("!", description = "The prefix used to mark commands. Defaults to '!'.")
         val commandTimeout by optional(
-            5_000.toLong(),
+            5_000,
             description = "The length of time in milliseconds that commands live for before being cleared."
         )
         val botChannels by optional(

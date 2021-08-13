@@ -27,9 +27,10 @@ object BotCommands {
         val status = GatewayPlugin.plugin.discordBot.botStatus
         context.sender.sendMessage(
             Component.join(
-                Component.empty(),
-                Component.text("Bot Status: ", DiscordBot.getMentionColor()),
-                Component.text("${status.status} (${status.reason})")
+                Component.text(" "),
+                Component.text("Bot Status:", DiscordBot.getMentionColor()),
+                Component.text(status.status),
+                Component.text(if (status.reason.isEmpty()) "" else "(${status.reason})")
             )
         )
 

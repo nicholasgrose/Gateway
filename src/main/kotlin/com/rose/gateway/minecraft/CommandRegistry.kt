@@ -4,6 +4,7 @@ import com.rose.gateway.minecraft.commands.BotCommands
 import com.rose.gateway.minecraft.commands.ConfigCommands
 import com.rose.gateway.minecraft.commands.GeneralCommands
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.converters.IntArg
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 object CommandRegistry {
@@ -31,19 +32,37 @@ object CommandRegistry {
 
             subcommand("config") {
                 subcommand("set") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                    runner(
+                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        IntArg("VALUE")
+                    ) { context ->
+                        ConfigCommands.setConfiguration(context)
+                    }
+
+                    runner(
+                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("VALUE")
+                    ) { context ->
                         ConfigCommands.setConfiguration(context)
                     }
                 }
 
                 subcommand("add") {
-                    runner(StringArg("CONFIG_PATH"), StringArg("VALUE")) { context ->
+                    runner(
+                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("VALUE"),
+                        allowVariableNumberOfArguments = true
+                    ) { context ->
                         ConfigCommands.addConfiguration(context)
                     }
                 }
 
                 subcommand("remove") {
-                    runner(StringArg("CONFIGURATION_PATH"), StringArg("VALUE")) { context ->
+                    runner(
+                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("VALUE"),
+                        allowVariableNumberOfArguments = true
+                    ) { context ->
                         ConfigCommands.removeConfiguration(context)
                     }
                 }
