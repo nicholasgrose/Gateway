@@ -8,5 +8,5 @@ commands:
     description: Gives help for Minecraft to Discord chat shortcuts.
     usage: /discord
   gateway:
-    description: Modifies the gateway plugin.
+    description: Modifies the Gateway plugin.
     usage: /gateway
