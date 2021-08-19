@@ -1,34 +1,34 @@
 package com.rose.gateway
 
 import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.Configurator
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
     companion object {
         const val VERSION = "1.3.3"
-        lateinit var plugin: GatewayPlugin
     }
 
-    var discordBot = DiscordBot()
+    val startTime = Clock.System.now()
+    val configuration = PluginConfiguration()
+    var discordBot = DiscordBot(this)
+    private val eventListeners = EventListeners(this)
+    private val commandRegistry = CommandRegistry(this)
 
     override fun onEnable() {
         Logger.log("Starting Gateway!")
-
-        plugin = this
-
-        if (!Configurator.ensureProperConfiguration()) return
 
         runBlocking {
             discordBot.start()
         }
 
-        EventListeners.registerListeners(server)
-        CommandRegistry.registerCommands()
+        eventListeners.registerListeners(server)
+        commandRegistry.registerCommands()
 
         Logger.log("Gateway started!")
     }
@@ -46,7 +46,7 @@ class GatewayPlugin : JavaPlugin() {
     fun restartBot() {
         runBlocking {
             discordBot.stop()
-            discordBot = DiscordBot()
+            discordBot = DiscordBot(this@GatewayPlugin)
             discordBot.start()
         }
     }

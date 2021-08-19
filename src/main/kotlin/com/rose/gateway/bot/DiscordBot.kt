@@ -3,101 +3,75 @@ package com.rose.gateway.bot
 import com.kotlindiscord.kord.extensions.DISCORD_GREEN
 import com.kotlindiscord.kord.extensions.ExtensibleBot
 import com.kotlindiscord.kord.extensions.checks.isNotbot
+import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.checks.DefaultCheck
 import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
-import com.rose.gateway.configuration.Configurator
-import com.rose.gateway.configuration.PluginSpec
+import com.rose.gateway.configuration.specs.PluginSpec
+import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
+import com.rose.gateway.shared.configurations.BotConfiguration.commandPrefix
+import com.rose.gateway.shared.configurations.BotConfiguration.commandTimeout
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.datetime.Clock
-import net.kyori.adventure.text.format.TextColor
 import org.koin.core.context.stopKoin
 
-class DiscordBot {
-    companion object {
-        fun getBotChannels(): Set<TextChannel> {
-            return GatewayPlugin.plugin.discordBot.botChannels
-        }
-
-        fun getBotGuilds(): Set<Guild> {
-            return GatewayPlugin.plugin.discordBot.botGuilds
-        }
-
-        fun getKordClient(): Kord? {
-            return GatewayPlugin.plugin.discordBot.kordClient
-        }
-
-        fun getBot(): ExtensibleBot? {
-            return GatewayPlugin.plugin.discordBot.bot
-        }
-
-        fun getMemberQueryMax(): Int {
-            return GatewayPlugin.plugin.discordBot.memberQueryMax
-        }
-
-        fun getDiscordColor(): TextColor {
-            return GatewayPlugin.plugin.discordBot.discordColor
-        }
-
-        fun getMentionColor(): TextColor {
-            return GatewayPlugin.plugin.discordBot.mentionColor
-        }
-    }
-
-    private val botChannels = mutableSetOf<TextChannel>()
-    private val botGuilds = mutableSetOf<Guild>()
+class DiscordBot(private val plugin: GatewayPlugin) {
+    val botChannels = mutableSetOf<TextChannel>()
+    val botGuilds = mutableSetOf<Guild>()
     private var job: Job? = null
-
-    val memberQueryMax by lazy { Configurator.config[PluginSpec.BotSpec.memberQueryMax] }
-    val discordColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordUserColor])!! }
-    val mentionColor by lazy { TextColor.fromHexString(Configurator.config[PluginSpec.MinecraftSpec.discordMentionColor])!! }
     var botStatus = BotStatus.NOT_STARTED
+    private val defaultCheck = DefaultCheck(plugin)
 
-    private val bot = try {
-        runBlocking { createBot(Configurator.config[PluginSpec.botToken]) }
+    val bot = try {
+        runBlocking { createBot(plugin.configuration[PluginSpec.botToken]) }
     } catch (e: KordInitializationException) {
         botStatus = BotStatus.STOPPED because e.localizedMessage
         null
     }
+    val presence = DynamicPresence(plugin)
 
     private suspend fun createBot(token: String): ExtensibleBot {
         return ExtensibleBot(token) {
             hooks {
                 kordShutdownHook = false
+                afterKoinSetup {
+                    getKoin().declare(plugin)
+                    getKoin().declare(defaultCheck)
+                }
             }
             presence {
-                since = Clock.System.now()
-                playing(DynamicPresence.presenceForPlayerCount())
+                since = plugin.startTime
+                playing(presence.presenceForPlayerCount())
             }
             messageCommands {
-                defaultPrefix = Configurator.config[PluginSpec.BotSpec.commandPrefix]
+                defaultPrefix = plugin.configuration.commandPrefix()
                 invokeOnMention = true
-                check(DefaultCheck.defaultCheck, isNotbot)
+                check(defaultCheck.defaultCheck, isNotbot)
             }
             slashCommands {
-                enabled = false
+                enabled = true
             }
             extensions {
-                DiscordBotConstants.BOT_EXTENSIONS.filter { Configurator.extensionEnabled(it) }.forEach { add(it) }
+                extensions.addAll(DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() })
 
                 help {
-                    paginatorTimeout = Configurator.config[PluginSpec.BotSpec.commandTimeout].toLong()
+                    paginatorTimeout = plugin.configuration.commandTimeout()
                     deletePaginatorOnTimeout = true
                     deleteInvocationOnPaginatorTimeout = true
-                    colour { DISCORD_GREEN }
+                    color { DISCORD_GREEN }
                 }
             }
         }
     }
 
-    private val kordClient = bot?.getKoin()?.get<Kord>()
+    val kordClient = bot?.getKoin()?.get<Kord>()
+    private val clientInfo = ClientInfo(this)
 
     suspend fun start() {
         if (bot == null) {
@@ -106,34 +80,44 @@ class DiscordBot {
 
         botStatus = BotStatus.STARTING
 
+        unloadDisabledExtensions()
         fillBotChannels()
-
-        job = CoroutineScope(Dispatchers.Default).launch {
-            try {
-                botStatus = BotStatus.RUNNING
-                bot.start()
-            } catch (error: KordInitializationException) {
-                val message = "An error occurred while running bot: ${error.message}"
-                Logger.log(message)
-                botStatus = BotStatus.STOPPED because message
-            }
-        }
+        launchBotInNewThread()
 
         Logger.log("Bot ready!")
     }
 
+    private suspend fun unloadDisabledExtensions() {
+        for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
+            if (!extension.isEnabled(plugin)) bot!!.unloadExtension(extension.extensionName())
+        }
+    }
+
     private suspend fun fillBotChannels() {
-        val validBotChannels = Configurator.config[PluginSpec.BotSpec.botChannels]
-        kordClient!!.guilds.collect { guild: Guild ->
+        val validBotChannels = plugin.configuration.botChannels()
+        kordClient!!.guilds.collect { guild ->
             guild.channels.collect { channel ->
                 if (
-                    ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS)
+                    clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS)
                     && channel is TextChannel
                     && channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)
                     botGuilds.add(guild)
                 }
+            }
+        }
+    }
+
+    private fun launchBotInNewThread() {
+        job = CoroutineScope(Dispatchers.Default).launch {
+            try {
+                botStatus = BotStatus.RUNNING
+                bot!!.start()
+            } catch (error: KordInitializationException) {
+                val message = "An error occurred while running bot: ${error.message}"
+                Logger.log(message)
+                botStatus = BotStatus.STOPPED because message
             }
         }
     }

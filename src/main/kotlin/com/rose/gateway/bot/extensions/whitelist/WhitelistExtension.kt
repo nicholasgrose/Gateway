@@ -1,13 +1,35 @@
 package com.rose.gateway.bot.extensions.whitelist
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
+import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.bot.message.MessageLifetime.respondWithLifetime
+import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
+import com.rose.gateway.shared.configurations.BotConfiguration.commandTimeout
 
 class WhitelistExtension : Extension() {
-    override val name: String = "whitelist"
+    companion object : ToggleableExtension {
+        override fun extensionName(): String {
+            return "whitelist"
+        }
+
+        override fun extensionConstructor(): () -> Extension {
+            return ::WhitelistExtension
+        }
+
+        override fun isEnabled(plugin: GatewayPlugin): Boolean {
+            val enabledSpec = PluginSpec.BotSpec.ExtensionsSpec.WhitelistSpec.enabled
+            return plugin.configuration[enabledSpec]
+        }
+    }
+
+    override val name: String = extensionName()
+    val plugin = bot.getKoin().get<GatewayPlugin>()
+    private val timeout = plugin.configuration.commandTimeout()
+    private val whitelistManager = Whitelist(plugin)
 
     override suspend fun setup() {
         group {
@@ -22,12 +44,12 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.log("${user?.username} added ${arguments.username} to whitelist!")
-                    val status = when (Whitelist.addToWhitelist(arguments.username)) {
+                    val status = when (whitelistManager.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred adding ${arguments.username} to whitelist."
                     }
-                    message.respondWithLifetime {
+                    message.respondWithLifetime(timeout) {
                         content = status
                     }
                 }
@@ -40,12 +62,12 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.log("${user?.username} removed ${arguments.username} from whitelist!")
-                    val status = when (Whitelist.removeFromWhitelist(arguments.username)) {
+                    val status = when (whitelistManager.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred removing ${arguments.username} from whitelist."
                     }
-                    message.respondWithLifetime {
+                    message.respondWithLifetime(timeout) {
                         content = status
                     }
                 }
@@ -58,11 +80,11 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.log("${user?.username} requested list of whitelisted players!")
-                    val whitelistedPlayers = Whitelist.listWhitelistedPlayers()
+                    val whitelistedPlayers = whitelistManager.whitelistedPlayersAsString()
                     val response =
                         if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."
                         else "Players currently whitelisted: $whitelistedPlayers"
-                    message.respondWithLifetime {
+                    message.respondWithLifetime(timeout) {
                         content = response
                     }
                 }

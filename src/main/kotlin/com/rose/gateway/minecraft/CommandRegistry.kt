@@ -1,5 +1,6 @@
 package com.rose.gateway.minecraft
 
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.BotCommands
 import com.rose.gateway.minecraft.commands.ConfigCommands
 import com.rose.gateway.minecraft.commands.GeneralCommands
@@ -7,12 +8,15 @@ import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Co
 import com.rose.gateway.minecraft.commands.framework.converters.IntArg
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
-object CommandRegistry {
+class CommandRegistry(val plugin: GatewayPlugin) {
+    private val botCommands = BotCommands(plugin)
+    private val configCommands = ConfigCommands(plugin.configuration)
+
     fun registerCommands() {
         commands.registerCommands()
     }
 
-    private val commands = minecraftCommands {
+    private val commands = minecraftCommands(plugin) {
         command("discord") {
             runner { context ->
                 GeneralCommands.discordHelp(context)
@@ -22,59 +26,59 @@ object CommandRegistry {
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
-                    runner { context -> BotCommands.restartBot(context) }
+                    runner { context -> botCommands.restartBot(context) }
                 }
 
                 subcommand("status") {
-                    runner { context -> BotCommands.botStatus(context) }
+                    runner { context -> botCommands.botStatus(context) }
                 }
             }
 
             subcommand("config") {
                 subcommand("set") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
                         IntArg("VALUE")
                     ) { context ->
-                        ConfigCommands.setConfiguration(context)
+                        configCommands.setConfiguration(context)
                     }
 
                     runner(
-                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
                         StringArg("VALUE")
                     ) { context ->
-                        ConfigCommands.setConfiguration(context)
+                        configCommands.setConfiguration(context)
                     }
                 }
 
                 subcommand("add") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
-                        ConfigCommands.addConfiguration(context)
+                        configCommands.addConfiguration(context)
                     }
                 }
 
                 subcommand("remove") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion),
+                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
-                        ConfigCommands.removeConfiguration(context)
+                        configCommands.removeConfiguration(context)
                     }
                 }
 
                 subcommand("help") {
-                    runner(StringArg("CONFIGURATION_PATH", ConfigCommands::configCompletion)) { context ->
+                    runner(StringArg("CONFIGURATION_PATH", configCommands::configCompletion)) { context ->
                         val configuration = context.commandArguments[0] as String
-                        ConfigCommands.sendConfigurationHelp(context.sender, configuration)
+                        configCommands.sendConfigurationHelp(context.sender, configuration)
                     }
 
                     runner { context ->
-                        ConfigCommands.sendConfigurationHelp(context.sender, "")
+                        configCommands.sendConfigurationHelp(context.sender, "")
                     }
                 }
             }

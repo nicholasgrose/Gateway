@@ -1,7 +1,9 @@
 package com.rose.gateway.minecraft.commands.framework
 
-class MinecraftCommands(private val commands: List<Command>) {
+import com.rose.gateway.GatewayPlugin
+
+class MinecraftCommands(private val plugin: GatewayPlugin, private val commands: List<Command>) {
     fun registerCommands() {
-        commands.forEach { command -> command.registerCommand() }
+        commands.forEach { command -> command.registerCommand(plugin) }
     }
 }

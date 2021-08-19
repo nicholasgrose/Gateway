@@ -8,7 +8,7 @@ import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Permissions
 
 object DiscordBotConstants {
-    val BOT_EXTENSIONS = setOf(::WhitelistExtension, ::ListExtension, ::AboutExtension, ::ChatExtension)
+    val BOT_EXTENSIONS = setOf(WhitelistExtension, ListExtension, AboutExtension, ChatExtension)
     val REQUIRED_PERMISSIONS = Permissions(
         setOf(
             Permission.SendMessages,

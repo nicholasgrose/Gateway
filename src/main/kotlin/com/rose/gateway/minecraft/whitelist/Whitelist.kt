@@ -1,16 +1,19 @@
 package com.rose.gateway.minecraft.whitelist
 
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.server.Console
 import com.rose.gateway.minecraft.server.Scheduler
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 
-object Whitelist {
+class Whitelist(plugin: GatewayPlugin) {
+    private val scheduler = Scheduler(plugin)
+
     fun addToWhitelist(username: String): WhitelistState {
         val player = getOfflinePlayer(username) ?: return WhitelistState.STATE_INVALID
         if (player.isWhitelisted) return WhitelistState.STATE_SUSTAINED
-        Scheduler.runTask {
+        scheduler.runTask {
             Console.runCommand("whitelist add $username")
         }
         return WhitelistState.STATE_MODIFIED
@@ -19,14 +22,14 @@ object Whitelist {
     fun removeFromWhitelist(username: String): WhitelistState {
         val player = getOfflinePlayer(username) ?: return WhitelistState.STATE_INVALID
         if (!player.isWhitelisted) return WhitelistState.STATE_SUSTAINED
-        Scheduler.runTask {
+        scheduler.runTask {
             player.player?.kick(Component.text("Removed from whitelist."))
             Console.runCommand("whitelist remove $username")
         }
         return WhitelistState.STATE_MODIFIED
     }
 
-    fun listWhitelistedPlayers(): String {
+    fun whitelistedPlayersAsString(): String {
         val whitelistedPlayers = Bukkit.getWhitelistedPlayers()
         return whitelistedPlayers.map { it.name }.joinToString(separator = ", ")
     }

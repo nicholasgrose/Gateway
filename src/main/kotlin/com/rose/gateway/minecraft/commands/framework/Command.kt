@@ -91,7 +91,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         return null
     }
 
-    fun registerCommand() {
-        GatewayPlugin.plugin.getCommand(definition.name)!!.setExecutor(this)
+    fun registerCommand(plugin: GatewayPlugin) {
+        plugin.getCommand(definition.name)!!.setExecutor(this)
     }
 }

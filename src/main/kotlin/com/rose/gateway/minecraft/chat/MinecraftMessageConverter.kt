@@ -1,6 +1,8 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.shared.configurations.BotConfiguration.memberQueryMax
+import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.entity.ChannelType
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
@@ -14,7 +16,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
 
 @OptIn(KordExperimental::class)
-object MinecraftMessageConverter {
+class MinecraftMessageConverter(val plugin: GatewayPlugin) {
     data class MessageProcessingResult(
         val successful: Boolean,
         val minecraftMessage: Component,
@@ -78,7 +80,7 @@ object MinecraftMessageConverter {
                 components.add(Component.text(tokenString))
                 tokenString
             } else {
-                components.add(Component.text(tokenString, DiscordBot.getMentionColor()))
+                components.add(Component.text(tokenString, plugin.configuration.primaryColor()))
                 mention
             }
         }
@@ -89,8 +91,8 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createUserMention(nameString: String): String? {
-        for (guild in DiscordBot.getBotGuilds()) {
-            val members = guild.getMembers(nameString, DiscordBot.getMemberQueryMax())
+        for (guild in plugin.discordBot.botGuilds) {
+            val members = guild.getMembers(nameString, plugin.configuration.memberQueryMax())
             val id = members.firstOrNull()?.id?.asString ?: return null
             return "<@!$id>"
         }
@@ -99,7 +101,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createRoleMention(nameString: String): String? {
-        for (guild in DiscordBot.getBotGuilds()) {
+        for (guild in plugin.discordBot.botGuilds) {
             for (role in guild.roles.toSet()) {
                 if (role.name == nameString) return "<@&${role.id.asString}>"
             }
@@ -109,7 +111,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createTextChannelMention(nameString: String): String? {
-        for (guild in DiscordBot.getBotGuilds()) {
+        for (guild in plugin.discordBot.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildText) continue
                 if (channel.name == nameString) return "<#${channel.id.asString}>"
@@ -120,7 +122,7 @@ object MinecraftMessageConverter {
     }
 
     private suspend fun createVoiceChannelMention(nameString: String): String? {
-        for (guild in DiscordBot.getBotGuilds()) {
+        for (guild in plugin.discordBot.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildVoice) continue
                 if (channel.name == nameString) return "<#${channel.id.asString}>"

@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.shared.trie.Trie
+import com.rose.gateway.shared.collections.trie.Trie
 
 data class CommandDefinition(
     val name: String,

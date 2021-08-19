@@ -1,18 +1,17 @@
 package com.rose.gateway.bot.presence
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.minecraft.server.ServerInfo
 
-object DynamicPresence {
-    var playerCount = 0
-
+class DynamicPresence(val plugin: GatewayPlugin) {
     suspend fun updatePresencePlayerCount() {
-        DiscordBot.getKordClient()?.editPresence {
+        plugin.discordBot.kordClient?.editPresence {
             playing(presenceForPlayerCount())
         }
     }
 
     fun presenceForPlayerCount(): String {
-        return when (playerCount) {
+        return when (val playerCount = ServerInfo.playerCount()) {
             1 -> "Minecraft ($playerCount Player)"
             else -> "Minecraft ($playerCount Players)"
         }

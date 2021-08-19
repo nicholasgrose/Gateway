@@ -1,13 +1,18 @@
 package com.rose.gateway.minecraft.commands.framework
 
-class MinecraftCommandsBuilder {
+import com.rose.gateway.GatewayPlugin
+
+class MinecraftCommandsBuilder(val plugin: GatewayPlugin) {
     companion object {
-        fun minecraftCommands(initializer: MinecraftCommandsBuilder.() -> Unit): MinecraftCommands {
-            return build(MinecraftCommandsBuilder().apply(initializer))
+        fun minecraftCommands(
+            plugin: GatewayPlugin,
+            initializer: MinecraftCommandsBuilder.() -> Unit
+        ): MinecraftCommands {
+            return build(plugin, MinecraftCommandsBuilder(plugin).apply(initializer))
         }
 
-        private fun build(builder: MinecraftCommandsBuilder): MinecraftCommands {
-            return MinecraftCommands(builder.commands)
+        private fun build(plugin: GatewayPlugin, builder: MinecraftCommandsBuilder): MinecraftCommands {
+            return MinecraftCommands(plugin, builder.commands)
         }
     }
 

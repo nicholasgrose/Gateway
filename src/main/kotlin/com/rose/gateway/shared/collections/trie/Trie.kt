@@ -1,4 +1,4 @@
-package com.rose.gateway.shared.trie
+package com.rose.gateway.shared.collections.trie
 
 class Trie : MutableSet<String> {
 
@@ -28,7 +28,7 @@ class Trie : MutableSet<String> {
         return searchResult.ifEmpty { getAll() }
     }
 
-    fun search(prefix: String): List<String> {
+    private fun search(prefix: String): List<String> {
         val startNode = followSearchString(prefix) ?: return listOf()
         return depthFirstSearch(startNode)
     }

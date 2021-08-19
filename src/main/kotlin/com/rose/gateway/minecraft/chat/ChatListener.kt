@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.chat.GameChatEvent
 import io.papermc.paper.event.player.AsyncChatEvent
 import io.papermc.paper.text.PaperComponents
@@ -14,14 +14,16 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.server.ServerCommandEvent
 
-object ChatListener : Listener {
+class ChatListener(val plugin: GatewayPlugin) : Listener {
+    private val minecraftMessageConverter = MinecraftMessageConverter(plugin)
+
     @EventHandler
     fun onChat(event: AsyncChatEvent) {
         val messageText = PaperComponents.plainSerializer().serialize(event.message())
 
         runBlocking {
-            val message = MinecraftMessageConverter.convertToDiscordMessage(messageText, event) ?: return@runBlocking
-            DiscordBot.getBot()?.send(GameChatEvent(message))
+            val message = minecraftMessageConverter.convertToDiscordMessage(messageText, event) ?: return@runBlocking
+            plugin.discordBot.bot?.send(GameChatEvent(message))
         }
     }
 
@@ -29,7 +31,7 @@ object ChatListener : Listener {
     fun onJoin(event: PlayerJoinEvent) {
         val joinMessage = event.joinMessage() ?: return
         runBlocking {
-            DiscordBot.getBot()?.send(GameChatEvent {
+            plugin.discordBot.bot?.send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(joinMessage)
             })
         }
@@ -40,7 +42,7 @@ object ChatListener : Listener {
         val quitMessage = event.quitMessage() ?: return
 
         runBlocking {
-            DiscordBot.getBot()?.send(GameChatEvent {
+            plugin.discordBot.bot?.send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(quitMessage)
             })
         }
@@ -51,7 +53,7 @@ object ChatListener : Listener {
         val deathMessage = event.deathMessage() ?: return
 
         runBlocking {
-            DiscordBot.getBot()?.send(GameChatEvent {
+            plugin.discordBot.bot?.send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(deathMessage)
             })
         }
@@ -64,8 +66,8 @@ object ChatListener : Listener {
         if (messageText.isEmpty()) return
 
         runBlocking {
-            val message = MinecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
-            DiscordBot.getBot()?.send(GameChatEvent(message))
+            val message = minecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
+            plugin.discordBot.bot?.send(GameChatEvent(message))
         }
     }
 
@@ -76,8 +78,8 @@ object ChatListener : Listener {
         if (messageText.isEmpty()) return
 
         runBlocking {
-            val message = MinecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
-            DiscordBot.getBot()?.send(GameChatEvent(message))
+            val message = minecraftMessageConverter.convertToDiscordMessage(messageText) ?: return@runBlocking
+            plugin.discordBot.bot?.send(GameChatEvent(message))
         }
     }
 
@@ -86,7 +88,7 @@ object ChatListener : Listener {
         val advancementMessage = event.message() ?: return
 
         runBlocking {
-            DiscordBot.getBot()?.send(GameChatEvent {
+            plugin.discordBot.bot?.send(GameChatEvent {
                 content = PaperComponents.plainSerializer().serialize(advancementMessage)
             })
         }

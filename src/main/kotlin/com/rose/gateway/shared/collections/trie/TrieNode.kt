@@ -1,4 +1,4 @@
-package com.rose.gateway.shared.trie
+package com.rose.gateway.shared.collections.trie
 
 import java.util.*
 

@@ -2,7 +2,7 @@ package com.rose.gateway.minecraft.commands.framework
 
 import com.rose.gateway.minecraft.commands.framework.CommandArgument.Companion.subcommandCompleter
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
-import com.rose.gateway.shared.trie.Trie
+import com.rose.gateway.shared.collections.trie.Trie
 
 class CommandBuilder(private val name: String) {
     companion object {

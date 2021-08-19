@@ -1,6 +1,8 @@
 package com.rose.gateway.bot.extensions.chat
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
+import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
 import guru.zoroark.lixy.LixyToken
@@ -10,7 +12,7 @@ import guru.zoroark.lixy.matchers.matches
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
 
-object MinecraftChatMaker {
+class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     suspend fun createMessage(event: MessageCreateEvent): Component {
         return Component.join(
             Component.empty(),
@@ -26,7 +28,7 @@ object MinecraftChatMaker {
         return Component.join(
             Component.empty(),
             Component.text("<"),
-            Component.text(username, DiscordBot.getDiscordColor()),
+            Component.text(username, pluginConfiguration.secondaryColor()),
             Component.text("> ")
         )
     }
@@ -37,7 +39,7 @@ object MinecraftChatMaker {
         val guild = event.getGuild() ?: return Component.empty()
         val name = guild.getMemberOrNull(referencedAuthor)?.displayName ?: return Component.empty()
 
-        return Component.text("(Replying to @$name) ", DiscordBot.getMentionColor())
+        return Component.text("(Replying to @$name) ", pluginConfiguration.primaryColor())
     }
 
     enum class DisplayComponent : LixyTokenType {
@@ -79,7 +81,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val member = event.getGuild()!!.getMemberOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${member.displayName}", DiscordBot.getMentionColor())
+        return Component.text("@${member.displayName}", pluginConfiguration.primaryColor())
     }
 
     private suspend fun processRoleMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {
@@ -87,7 +89,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val role = event.getGuild()!!.getRoleOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${role.name}", DiscordBot.getMentionColor())
+        return Component.text("@${role.name}", pluginConfiguration.primaryColor())
     }
 
     private suspend fun processChannelMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {
@@ -95,7 +97,7 @@ object MinecraftChatMaker {
         val id = Snowflake(snowflakeString)
         val channel = event.getGuild()!!.getChannelOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("#${channel.name}", DiscordBot.getMentionColor())
+        return Component.text("#${channel.name}", pluginConfiguration.primaryColor())
     }
 
     @Suppress("RedundantSuspendModifier", "UNUSED_PARAMETER")
