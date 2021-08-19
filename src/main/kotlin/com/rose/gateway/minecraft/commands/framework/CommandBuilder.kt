@@ -28,7 +28,7 @@ class CommandBuilder(private val name: String) {
         }
 
         private fun generateBuilderDocumentation(builder: CommandBuilder): String {
-            val usages = builder.executors.joinToString(separator = "") { executor ->
+            val usages = builder.executors.joinToString(separator = "\n") { executor ->
                 generateExecutorUsage(executor, builder)
             }
 
@@ -51,9 +51,7 @@ class CommandBuilder(private val name: String) {
                 currentBuilder = currentBuilder.parent
             }
 
-            val usage = commandUsageParts.joinToString(separator = " ", prefix = "/")
-
-            return "Correct Usage: $usage"
+            return commandUsageParts.joinToString(separator = " ", prefix = "/")
         }
 
         private fun usesSubcommandRunner(builder: CommandBuilder): Boolean {
@@ -74,7 +72,7 @@ class CommandBuilder(private val name: String) {
                 separator = "] [",
                 prefix = "[",
                 postfix = "]"
-            ) { argument -> argument.getName() }
+            ) { argument -> "${argument.getName()}=${argument.getTypeName()}" }
         }
     }
 

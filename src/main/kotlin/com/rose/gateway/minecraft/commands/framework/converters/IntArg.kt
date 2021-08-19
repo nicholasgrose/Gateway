@@ -22,4 +22,8 @@ class IntArg(
     override fun completeTab(tabCompletionContext: TabCompletionContext): List<String>? {
         return tabCompleter(tabCompletionContext)
     }
+
+    override fun getTypeName(): String {
+        return "Integer"
+    }
 }

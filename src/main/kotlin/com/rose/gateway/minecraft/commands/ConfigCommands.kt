@@ -32,9 +32,9 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         context.sender.sendMessage(
             Component.join(
                 Component.text(" "),
-                Component.text(path, configuration.secondaryColor(), TextDecoration.ITALIC),
+                Component.text(path, configuration.tertiaryColor(), TextDecoration.ITALIC),
                 Component.text("set to"),
-                Component.text(newValue.toString(), configuration.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text(newValue.toString(), configuration.secondaryColor(), TextDecoration.ITALIC),
                 Component.text("successfully!")
             )
         )
@@ -69,6 +69,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
             sender.sendMessage(
                 Component.join(
                     Component.newline(),
+                    Component.text("Configuration Help:", configuration.primaryColor()),
                     Component.join(
                         Component.empty(),
                         Component.text("Name: ", configuration.primaryColor()),
@@ -92,7 +93,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
                     ),
                     Component.text(
                         "View All Configurations",
-                        configuration.primaryColor(),
+                        configuration.secondaryColor(),
                         TextDecoration.UNDERLINED,
                         TextDecoration.ITALIC
                     )
@@ -105,7 +106,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
                 Component.join(
                     Component.empty(),
                     Component.text("* "),
-                    Component.text(config, configuration.primaryColor(), TextDecoration.ITALIC)
+                    Component.text(config, configuration.tertiaryColor(), TextDecoration.ITALIC)
                         .hoverEvent(
                             HoverEvent.showText(
                                 Component.join(
@@ -122,7 +123,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
             sender.sendMessage(
                 Component.join(
                     Component.newline(),
-                    Component.text("Available Configurations: ", configuration.tertiaryColor()),
+                    Component.text("Available Configurations: ", configuration.primaryColor()),
                     Component.join(Component.newline(), configurations)
                 )
             )

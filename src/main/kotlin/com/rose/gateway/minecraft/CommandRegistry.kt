@@ -37,14 +37,14 @@ class CommandRegistry(val plugin: GatewayPlugin) {
             subcommand("config") {
                 subcommand("set") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::configCompletion),
                         IntArg("VALUE")
                     ) { context ->
                         configCommands.setConfiguration(context)
                     }
 
                     runner(
-                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::configCompletion),
                         StringArg("VALUE")
                     ) { context ->
                         configCommands.setConfiguration(context)
@@ -53,7 +53,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("add") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::configCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -63,7 +63,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("remove") {
                     runner(
-                        StringArg("CONFIGURATION_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::configCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -72,7 +72,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 }
 
                 subcommand("help") {
-                    runner(StringArg("CONFIGURATION_PATH", configCommands::configCompletion)) { context ->
+                    runner(StringArg("CONFIG_PATH", configCommands::configCompletion)) { context ->
                         val configuration = context.commandArguments[0] as String
                         configCommands.sendConfigurationHelp(context.sender, configuration)
                     }

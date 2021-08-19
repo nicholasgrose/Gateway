@@ -16,6 +16,10 @@ class StringArg(
         return name
     }
 
+    override fun getTypeName(): String {
+        return "String"
+    }
+
     override fun completeTab(tabCompletionContext: TabCompletionContext): List<String>? {
         return tabCompleter(tabCompletionContext)
     }
