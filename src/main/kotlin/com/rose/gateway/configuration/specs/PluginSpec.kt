@@ -38,15 +38,15 @@ object PluginSpec : ConfigSpec() {
     object MinecraftSpec : ConfigSpec() {
         val primaryColor by optional(
             "#56EE5C",
-            description = "Used for Discord mentions and labels in-game."
+            description = "Used for labels and Discord mentions in-game."
         )
         val secondaryColor by optional(
             "#7289DA",
-            description = "Used for names of Discord users in-game."
+            description = "Used for differentiated text elements and names of Discord users in-game."
         )
         val tertiaryColor by optional(
             "#F526ED",
-            description = "Used for labelling configurations."
+            description = "Used for labelling configuration paths."
         )
         val warningColor by optional(
             "#EB4325",

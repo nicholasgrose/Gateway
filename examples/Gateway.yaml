@@ -50,8 +50,14 @@ plugin:
   # Settings for how the plugin functions on the Minecraft server.
   minecraft:
 
-    # The hex code for the color for the Discord users as they appear in the Minecraft chat.
-    discordUserColor: '#7289DA'
+    # Used for labels and Discord mentions in-game.
+    primaryColor: '#56EE5C'
 
-    # The hex code for the color for the Discord mentions as they appear in the Minecraft chat.
-    discordMentionColor: '#56EE5C'
+    # Used for differentiated text elements and names of Discord users in-game.
+    secondaryColor: '#7289DA'
+
+    # Used for labelling configuration paths.
+    tertiaryColor: '#F526ED'
+
+    # Used for marking configurations that can be null.
+    warningColor: '#EB4325'
