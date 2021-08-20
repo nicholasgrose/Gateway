@@ -1,10 +1,13 @@
 package com.rose.gateway.configuration
 
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.Item
+import com.uchuhimo.konf.source.yaml.toYaml
+import kotlinx.coroutines.runBlocking
 
-class PluginConfiguration {
+class PluginConfiguration(private val plugin: GatewayPlugin) {
     companion object {
         private const val CONFIGURATION_FILE = "plugins/Gateway/Gateway.yaml"
         private const val EXAMPLE_CONFIGURATION_URL =
@@ -15,11 +18,21 @@ class PluginConfiguration {
     private val configurationLoader = ConfigurationLoader(PluginSpec, CONFIGURATION_FILE, EXAMPLE_CONFIGURATION_URL)
     var configuration: Config? = configurationLoader.loadOrCreateConfig()
 
-    fun reloadConfiguration() {
+    fun reloadConfiguration(): Boolean {
         configuration = configurationLoader.loadOrCreateConfig()
+
+        return if (configuration == null) {
+            runBlocking {
+                plugin.discordBot.stop()
+            }
+
+            false
+        } else {
+            true
+        }
     }
 
-    fun configurationNotLoaded(): Boolean {
+    fun notLoaded(): Boolean {
         return configuration == null
     }
 
@@ -29,5 +42,6 @@ class PluginConfiguration {
 
     operator fun <T> set(item: Item<T>, newValue: T) {
         configuration!![item] = newValue
+        configuration!!.toYaml.toFile(CONFIGURATION_FILE)
     }
 }

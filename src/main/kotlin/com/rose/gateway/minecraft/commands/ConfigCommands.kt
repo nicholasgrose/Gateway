@@ -19,13 +19,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
     fun setConfiguration(context: CommandContext): Boolean {
         val path = context.commandArguments[0] as String
-        val configSpec = configuration.configurationStringMap.specificationFromString(path)
-
-        if (configSpec == null) {
-            context.sender.sendMessage("Configuration not found. Please try again.")
-            return true
-        }
-
+        val configSpec = configSpecFromArgs(path, context) ?: return true
         val newValue = context.commandArguments[1]
         setConfiguration(configSpec, newValue)
 
@@ -42,6 +36,15 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         return true
     }
 
+    private fun configSpecFromArgs(path: String, context: CommandContext): Item<*>? {
+        val configSpec = configuration.configurationStringMap.specificationFromString(path)
+
+        return if (configSpec == null) {
+            context.sender.sendMessage("Configuration not found. Please try again.")
+            null
+        } else configSpec
+    }
+
     private fun <T> setConfiguration(item: Item<T>, newValue: Any?) {
         if (item.type.rawClass.isInstance(newValue)) {
             @Suppress("UNCHECKED_CAST")
@@ -50,12 +53,34 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     fun addConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config add is not yet implemented")
+        val path = context.commandArguments[0] as String
+        val configSpec = configSpecFromArgs(path, context) ?: return true
+
+        val newValues = context.commandArguments.subList(1, context.commandArguments.size)
+
+        addToConfiguration(configSpec, newValues)
+
         return true
     }
 
+    private fun <T> addToConfiguration(item: Item<T>, newValues: List<Any?>) {
+        val currentValues = configuration[item]
+
+        if (currentValues !is List<*>) {
+            return
+        } else {
+            configuration[item] = currentValuesWithNewValuesAppended(currentValues, newValues)
+        }
+    }
+
+    private fun <T, N> currentValuesWithNewValuesAppended(currentValues: List<N>, newValues: List<Any?>): T {
+        return (newValues as List<N>).toCollection(currentValues.toMutableList()) as T
+    }
+
     fun removeConfiguration(context: CommandContext): Boolean {
-        context.sender.sendMessage("config remove is not yet implemented")
+        val path = context.commandArguments[0] as String
+        val configSpec = configSpecFromArgs(path, context) ?: return true
+
         return true
     }
 
@@ -136,5 +161,19 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         val currentConfigurationArgument = context.parsedArguments.last() as String
 
         return configStringMap.matchingOrAllConfigurationStrings(currentConfigurationArgument)
+    }
+
+    fun reloadConfig(context: CommandContext): Boolean {
+        context.sender.sendMessage("Loading configuration.")
+
+        val loadSuccessful = configuration.reloadConfiguration()
+
+        if (loadSuccessful) {
+            context.sender.sendMessage("New configuration loaded successfully.")
+        } else {
+            context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
+        }
+
+        return true
     }
 }

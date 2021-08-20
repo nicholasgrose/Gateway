@@ -15,7 +15,7 @@ class GatewayPlugin : JavaPlugin() {
     }
 
     val startTime = Clock.System.now()
-    val configuration = PluginConfiguration()
+    val configuration = PluginConfiguration(this)
     var discordBot = DiscordBot(this)
     private val eventListeners = EventListeners(this)
     private val commandRegistry = CommandRegistry(this)
@@ -43,11 +43,17 @@ class GatewayPlugin : JavaPlugin() {
         Logger.log("Gateway stopped!")
     }
 
-    fun restartBot() {
+    fun restartBot(): Boolean {
+        if (configuration.notLoaded()) {
+            return false
+        }
+
         runBlocking {
             discordBot.stop()
             discordBot = DiscordBot(this@GatewayPlugin)
             discordBot.start()
         }
+
+        return true
     }
 }

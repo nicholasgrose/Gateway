@@ -5,7 +5,6 @@ import com.github.kittinunf.result.Result
 import com.rose.gateway.Logger
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.Spec
-import com.uchuhimo.konf.UnsetValueException
 import com.uchuhimo.konf.source.yaml
 import java.nio.file.Files
 import java.nio.file.Path
@@ -18,11 +17,18 @@ class ConfigurationLoader(
     private val configurationFilePath = Path.of(configurationFile)
 
     fun loadOrCreateConfig(): Config? {
+        Logger.log("Checking configuration file existence.")
         if (!Files.exists(configurationFilePath)) {
+            Logger.log("No configuration file found. Downloading...")
             val configurationFileCreated = createConfigurationFile()
             if (!configurationFileCreated) {
+                Logger.log("Failed to create new configuration file.")
                 return null
+            } else {
+                Logger.log("Successfully created new configuration file.")
             }
+        } else {
+            Logger.log("Configuration file found.")
         }
 
         val configuration = loadConfig() ?: return null
@@ -50,9 +56,12 @@ class ConfigurationLoader(
     }
 
     private fun loadConfig(): Config? {
+        Logger.log("Loading configuration...")
         return try {
-            Config { addSpec(baseSpec) }
-                .from.yaml.watchFile(configurationFile)
+            val loadedConfig = Config { addSpec(baseSpec) }
+                .from.yaml.file(configurationFile)
+            Logger.log("Configuration loaded successfully.")
+            loadedConfig
         } catch (error: Throwable) {
             Logger.log("Configuration failed to load: ${error.message}")
             null
@@ -60,13 +69,14 @@ class ConfigurationLoader(
     }
 
     private fun configurationIsValid(configuration: Config): Boolean {
-        return try {
-            configuration.validateRequired()
+        val isValid = configuration.containsRequired()
+
+        if (isValid) {
             Logger.log("Configuration is valid.")
-            true
-        } catch (exception: UnsetValueException) {
-            Logger.log("Configuration is invalid.")
-            false
+        } else {
+            Logger.log("Configuration invalid.")
         }
+
+        return isValid
     }
 }

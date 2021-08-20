@@ -81,6 +81,12 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                         configCommands.sendConfigurationHelp(context.sender, "")
                     }
                 }
+
+                subcommand("reload") {
+                    runner { context ->
+                        configCommands.reloadConfig(context)
+                    }
+                }
             }
         }
     }
