@@ -8,7 +8,7 @@ import org.bukkit.Server
 
 class EventListeners(val plugin: GatewayPlugin) {
     fun registerListeners(server: Server) {
-        if (ChatExtension.isEnabled(plugin)) {
+        if (plugin.configuration.notLoaded() || ChatExtension.isEnabled(plugin)) {
             server.pluginManager.registerEvents(ChatListener(plugin), plugin)
         }
         server.pluginManager.registerEvents(UserCount(plugin), plugin)

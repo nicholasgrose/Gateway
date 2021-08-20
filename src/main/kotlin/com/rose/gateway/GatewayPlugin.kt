@@ -44,16 +44,12 @@ class GatewayPlugin : JavaPlugin() {
     }
 
     fun restartBot(): Boolean {
-        if (configuration.notLoaded()) {
-            return false
-        }
-
         runBlocking {
             discordBot.stop()
             discordBot = DiscordBot(this@GatewayPlugin)
             discordBot.start()
         }
 
-        return true
+        return discordBot.bot != null
     }
 }

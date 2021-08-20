@@ -15,7 +15,7 @@ class BotCommands(val plugin: GatewayPlugin) {
         if (restarted) {
             sendAndLogMessage(context.sender, "Discord bot restarted.")
         } else {
-            sendAndLogMessage(context.sender, "Discord bot could not be restarted. Check configuration.")
+            sendAndLogMessage(context.sender, "Discord bot failed to restart. Check bot status for more info.")
         }
 
         return true

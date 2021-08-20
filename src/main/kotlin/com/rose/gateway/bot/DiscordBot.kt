@@ -29,7 +29,12 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     private val defaultCheck = DefaultCheck(plugin)
 
     val bot = try {
-        runBlocking { createBot(plugin.configuration[PluginSpec.botToken]) }
+        if (plugin.configuration.notLoaded()) {
+            botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+            null
+        } else {
+            runBlocking { createBot(plugin.configuration[PluginSpec.botToken]) }
+        }
     } catch (e: KordInitializationException) {
         botStatus = BotStatus.STOPPED because e.localizedMessage
         null
@@ -71,7 +76,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     }
 
     val kordClient = bot?.getKoin()?.get<Kord>()
-    private val clientInfo = ClientInfo(this)
+    private val clientInfo = ClientInfo(plugin)
 
     suspend fun start() {
         if (bot == null) {

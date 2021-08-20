@@ -8,6 +8,7 @@ import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryCo
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
 import com.uchuhimo.konf.Item
+import io.ktor.client.features.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
@@ -18,6 +19,8 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     private val configStringMap = configuration.configurationStringMap
 
     fun setConfiguration(context: CommandContext): Boolean {
+        if (informSenderOnInvalidConfiguration(context.sender, "set")) return true
+
         val path = context.commandArguments[0] as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
         val newValue = context.commandArguments[1]
@@ -34,6 +37,13 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         )
 
         return true
+    }
+
+    private fun informSenderOnInvalidConfiguration(sender: CommandSender, attemptedAction: String): Boolean {
+        return if (configuration.notLoaded()) {
+            sender.sendMessage("Cannot $attemptedAction with unloaded configuration. Fix configuration file first.")
+            true
+        } else false
     }
 
     private fun configSpecFromArgs(path: String, context: CommandContext): Item<*>? {
@@ -53,6 +63,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     fun addConfiguration(context: CommandContext): Boolean {
+        if (informSenderOnInvalidConfiguration(context.sender, "add")) return true
         val path = context.commandArguments[0] as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
 
@@ -78,6 +89,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     fun removeConfiguration(context: CommandContext): Boolean {
+        if (informSenderOnInvalidConfiguration(context.sender, "remove")) return true
         val path = context.commandArguments[0] as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
 
