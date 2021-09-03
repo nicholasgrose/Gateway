@@ -36,7 +36,7 @@ dependencies {
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.4.4-RC3"
+        version = "1.4.4-RC4"
     )
     implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")

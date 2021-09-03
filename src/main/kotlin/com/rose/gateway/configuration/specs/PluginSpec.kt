@@ -34,7 +34,6 @@ object PluginSpec : ConfigSpec() {
         }
     }
 
-
     object MinecraftSpec : ConfigSpec() {
         const val DEFAULT_PRIMARY_COLOR = "#56EE5C"
         const val DEFAULT_SECONDARY_COLOR = "#7289DA"
