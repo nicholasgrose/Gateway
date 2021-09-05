@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    id("org.jetbrains.kotlin.jvm") version "1.5.30"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("xyz.jpenilla.run-paper") version "1.0.3"
 }
