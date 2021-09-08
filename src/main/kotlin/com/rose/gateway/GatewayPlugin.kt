@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
     companion object {
-        const val VERSION = "1.3.3"
+        const val VERSION = "1.4.0"
     }
 
     val startTime = Clock.System.now()
