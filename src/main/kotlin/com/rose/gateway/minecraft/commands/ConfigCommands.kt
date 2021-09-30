@@ -8,8 +8,8 @@ import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryCo
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
 import com.uchuhimo.konf.Item
-import io.ktor.client.features.*
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
@@ -28,7 +28,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
         context.sender.sendMessage(
             Component.join(
-                Component.text(" "),
+                JoinConfiguration.separator(Component.text(" ")),
                 Component.text(path, configuration.tertiaryColor(), TextDecoration.ITALIC),
                 Component.text("set to"),
                 Component.text(newValue.toString(), configuration.secondaryColor(), TextDecoration.ITALIC),
@@ -105,26 +105,26 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
             sender.sendMessage(
                 Component.join(
-                    Component.newline(),
+                    JoinConfiguration.separator(Component.newline()),
                     Component.text("Configuration Help:", configuration.primaryColor()),
                     Component.join(
-                        Component.empty(),
+                        JoinConfiguration.noSeparators(),
                         Component.text("Name: ", configuration.primaryColor()),
                         Component.text(path, configuration.tertiaryColor(), TextDecoration.ITALIC)
                     ),
                     Component.join(
-                        Component.empty(),
+                        JoinConfiguration.noSeparators(),
                         Component.text("Type: ", configuration.primaryColor()),
                         Component.text(matchingSpec.type.rawClass.simpleName),
                         Component.text(if (matchingSpec.nullable) "?" else "", configuration.warningColor())
                     ),
                     Component.join(
-                        Component.empty(),
+                        JoinConfiguration.noSeparators(),
                         Component.text("Current Value: ", configuration.primaryColor()),
                         Component.text(configuration[matchingSpec].toString())
                     ),
                     Component.join(
-                        Component.empty(),
+                        JoinConfiguration.noSeparators(),
                         Component.text("Description: ", configuration.primaryColor()),
                         Component.text(matchingSpec.description)
                     ),
@@ -141,13 +141,13 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         } else {
             val configurations = matchingConfigurations.map { config ->
                 Component.join(
-                    Component.empty(),
+                    JoinConfiguration.noSeparators(),
                     Component.text("* "),
                     Component.text(config, configuration.tertiaryColor(), TextDecoration.ITALIC)
                         .hoverEvent(
                             HoverEvent.showText(
                                 Component.join(
-                                    Component.empty(),
+                                    JoinConfiguration.noSeparators(),
                                     Component.text("Get help for "),
                                     Component.text(config, configuration.tertiaryColor(), TextDecoration.ITALIC)
                                 )
@@ -159,9 +159,9 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
             sender.sendMessage(
                 Component.join(
-                    Component.newline(),
+                    JoinConfiguration.separator(Component.newline()),
                     Component.text("Available Configurations: ", configuration.primaryColor()),
-                    Component.join(Component.newline(), configurations)
+                    Component.join(JoinConfiguration.separator(Component.newline()), configurations)
                 )
             )
         }

@@ -5,6 +5,7 @@ import com.rose.gateway.Logger
 import com.rose.gateway.minecraft.commands.framework.CommandContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.command.CommandSender
 
 class BotCommands(val plugin: GatewayPlugin) {
@@ -30,7 +31,7 @@ class BotCommands(val plugin: GatewayPlugin) {
         val status = plugin.discordBot.botStatus
         context.sender.sendMessage(
             Component.join(
-                Component.text(" "),
+                JoinConfiguration.separator(Component.text(" ")),
                 Component.text("Bot Status:", plugin.configuration.primaryColor()),
                 Component.text(status.status),
                 Component.text(if (status.reason.isEmpty()) "" else "(${status.reason})")

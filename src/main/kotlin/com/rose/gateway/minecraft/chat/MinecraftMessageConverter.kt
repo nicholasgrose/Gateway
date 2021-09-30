@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toSet
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
+import net.kyori.adventure.text.JoinConfiguration
 
 @OptIn(KordExperimental::class)
 class MinecraftMessageConverter(val plugin: GatewayPlugin) {
@@ -85,7 +86,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
             }
         }
 
-        return MessageProcessingResult(true, Component.join(Component.empty(), components)) {
+        return MessageProcessingResult(true, Component.join(JoinConfiguration.noSeparators(), components)) {
             content = messageTextParts.joinToString(separator = "")
         }
     }

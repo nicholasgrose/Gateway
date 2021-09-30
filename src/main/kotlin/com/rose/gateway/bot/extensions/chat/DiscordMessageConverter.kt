@@ -11,11 +11,12 @@ import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
+import net.kyori.adventure.text.JoinConfiguration
 
 class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     suspend fun createMessage(event: MessageCreateEvent): Component {
         return Component.join(
-            Component.empty(),
+            JoinConfiguration.noSeparators(),
             generateNameBlock(event),
             generateMessagePrefixBlock(event),
             generateMessageBlock(event)
@@ -26,7 +27,7 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         val username = event.member!!.displayName
 
         return Component.join(
-            Component.empty(),
+            JoinConfiguration.noSeparators(),
             Component.text("<"),
             Component.text(username, pluginConfiguration.secondaryColor()),
             Component.text("> ")
@@ -66,7 +67,7 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         val messageComponents = discordMessageLexer.tokenize(event.message.content)
 
         return Component.join(
-            Component.empty(),
+            JoinConfiguration.noSeparators(),
             messageComponents.map { token -> processToken(token, event) }
         )
     }
