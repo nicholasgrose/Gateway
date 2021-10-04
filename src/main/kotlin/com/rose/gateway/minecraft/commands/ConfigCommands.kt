@@ -85,6 +85,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     private fun <T, N> currentValuesWithNewValuesAppended(currentValues: List<N>, newValues: List<Any?>): T {
+        @Suppress("UNCHECKED_CAST")
         return (newValues as List<N>).toCollection(currentValues.toMutableList()) as T
     }
 
@@ -93,7 +94,26 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         val path = context.commandArguments[0] as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
 
+        val newValues = context.commandArguments.subList(1, context.commandArguments.size)
+
+        removeFromConfiguration(configSpec, newValues)
+
         return true
+    }
+
+    private fun <T> removeFromConfiguration(item: Item<T>, valuesToBeRemoved: List<Any?>) {
+        val currentValues = configuration[item]
+
+        if (currentValues !is List<*>) {
+            return
+        } else {
+            configuration[item] = currentValuesWithNewValuesRemoved(currentValues, valuesToBeRemoved)
+        }
+    }
+
+    private fun <T, N> currentValuesWithNewValuesRemoved(currentValues: List<N>, valuesToBeRemoved: List<Any?>): T {
+        @Suppress("UNCHECKED_CAST")
+        return currentValues.toMutableList().removeAll(valuesToBeRemoved as List<N>) as T
     }
 
     fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
