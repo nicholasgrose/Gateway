@@ -1,6 +1,7 @@
 package com.rose.gateway.bot.extensions.list
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
+import com.kotlindiscord.kord.extensions.extensions.chatCommand
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
@@ -30,13 +31,13 @@ class ListExtension : Extension() {
     private val timeout = plugin.configuration.commandTimeout()
 
     override suspend fun setup() {
-        command {
+        chatCommand {
             name = "list"
             aliases = arrayOf("ls", "l")
             description = "Gives a list of all online players."
 
             action {
-                Logger.log("${user?.username} requested player list!")
+                Logger.log("${user?.asUserOrNull()?.username} requested player list!")
                 val playerList = ServerInfo.playerListAsString()
                 val response =
                     if (playerList.isEmpty()) "No players online."

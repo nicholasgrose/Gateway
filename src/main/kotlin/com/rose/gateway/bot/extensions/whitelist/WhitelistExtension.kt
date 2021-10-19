@@ -1,6 +1,7 @@
 package com.rose.gateway.bot.extensions.whitelist
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
+import com.kotlindiscord.kord.extensions.extensions.chatGroupCommand
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
@@ -32,18 +33,18 @@ class WhitelistExtension : Extension() {
     private val whitelistManager = Whitelist(plugin)
 
     override suspend fun setup() {
-        group {
+        chatGroupCommand {
             name = "whitelist"
             aliases = arrayOf("wl", "w")
             description = "Runs an operation that relates to the server whitelist."
 
-            command(::WhitelistArguments) {
+            chatCommand(::WhitelistArguments) {
                 name = "add"
                 aliases = arrayOf("a", "+")
                 description = "Adds a player to the whitelist."
 
                 action {
-                    Logger.log("${user?.username} added ${arguments.username} to whitelist!")
+                    Logger.log("${user?.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
                     val status = when (whitelistManager.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
@@ -55,13 +56,13 @@ class WhitelistExtension : Extension() {
                 }
             }
 
-            command(::WhitelistArguments) {
+            chatCommand(::WhitelistArguments) {
                 name = "remove"
                 aliases = arrayOf("rm", "r", "d", "-")
                 description = "Removes a player from the whitelist."
 
                 action {
-                    Logger.log("${user?.username} removed ${arguments.username} from whitelist!")
+                    Logger.log("${user?.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
                     val status = when (whitelistManager.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
@@ -73,13 +74,13 @@ class WhitelistExtension : Extension() {
                 }
             }
 
-            command {
+            chatCommand {
                 name = "list"
                 aliases = arrayOf("ls", "l")
                 description = "Lists all currently whitelisted players."
 
                 action {
-                    Logger.log("${user?.username} requested list of whitelisted players!")
+                    Logger.log("${user?.asUserOrNull()?.username} requested list of whitelisted players!")
                     val whitelistedPlayers = whitelistManager.whitelistedPlayersAsString()
                     val response =
                         if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."

@@ -2,7 +2,7 @@ package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.DISCORD_GREEN
 import com.kotlindiscord.kord.extensions.ExtensibleBot
-import com.kotlindiscord.kord.extensions.checks.isNotbot
+import com.kotlindiscord.kord.extensions.checks.isNotBot
 import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
@@ -54,12 +54,15 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 since = plugin.startTime
                 playing(presence.presenceForPlayerCount())
             }
-            messageCommands {
+            chatCommands {
                 defaultPrefix = plugin.configuration.commandPrefix()
                 invokeOnMention = true
-                check(defaultCheck.defaultCheck, isNotbot)
+                check {
+                    defaultCheck.defaultCheck(this)
+                    isNotBot()
+                }
             }
-            slashCommands {
+            applicationCommands {
                 enabled = true
             }
             extensions {

@@ -1,7 +1,7 @@
 package com.rose.gateway.bot.extensions.whitelist
 
+import com.kotlindiscord.kord.extensions.commands.Arguments
 import com.kotlindiscord.kord.extensions.commands.converters.impl.string
-import com.kotlindiscord.kord.extensions.commands.parser.Arguments
 import dev.kord.common.annotation.KordPreview
 
 @OptIn(KordPreview::class)

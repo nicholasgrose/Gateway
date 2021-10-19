@@ -1,6 +1,6 @@
 package com.rose.gateway.bot.extensions.about
 
-import com.kotlindiscord.kord.extensions.extensions.Extension
+import com.kotlindiscord.kord.extensions.extensions.*
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
@@ -29,13 +29,13 @@ class AboutExtension : Extension() {
     private val timeout = plugin.configuration.commandTimeout()
 
     override suspend fun setup() {
-        command {
+        chatCommand {
             name = "version"
             aliases = arrayOf("ver", "v")
             description = "Gives the current version of the Gateway plugin."
 
             action {
-                Logger.log("${user?.username} requested plugin version!")
+                Logger.log("${user?.asUserOrNull()?.username} requested plugin version!")
                 message.respondWithLifetime(timeout) {
                     content =
                         "I am currently version ${GatewayPlugin.VERSION}. All versions are available at https://github.com/nicholasgrose/Gateway/."
@@ -43,14 +43,15 @@ class AboutExtension : Extension() {
             }
         }
 
-        command {
+        chatCommand {
             name = "blockgod"
             description = "Summon the block god for a moment."
             hidden = true
 
             action {
-                Logger.log("${user?.username} knows the super secret command!")
+                Logger.log("${user?.asUserOrNull()?.username} knows the super secret command!")
                 message.delete()
+                @Suppress("HttpUrlsUsage")
                 user?.getDmChannelOrNull()?.createMessage("http://www.scpwiki.com/church-of-the-broken-god-hub")
             }
         }

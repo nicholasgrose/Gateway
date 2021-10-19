@@ -1,7 +1,7 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.5.30"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("xyz.jpenilla.run-paper") version "1.0.3"
+    id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("xyz.jpenilla.run-paper") version "1.0.4"
 }
 
 group = "com.rose"
@@ -36,7 +36,7 @@ dependencies {
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.4.4-RC4"
+        version = "1.5.1-RC1"
     )
     implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")
