@@ -42,6 +42,7 @@ class ChatExtension : Extension() {
                 SendMessage.sendDiscordMessage(message)
             }
         }
+
         event<GameChatEvent> {
             action {
                 discordMessageSender.sendGameChatMessage(event.message)

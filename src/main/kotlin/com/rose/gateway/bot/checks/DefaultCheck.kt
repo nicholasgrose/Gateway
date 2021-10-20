@@ -1,11 +1,13 @@
 package com.rose.gateway.bot.checks
 
 import com.kotlindiscord.kord.extensions.checks.channelFor
+import com.kotlindiscord.kord.extensions.checks.isNotBot
 import com.kotlindiscord.kord.extensions.checks.types.Check
 import com.rose.gateway.GatewayPlugin
 
 class DefaultCheck(val plugin: GatewayPlugin) {
     val defaultCheck: Check<*> = {
+        isNotBot()
         val channelBehaviour = channelFor(event)
         val channel = channelBehaviour?.asChannelOrNull()
 

@@ -1,11 +1,11 @@
 package com.rose.gateway.bot.extensions.list
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
-import com.kotlindiscord.kord.extensions.extensions.chatCommand
+import com.kotlindiscord.kord.extensions.extensions.publicSlashCommand
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.bot.message.MessageLifetime.respondWithLifetime
+import com.rose.gateway.bot.message.MessageLifetime.createMessageWithLifetime
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.server.ServerInfo
 import com.rose.gateway.shared.configurations.BotConfiguration.commandTimeout
@@ -31,18 +31,17 @@ class ListExtension : Extension() {
     private val timeout = plugin.configuration.commandTimeout()
 
     override suspend fun setup() {
-        chatCommand {
+        publicSlashCommand {
             name = "list"
-            aliases = arrayOf("ls", "l")
             description = "Gives a list of all online players."
 
             action {
-                Logger.log("${user?.asUserOrNull()?.username} requested player list!")
+                Logger.log("${user.asUserOrNull()?.username} requested player list!")
                 val playerList = ServerInfo.playerListAsString()
                 val response =
                     if (playerList.isEmpty()) "No players online."
                     else "Players online: $playerList"
-                message.respondWithLifetime(timeout) {
+                channel.createMessageWithLifetime(timeout) {
                     content = response
                 }
             }

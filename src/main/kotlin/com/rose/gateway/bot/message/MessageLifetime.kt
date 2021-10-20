@@ -1,20 +1,22 @@
 package com.rose.gateway.bot.message
 
 import com.kotlindiscord.kord.extensions.utils.respond
+import dev.kord.core.behavior.channel.MessageChannelBehavior
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.entity.Message
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import kotlinx.coroutines.delay
 
 object MessageLifetime {
-    private suspend fun deleteAfterDelay(delay: Long, vararg messages: Message) {
+    private suspend fun deleteAfterDelay(delay: Long, message: Message) {
         delay(delay)
-        messages.forEach { it.delete() }
+        message.delete()
     }
 
-    suspend fun Message.respondWithLifetime(delay: Long, builder: suspend MessageCreateBuilder.() -> Unit) {
-        val response = this.respond {
+    suspend fun MessageChannelBehavior.createMessageWithLifetime(delay: Long, builder: suspend MessageCreateBuilder.() -> Unit) {
+        val response = this.createMessage {
             builder()
         }
-        deleteAfterDelay(delay, this, response)
+        deleteAfterDelay(delay, response)
     }
 }

@@ -54,16 +54,10 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 since = plugin.startTime
                 playing(presence.presenceForPlayerCount())
             }
-            chatCommands {
-                defaultPrefix = plugin.configuration.commandPrefix()
-                invokeOnMention = true
-                check {
-                    defaultCheck.defaultCheck(this)
-                    isNotBot()
-                }
-            }
             applicationCommands {
                 enabled = true
+
+                slashCommandCheck(defaultCheck.defaultCheck)
             }
             extensions {
                 extensions.addAll(DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() })

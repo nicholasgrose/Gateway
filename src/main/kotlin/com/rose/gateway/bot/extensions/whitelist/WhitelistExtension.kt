@@ -1,11 +1,12 @@
 package com.rose.gateway.bot.extensions.whitelist
 
+import com.kotlindiscord.kord.extensions.commands.application.slash.publicSubCommand
 import com.kotlindiscord.kord.extensions.extensions.Extension
-import com.kotlindiscord.kord.extensions.extensions.chatGroupCommand
+import com.kotlindiscord.kord.extensions.extensions.publicSlashCommand
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.bot.message.MessageLifetime.respondWithLifetime
+import com.rose.gateway.bot.message.MessageLifetime.createMessageWithLifetime
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
@@ -33,59 +34,55 @@ class WhitelistExtension : Extension() {
     private val whitelistManager = Whitelist(plugin)
 
     override suspend fun setup() {
-        chatGroupCommand {
+        publicSlashCommand {
             name = "whitelist"
-            aliases = arrayOf("wl", "w")
             description = "Runs an operation that relates to the server whitelist."
 
-            chatCommand(::WhitelistArguments) {
+            publicSubCommand(::WhitelistArguments) {
                 name = "add"
-                aliases = arrayOf("a", "+")
                 description = "Adds a player to the whitelist."
 
                 action {
-                    Logger.log("${user?.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
+                    Logger.log("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
                     val status = when (whitelistManager.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred adding ${arguments.username} to whitelist."
                     }
-                    message.respondWithLifetime(timeout) {
+                    channel.createMessageWithLifetime(timeout) {
                         content = status
                     }
                 }
             }
 
-            chatCommand(::WhitelistArguments) {
+            publicSubCommand(::WhitelistArguments) {
                 name = "remove"
-                aliases = arrayOf("rm", "r", "d", "-")
                 description = "Removes a player from the whitelist."
 
                 action {
-                    Logger.log("${user?.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
+                    Logger.log("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
                     val status = when (whitelistManager.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred removing ${arguments.username} from whitelist."
                     }
-                    message.respondWithLifetime(timeout) {
+                    channel.createMessageWithLifetime(timeout) {
                         content = status
                     }
                 }
             }
 
-            chatCommand {
+            publicSubCommand {
                 name = "list"
-                aliases = arrayOf("ls", "l")
                 description = "Lists all currently whitelisted players."
 
                 action {
-                    Logger.log("${user?.asUserOrNull()?.username} requested list of whitelisted players!")
+                    Logger.log("${user.asUserOrNull()?.username} requested list of whitelisted players!")
                     val whitelistedPlayers = whitelistManager.whitelistedPlayersAsString()
                     val response =
                         if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."
                         else "Players currently whitelisted: $whitelistedPlayers"
-                    message.respondWithLifetime(timeout) {
+                    channel.createMessageWithLifetime(timeout) {
                         content = response
                     }
                 }
