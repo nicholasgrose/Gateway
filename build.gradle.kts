@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    id("org.jetbrains.kotlin.jvm") version "1.6.0"
     id("com.github.johnrengelman.shadow") version "7.1.0"
     id("xyz.jpenilla.run-paper") version "1.0.4"
 }
@@ -46,8 +46,8 @@ tasks {
     compileKotlin {
         kotlinOptions {
             jvmTarget = "16"
-            apiVersion = "1.5"
-            languageVersion = "1.5"
+            apiVersion = "1.6"
+            languageVersion = "1.6"
             freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
     }
