@@ -12,10 +12,7 @@ object DiscordBotConstants {
     val REQUIRED_PERMISSIONS = Permissions(
         setOf(
             Permission.SendMessages,
-            Permission.EmbedLinks,
-            Permission.ManageMessages,
-            Permission.AddReactions,
-            Permission.ReadMessageHistory
+            Permission.EmbedLinks
         )
     )
 }

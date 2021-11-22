@@ -3,7 +3,6 @@ package com.rose.gateway.bot.extensions.chat
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.event
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.bot.checks.DefaultCheck
 import com.rose.gateway.bot.checks.MessageCheck
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.bot.message.DiscordMessageSender
@@ -29,13 +28,13 @@ class ChatExtension : Extension() {
 
     override val name = extensionName()
     val plugin = bot.getKoin().get<GatewayPlugin>()
-    private val defaultCheck = bot.getKoin().get<DefaultCheck>()
+    private val messageCheck = MessageCheck(plugin)
     private val discordMessageSender = DiscordMessageSender(plugin)
     private val minecraftChatMaker = MinecraftChatMaker(plugin.configuration)
 
     override suspend fun setup() {
         event<MessageCreateEvent> {
-            check(defaultCheck.defaultCheck, MessageCheck.notCommand, MessageCheck.notSelf)
+            check(messageCheck.notSelf, messageCheck.isConfiguredBotChannel)
 
             action {
                 val message = minecraftChatMaker.createMessage(event)

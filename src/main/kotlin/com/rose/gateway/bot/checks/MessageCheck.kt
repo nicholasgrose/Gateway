@@ -1,21 +1,19 @@
 package com.rose.gateway.bot.checks
 
+import com.kotlindiscord.kord.extensions.checks.channelFor
 import com.kotlindiscord.kord.extensions.checks.messageFor
 import com.kotlindiscord.kord.extensions.checks.types.Check
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.shared.configurations.BotConfiguration.commandPrefix
 import dev.kord.core.Kord
 
-object MessageCheck {
-    val notCommand: Check<*> = {
-        val plugin = getKoin().get<GatewayPlugin>()
-        val messageContent = messageFor(event)?.asMessageOrNull()?.content
+class MessageCheck(val plugin: GatewayPlugin) {
+    val isConfiguredBotChannel: Check<*> = {
+        val channelBehaviour = channelFor(event)
+        val channel = channelBehaviour?.asChannelOrNull()
 
-        when {
-            messageContent == null -> fail()
-            messageContent.startsWith(plugin.configuration.commandPrefix()) -> fail("Is command.")
-            else -> pass()
-        }
+        if (plugin.discordBot.botChannels.contains(channel)) pass()
+        else fail("Channel is not configured bot channel.")
     }
 
     val notSelf: Check<*> = {

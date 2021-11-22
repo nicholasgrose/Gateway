@@ -5,7 +5,6 @@ import com.kotlindiscord.kord.extensions.ExtensibleBot
 import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
-import com.rose.gateway.bot.checks.DefaultCheck
 import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
 import com.rose.gateway.configuration.specs.PluginSpec
@@ -24,7 +23,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     val botGuilds = mutableSetOf<Guild>()
     private var job: Job? = null
     var botStatus = BotStatus.NOT_STARTED
-    private val defaultCheck = DefaultCheck(plugin)
 
     val bot = try {
         if (plugin.configuration.notLoaded()) {
@@ -45,7 +43,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 kordShutdownHook = false
                 afterKoinSetup {
                     getKoin().declare(plugin)
-                    getKoin().declare(defaultCheck)
                 }
             }
             presence {
@@ -53,7 +50,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 playing(presence.presenceForPlayerCount())
             }
             applicationCommands {
-                slashCommandCheck(defaultCheck.defaultCheck)
+                enabled = true
             }
             extensions {
                 extensions.addAll(DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() })
