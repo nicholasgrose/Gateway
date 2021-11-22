@@ -2,7 +2,6 @@ package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.DISCORD_GREEN
 import com.kotlindiscord.kord.extensions.ExtensibleBot
-import com.kotlindiscord.kord.extensions.checks.isNotBot
 import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
@@ -11,7 +10,6 @@ import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
-import com.rose.gateway.shared.configurations.BotConfiguration.commandPrefix
 import com.rose.gateway.shared.configurations.BotConfiguration.commandTimeout
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
@@ -55,8 +53,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 playing(presence.presenceForPlayerCount())
             }
             applicationCommands {
-                enabled = true
-
                 slashCommandCheck(defaultCheck.defaultCheck)
             }
             extensions {
@@ -76,9 +72,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     private val clientInfo = ClientInfo(plugin)
 
     suspend fun start() {
-        if (bot == null) {
-            return
-        }
+        if (bot == null) return
 
         botStatus = BotStatus.STARTING
 
@@ -86,7 +80,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         fillBotChannels()
         launchBotInNewThread()
 
-        Logger.log("Bot ready!")
+        Logger.logInfo("Bot ready!")
     }
 
     private suspend fun unloadDisabledExtensions() {
@@ -118,7 +112,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 bot!!.start()
             } catch (error: KordInitializationException) {
                 val message = "An error occurred while running bot: ${error.message}"
-                Logger.log(message)
+                Logger.logInfo(message)
                 botStatus = BotStatus.STOPPED because message
             }
         }

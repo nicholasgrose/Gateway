@@ -21,7 +21,7 @@ class GatewayPlugin : JavaPlugin() {
     private val commandRegistry = CommandRegistry(this)
 
     override fun onEnable() {
-        Logger.log("Starting Gateway!")
+        Logger.logInfo("Starting Gateway!")
 
         runBlocking {
             discordBot.start()
@@ -30,17 +30,17 @@ class GatewayPlugin : JavaPlugin() {
         eventListeners.registerListeners(server)
         commandRegistry.registerCommands()
 
-        Logger.log("Gateway started!")
+        Logger.logInfo("Gateway started!")
     }
 
     override fun onDisable() {
-        Logger.log("Stopping Gateway!")
+        Logger.logInfo("Stopping Gateway!")
 
         runBlocking {
             discordBot.stop()
         }
 
-        Logger.log("Gateway stopped!")
+        Logger.logInfo("Gateway stopped!")
     }
 
     fun restartBot(): Boolean {

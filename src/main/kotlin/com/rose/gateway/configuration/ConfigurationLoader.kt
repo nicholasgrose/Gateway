@@ -17,18 +17,18 @@ class ConfigurationLoader(
     private val configurationFilePath = Path.of(configurationFile)
 
     fun loadOrCreateConfig(): Config? {
-        Logger.log("Checking configuration file existence.")
+        Logger.logInfo("Checking configuration file existence.")
         if (!Files.exists(configurationFilePath)) {
-            Logger.log("No configuration file found. Downloading...")
+            Logger.logInfo("No configuration file found. Downloading...")
             val configurationFileCreated = createConfigurationFile()
             if (!configurationFileCreated) {
-                Logger.log("Failed to create new configuration file.")
+                Logger.logInfo("Failed to create new configuration file.")
                 return null
             } else {
-                Logger.log("Successfully created new configuration file.")
+                Logger.logInfo("Successfully created new configuration file.")
             }
         } else {
-            Logger.log("Configuration file found.")
+            Logger.logInfo("Configuration file found.")
         }
 
         val configuration = loadConfig() ?: return null
@@ -45,25 +45,25 @@ class ConfigurationLoader(
         return when (result) {
             is Result.Success -> {
                 Files.writeString(configurationFilePath, result.value)
-                Logger.log("Successfully created configuration file!")
+                Logger.logInfo("Successfully created configuration file!")
                 true
             }
             is Result.Failure -> {
-                Logger.log("Could not get configuration file! You will need download or create it manually.")
+                Logger.logInfo("Could not get configuration file! You will need download or create it manually.")
                 false
             }
         }
     }
 
     private fun loadConfig(): Config? {
-        Logger.log("Loading configuration...")
+        Logger.logInfo("Loading configuration...")
         return try {
             val loadedConfig = Config { addSpec(baseSpec) }
                 .from.yaml.file(configurationFile)
-            Logger.log("Configuration loaded successfully.")
+            Logger.logInfo("Configuration loaded successfully.")
             loadedConfig
         } catch (error: Throwable) {
-            Logger.log("Configuration failed to load: ${error.message}")
+            Logger.logInfo("Configuration failed to load: ${error.message}")
             null
         }
     }
@@ -72,9 +72,9 @@ class ConfigurationLoader(
         val isValid = configuration.containsRequired()
 
         if (isValid) {
-            Logger.log("Configuration is valid.")
+            Logger.logInfo("Configuration is valid.")
         } else {
-            Logger.log("Configuration invalid.")
+            Logger.logInfo("Configuration invalid.")
         }
 
         return isValid

@@ -23,7 +23,7 @@ class BotCommands(val plugin: GatewayPlugin) {
     }
 
     private fun sendAndLogMessage(sender: CommandSender, message: String) {
-        Logger.log(message)
+        Logger.logInfo(message)
         sender.sendMessage(message)
     }
 
