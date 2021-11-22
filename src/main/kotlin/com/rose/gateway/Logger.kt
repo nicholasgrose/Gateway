@@ -13,8 +13,4 @@ object Logger {
     private fun gatewayPrefixedMessage(message: String): String {
         return "[Gateway] $message"
     }
-
-    fun logDebug(message: String) {
-        bukkitLogger.log(Level.FINEST, gatewayPrefixedMessage(message))
-    }
 }
