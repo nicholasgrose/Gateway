@@ -15,10 +15,6 @@ repositories {
         url = uri("https://papermc.io/repo/repository/maven-public/")
     }
     maven {
-        name = "Kord Emojis"
-        url = uri("https://dl.bintray.com/kordlib/Kord")
-    }
-    maven {
         name = "Kotlin Discord"
         url = uri("https://maven.kotlindiscord.com/repository/maven-public/")
     }
@@ -31,8 +27,6 @@ repositories {
 dependencies {
     compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.17.1-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
-//    This is potentially useful, but not currently needed.
-//    implementation(group = "dev.kord.x", name = "emoji", version = "0.5.0")
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
