@@ -4,7 +4,6 @@ import com.kotlindiscord.kord.extensions.checks.channelFor
 import com.kotlindiscord.kord.extensions.checks.messageFor
 import com.kotlindiscord.kord.extensions.checks.types.Check
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.shared.configurations.BotConfiguration.commandPrefix
 import dev.kord.core.Kord
 
 class MessageCheck(val plugin: GatewayPlugin) {

@@ -3,7 +3,6 @@ package com.rose.gateway.shared.configurations
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.shared.color.ColorParser.asTextColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.uchuhimo.konf.Item
 import net.kyori.adventure.text.format.TextColor
 

@@ -12,7 +12,7 @@ Available extensions:
 
 ## Installing the Plugin:
 
-1. Install just like any other Paper plugin: plop the jar in your plugins directory.
+1. Install just like any other Paper plugin: plop the jar in your plugin's directory.
 2. After you install the plugin, you will need to add a configuration file for it. You can get a sample configuration
    file from examples/Gateway.yaml in this repository. Place this configuration file inside your server's plugins
    directory in a new directory called 'Gateway' (i.e., {SERVER_FOLDER}/plugins/Gateway/Gateway.yaml).

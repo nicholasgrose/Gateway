@@ -4,9 +4,6 @@ import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.configuration.specs.PluginSpec
 
 object BotConfiguration {
-    fun PluginConfiguration.commandPrefix(): String {
-        return configuration!![PluginSpec.BotSpec.commandPrefix]
-    }
 
     fun PluginConfiguration.commandTimeout(): Long {
         return configuration!![PluginSpec.BotSpec.commandTimeout].toLong()

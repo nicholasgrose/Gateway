@@ -2,7 +2,6 @@ package com.rose.gateway.bot.client
 
 import com.kotlindiscord.kord.extensions.utils.permissionsForMember
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.bot.DiscordBot
 import dev.kord.common.entity.Permissions
 import dev.kord.core.entity.channel.GuildChannel
 
