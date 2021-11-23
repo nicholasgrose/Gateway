@@ -17,13 +17,25 @@ class ConfigurationLoader(
     private val configurationFilePath = Path.of(configurationFile)
 
     fun loadOrCreateConfig(): Config? {
-        Logger.logInfo("Checking configuration file existence.")
+        if (!ensureConfigurationFileExists(configurationFilePath)) return null
+
+        val configuration = loadConfig() ?: return null
+
+        return if (configurationIsValid(configuration)) configuration
+        else null
+    }
+
+    private fun ensureConfigurationFileExists(configurationFilePath: Path): Boolean {
+        Logger.logInfo("Checking configuration file existence...")
+
         if (!Files.exists(configurationFilePath)) {
             Logger.logInfo("No configuration file found. Downloading...")
             val configurationFileCreated = createConfigurationFile()
+
             if (!configurationFileCreated) {
                 Logger.logInfo("Failed to create new configuration file.")
-                return null
+
+                return false
             } else {
                 Logger.logInfo("Successfully created new configuration file.")
             }
@@ -31,10 +43,7 @@ class ConfigurationLoader(
             Logger.logInfo("Configuration file found.")
         }
 
-        val configuration = loadConfig() ?: return null
-
-        return if (configurationIsValid(configuration)) configuration
-        else null
+        return true
     }
 
     private fun createConfigurationFile(): Boolean {
