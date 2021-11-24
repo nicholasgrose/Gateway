@@ -195,6 +195,12 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         return configStringMap.matchingOrAllConfigurationStrings(currentConfigurationArgument)
     }
 
+    fun collectionConfigCompletion(context: TabCompletionContext): List<String> {
+        return configCompletion(context).filter { config ->
+            configuration.configurationStringMap.specificationFromString(config)?.type?.isCollectionLikeType ?: false
+        }
+    }
+
     fun reloadConfig(context: CommandContext): Boolean {
         context.sender.sendMessage("Loading configuration.")
 

@@ -53,7 +53,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("add") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::collectionConfigCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -63,7 +63,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("remove") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::configCompletion),
+                        StringArg("CONFIG_PATH", configCommands::collectionConfigCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
