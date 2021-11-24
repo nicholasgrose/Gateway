@@ -1,7 +1,6 @@
 package com.rose.gateway.shared.collections.trie
 
 class Trie : MutableSet<String> {
-
     private val rootNode = TrieNode("", null)
     override var size = 0
 

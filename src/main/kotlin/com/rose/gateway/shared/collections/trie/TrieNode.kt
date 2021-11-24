@@ -2,7 +2,7 @@ package com.rose.gateway.shared.collections.trie
 
 import java.util.*
 
-class TrieNode(
+data class TrieNode(
     val nodeValue: String,
     val parent: TrieNode?,
     var isTerminalNode: Boolean = false,
