@@ -53,7 +53,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("add") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::collectionConfigCompletion),
+                        StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
                         StringArg("VALUE"),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -63,8 +63,8 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("remove") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::collectionConfigCompletion),
-                        StringArg("VALUE"),
+                        StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
+                        StringArg("VALUE", configCommands::collectionConfigValueCompletion),
                         allowVariableNumberOfArguments = true
                     ) { context ->
                         configCommands.removeConfiguration(context)
@@ -73,7 +73,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("help") {
                     runner(StringArg("CONFIG_PATH", configCommands::configCompletion)) { context ->
-                        val configuration = context.commandArguments[0] as String
+                        val configuration = context.commandArguments.first() as String
                         configCommands.sendConfigurationHelp(context.sender, configuration)
                     }
 

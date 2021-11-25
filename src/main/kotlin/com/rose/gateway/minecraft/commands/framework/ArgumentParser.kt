@@ -44,9 +44,7 @@ class ArgumentParser(
         val firstNullIndex = parsedArguments.indexOf(null)
         val lastParsedArgumentIndex = if (firstNullIndex == -1) parsedArguments.size - 1 else firstNullIndex
         val converterIndex = minOf(lastParsedArgumentIndex, converters.size - 1)
-        val converterParsedArgument = listOf(parsedArguments[converterIndex])
-        val converterTabCompletionContext = tabCompletionContext.copy(parsedArguments = converterParsedArgument)
 
-        return converters[converterIndex].completeTab(converterTabCompletionContext)
+        return converters[converterIndex].completeTab(tabCompletionContext)
     }
 }

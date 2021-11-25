@@ -21,7 +21,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     fun setConfiguration(context: CommandContext): Boolean {
         if (informSenderOnInvalidConfiguration(context.sender, "set")) return true
 
-        val path = context.commandArguments[0] as String
+        val path = context.commandArguments.first() as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
         val newValue = context.commandArguments[1]
         setConfiguration(configSpec, newValue)
@@ -64,7 +64,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
     fun addConfiguration(context: CommandContext): Boolean {
         if (informSenderOnInvalidConfiguration(context.sender, "add")) return true
-        val path = context.commandArguments[0] as String
+        val path = context.commandArguments.first() as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
 
         val newValues = context.commandArguments.subList(1, context.commandArguments.size)
@@ -91,7 +91,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
 
     fun removeConfiguration(context: CommandContext): Boolean {
         if (informSenderOnInvalidConfiguration(context.sender, "remove")) return true
-        val path = context.commandArguments[0] as String
+        val path = context.commandArguments.first() as String
         val configSpec = configSpecFromArgs(path, context) ?: return true
 
         val newValues = context.commandArguments.subList(1, context.commandArguments.size)
@@ -124,7 +124,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         val matchingConfigurations = configStringMap.matchingOrAllConfigurationStrings(configSearchString)
 
         if (matchingConfigurations.size == 1) {
-            val path = matchingConfigurations[0]
+            val path = matchingConfigurations.first()
             val matchingSpec = configStringMap.specificationFromString(path)!!
 
             sender.sendMessage(
@@ -199,10 +199,20 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         return configStringMap.matchingOrAllConfigurationStrings(currentConfigurationArgument)
     }
 
-    fun collectionConfigCompletion(context: TabCompletionContext): List<String> {
+    fun collectionConfigNameCompletion(context: TabCompletionContext): List<String> {
         return configCompletion(context).filter { config ->
             configuration.configurationStringMap.specificationFromString(config)?.type?.isCollectionLikeType ?: false
         }
+    }
+
+    fun collectionConfigValueCompletion(context: TabCompletionContext): List<String> {
+        val configName = context.parsedArguments.first() as String
+
+        @Suppress("UNCHECKED_CAST")
+        val configItem = configuration.configurationStringMap.specificationFromString(configName) as Item<List<*>>?
+
+        return if (configItem == null) listOf()
+        else configuration[configItem].map { it.toString() }
     }
 
     fun reloadConfig(context: CommandContext): Boolean {

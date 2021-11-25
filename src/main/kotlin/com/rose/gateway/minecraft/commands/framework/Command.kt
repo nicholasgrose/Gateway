@@ -10,7 +10,7 @@ import org.bukkit.command.TabCompleter
 class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter {
     companion object {
         fun subcommandRunner(context: CommandContext): Boolean {
-            val subcommand = context.commandArguments[0] as String
+            val subcommand = context.commandArguments.first() as String
             val childCommand = context.definition.subcommands[subcommand]
             val arguments = context.rawCommandArguments
 

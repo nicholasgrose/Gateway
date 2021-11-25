@@ -55,7 +55,7 @@ class CommandBuilder(private val name: String) {
         }
 
         private fun usesSubcommandRunner(builder: CommandBuilder): Boolean {
-            return builder.executors.size == 1 && builder.executors[0] == subcommandExecutor
+            return builder.executors.size == 1 && builder.executors.first() == subcommandExecutor
         }
 
         private fun generateSubcommandUsageEnding(builder: CommandBuilder): String {
