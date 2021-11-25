@@ -112,8 +112,12 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     private fun <T, N> currentValuesWithNewValuesRemoved(currentValues: List<N>, valuesToBeRemoved: List<Any?>): T {
+        val newValues = currentValues.toMutableList()
         @Suppress("UNCHECKED_CAST")
-        return currentValues.toMutableList().removeAll((valuesToBeRemoved as List<N>).toSet()) as T
+        newValues.removeAll((valuesToBeRemoved as List<N>).toSet())
+
+        @Suppress("UNCHECKED_CAST")
+        return newValues as T
     }
 
     fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
