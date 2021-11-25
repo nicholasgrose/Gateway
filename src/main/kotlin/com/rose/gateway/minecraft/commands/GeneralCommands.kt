@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands
 
-import com.rose.gateway.minecraft.commands.framework.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 
 object GeneralCommands {
     fun discordHelp(context: CommandContext): Boolean {

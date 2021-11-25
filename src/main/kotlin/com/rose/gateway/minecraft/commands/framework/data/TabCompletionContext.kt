@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework
+package com.rose.gateway.minecraft.commands.framework.data
 
 import org.bukkit.command.CommandSender
 

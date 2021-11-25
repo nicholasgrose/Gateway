@@ -1,6 +1,9 @@
 package com.rose.gateway.minecraft.commands.framework
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.command.CommandExecutor

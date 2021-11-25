@@ -1,5 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+
 class ArgumentParser(
     val converters: Array<out CommandArgument<*>>,
     private val variableArgumentNumberAllowed: Boolean

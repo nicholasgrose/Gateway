@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands
 
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.framework.CommandContext
-import com.rose.gateway.minecraft.commands.framework.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor

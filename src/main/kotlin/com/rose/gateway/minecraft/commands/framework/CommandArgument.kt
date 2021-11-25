@@ -1,5 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+
 interface CommandArgument<T> {
     companion object {
         @Suppress("UNUSED_PARAMETER")

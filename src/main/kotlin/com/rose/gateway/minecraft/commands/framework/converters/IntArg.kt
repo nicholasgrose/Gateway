@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.converters
 
 import com.rose.gateway.minecraft.commands.framework.CommandArgument
-import com.rose.gateway.minecraft.commands.framework.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
 class IntArg(
     private val name: String,

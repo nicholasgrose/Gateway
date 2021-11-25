@@ -2,7 +2,7 @@ package com.rose.gateway.minecraft.commands.framework.converters
 
 import com.rose.gateway.minecraft.commands.framework.CommandArgument
 import com.rose.gateway.minecraft.commands.framework.CommandArgument.Companion.noCompletionCompleter
-import com.rose.gateway.minecraft.commands.framework.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
 class StringArg(
     private val name: String,

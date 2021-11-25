@@ -2,7 +2,7 @@ package com.rose.gateway.minecraft.commands
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
-import com.rose.gateway.minecraft.commands.framework.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
