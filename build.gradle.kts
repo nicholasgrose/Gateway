@@ -1,7 +1,7 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.0"
-    id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("xyz.jpenilla.run-paper") version "1.0.5"
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.1"
+    id("xyz.jpenilla.run-paper") version "1.0.6"
 }
 
 group = "com.rose"
@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.18-R0.1-SNAPSHOT")
+    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.18.1-R0.1-SNAPSHOT")
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
     implementation(
         group = "com.kotlindiscord.kord.extensions",
@@ -64,7 +64,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18")
+        minecraftVersion("1.18.1")
     }
 
     clean {
