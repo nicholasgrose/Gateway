@@ -2,6 +2,7 @@ package com.rose.gateway
 
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
 import kotlinx.coroutines.runBlocking
@@ -27,6 +28,8 @@ class GatewayPlugin : JavaPlugin() {
             discordBot.start()
         }
 
+        setConfigurationChangeActions()
+
         eventListeners.registerListeners(server)
         commandRegistry.registerCommands()
 
@@ -51,5 +54,9 @@ class GatewayPlugin : JavaPlugin() {
         }
 
         return discordBot.bot != null
+    }
+
+    private fun setConfigurationChangeActions() {
+        PluginSpec.setConfigChangeActions(this)
     }
 }

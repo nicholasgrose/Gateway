@@ -7,15 +7,12 @@ plugin:
   # Settings for how the Discord bot, functions.
   bot:
 
-    # The length of time in milliseconds that commands live for before being cleared.
-    commandTimeout: 5_000
-
     # The names of the channels in which the bot should post/accept chat messages.
     botChannels:
       - speakers-of-the-gateway
 
     # The maximum number of users that can be queried for when searching for a user by name.
-    memberQueryMax: 100
+    memberQueryMax: 1
 
     # Configurations for the various bot extensions.
     extensions:

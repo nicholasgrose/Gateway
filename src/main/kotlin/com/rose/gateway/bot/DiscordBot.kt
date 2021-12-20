@@ -1,6 +1,5 @@
 package com.rose.gateway.bot
 
-import com.kotlindiscord.kord.extensions.DISCORD_GREEN
 import com.kotlindiscord.kord.extensions.ExtensibleBot
 import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
@@ -9,7 +8,6 @@ import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
-import com.rose.gateway.shared.configurations.BotConfiguration.commandTimeout
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
@@ -54,13 +52,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
             }
             extensions {
                 extensions.addAll(DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() })
-
-                help {
-                    paginatorTimeout = plugin.configuration.commandTimeout()
-                    deletePaginatorOnTimeout = true
-                    deleteInvocationOnPaginatorTimeout = true
-                    color { DISCORD_GREEN }
-                }
             }
         }
     }
@@ -86,7 +77,10 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         }
     }
 
-    private suspend fun fillBotChannels() {
+    suspend fun fillBotChannels() {
+        botChannels.clear()
+        botGuilds.clear()
+
         val validBotChannels = plugin.configuration.botChannels()
         kordClient!!.guilds.collect { guild ->
             guild.channels.collect { channel ->

@@ -8,8 +8,8 @@ class StringArg(
     private val name: String,
     private val tabCompleter: (TabCompletionContext) -> List<String>? = ::noCompletionCompleter
 ) : CommandArgument<String> {
-    override fun fromString(string: String): String {
-        return string
+    override fun fromArguments(arguments: Array<String>, index: Int): String {
+        return arguments[index]
     }
 
     override fun getName(): String {

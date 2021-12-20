@@ -25,7 +25,7 @@ interface CommandArgument<T> {
         }
     }
 
-    fun fromString(string: String): T?
+    fun fromArguments(arguments: Array<String>, index: Int): T?
     fun getName(): String
     fun getTypeName(): String
     fun completeTab(tabCompletionContext: TabCompletionContext): List<String>?

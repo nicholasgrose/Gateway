@@ -3,13 +3,14 @@ package com.rose.gateway.minecraft.commands.framework.converters
 import com.rose.gateway.minecraft.commands.framework.CommandArgument
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
+@Deprecated("Might be useful in the future, but currently not used, in favor of ConfigValueArg.")
 class IntArg(
     private val name: String,
     private val tabCompleter: (TabCompletionContext) -> List<String>? = CommandArgument.Companion::noCompletionCompleter
 ) : CommandArgument<Int> {
-    override fun fromString(string: String): Int? {
+    override fun fromArguments(arguments: Array<String>, index: Int): Int? {
         return try {
-            Integer.parseInt(string)
+            Integer.parseInt(arguments[index])
         } catch (e: NumberFormatException) {
             null
         }

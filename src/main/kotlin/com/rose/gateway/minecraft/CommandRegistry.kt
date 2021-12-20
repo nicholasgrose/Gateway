@@ -5,7 +5,7 @@ import com.rose.gateway.minecraft.commands.BotCommands
 import com.rose.gateway.minecraft.commands.ConfigCommands
 import com.rose.gateway.minecraft.commands.GeneralCommands
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
-import com.rose.gateway.minecraft.commands.framework.converters.IntArg
+import com.rose.gateway.minecraft.commands.framework.converters.ConfigValueArg
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandRegistry(val plugin: GatewayPlugin) {
@@ -38,14 +38,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 subcommand("set") {
                     runner(
                         StringArg("CONFIG_PATH", configCommands::configCompletion),
-                        IntArg("VALUE")
-                    ) { context ->
-                        configCommands.setConfiguration(context)
-                    }
-
-                    runner(
-                        StringArg("CONFIG_PATH", configCommands::configCompletion),
-                        StringArg("VALUE")
+                        ConfigValueArg("VALUE", 0, plugin.configuration)
                     ) { context ->
                         configCommands.setConfiguration(context)
                     }

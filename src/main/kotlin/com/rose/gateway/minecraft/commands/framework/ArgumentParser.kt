@@ -15,8 +15,7 @@ class ArgumentParser(
     private fun argumentCountIncorrect(arguments: Array<String>): Boolean {
         return when {
             variableArgumentNumberAllowed -> arguments.size < converters.size
-            !variableArgumentNumberAllowed -> arguments.size != converters.size
-            else -> false
+            else -> arguments.size != converters.size
         }
     }
 
@@ -35,9 +34,9 @@ class ArgumentParser(
 
     @Suppress("RedundantNullableReturnType")
     private fun parseArguments(arguments: Array<String>): List<*>? {
-        return arguments.mapIndexed { index, argument ->
+        return arguments.indices.map { index ->
             val converterIndex = minOf(index, converters.size - 1)
-            converters[converterIndex].fromString(argument) ?: return@parseArguments null
+            converters[converterIndex].fromArguments(arguments, index) ?: return@parseArguments null
         }
     }
 
