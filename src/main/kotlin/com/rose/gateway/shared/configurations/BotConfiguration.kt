@@ -11,4 +11,8 @@ object BotConfiguration {
     fun PluginConfiguration.botChannels(): List<String> {
         return configuration!![PluginSpec.BotSpec.botChannels]
     }
+
+    fun PluginConfiguration.chatExtensionEnabled(): Boolean {
+        return configuration!![PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled]
+    }
 }

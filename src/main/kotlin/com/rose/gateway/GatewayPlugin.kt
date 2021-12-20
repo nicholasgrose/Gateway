@@ -29,7 +29,6 @@ class GatewayPlugin : JavaPlugin() {
         }
 
         setConfigurationChangeActions()
-
         eventListeners.registerListeners(server)
         commandRegistry.registerCommands()
 

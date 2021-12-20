@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.chat.GameChatEvent
+import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import io.papermc.paper.event.player.AsyncChatEvent
 import io.papermc.paper.text.PaperComponents
 import kotlinx.coroutines.runBlocking
@@ -19,6 +20,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onChat(event: AsyncChatEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val messageText = PaperComponents.plainSerializer().serialize(event.message())
 
         runBlocking {
@@ -29,6 +32,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val joinMessage = event.joinMessage() ?: return
         runBlocking {
             plugin.discordBot.bot?.send(GameChatEvent {
@@ -39,6 +44,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val quitMessage = event.quitMessage() ?: return
 
         runBlocking {
@@ -50,6 +57,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val deathMessage = event.deathMessage() ?: return
 
         runBlocking {
@@ -61,6 +70,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onServerCommand(event: ServerCommandEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val messageText = DisplayCommandProcessor.processServerCommand(event.command)
 
         if (messageText.isEmpty()) return
@@ -73,6 +84,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val messageText = DisplayCommandProcessor.processPlayerCommand(event.message, event.player.name)
 
         if (messageText.isEmpty()) return
@@ -85,6 +98,8 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
+        if (!plugin.configuration.chatExtensionEnabled()) return
+
         val advancementMessage = event.message() ?: return
 
         runBlocking {
