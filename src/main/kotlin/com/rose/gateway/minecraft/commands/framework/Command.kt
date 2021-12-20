@@ -74,7 +74,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         command: org.bukkit.command.Command,
         alias: String,
         args: Array<String>
-    ): List<String>? {
+    ): List<String> {
         for (executor in definition.executors) {
             val parsedArguments = executor.argumentParser.parseArgumentSubset(args) ?: continue
             val tabCompletions = executor.argumentParser.getTabCompletions(
@@ -91,7 +91,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
             if (tabCompletions != null) return tabCompletions
         }
 
-        return null
+        return listOf()
     }
 
     fun registerCommand(plugin: GatewayPlugin) {
