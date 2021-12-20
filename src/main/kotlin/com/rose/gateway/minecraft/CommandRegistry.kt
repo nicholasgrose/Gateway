@@ -5,6 +5,7 @@ import com.rose.gateway.minecraft.commands.BotCommands
 import com.rose.gateway.minecraft.commands.ConfigCommands
 import com.rose.gateway.minecraft.commands.GeneralCommands
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.converters.ConfigListValueArg
 import com.rose.gateway.minecraft.commands.framework.converters.ConfigValueArg
 import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
@@ -38,7 +39,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 subcommand("set") {
                     runner(
                         StringArg("CONFIG_PATH", configCommands::configCompletion),
-                        ConfigValueArg("VALUE", 0, plugin.configuration)
+                        ConfigValueArg("VALUE", 0, plugin.configuration, configCommands::configValueCompletion)
                     ) { context ->
                         configCommands.setConfiguration(context)
                     }
@@ -47,7 +48,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 subcommand("add") {
                     runner(
                         StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
-                        StringArg("VALUE"),
+                        ConfigListValueArg("VALUE", 0, plugin.configuration),
                         allowVariableNumberOfArguments = true
                     ) { context ->
                         configCommands.addConfiguration(context)
@@ -57,7 +58,12 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 subcommand("remove") {
                     runner(
                         StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
-                        StringArg("VALUE", configCommands::collectionConfigValueCompletion),
+                        ConfigListValueArg(
+                            "VALUE",
+                            0,
+                            plugin.configuration,
+                            configCommands::collectionConfigValueCompletion
+                        ),
                         allowVariableNumberOfArguments = true
                     ) { context ->
                         configCommands.removeConfiguration(context)

@@ -205,6 +205,19 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         }
     }
 
+    private val configValueCompletionMap = mapOf(
+        Boolean::class.javaObjectType to listOf("true", "false")
+    )
+
+    fun configValueCompletion(context: TabCompletionContext): List<String> {
+        val configName = context.parsedArguments.first() as String
+
+        val configItem = configuration.configurationStringMap.specificationFromString(configName) ?: return listOf()
+        val completions = configValueCompletionMap[configItem.type.rawClass] ?: return listOf()
+
+        return completions
+    }
+
     fun collectionConfigValueCompletion(context: TabCompletionContext): List<String> {
         val configName = context.parsedArguments.first() as String
 
