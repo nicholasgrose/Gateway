@@ -6,8 +6,8 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.server.ServerInfo
+import com.rose.gateway.shared.configurations.BotConfiguration.listExtensionEnabled
 
 class ListExtension : Extension() {
     companion object : ToggleableExtension {
@@ -20,8 +20,7 @@ class ListExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            val enabledSpec = PluginSpec.BotSpec.ExtensionsSpec.ListSpec.enabled
-            return plugin.configuration[enabledSpec]
+            return plugin.configuration.listExtensionEnabled()
         }
     }
 

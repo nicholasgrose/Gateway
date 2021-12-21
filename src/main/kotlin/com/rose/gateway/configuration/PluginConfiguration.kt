@@ -36,12 +36,16 @@ class PluginConfiguration(private val plugin: GatewayPlugin) {
         return configuration == null
     }
 
-    operator fun <T> get(item: Item<T>): T {
-        return configuration!![item]
+    operator fun <T> get(item: Item<T>): T? {
+        val config = configuration ?: return null
+
+        return config[item]
     }
 
     operator fun <T> set(item: Item<T>, newValue: T) {
-        configuration!![item] = newValue
-        configuration!!.toYaml.toFile(CONFIGURATION_FILE)
+        val config = configuration ?: return
+
+        config[item] = newValue
+        config.toYaml.toFile(CONFIGURATION_FILE)
     }
 }

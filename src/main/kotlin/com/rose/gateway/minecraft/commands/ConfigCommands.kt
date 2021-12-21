@@ -213,9 +213,8 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         val configName = context.parsedArguments.first() as String
 
         val configItem = configuration.configurationStringMap.specificationFromString(configName) ?: return listOf()
-        val completions = configValueCompletionMap[configItem.type.rawClass] ?: return listOf()
 
-        return completions
+        return configValueCompletionMap[configItem.type.rawClass] ?: listOf()
     }
 
     fun collectionConfigValueCompletion(context: TabCompletionContext): List<String> {
@@ -225,7 +224,7 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         val configItem = configuration.configurationStringMap.specificationFromString(configName) as Item<List<*>>?
 
         return if (configItem == null) listOf()
-        else configuration[configItem].map { it.toString() }
+        else configuration[configItem]?.map { it.toString() } ?: listOf()
     }
 
     fun reloadConfig(context: CommandContext): Boolean {
@@ -238,6 +237,18 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
         } else {
             context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
         }
+
+        return true
+    }
+
+    fun sendConfigurationStatus(sender: CommandSender): Boolean {
+        sender.sendMessage(
+            Component.join(
+                JoinConfiguration.separator(Component.text(" ")),
+                Component.text("Config Status:", configuration.primaryColor()),
+                Component.text(if (configuration.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded")
+            )
+        )
 
         return true
     }

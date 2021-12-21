@@ -8,26 +8,26 @@ import net.kyori.adventure.text.format.TextColor
 
 object MinecraftConfiguration {
     fun PluginConfiguration.primaryColor(): TextColor {
-        return if (notLoaded()) PluginSpec.MinecraftSpec.DEFAULT_PRIMARY_COLOR.asTextColor()
-        else configurationAsTextColor(PluginSpec.MinecraftSpec.primaryColor)
+        return configurationAsTextColor(PluginSpec.MinecraftSpec.primaryColor)
+            ?: PluginSpec.MinecraftSpec.DEFAULT_PRIMARY_COLOR.asTextColor()
     }
 
-    private fun PluginConfiguration.configurationAsTextColor(spec: Item<String>): TextColor {
-        return get(spec).asTextColor()
+    private fun PluginConfiguration.configurationAsTextColor(spec: Item<String>): TextColor? {
+        return get(spec)?.asTextColor()
     }
 
     fun PluginConfiguration.secondaryColor(): TextColor {
-        return if (notLoaded()) PluginSpec.MinecraftSpec.DEFAULT_SECONDARY_COLOR.asTextColor()
-        else configurationAsTextColor(PluginSpec.MinecraftSpec.secondaryColor)
+        return configurationAsTextColor(PluginSpec.MinecraftSpec.secondaryColor)
+            ?: PluginSpec.MinecraftSpec.DEFAULT_SECONDARY_COLOR.asTextColor()
     }
 
     fun PluginConfiguration.tertiaryColor(): TextColor {
-        return if (notLoaded()) PluginSpec.MinecraftSpec.DEFAULT_TERTIARY_COLOR.asTextColor()
-        else configurationAsTextColor(PluginSpec.MinecraftSpec.tertiaryColor)
+        return configurationAsTextColor(PluginSpec.MinecraftSpec.tertiaryColor)
+            ?: PluginSpec.MinecraftSpec.DEFAULT_TERTIARY_COLOR.asTextColor()
     }
 
     fun PluginConfiguration.warningColor(): TextColor {
-        return if (notLoaded()) PluginSpec.MinecraftSpec.DEFAULT_WARNING_COLOR.asTextColor()
-        else configurationAsTextColor(PluginSpec.MinecraftSpec.warningColor)
+        return configurationAsTextColor(PluginSpec.MinecraftSpec.warningColor)
+            ?: PluginSpec.MinecraftSpec.DEFAULT_WARNING_COLOR.asTextColor()
     }
 }

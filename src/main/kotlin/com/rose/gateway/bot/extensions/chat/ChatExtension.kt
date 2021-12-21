@@ -6,8 +6,8 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.checks.MessageCheck
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.bot.message.DiscordMessageSender
-import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.chat.SendMessage
+import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import dev.kord.core.event.message.MessageCreateEvent
 
 class ChatExtension : Extension() {
@@ -21,8 +21,7 @@ class ChatExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            val enabledSpec = PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled
-            return plugin.configuration[enabledSpec]
+            return plugin.configuration.chatExtensionEnabled()
         }
     }
 

@@ -4,15 +4,31 @@ import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.configuration.specs.PluginSpec
 
 object BotConfiguration {
+    fun PluginConfiguration.botToken(): String {
+        return get(PluginSpec.botToken) ?: ""
+    }
+
     fun PluginConfiguration.memberQueryMax(): Int {
-        return configuration!![PluginSpec.BotSpec.memberQueryMax]
+        return get(PluginSpec.BotSpec.memberQueryMax) ?: 0
     }
 
     fun PluginConfiguration.botChannels(): List<String> {
-        return configuration!![PluginSpec.BotSpec.botChannels]
+        return get(PluginSpec.BotSpec.botChannels) ?: listOf()
+    }
+
+    fun PluginConfiguration.aboutExtensionEnabled(): Boolean {
+        return get(PluginSpec.BotSpec.ExtensionsSpec.AboutSpec.enabled) ?: false
     }
 
     fun PluginConfiguration.chatExtensionEnabled(): Boolean {
-        return configuration!![PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled]
+        return get(PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled) ?: false
+    }
+
+    fun PluginConfiguration.listExtensionEnabled(): Boolean {
+        return get(PluginSpec.BotSpec.ExtensionsSpec.ListSpec.enabled) ?: false
+    }
+
+    fun PluginConfiguration.whitelistExtensionEnabled(): Boolean {
+        return get(PluginSpec.BotSpec.ExtensionsSpec.WhitelistSpec.enabled) ?: false
     }
 }

@@ -7,9 +7,9 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
+import com.rose.gateway.shared.configurations.BotConfiguration.whitelistExtensionEnabled
 
 class WhitelistExtension : Extension() {
     companion object : ToggleableExtension {
@@ -22,8 +22,7 @@ class WhitelistExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            val enabledSpec = PluginSpec.BotSpec.ExtensionsSpec.WhitelistSpec.enabled
-            return plugin.configuration[enabledSpec]
+            return plugin.configuration.whitelistExtensionEnabled()
         }
     }
 
