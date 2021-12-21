@@ -29,12 +29,22 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     }
 
     private fun generateNameBlock(event: MessageCreateEvent): ComponentLike {
-        val username = event.member!!.displayName
+        val displayName = event.member!!.displayName
+        val username = event.member!!.username
 
         return Component.join(
             JoinConfiguration.noSeparators(),
             Component.text("<"),
-            Component.text(username, pluginConfiguration.secondaryColor()),
+            Component.text(displayName)
+                .color(pluginConfiguration.secondaryColor())
+                .hoverEvent(
+                    HoverEvent.showText(
+                        Component.text("Username: ")
+                            .append(
+                                Component.text(username, pluginConfiguration.primaryColor(), TextDecoration.ITALIC)
+                            )
+                    )
+                ),
             Component.text("> ")
         )
     }
