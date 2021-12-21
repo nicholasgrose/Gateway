@@ -3,6 +3,7 @@ package com.rose.gateway.bot.extensions.chat
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
+import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
 import guru.zoroark.lixy.LixyToken
@@ -22,7 +23,8 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
             JoinConfiguration.noSeparators(),
             generateNameBlock(event),
             generateMessagePrefixBlock(event),
-            generateMessageBlock(event)
+            generateMessageBlock(event),
+            generateMessageSuffixBlock(event)
         )
     }
 
@@ -43,7 +45,17 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         val guild = event.getGuild() ?: return Component.empty()
         val name = guild.getMemberOrNull(referencedAuthor)?.displayName ?: return Component.empty()
 
-        return Component.text("(Replying to @$name) ", pluginConfiguration.primaryColor())
+        return Component.text("(Replying to @")
+            .decorate(TextDecoration.ITALIC)
+            .color(pluginConfiguration.primaryColor())
+            .append(
+                Component.text(name)
+                    .decorate(TextDecoration.ITALIC)
+                    .color(pluginConfiguration.secondaryColor())
+            )
+            .append(Component.text(") "))
+            .decorate(TextDecoration.ITALIC)
+            .color(pluginConfiguration.primaryColor())
     }
 
     enum class DisplayComponent : LixyTokenType {
@@ -115,5 +127,35 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
 
     private fun processText(token: LixyToken): ComponentLike {
         return Component.text(token.string)
+    }
+
+    private fun generateMessageSuffixBlock(event: MessageCreateEvent): ComponentLike {
+        if (event.message.attachments.isEmpty()) return Component.empty()
+
+        return Component.text(" (Attachments: ")
+            .decorate(TextDecoration.ITALIC)
+            .color(pluginConfiguration.primaryColor())
+            .append(
+                Component.join(
+                    JoinConfiguration.separator(
+                        Component.text(", ")
+                            .decorate(TextDecoration.ITALIC)
+                            .color(pluginConfiguration.primaryColor())
+                    ),
+                    event.message.attachments.mapIndexed { index, attachment ->
+                        Component.text("Attachment$index")
+                            .decorate(TextDecoration.UNDERLINED)
+                            .decorate(TextDecoration.ITALIC)
+                            .color(pluginConfiguration.tertiaryColor())
+                            .hoverEvent(HoverEvent.showText(Component.text("Open attachment link")))
+                            .clickEvent(ClickEvent.openUrl(attachment.url))
+                    }
+                )
+            )
+            .append(
+                Component.text(")")
+                    .decorate(TextDecoration.ITALIC)
+                    .color(pluginConfiguration.primaryColor())
+            )
     }
 }
