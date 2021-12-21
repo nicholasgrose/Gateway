@@ -12,6 +12,9 @@ import guru.zoroark.lixy.matchers.matches
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.JoinConfiguration
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
+import net.kyori.adventure.text.format.TextDecoration
 
 class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     suspend fun createMessage(event: MessageCreateEvent): Component {
@@ -44,24 +47,18 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     }
 
     enum class DisplayComponent : LixyTokenType {
-        USER_MENTION, ROLE_MENTION, CHANNEL_MENTION, TEXT
+        USER_MENTION, ROLE_MENTION, CHANNEL_MENTION, URL, TEXT
     }
 
     private val discordMessageLexer = lixy {
         state {
+            matches("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]") isToken DisplayComponent.URL
             matches("<@!\\d+>") isToken DisplayComponent.USER_MENTION
             matches("<@&\\d+>") isToken DisplayComponent.ROLE_MENTION
             matches("<#\\d+>") isToken DisplayComponent.CHANNEL_MENTION
             matches(".[^<]*") isToken DisplayComponent.TEXT
         }
     }
-
-    private val tokenToComponentTransformer = mapOf(
-        DisplayComponent.USER_MENTION to ::processUserMention,
-        DisplayComponent.ROLE_MENTION to ::processRoleMention,
-        DisplayComponent.CHANNEL_MENTION to ::processChannelMention,
-        DisplayComponent.TEXT to ::processText
-    )
 
     private suspend fun generateMessageBlock(event: MessageCreateEvent): ComponentLike {
         val messageComponents = discordMessageLexer.tokenize(event.message.content)
@@ -72,9 +69,15 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         )
     }
 
-    @Suppress("RedundantSuspendModifier")
     private suspend fun processToken(token: LixyToken, event: MessageCreateEvent): ComponentLike {
-        return tokenToComponentTransformer[token.tokenType]!!(token, event)
+        return when (token.tokenType) {
+            DisplayComponent.USER_MENTION -> processUserMention(token, event)
+            DisplayComponent.ROLE_MENTION -> processRoleMention(token, event)
+            DisplayComponent.CHANNEL_MENTION -> processChannelMention(token, event)
+            DisplayComponent.URL -> processUrl(token)
+            DisplayComponent.TEXT -> processText(token)
+            else -> Component.empty()
+        }
     }
 
     private suspend fun processUserMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {
@@ -101,8 +104,16 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         return Component.text("#${channel.name}", pluginConfiguration.primaryColor())
     }
 
-    @Suppress("RedundantSuspendModifier", "UNUSED_PARAMETER")
-    private suspend fun processText(token: LixyToken, event: MessageCreateEvent): ComponentLike {
+    private fun processUrl(token: LixyToken): ComponentLike {
+        val url = token.string
+
+        return Component.text(url)
+            .decorate(TextDecoration.UNDERLINED)
+            .hoverEvent(HoverEvent.showText(Component.text("Click to open url")))
+            .clickEvent(ClickEvent.openUrl(url))
+    }
+
+    private fun processText(token: LixyToken): ComponentLike {
         return Component.text(token.string)
     }
 }
