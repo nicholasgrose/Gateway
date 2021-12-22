@@ -5,10 +5,11 @@ be enabled or disabled in its configuration, so you don't need to use them all.
 
 Available extensions:
 
-- Chat Extension - Adds cross-chat capability between Minecraft and Discord.
-- Whitelist Extension - Let's Discord users add and removes people from the whitelist.
-- List Extension - Let's Discord users list the names of online users.
 - About Extension - Let's Discord users view the plugin version and have fun.
+- Chat Extension - Adds cross-chat capability between Minecraft and Discord.
+- IP Extension - Adds a way for Discord users to query for the server's IP address.
+- List Extension - Let's Discord users list the names of online users.
+- Whitelist Extension - Let's Discord users add and remove people from the whitelist.
 
 ## Installing the Plugin:
 
