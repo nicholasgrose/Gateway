@@ -3,6 +3,7 @@ package com.rose.gateway.configuration.specs
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.about.AboutExtension
 import com.rose.gateway.bot.extensions.chat.ChatExtension
+import com.rose.gateway.bot.extensions.ip.IpExtension
 import com.rose.gateway.bot.extensions.list.ListExtension
 import com.rose.gateway.bot.extensions.whitelist.WhitelistExtension
 import com.uchuhimo.konf.ConfigSpec
@@ -31,6 +32,14 @@ object PluginSpec : ConfigSpec(), ResponsiveSpec {
             }
 
             object ChatSpec : CommonExtensionSpec(ChatExtension.extensionName()) {
+                override fun setConfigChangeActions(plugin: GatewayPlugin) {
+                    this.enabled.afterSet { _, value -> modifyExtensionLoadedStatus(value, plugin) }
+                }
+            }
+
+            object IpSpec : CommonExtensionSpec(IpExtension.extensionName()) {
+                val displayIp by required<String>()
+
                 override fun setConfigChangeActions(plugin: GatewayPlugin) {
                     this.enabled.afterSet { _, value -> modifyExtensionLoadedStatus(value, plugin) }
                 }

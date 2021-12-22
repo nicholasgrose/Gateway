@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands
 
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
@@ -8,6 +8,7 @@ import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryCo
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
 import com.uchuhimo.konf.Item
+import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.event.ClickEvent
@@ -15,7 +16,8 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 
-class ConfigCommands(private val configuration: PluginConfiguration) {
+class ConfigCommands(private val plugin: GatewayPlugin) {
+    private val configuration = plugin.configuration
     private val configStringMap = configuration.configurationStringMap
 
     fun setConfiguration(context: CommandContext): Boolean {
@@ -228,12 +230,16 @@ class ConfigCommands(private val configuration: PluginConfiguration) {
     }
 
     fun reloadConfig(context: CommandContext): Boolean {
-        context.sender.sendMessage("Loading configuration.")
+        context.sender.sendMessage("Loading configuration...")
 
         val loadSuccessful = configuration.reloadConfiguration()
 
         if (loadSuccessful) {
-            context.sender.sendMessage("New configuration loaded successfully.")
+            runBlocking {
+                plugin.restartBot()
+            }
+
+            context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
         } else {
             context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
         }

@@ -17,18 +17,6 @@ plugin:
     # Configurations for the various bot extensions.
     extensions:
 
-      # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
-      whitelist:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-      # Configurations for the list extension, which gives information about online players.
-      list:
-
-        # Whether the extension is enabled.
-        enabled: true
-
       # Configurations for the about extension, which gives information about the plugin.
       about:
 
@@ -37,6 +25,27 @@ plugin:
 
       # Configurations for the chat extension, which gives Minecraft chat integration.
       chat:
+
+        # Whether the extension is enabled.
+        enabled: true
+
+      # Configurations for the IP extension, which gives the IP command.
+      ip:
+
+        # Whether the extension is enabled.
+        enabled: true
+
+        # The IP that will be displayed by the IP command.
+        displayIp: 'minecraft.test:25565'
+
+      # Configurations for the list extension, which gives information about online players.
+      list:
+
+        # Whether the extension is enabled.
+        enabled: true
+
+      # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
+      whitelist:
 
         # Whether the extension is enabled.
         enabled: true

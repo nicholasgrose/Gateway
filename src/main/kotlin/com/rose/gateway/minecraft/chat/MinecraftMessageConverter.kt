@@ -24,7 +24,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
     data class MessageProcessingResult(
         val successful: Boolean,
         val minecraftMessage: Component,
-        val discordMessage: (MessageCreateBuilder.() -> Unit)
+        val discordMessage: String
     )
 
     data class TokenProcessingResult(
@@ -61,8 +61,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
         val playerName = event.player.name
 
         return {
-            result.discordMessage.invoke(this)
-            content = "<$playerName> $content"
+            content = "<$playerName> ${result.discordMessage}"
         }
     }
 
@@ -70,7 +69,9 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
         val result = processMessageText(messageText)
         if (!result.successful) return null
 
-        return result.discordMessage
+        return {
+            content = result.discordMessage
+        }
     }
 
     private suspend fun processMessageText(messageText: String): MessageProcessingResult {
@@ -99,11 +100,11 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
                 messageTextParts.map {
                     it.minecraftMessage
                 }
-            )) {
-            content = messageTextParts.joinToString(separator = "") {
-                it.discordMessage
+            ),
+            messageTextParts.joinToString(separator = "") { part ->
+                part.discordMessage
             }
-        }
+        )
     }
 
     private fun emptyTokenResult(): TokenProcessingResult {

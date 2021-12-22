@@ -82,7 +82,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         botGuilds.clear()
 
         val validBotChannels = plugin.configuration.botChannels()
-        kordClient!!.guilds.collect { guild ->
+        kordClient?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
                     clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS)

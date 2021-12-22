@@ -24,6 +24,14 @@ object BotConfiguration {
         return get(PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled) ?: false
     }
 
+    fun PluginConfiguration.ipExtensionEnabled(): Boolean {
+        return get(PluginSpec.BotSpec.ExtensionsSpec.IpSpec.enabled) ?: false
+    }
+
+    fun PluginConfiguration.displayIp(): String {
+        return get(PluginSpec.BotSpec.ExtensionsSpec.IpSpec.displayIp) ?: ""
+    }
+
     fun PluginConfiguration.listExtensionEnabled(): Boolean {
         return get(PluginSpec.BotSpec.ExtensionsSpec.ListSpec.enabled) ?: false
     }

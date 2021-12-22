@@ -1,12 +1,27 @@
 name: Gateway
 version: 1.4.0
+author: 'Nicholas Rose'
+
 main: com.rose.gateway.GatewayPlugin
-api-version: 1.16
-authors: [ 'Nicholas Rose' ]
+api-version: 1.18
+load: POSTWORLD
+
 commands:
-  discord:
+  discord-help:
     description: Gives help for Minecraft to Discord chat shortcuts.
-    usage: /discord
+    usage: /discord-help
+    permission: gateway.help
+    permission-message: You do not have permission to request help for Gateway!
   gateway:
-    description: Modifies the Gateway plugin.
+    description: Controls the Gateway plugin.
     usage: /gateway
+    permission: gateway.control
+    permission-message: You do not have permission to control Gateway!
+
+permissions:
+  gateway.control:
+    description: Allows permission to control the Gateway plugin.
+    default: op
+  gateway.help:
+    description: Allows permission to view the discord message help sheet.
+    default: true

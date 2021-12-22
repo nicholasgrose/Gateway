@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender
 
 class BotCommands(val plugin: GatewayPlugin) {
     fun restartBot(context: CommandContext): Boolean {
-        sendAndLogMessage(context.sender, "Restarting the Discord bot.")
+        sendAndLogMessage(context.sender, "Restarting the Discord bot...")
         val restarted = plugin.restartBot()
 
         if (restarted) {

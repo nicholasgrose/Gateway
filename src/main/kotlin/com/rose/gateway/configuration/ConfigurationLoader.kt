@@ -73,6 +73,7 @@ class ConfigurationLoader(
             loadedConfig
         } catch (error: Throwable) {
             Logger.logInfo("Configuration failed to load: ${error.message}")
+            error.printStackTrace()
             null
         }
     }

@@ -11,14 +11,14 @@ import com.rose.gateway.minecraft.commands.framework.converters.StringArg
 
 class CommandRegistry(val plugin: GatewayPlugin) {
     private val botCommands = BotCommands(plugin)
-    private val configCommands = ConfigCommands(plugin.configuration)
+    private val configCommands = ConfigCommands(plugin)
 
     fun registerCommands() {
         commands.registerCommands()
     }
 
     private val commands = minecraftCommands(plugin) {
-        command("discord") {
+        command("discord-help") {
             runner { context ->
                 GeneralCommands.discordHelp(context)
             }
