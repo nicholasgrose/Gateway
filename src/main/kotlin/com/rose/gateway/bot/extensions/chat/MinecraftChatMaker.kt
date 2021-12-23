@@ -1,6 +1,7 @@
 package com.rose.gateway.bot.extensions.chat
 
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.shared.component.ComponentBuilder
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
@@ -17,7 +18,9 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 
-class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
+class MinecraftChatMaker(private val plugin: GatewayPlugin) {
+    private val pluginConfiguration = plugin.configuration
+
     suspend fun createMessage(event: MessageCreateEvent): Component {
         return Component.join(
             JoinConfiguration.noSeparators(),
@@ -29,22 +32,10 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     }
 
     private fun generateNameBlock(event: MessageCreateEvent): ComponentLike {
-        val displayName = event.member!!.displayName
-        val username = event.member!!.username
-
         return Component.join(
             JoinConfiguration.noSeparators(),
             Component.text("<"),
-            Component.text(displayName)
-                .color(pluginConfiguration.secondaryColor())
-                .hoverEvent(
-                    HoverEvent.showText(
-                        Component.text("Username: ")
-                            .append(
-                                Component.text(username, pluginConfiguration.primaryColor(), TextDecoration.ITALIC)
-                            )
-                    )
-                ),
+            ComponentBuilder.discordMemberComponent(event.member!!, plugin),
             Component.text("> ")
         )
     }
@@ -52,20 +43,19 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
     private suspend fun generateMessagePrefixBlock(event: MessageCreateEvent): ComponentLike {
         val referencedMessage = event.message.referencedMessage ?: return Component.empty()
         val referencedAuthor = referencedMessage.author?.id ?: return Component.empty()
-        val guild = event.getGuild() ?: return Component.empty()
-        val name = guild.getMemberOrNull(referencedAuthor)?.displayName ?: return Component.empty()
+        val member = event.getGuild()?.getMemberOrNull(referencedAuthor) ?: return Component.empty()
 
-        return Component.text("(Replying to @")
-            .decorate(TextDecoration.ITALIC)
-            .color(pluginConfiguration.primaryColor())
-            .append(
-                Component.text(name)
-                    .decorate(TextDecoration.ITALIC)
-                    .color(pluginConfiguration.secondaryColor())
-            )
-            .append(Component.text(") "))
-            .decorate(TextDecoration.ITALIC)
-            .color(pluginConfiguration.primaryColor())
+        return Component.join(
+            JoinConfiguration.noSeparators(),
+            Component.text("(Replying to ")
+                .color(pluginConfiguration.primaryColor())
+                .decorate(TextDecoration.ITALIC),
+            ComponentBuilder.atDiscordMemberComponent(member, plugin.configuration.secondaryColor(), plugin)
+                .decorate(TextDecoration.ITALIC),
+            Component.text(") ")
+                .color(pluginConfiguration.primaryColor())
+                .decorate(TextDecoration.ITALIC)
+        )
     }
 
     enum class DisplayComponent : LixyTokenType {
@@ -107,7 +97,7 @@ class MinecraftChatMaker(private val pluginConfiguration: PluginConfiguration) {
         val id = Snowflake(snowflakeString)
         val member = event.getGuild()!!.getMemberOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${member.displayName}", pluginConfiguration.primaryColor())
+        return ComponentBuilder.atDiscordMemberComponent(member, plugin.configuration.primaryColor(), plugin)
     }
 
     private suspend fun processRoleMention(token: LixyToken, event: MessageCreateEvent): ComponentLike {

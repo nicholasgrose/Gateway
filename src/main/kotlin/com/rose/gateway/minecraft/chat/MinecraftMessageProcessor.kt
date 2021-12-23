@@ -1,9 +1,11 @@
 package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.shared.component.ComponentBuilder
 import com.rose.gateway.shared.configurations.BotConfiguration.memberQueryMax
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
+import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.entity.ChannelType
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
@@ -20,7 +22,7 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 
 @OptIn(KordExperimental::class)
-class MinecraftMessageConverter(val plugin: GatewayPlugin) {
+class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     data class MessageProcessingResult(
         val successful: Boolean,
         val minecraftMessage: Component,
@@ -61,7 +63,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
         val playerName = event.player.name
 
         return {
-            content = "<$playerName> ${result.discordMessage}"
+            content = "**${playerName.discordBoldSafe()} »** ${result.discordMessage}"
         }
     }
 
@@ -116,10 +118,12 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
             val members = guild.getMembers(nameString, plugin.configuration.memberQueryMax())
             val firstMember = members.firstOrNull() ?: return processErrorText("@$nameString")
             val id = firstMember.id.asString
-            val minecraftText = "@${firstMember.displayName}"
             val discordText = "<@!$id>"
 
-            return mentionComponent(minecraftText, discordText)
+            return TokenProcessingResult(
+                ComponentBuilder.atDiscordMemberComponent(firstMember, plugin.configuration.primaryColor(), plugin),
+                discordText
+            )
         }
 
         return processErrorText("@$nameString")
@@ -131,7 +135,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
                 val minecraftText = "@${role.name}"
                 val discordText = "<@&${role.id.asString}>"
 
-                if (role.name == nameString) return mentionComponent(minecraftText, discordText)
+                if (role.name == nameString) return mentionResult(minecraftText, discordText)
             }
         }
 
@@ -146,7 +150,7 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
                 val minecraftText = "#${channel.name}"
                 val discordText = "<#${channel.id.asString}>"
 
-                if (channel.name == nameString) return mentionComponent(minecraftText, discordText)
+                if (channel.name == nameString) return mentionResult(minecraftText, discordText)
             }
         }
 
@@ -161,14 +165,14 @@ class MinecraftMessageConverter(val plugin: GatewayPlugin) {
                 val minecraftText = "#${channel.name}"
                 val discordText = "<#${channel.id.asString}>"
 
-                if (channel.name == nameString) return mentionComponent(minecraftText, discordText)
+                if (channel.name == nameString) return mentionResult(minecraftText, discordText)
             }
         }
 
         return processErrorText("#$nameString")
     }
 
-    private fun mentionComponent(minecraftText: String, discordText: String): TokenProcessingResult {
+    private fun mentionResult(minecraftText: String, discordText: String): TokenProcessingResult {
         return TokenProcessingResult(
             Component.text(minecraftText)
                 .color(plugin.configuration.primaryColor()),

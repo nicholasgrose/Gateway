@@ -29,7 +29,7 @@ class ChatExtension : Extension() {
     val plugin = bot.getKoin().get<GatewayPlugin>()
     private val messageCheck = MessageCheck(plugin)
     private val discordMessageSender = DiscordMessageSender(plugin)
-    private val minecraftChatMaker = MinecraftChatMaker(plugin.configuration)
+    private val minecraftChatMaker = MinecraftChatMaker(plugin)
 
     override suspend fun setup() {
         event<MessageCreateEvent> {

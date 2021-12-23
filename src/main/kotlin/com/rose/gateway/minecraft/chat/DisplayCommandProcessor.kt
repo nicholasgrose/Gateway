@@ -1,5 +1,7 @@
 package com.rose.gateway.minecraft.chat
 
+import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
+
 object DisplayCommandProcessor {
     private val displayProcessorMap = mapOf(
         "me" to DisplayCommandProcessor::processMe,
@@ -38,13 +40,13 @@ object DisplayCommandProcessor {
         val commandEnd = command.indexOf(' ')
         val actionContent = command.substring(commandEnd + 1)
 
-        return "* $sender $actionContent"
+        return "*** ${sender.discordBoldSafe()}** $actionContent"
     }
 
     private fun processSay(command: String, sender: String): String {
         val commandEnd = command.indexOf(' ')
         val sayContent = command.substring(commandEnd + 1)
 
-        return "[$sender] $sayContent"
+        return "**[${sender.discordBoldSafe()}]** $sayContent"
     }
 }
