@@ -6,6 +6,7 @@ import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColo
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
@@ -42,20 +43,27 @@ class MinecraftChatMaker(private val plugin: GatewayPlugin) {
 
     private suspend fun generateMessagePrefixBlock(event: MessageCreateEvent): ComponentLike {
         val referencedMessage = event.message.referencedMessage ?: return Component.empty()
-        val referencedAuthor = referencedMessage.author?.id ?: return Component.empty()
-        val member = event.getGuild()?.getMemberOrNull(referencedAuthor) ?: return Component.empty()
+        val referenceComponent = replyReferenceComponent(referencedMessage, event) ?: return Component.empty()
 
         return Component.join(
             JoinConfiguration.noSeparators(),
             Component.text("(Replying to ")
                 .color(pluginConfiguration.primaryColor())
                 .decorate(TextDecoration.ITALIC),
-            ComponentBuilder.atDiscordMemberComponent(member, plugin.configuration.secondaryColor(), plugin)
-                .decorate(TextDecoration.ITALIC),
+            referenceComponent,
             Component.text(") ")
                 .color(pluginConfiguration.primaryColor())
                 .decorate(TextDecoration.ITALIC)
         )
+
+    }
+
+    private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {
+        val referencedAuthor = referencedMessage.author?.id ?: return null
+        val member = event.getGuild()?.getMemberOrNull(referencedAuthor) ?: return Component.empty()
+
+        return ComponentBuilder.atDiscordMemberComponent(member, plugin.configuration.secondaryColor(), plugin)
+            .decorate(TextDecoration.ITALIC)
     }
 
     enum class DisplayComponent : LixyTokenType {
