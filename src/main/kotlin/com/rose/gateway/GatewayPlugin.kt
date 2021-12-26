@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
     companion object {
-        const val VERSION = "1.4.0"
+        const val VERSION = "1.4.1"
     }
 
     val startTime = Clock.System.now()

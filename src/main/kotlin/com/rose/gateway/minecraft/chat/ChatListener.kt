@@ -102,10 +102,12 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         val advancementMessage = event.message() ?: return
+        val advancementText = PaperComponents.plainTextSerializer().serialize(advancementMessage)
+            .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
             plugin.discordBot.bot?.send(GameChatEvent {
-                content = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
+                content = advancementText
             })
         }
     }
