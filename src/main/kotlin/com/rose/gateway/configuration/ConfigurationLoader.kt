@@ -30,6 +30,7 @@ class ConfigurationLoader(
 
         if (!Files.exists(configurationFilePath)) {
             Logger.logInfo("No configuration file found. Downloading...")
+
             val configurationFileCreated = createConfigurationFile()
 
             if (!configurationFileCreated) {
@@ -53,6 +54,8 @@ class ConfigurationLoader(
 
         return when (result) {
             is Result.Success -> {
+                Files.createDirectories(configurationFilePath.parent)
+                Files.createFile(configurationFilePath)
                 Files.writeString(configurationFilePath, result.value)
                 Logger.logInfo("Successfully created configuration file!")
                 true
