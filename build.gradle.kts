@@ -46,6 +46,14 @@ tasks {
         }
     }
 
+    processResources {
+        filesMatching("plugin.yml") {
+            expand(
+                "version" to version
+            )
+        }
+    }
+
     jar.configure {
         onlyIf { false }
     }
