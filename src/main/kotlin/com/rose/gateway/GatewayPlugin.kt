@@ -11,10 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
-    companion object {
-        const val VERSION = "1.4.2"
-    }
-
+    val version = description.version
     val startTime = Clock.System.now()
     val configuration = PluginConfiguration(this)
     var discordBot = DiscordBot(this)
