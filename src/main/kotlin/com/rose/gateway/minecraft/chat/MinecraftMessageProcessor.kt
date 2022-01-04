@@ -117,8 +117,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
         for (guild in plugin.discordBot.botGuilds) {
             val members = guild.getMembers(nameString, plugin.configuration.memberQueryMax())
             val firstMember = members.firstOrNull() ?: return processErrorText("@$nameString")
-            val id = firstMember.id.asString
-            val discordText = "<@!$id>"
+            val discordText = "<@!${firstMember.id}>"
 
             return TokenProcessingResult(
                 ComponentBuilder.atDiscordMemberComponent(firstMember, plugin.configuration.primaryColor(), plugin),
@@ -133,7 +132,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
         for (guild in plugin.discordBot.botGuilds) {
             for (role in guild.roles.toSet()) {
                 val minecraftText = "@${role.name}"
-                val discordText = "<@&${role.id.asString}>"
+                val discordText = "<@&${role.id}>"
 
                 if (role.name == nameString) return mentionResult(minecraftText, discordText)
             }
@@ -148,7 +147,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
                 if (channel.type != ChannelType.GuildText) continue
 
                 val minecraftText = "#${channel.name}"
-                val discordText = "<#${channel.id.asString}>"
+                val discordText = "<#${channel.id}>"
 
                 if (channel.name == nameString) return mentionResult(minecraftText, discordText)
             }
@@ -163,7 +162,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
                 if (channel.type != ChannelType.GuildVoice) continue
 
                 val minecraftText = "#${channel.name}"
-                val discordText = "<#${channel.id.asString}>"
+                val discordText = "<#${channel.id}>"
 
                 if (channel.name == nameString) return mentionResult(minecraftText, discordText)
             }

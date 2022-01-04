@@ -13,7 +13,6 @@ import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import org.koin.core.context.stopKoin
 
 class DiscordBot(private val plugin: GatewayPlugin) {
@@ -112,11 +111,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
-        if (kordClient != null) {
-            kordClient.shutdown()
-            kordClient.coroutineContext.job.join()
-        }
-
+        kordClient?.shutdown()
         job?.join()
         stopKoin()
 
