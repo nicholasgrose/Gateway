@@ -94,7 +94,9 @@ object PluginSpec : ConfigSpec(), ResponsiveSpec {
             description = "Used for marking configurations that can be null."
         )
 
-        override fun setConfigChangeActions(plugin: GatewayPlugin) {}
+        override fun setConfigChangeActions(plugin: GatewayPlugin) {
+            // This does not need to do anything at the moment because colors are always read anew when used.
+        }
     }
 
     override fun setConfigChangeActions(plugin: GatewayPlugin) {
