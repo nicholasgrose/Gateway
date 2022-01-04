@@ -57,7 +57,6 @@ class ConfigurationLoader(
                 Files.createDirectories(configurationFilePath.parent)
                 Files.createFile(configurationFilePath)
                 Files.writeString(configurationFilePath, result.value)
-                Logger.logInfo("Successfully created configuration file!")
                 true
             }
             is Result.Failure -> {

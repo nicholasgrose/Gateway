@@ -10,12 +10,13 @@ import kotlinx.coroutines.runBlocking
 class PluginConfiguration(private val plugin: GatewayPlugin) {
     companion object {
         private const val CONFIGURATION_FILE = "plugins/Gateway/Gateway.yaml"
-        private const val EXAMPLE_CONFIGURATION_URL =
-            "https://raw.githubusercontent.com/nicholasgrose/Gateway/main/examples/Gateway.yaml"
     }
 
+    private val exampleConfigurationUrl =
+        "https://raw.githubusercontent.com/nicholasgrose/Gateway/v${plugin.version}/examples/Gateway.yaml"
+
     val configurationStringMap = ConfigurationStringMap(PluginSpec)
-    private val configurationLoader = ConfigurationLoader(PluginSpec, CONFIGURATION_FILE, EXAMPLE_CONFIGURATION_URL)
+    private val configurationLoader = ConfigurationLoader(PluginSpec, CONFIGURATION_FILE, exampleConfigurationUrl)
     var configuration: Config? = configurationLoader.loadOrCreateConfig()
 
     fun reloadConfiguration(): Boolean {
