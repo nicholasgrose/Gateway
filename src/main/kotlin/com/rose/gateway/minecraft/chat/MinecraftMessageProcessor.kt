@@ -98,7 +98,8 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
 
         return MessageProcessingResult(
             true,
-            Component.join(JoinConfiguration.noSeparators(),
+            Component.join(
+                JoinConfiguration.noSeparators(),
                 messageTextParts.map {
                     it.minecraftMessage
                 }
@@ -178,7 +179,6 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
             discordText
         )
     }
-
 
     private fun processUrl(url: String): TokenProcessingResult {
         val component = Component.text(url)

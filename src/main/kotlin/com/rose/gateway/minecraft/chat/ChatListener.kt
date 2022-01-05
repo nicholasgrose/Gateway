@@ -37,9 +37,11 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         runBlocking {
-            plugin.discordBot.bot?.send(GameChatEvent {
-                content = "**${event.player.name}** joined the game"
-            })
+            plugin.discordBot.bot?.send(
+                GameChatEvent {
+                    content = "**${event.player.name}** joined the game"
+                }
+            )
         }
     }
 
@@ -48,9 +50,11 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         runBlocking {
-            plugin.discordBot.bot?.send(GameChatEvent {
-                content = "**${event.player.name}** left the game"
-            })
+            plugin.discordBot.bot?.send(
+                GameChatEvent {
+                    content = "**${event.player.name}** left the game"
+                }
+            )
         }
     }
 
@@ -63,9 +67,11 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
-            plugin.discordBot.bot?.send(GameChatEvent {
-                content = plainTextMessage
-            })
+            plugin.discordBot.bot?.send(
+                GameChatEvent {
+                    content = plainTextMessage
+                }
+            )
         }
     }
 
@@ -106,9 +112,11 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
-            plugin.discordBot.bot?.send(GameChatEvent {
-                content = advancementText
-            })
+            plugin.discordBot.bot?.send(
+                GameChatEvent {
+                    content = advancementText
+                }
+            )
         }
     }
 }

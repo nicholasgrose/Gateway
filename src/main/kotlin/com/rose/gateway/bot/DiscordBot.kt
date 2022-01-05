@@ -12,7 +12,11 @@ import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.core.context.stopKoin
 
 class DiscordBot(private val plugin: GatewayPlugin) {
@@ -84,9 +88,9 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         kordClient?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
-                    clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS)
-                    && channel is TextChannel
-                    && channel.name in validBotChannels
+                    clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
+                    channel is TextChannel &&
+                    channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)
                     botGuilds.add(guild)
