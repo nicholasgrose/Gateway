@@ -11,22 +11,34 @@ class Whitelist(plugin: GatewayPlugin) {
     private val scheduler = Scheduler(plugin)
 
     fun addToWhitelist(username: String): WhitelistState {
-        val player = getOfflinePlayer(username) ?: return WhitelistState.STATE_INVALID
-        if (player.isWhitelisted) return WhitelistState.STATE_SUSTAINED
-        scheduler.runTask {
-            Console.runCommand("whitelist add $username")
+        val player = getOfflinePlayer(username)
+
+        return when {
+            player == null -> WhitelistState.STATE_INVALID
+            player.isWhitelisted -> WhitelistState.STATE_SUSTAINED
+            else -> {
+                scheduler.runTask {
+                    Console.runCommand("whitelist add $username")
+                }
+                WhitelistState.STATE_MODIFIED
+            }
         }
-        return WhitelistState.STATE_MODIFIED
     }
 
     fun removeFromWhitelist(username: String): WhitelistState {
-        val player = getOfflinePlayer(username) ?: return WhitelistState.STATE_INVALID
-        if (!player.isWhitelisted) return WhitelistState.STATE_SUSTAINED
-        scheduler.runTask {
-            player.player?.kick(Component.text("Removed from whitelist."))
-            Console.runCommand("whitelist remove $username")
+        val player = getOfflinePlayer(username)
+
+        return when {
+            player == null -> WhitelistState.STATE_INVALID
+            player.isWhitelisted -> WhitelistState.STATE_SUSTAINED
+            else -> {
+                scheduler.runTask {
+                    player.player?.kick(Component.text("Removed from whitelist."))
+                    Console.runCommand("whitelist remove $username")
+                }
+                WhitelistState.STATE_MODIFIED
+            }
         }
-        return WhitelistState.STATE_MODIFIED
     }
 
     fun whitelistedPlayersAsString(): String {
