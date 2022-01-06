@@ -21,6 +21,9 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: Set gradlew Execution Permissions
+        run: chmod u+x gradlew
+
       - name: Build Artifacts
         uses: gradle/gradle-build-action@v2
         with:
