@@ -1,0 +1,49 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Build Artifacts
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - name: Get Release Version
+        uses: HardNorth/github-version-generate@v1.1.1
+        with:
+          version-source: file
+          version-file: build.gradle.kts
+          version-file-extraction-pattern: '(?<=version = ").+(?=")'
+
+      - name: Create Release notes
+        uses: johnyherangi/create-release-notes@main
+        id: create-release-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Gateway ${{ env.RELEASE_VERSION }}
+          artifacts: 'build/libs/*.jar'
+          body: ${{ env.create-release-notes.outputs.release-notes }}
+          tag: v${{ env.version-tag.outputs.RELEASE_VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
