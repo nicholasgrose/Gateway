@@ -44,4 +44,3 @@ class ConfigListValueArg(
         return tabCompleter(tabCompletionContext)
     }
 }
-
