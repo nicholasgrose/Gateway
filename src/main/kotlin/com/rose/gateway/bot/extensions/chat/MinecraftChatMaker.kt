@@ -55,7 +55,6 @@ class MinecraftChatMaker(private val plugin: GatewayPlugin) {
                 .color(pluginConfiguration.primaryColor())
                 .decorate(TextDecoration.ITALIC)
         )
-
     }
 
     private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {

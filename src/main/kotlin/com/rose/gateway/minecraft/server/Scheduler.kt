@@ -6,8 +6,11 @@ import org.bukkit.scheduler.BukkitTask
 
 class Scheduler(val plugin: GatewayPlugin) {
     fun runTask(task: () -> Unit): BukkitTask {
-        return Bukkit.getScheduler().runTask(plugin, Runnable {
-            task()
-        })
+        return Bukkit.getScheduler().runTask(
+            plugin,
+            Runnable {
+                task()
+            }
+        )
     }
 }
