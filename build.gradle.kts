@@ -2,6 +2,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("xyz.jpenilla.run-paper") version "1.0.6"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
 group = "com.rose"
