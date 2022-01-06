@@ -36,17 +36,11 @@ jobs:
           version-file: build.gradle.kts
           version-file-extraction-pattern: '(?<=version = ").+(?=")'
 
-      - name: Create Release notes
-        uses: johnyherangi/create-release-notes@main
-        id: create-release-notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           name: Gateway ${{ env.RELEASE_VERSION }}
+          tag: v${{ env.RELEASE_VERSION }}
+          generateReleaseNotes: true
           artifacts: 'build/libs/*.jar'
-          body: ${{ env.create-release-notes.outputs.release-notes }}
-          tag: v${{ env.version-tag.outputs.RELEASE_VERSION }}
           token: ${{ secrets.GITHUB_TOKEN }}
