@@ -1,6 +1,6 @@
 package com.rose.gateway.shared.collections.trie
 
-import java.util.*
+import java.util.SortedMap
 
 data class TrieNode(
     val nodeValue: String,
