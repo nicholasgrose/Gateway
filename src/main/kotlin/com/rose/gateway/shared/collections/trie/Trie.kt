@@ -1,5 +1,6 @@
 package com.rose.gateway.shared.collections.trie
 
+@Suppress("TooManyFunctions")
 class Trie : MutableSet<String> {
     private val rootNode = TrieNode("", null)
     override var size = 0
@@ -112,9 +113,9 @@ class Trie : MutableSet<String> {
     }
 
     override fun remove(element: String): Boolean {
-        val node = followSearchString(element) ?: return false
+        val node = followSearchString(element)
 
-        if (!node.isTerminalNode) return false
+        if (node == null || !node.isTerminalNode) return false
 
         node.isTerminalNode = false
         pruneTrieNode(node)
