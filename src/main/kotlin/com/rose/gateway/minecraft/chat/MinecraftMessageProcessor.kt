@@ -9,6 +9,7 @@ import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.common.entity.ChannelType
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
+import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
@@ -23,6 +24,31 @@ import net.kyori.adventure.text.format.TextDecoration
 
 @OptIn(KordExperimental::class)
 class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
+    companion object {
+        const val USER_MENTION_REGEX = "@[^\\s@]+"
+        const val USER_MENTION_START_INDEX = 1
+
+        const val USER_QUOTE_MENTION_REGEX = "@\"((\\\\\")|[^\"])+\""
+        const val USER_QUOTE_MENTION_START_INDEX = 2
+
+        const val TEXT_CHANNEL_MENTION_REGEX = "@C=[^\\s@]+"
+        const val TEXT_CHANNEL_MENTION_START_INDEX = 3
+
+        const val VOICE_CHANNEL_MENTION_REGEX = "@V=[^\\s@]+"
+        const val VOICE_CHANNEL_MENTION_START_INDEX = 3
+
+        const val ROLE_MENTION_REGEX = "@R=[^\\s@]+"
+        const val ROLE_MENTION_START_INDEX = 3
+
+        const val ROLE_QUOTE_MENTION_REGEX = "@R=\"((\\\\\")|[^\"])+\""
+        const val ROLE_QUOTE_MENTION_START_INDEX = 4
+
+        const val URL_REGEX = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
+        const val URL_START_INDEX = 0
+
+        const val TEXT_REGEX = ".[^@]*"
+        const val TEXT_START_INDEX = 0
+    }
 
     data class MessageProcessingResult(
         val successful: Boolean,
@@ -35,27 +61,27 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
         val discordMessage: String
     )
 
-    enum class ChatComponent(val regexPattern: String) : LixyTokenType {
-        USER_MENTION("@[^\\s@]+"),
-        USER_QUOTE_MENTION("@\"((\\\\\")|[^\"])+\""),
-        TEXT_CHANNEL_MENTION("@V=[^\\s@]+"),
-        VOICE_CHANNEL_MENTION("@C=[^\\s@]+"),
-        ROLE_MENTION("@R=[^\\s@]+"),
-        ROLE_QUOTE_MENTION("@R=\"((\\\\\")|[^\"])+\""),
-        URL("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"),
-        TEXT(".[^@]*")
+    enum class ChatComponent(val pattern: String, val substringStartIndex: Int) : LixyTokenType {
+        USER_MENTION(USER_MENTION_REGEX, USER_MENTION_START_INDEX),
+        USER_QUOTE_MENTION(USER_QUOTE_MENTION_REGEX, USER_QUOTE_MENTION_START_INDEX),
+        TEXT_CHANNEL_MENTION(TEXT_CHANNEL_MENTION_REGEX, TEXT_CHANNEL_MENTION_START_INDEX),
+        VOICE_CHANNEL_MENTION(VOICE_CHANNEL_MENTION_REGEX, VOICE_CHANNEL_MENTION_START_INDEX),
+        ROLE_MENTION(ROLE_MENTION_REGEX, ROLE_MENTION_START_INDEX),
+        ROLE_QUOTE_MENTION(ROLE_QUOTE_MENTION_REGEX, ROLE_QUOTE_MENTION_START_INDEX),
+        URL(URL_REGEX, URL_START_INDEX),
+        TEXT(TEXT_REGEX, TEXT_START_INDEX)
     }
 
     private val chatLexer = lixy {
         state {
-            matches(ChatComponent.URL.regexPattern) isToken ChatComponent.URL
-            matches(ChatComponent.ROLE_QUOTE_MENTION.regexPattern) isToken ChatComponent.ROLE_QUOTE_MENTION
-            matches(ChatComponent.ROLE_MENTION.regexPattern) isToken ChatComponent.ROLE_MENTION
-            matches(ChatComponent.TEXT_CHANNEL_MENTION.regexPattern) isToken ChatComponent.TEXT_CHANNEL_MENTION
-            matches(ChatComponent.VOICE_CHANNEL_MENTION.regexPattern) isToken ChatComponent.VOICE_CHANNEL_MENTION
-            matches(ChatComponent.USER_QUOTE_MENTION.regexPattern) isToken ChatComponent.USER_QUOTE_MENTION
-            matches(ChatComponent.USER_MENTION.regexPattern) isToken ChatComponent.USER_MENTION
-            matches(ChatComponent.TEXT.regexPattern) isToken ChatComponent.TEXT
+            matches(ChatComponent.URL.pattern) isToken ChatComponent.URL
+            matches(ChatComponent.ROLE_QUOTE_MENTION.pattern) isToken ChatComponent.ROLE_QUOTE_MENTION
+            matches(ChatComponent.ROLE_MENTION.pattern) isToken ChatComponent.ROLE_MENTION
+            matches(ChatComponent.TEXT_CHANNEL_MENTION.pattern) isToken ChatComponent.TEXT_CHANNEL_MENTION
+            matches(ChatComponent.VOICE_CHANNEL_MENTION.pattern) isToken ChatComponent.VOICE_CHANNEL_MENTION
+            matches(ChatComponent.USER_QUOTE_MENTION.pattern) isToken ChatComponent.USER_QUOTE_MENTION
+            matches(ChatComponent.USER_MENTION.pattern) isToken ChatComponent.USER_MENTION
+            matches(ChatComponent.TEXT.pattern) isToken ChatComponent.TEXT
         }
     }
 
@@ -87,22 +113,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     private suspend fun processMessageText(messageText: String): MessageProcessingResult {
         val tokens = chatLexer.tokenize(messageText)
 
-        val messageTextParts = tokens.map { token ->
-            val tokenString = token.string
-            val tokenProcessingResult = when (token.tokenType) {
-                ChatComponent.USER_MENTION -> createUserMention(tokenString.substring(1))
-                ChatComponent.USER_QUOTE_MENTION -> createUserMention(tokenString.substring(2, tokenString.length - 1))
-                ChatComponent.ROLE_MENTION -> createRoleMention(tokenString.substring(3))
-                ChatComponent.ROLE_QUOTE_MENTION -> createRoleMention(tokenString.substring(4, tokenString.length - 1))
-                ChatComponent.TEXT_CHANNEL_MENTION -> createTextChannelMention(tokenString.substring(3))
-                ChatComponent.VOICE_CHANNEL_MENTION -> createVoiceChannelMention(tokenString.substring(3))
-                ChatComponent.URL -> processUrl(tokenString)
-                ChatComponent.TEXT -> processText(tokenString)
-                else -> emptyTokenResult()
-            }
-
-            tokenProcessingResult
-        }
+        val messageTextParts = tokens.map { token -> processToken(token) }
 
         return MessageProcessingResult(
             true,
@@ -118,6 +129,54 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
         )
     }
 
+    private suspend fun processToken(token: LixyToken): TokenProcessingResult {
+        return when (token.tokenType) {
+            ChatComponent.USER_MENTION -> processTokenForComponent(
+                token,
+                ::createUserMention,
+                ChatComponent.USER_MENTION
+            )
+            ChatComponent.USER_QUOTE_MENTION -> processTokenForComponent(
+                token,
+                ::createUserMention,
+                ChatComponent.USER_QUOTE_MENTION
+            )
+            ChatComponent.ROLE_MENTION -> processTokenForComponent(
+                token,
+                ::createRoleMention,
+                ChatComponent.ROLE_MENTION
+            )
+            ChatComponent.ROLE_QUOTE_MENTION -> processTokenForComponent(
+                token,
+                ::createRoleMention,
+                ChatComponent.ROLE_QUOTE_MENTION
+            )
+            ChatComponent.TEXT_CHANNEL_MENTION -> processTokenForComponent(
+                token,
+                ::createTextChannelMention,
+                ChatComponent.TEXT_CHANNEL_MENTION
+            )
+            ChatComponent.VOICE_CHANNEL_MENTION -> processTokenForComponent(
+                token,
+                ::createVoiceChannelMention,
+                ChatComponent.VOICE_CHANNEL_MENTION
+            )
+            ChatComponent.URL -> processTokenForComponent(token, ::processUrl, ChatComponent.URL)
+            ChatComponent.TEXT -> processTokenForComponent(token, ::processText, ChatComponent.TEXT)
+            else -> emptyTokenResult()
+        }
+    }
+
+    private suspend fun processTokenForComponent(
+        token: LixyToken,
+        processor: suspend (String) -> TokenProcessingResult,
+        component: ChatComponent
+    ): TokenProcessingResult {
+        val tokenString = token.string
+
+        return processor(tokenString.substring(component.substringStartIndex))
+    }
+
     private fun emptyTokenResult(): TokenProcessingResult {
         return TokenProcessingResult(Component.empty(), "")
     }
@@ -125,7 +184,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     private suspend fun createUserMention(nameString: String): TokenProcessingResult {
         for (guild in plugin.discordBot.botGuilds) {
             val members = guild.getMembers(nameString, plugin.configuration.memberQueryMax())
-            val firstMember = members.firstOrNull() ?: return processErrorText("@$nameString")
+            val firstMember = members.firstOrNull() ?: break
             val discordText = "<@!${firstMember.id}>"
 
             return TokenProcessingResult(
