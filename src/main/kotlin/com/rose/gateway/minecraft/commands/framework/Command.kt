@@ -4,8 +4,6 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
@@ -36,10 +34,12 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         label: String,
         args: Array<String>
     ): Boolean {
-        try {
-            var success = false
+        var success = false
 
-            for (executor in definition.executors) {
+        for (executor in definition.executors) {
+            val commandArguments = executor.argumentParser.parseAllArguments(args)
+
+            if (commandArguments != null) {
                 success = executor.executor(
                     CommandContext(
                         definition = definition,
@@ -47,18 +47,15 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
                         command = command,
                         label = label,
                         rawCommandArguments = args.toList(),
-                        commandArguments = executor.argumentParser.parseAllArguments(args) ?: continue
+                        commandArguments = commandArguments
                     )
                 )
 
                 if (!success) break
             }
-
-            if (!success) sendArgumentErrorMessage(sender)
-        } catch (e: Error) {
-            sender.sendMessage(Component.text("Error: ${e.message}", TextColor.fromHexString("#FF0000")))
-            sendArgumentErrorMessage(sender)
         }
+
+        if (!success) sendArgumentErrorMessage(sender)
 
         return true
     }
@@ -74,7 +71,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         args: Array<String>
     ): List<String> {
         for (executor in definition.executors) {
-            return executor.argumentParser.getTabCompletions(
+            val tabCompletions = executor.argumentParser.getTabCompletions(
                 TabCompletionContext(
                     sender = sender,
                     command = command,
@@ -83,7 +80,9 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
                     parsedArguments = executor.argumentParser.parseArgumentSubset(args) ?: continue,
                     commandDefinition = definition
                 )
-            ) ?: continue
+            )
+
+            if (tabCompletions != null) return tabCompletions
         }
 
         return listOf()

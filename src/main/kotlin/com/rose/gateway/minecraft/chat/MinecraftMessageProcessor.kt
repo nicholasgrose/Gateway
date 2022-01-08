@@ -23,6 +23,7 @@ import net.kyori.adventure.text.format.TextDecoration
 
 @OptIn(KordExperimental::class)
 class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
+
     data class MessageProcessingResult(
         val successful: Boolean,
         val minecraftMessage: Component,
@@ -34,20 +35,27 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
         val discordMessage: String
     )
 
-    enum class ChatComponent : LixyTokenType {
-        USER_MENTION, USER_QUOTE_MENTION, TEXT_CHANNEL_MENTION, VOICE_CHANNEL_MENTION, ROLE_MENTION, ROLE_QUOTE_MENTION, URL, TEXT
+    enum class ChatComponent(val regexPattern: String) : LixyTokenType {
+        USER_MENTION("@[^\\s@]+"),
+        USER_QUOTE_MENTION("@\"((\\\\\")|[^\"])+\""),
+        TEXT_CHANNEL_MENTION("@V=[^\\s@]+"),
+        VOICE_CHANNEL_MENTION("@C=[^\\s@]+"),
+        ROLE_MENTION("@R=[^\\s@]+"),
+        ROLE_QUOTE_MENTION("@R=\"((\\\\\")|[^\"])+\""),
+        URL("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"),
+        TEXT(".[^@]*")
     }
 
     private val chatLexer = lixy {
         state {
-            matches("(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]") isToken ChatComponent.URL
-            matches("@R=\"((\\\\\")|[^\"])+\"") isToken ChatComponent.ROLE_QUOTE_MENTION
-            matches("@R=[^\\s@]+") isToken ChatComponent.ROLE_MENTION
-            matches("@C=[^\\s@]+") isToken ChatComponent.TEXT_CHANNEL_MENTION
-            matches("@V=[^\\s@]+") isToken ChatComponent.VOICE_CHANNEL_MENTION
-            matches("@\"((\\\\\")|[^\"])+\"") isToken ChatComponent.USER_QUOTE_MENTION
-            matches("@[^\\s@]+") isToken ChatComponent.USER_MENTION
-            matches(".[^@]*") isToken ChatComponent.TEXT
+            matches(ChatComponent.URL.regexPattern) isToken ChatComponent.URL
+            matches(ChatComponent.ROLE_QUOTE_MENTION.regexPattern) isToken ChatComponent.ROLE_QUOTE_MENTION
+            matches(ChatComponent.ROLE_MENTION.regexPattern) isToken ChatComponent.ROLE_MENTION
+            matches(ChatComponent.TEXT_CHANNEL_MENTION.regexPattern) isToken ChatComponent.TEXT_CHANNEL_MENTION
+            matches(ChatComponent.VOICE_CHANNEL_MENTION.regexPattern) isToken ChatComponent.VOICE_CHANNEL_MENTION
+            matches(ChatComponent.USER_QUOTE_MENTION.regexPattern) isToken ChatComponent.USER_QUOTE_MENTION
+            matches(ChatComponent.USER_MENTION.regexPattern) isToken ChatComponent.USER_MENTION
+            matches(ChatComponent.TEXT.regexPattern) isToken ChatComponent.TEXT
         }
     }
 
