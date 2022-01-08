@@ -47,7 +47,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!(plugin.configuration.chatExtensionEnabled() && event.isAsynchronous)) return
 
         runBlocking {
             plugin.discordBot.bot?.send(
