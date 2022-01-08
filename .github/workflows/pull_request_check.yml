@@ -27,7 +27,7 @@ jobs:
         with:
           arguments: build --stacktrace
 
-  lint:
+  ktlint:
     runs-on: ubuntu-latest
 
     steps:
