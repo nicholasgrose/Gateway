@@ -22,7 +22,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onChat(event: AsyncChatEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!(plugin.configuration.chatExtensionEnabled() && event.isAsynchronous)) return
 
         val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
 
@@ -47,7 +47,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-        if (!(plugin.configuration.chatExtensionEnabled() && event.isAsynchronous)) return
+        if (!plugin.configuration.chatExtensionEnabled()) return
 
         runBlocking {
             plugin.discordBot.bot?.send(
