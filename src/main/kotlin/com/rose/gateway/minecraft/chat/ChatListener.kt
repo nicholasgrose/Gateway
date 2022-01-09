@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.chat.GameChatEvent
+import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import io.papermc.paper.event.player.AsyncChatEvent
