@@ -3,15 +3,20 @@ package com.rose.gateway.minecraft.chat.processing.tokens
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.chat.processing.tokens.result.RoleMentionBuilder
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.shared.processing.ChatTokenProcessor
+import com.rose.gateway.shared.processing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
+import guru.zoroark.lixy.LixyTokenType
 
-class RoleQuoteMentionTokenProcessor(plugin: GatewayPlugin) : ChatTokenProcessor<TokenProcessingResult> {
+class RoleQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
     companion object {
         const val ROLE_QUOTE_MENTION_START_INDEX = 4
     }
 
     private val mentionBuilder = RoleMentionBuilder(plugin)
+
+    override fun tokenType(): LixyTokenType {
+        return ChatComponent.ROLE_QUOTE_MENTION
+    }
 
     override fun regexPattern(): String {
         return "@R=\"((\\\\\")|[^\"])+\""

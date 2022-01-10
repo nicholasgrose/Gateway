@@ -1,14 +1,19 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.shared.processing.ChatTokenProcessor
+import com.rose.gateway.shared.processing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
+import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 
-class UrlTokenProcessor : ChatTokenProcessor<TokenProcessingResult> {
+class UrlTokenProcessor : TokenProcessor<TokenProcessingResult> {
+    override fun tokenType(): LixyTokenType {
+        return ChatComponent.URL
+    }
+
     override fun regexPattern(): String {
         return "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
     }

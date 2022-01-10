@@ -20,15 +20,15 @@ import net.kyori.adventure.text.JoinConfiguration
 @OptIn(KordExperimental::class)
 class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     private val textProcessor = TextProcessor(
-        mapOf(
-            ChatComponent.USER_MENTION to UserMentionTokenProcessor(plugin),
-            ChatComponent.USER_QUOTE_MENTION to UserQuoteMentionTokenProcessor(plugin),
-            ChatComponent.ROLE_MENTION to RoleMentionTokenProcessor(plugin),
-            ChatComponent.ROLE_QUOTE_MENTION to RoleQuoteMentionTokenProcessor(plugin),
-            ChatComponent.TEXT_CHANNEL_MENTION to TextChannelMentionTokenProcessor(plugin),
-            ChatComponent.VOICE_CHANNEL_MENTION to VoiceChannelMentionTokenProcessor(plugin),
-            ChatComponent.URL to UrlTokenProcessor(),
-            ChatComponent.TEXT to TextTokenProcessor(),
+        listOf(
+            UserMentionTokenProcessor(plugin),
+            UserQuoteMentionTokenProcessor(plugin),
+            RoleMentionTokenProcessor(plugin),
+            RoleQuoteMentionTokenProcessor(plugin),
+            TextChannelMentionTokenProcessor(plugin),
+            VoiceChannelMentionTokenProcessor(plugin),
+            UrlTokenProcessor(),
+            TextTokenProcessor(),
         )
     )
 

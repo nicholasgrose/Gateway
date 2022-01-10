@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.chat.processing
+package com.rose.gateway.minecraft.chat.processing.tokens
 
 import guru.zoroark.lixy.LixyTokenType
 
