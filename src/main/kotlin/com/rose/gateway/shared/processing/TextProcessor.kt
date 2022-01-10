@@ -4,7 +4,7 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
 
-class TextProcessor<T>(private val processors: List<TokenProcessor<T>>) {
+class TextProcessor<T, A>(private val processors: List<TokenProcessor<T, A>>) {
     private val tokenProcessorMap = processors.associateBy { it.tokenType() }
 
     private val lexer = lixy {
@@ -15,13 +15,13 @@ class TextProcessor<T>(private val processors: List<TokenProcessor<T>>) {
         }
     }
 
-    suspend fun parseText(text: String): List<T> {
+    suspend fun parseText(text: String, additionalData: A): List<T> {
         val tokens = lexer.tokenize(text)
 
-        return tokens.map { token -> processorFor(token).process(token) }
+        return tokens.map { token -> processorFor(token).process(token, additionalData) }
     }
 
-    private fun processorFor(token: LixyToken): TokenProcessor<T> {
+    private fun processorFor(token: LixyToken): TokenProcessor<T, A> {
         return tokenProcessorMap[token.tokenType]!!
     }
 }

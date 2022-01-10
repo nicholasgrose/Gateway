@@ -8,7 +8,7 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
-class UserQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
+class UserQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val USER_QUOTE_MENTION_START_INDEX = 2
     }
@@ -24,7 +24,7 @@ class UserQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<Tok
         return "@\"((\\\\\")|[^\"])+\""
     }
 
-    override suspend fun process(token: LixyToken): TokenProcessingResult {
+    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val tokenString = token.string
         val nameString = tokenString.substring(USER_QUOTE_MENTION_START_INDEX until tokenString.length)
 

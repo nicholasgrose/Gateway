@@ -7,7 +7,7 @@ import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
-class TextTokenProcessor : TokenProcessor<TokenProcessingResult> {
+class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     override fun tokenType(): LixyTokenType {
         return ChatComponent.TEXT
     }
@@ -17,7 +17,7 @@ class TextTokenProcessor : TokenProcessor<TokenProcessingResult> {
         return ".[^@]*"
     }
 
-    override suspend fun process(token: LixyToken): TokenProcessingResult {
+    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val text = token.string
 
         return TokenProcessingResult(Component.text(text), text)

@@ -8,7 +8,7 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
-class RoleMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
+class RoleMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val ROLE_MENTION_START_INDEX = 3
     }
@@ -24,7 +24,7 @@ class RoleMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenPro
         return "@R=[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken): TokenProcessingResult {
+    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val roleString = token.string.substring(ROLE_MENTION_START_INDEX)
 
         return mentionBuilder.createRoleMention(roleString)

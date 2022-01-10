@@ -58,7 +58,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     }
 
     private suspend fun processMessageText(messageText: String): MessageProcessingResult {
-        val messageTextParts = textProcessor.parseText(messageText)
+        val messageTextParts = textProcessor.parseText(messageText, Unit)
 
         return MessageProcessingResult(
             true,

@@ -10,7 +10,8 @@ import guru.zoroark.lixy.LixyTokenType
 import kotlinx.coroutines.flow.toSet
 import org.intellij.lang.annotations.Language
 
-class VoiceChannelMentionTokenProcessor(private val plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
+class VoiceChannelMentionTokenProcessor(private val plugin: GatewayPlugin) :
+    TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val VOICE_CHANNEL_MENTION_START_INDEX = 3
     }
@@ -26,7 +27,7 @@ class VoiceChannelMentionTokenProcessor(private val plugin: GatewayPlugin) : Tok
         return "@V=[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken): TokenProcessingResult {
+    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val nameString = token.string.substring(VOICE_CHANNEL_MENTION_START_INDEX)
 
         return createVoiceChannelMention(nameString)
