@@ -11,13 +11,15 @@ import kotlinx.coroutines.runBlocking
 
 object PluginSpec : ConfigSpec(), ResponsiveSpec {
     val botToken by required<String>(
-        description = "The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/."
+        description = "The token used by the bot to access discord." +
+            "Accessible at https://discord.com/developers/applications/."
     )
 
     object BotSpec : ConfigSpec(), ResponsiveSpec {
         val botChannels by optional(
             listOf<String>(),
-            description = "The names of the channels in which the bot should respond to commands and post/accept chat messages."
+            description = "The names of the channels in which the bot" +
+                " should respond to commands and post/accept chat messages."
         )
         val memberQueryMax by optional(
             1,

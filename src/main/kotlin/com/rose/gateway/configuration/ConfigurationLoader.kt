@@ -6,6 +6,8 @@ import com.rose.gateway.Logger
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.Spec
 import com.uchuhimo.konf.source.yaml
+import org.yaml.snakeyaml.error.YAMLException
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -17,12 +19,15 @@ class ConfigurationLoader(
     private val configurationFilePath = Path.of(configurationFile)
 
     fun loadOrCreateConfig(): Config? {
-        if (!ensureConfigurationFileExists(configurationFilePath)) return null
+        if (ensureConfigurationFileExists(configurationFilePath)) {
+            val configuration = loadConfig()
 
-        val configuration = loadConfig() ?: return null
+            if (configuration != null && configurationIsValid(configuration)) {
+                return configuration
+            }
+        }
 
-        return if (configurationIsValid(configuration)) configuration
-        else null
+        return null
     }
 
     private fun ensureConfigurationFileExists(configurationFilePath: Path): Boolean {
@@ -73,9 +78,11 @@ class ConfigurationLoader(
                 .from.yaml.file(configurationFile)
             Logger.logInfo("Configuration loaded successfully.")
             loadedConfig
-        } catch (error: Throwable) {
-            Logger.logInfo("Configuration failed to load: ${error.message}")
-            error.printStackTrace()
+        } catch (error: YAMLException) {
+            Logger.logInfo("Configuration failed to load due to problem with YAML: ${error.message}")
+            null
+        } catch (error: IOException) {
+            Logger.logInfo("Configuration failed to load due to problem with I/O: ${error.message}")
             null
         }
     }
