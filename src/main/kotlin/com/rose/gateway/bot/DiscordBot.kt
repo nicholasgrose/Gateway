@@ -15,8 +15,6 @@ import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.stopKoin
@@ -56,7 +54,9 @@ class DiscordBot(private val plugin: GatewayPlugin) {
                 enabled = true
             }
             extensions {
-                extensions.addAll(DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() })
+                extensions.addAll(
+                    DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() }
+                )
             }
         }
     }

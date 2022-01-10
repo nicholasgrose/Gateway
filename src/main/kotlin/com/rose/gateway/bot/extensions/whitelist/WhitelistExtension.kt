@@ -61,7 +61,8 @@ class WhitelistExtension : Extension() {
                     val status = when (whitelistManager.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
-                        WhitelistState.STATE_INVALID -> "An error occurred removing ${arguments.username} from whitelist."
+                        WhitelistState.STATE_INVALID ->
+                            "An error occurred removing ${arguments.username} from whitelist."
                     }
                     respond {
                         content = status
