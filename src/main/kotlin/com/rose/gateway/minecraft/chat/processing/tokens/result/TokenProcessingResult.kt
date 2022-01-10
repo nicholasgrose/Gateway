@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.chat.processing.tokens
+package com.rose.gateway.minecraft.chat.processing.tokens.result
 
 import net.kyori.adventure.text.Component
 

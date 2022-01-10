@@ -1,7 +1,8 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.chat.processing.tokens.shared.ResultBuilder
+import com.rose.gateway.minecraft.chat.processing.tokens.result.ResultBuilder
+import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import dev.kord.common.entity.ChannelType
 import guru.zoroark.lixy.LixyToken
 import kotlinx.coroutines.flow.toSet

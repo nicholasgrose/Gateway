@@ -1,7 +1,6 @@
-package com.rose.gateway.minecraft.chat.processing.tokens.shared
+package com.rose.gateway.minecraft.chat.processing.tokens.result
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.chat.processing.tokens.TokenProcessingResult
 import kotlinx.coroutines.flow.toSet
 
 class RoleMentionBuilder(private val plugin: GatewayPlugin) {

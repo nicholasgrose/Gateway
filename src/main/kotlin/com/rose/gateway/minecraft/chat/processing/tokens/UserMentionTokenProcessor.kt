@@ -1,7 +1,8 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.chat.processing.tokens.shared.UserMentionBuilder
+import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
+import com.rose.gateway.minecraft.chat.processing.tokens.result.UserMentionBuilder
 import guru.zoroark.lixy.LixyToken
 
 class UserMentionTokenProcessor(plugin: GatewayPlugin) : ChatTokenProcessor {

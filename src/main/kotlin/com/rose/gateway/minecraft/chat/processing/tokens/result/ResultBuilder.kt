@@ -1,7 +1,6 @@
-package com.rose.gateway.minecraft.chat.processing.tokens.shared
+package com.rose.gateway.minecraft.chat.processing.tokens.result
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.chat.processing.tokens.TokenProcessingResult
 import com.rose.gateway.shared.component.ComponentBuilder
 
 class ResultBuilder(private val plugin: GatewayPlugin) {
