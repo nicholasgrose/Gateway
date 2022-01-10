@@ -1,7 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.chat.processing.tokens.ChatTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.TextChannelMentionTokenProcessor
@@ -11,44 +10,27 @@ import com.rose.gateway.minecraft.chat.processing.tokens.UserMentionTokenProcess
 import com.rose.gateway.minecraft.chat.processing.tokens.UserQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.VoiceChannelMentionTokenProcessor
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
+import com.rose.gateway.shared.processing.TextProcessor
 import dev.kord.common.annotation.KordExperimental
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.lixy
-import guru.zoroark.lixy.matchers.matches
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 
 @OptIn(KordExperimental::class)
 class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
-    private val processors = mapOf(
-        ChatComponent.USER_MENTION to UserMentionTokenProcessor(plugin),
-        ChatComponent.USER_QUOTE_MENTION to UserQuoteMentionTokenProcessor(plugin),
-        ChatComponent.ROLE_MENTION to RoleMentionTokenProcessor(plugin),
-        ChatComponent.ROLE_QUOTE_MENTION to RoleQuoteMentionTokenProcessor(plugin),
-        ChatComponent.TEXT_CHANNEL_MENTION to TextChannelMentionTokenProcessor(plugin),
-        ChatComponent.VOICE_CHANNEL_MENTION to VoiceChannelMentionTokenProcessor(plugin),
-        ChatComponent.URL to UrlTokenProcessor(),
-        ChatComponent.TEXT to TextTokenProcessor(),
+    private val textProcessor = TextProcessor(
+        mapOf(
+            ChatComponent.USER_MENTION to UserMentionTokenProcessor(plugin),
+            ChatComponent.USER_QUOTE_MENTION to UserQuoteMentionTokenProcessor(plugin),
+            ChatComponent.ROLE_MENTION to RoleMentionTokenProcessor(plugin),
+            ChatComponent.ROLE_QUOTE_MENTION to RoleQuoteMentionTokenProcessor(plugin),
+            ChatComponent.TEXT_CHANNEL_MENTION to TextChannelMentionTokenProcessor(plugin),
+            ChatComponent.VOICE_CHANNEL_MENTION to VoiceChannelMentionTokenProcessor(plugin),
+            ChatComponent.URL to UrlTokenProcessor(),
+            ChatComponent.TEXT to TextTokenProcessor(),
+        )
     )
-
-    private val chatLexer = lixy {
-        state {
-            matches(regexFor(ChatComponent.URL)) isToken ChatComponent.URL
-            matches(regexFor(ChatComponent.ROLE_QUOTE_MENTION)) isToken ChatComponent.ROLE_QUOTE_MENTION
-            matches(regexFor(ChatComponent.ROLE_MENTION)) isToken ChatComponent.ROLE_MENTION
-            matches(regexFor(ChatComponent.TEXT_CHANNEL_MENTION)) isToken ChatComponent.TEXT_CHANNEL_MENTION
-            matches(regexFor(ChatComponent.VOICE_CHANNEL_MENTION)) isToken ChatComponent.VOICE_CHANNEL_MENTION
-            matches(regexFor(ChatComponent.USER_QUOTE_MENTION)) isToken ChatComponent.USER_QUOTE_MENTION
-            matches(regexFor(ChatComponent.USER_MENTION)) isToken ChatComponent.USER_MENTION
-            matches(regexFor(ChatComponent.TEXT)) isToken ChatComponent.TEXT
-        }
-    }
-
-    private fun regexFor(component: ChatComponent): String {
-        return processors[component]!!.regexPattern()
-    }
 
     suspend fun convertToDiscordMessage(
         messageText: String,
@@ -76,9 +58,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     }
 
     private suspend fun processMessageText(messageText: String): MessageProcessingResult {
-        val tokens = chatLexer.tokenize(messageText)
-
-        val messageTextParts = tokens.map { token -> processorFor(token).processToken(token) }
+        val messageTextParts = textProcessor.parseText(messageText)
 
         return MessageProcessingResult(
             true,
@@ -92,9 +72,5 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
                 part.discordMessage
             }
         )
-    }
-
-    private fun processorFor(component: LixyToken): ChatTokenProcessor {
-        return processors[component.tokenType]!!
     }
 }
