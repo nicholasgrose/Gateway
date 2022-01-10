@@ -21,22 +21,22 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Set gradlew Execution Permissions
+      - name: Set gradlew execution permission
         run: chmod u+x gradlew
 
-      - name: Build Artifacts
+      - name: Build artifacts
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
 
-      - name: Get Release Version
+      - name: Get release version
         uses: HardNorth/github-version-generate@v1.1.1
         with:
           version-source: file
           version-file: build.gradle.kts
           version-file-extraction-pattern: '(?<=version = ").+(?=")'
 
-      - name: Create Release
+      - name: Create release
         uses: ncipollo/release-action@v1
         with:
           name: Gateway ${{ env.RELEASE_VERSION }}

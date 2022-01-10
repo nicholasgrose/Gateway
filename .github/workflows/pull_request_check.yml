@@ -19,10 +19,10 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Set gradlew Execution Permissions
+      - name: Set gradlew execution permissions
         run: chmod u+x gradlew
 
-      - name: Build Artifacts
+      - name: Build artifacts
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build --stacktrace
@@ -38,3 +38,15 @@ jobs:
         with:
           version: '0.43.2'
           annotate: true
+
+  detekt:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Run detekt with reviewdog
+        uses: alaegin/Detekt-Action@v1.18.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
