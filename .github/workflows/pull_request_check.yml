@@ -19,7 +19,7 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Set gradlew execution permissions
+      - name: Set gradlew execution permission
         run: chmod u+x gradlew
 
       - name: Build artifacts
