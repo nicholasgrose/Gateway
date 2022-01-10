@@ -6,6 +6,7 @@ import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingR
 import com.rose.gateway.shared.processing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
+import org.intellij.lang.annotations.Language
 
 class RoleQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
     companion object {
@@ -18,6 +19,7 @@ class RoleQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<Tok
         return ChatComponent.ROLE_QUOTE_MENTION
     }
 
+    @Language("RegExp")
     override fun regexPattern(): String {
         return "@R=\"((\\\\\")|[^\"])+\""
     }

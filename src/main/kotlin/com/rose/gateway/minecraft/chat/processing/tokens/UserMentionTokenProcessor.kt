@@ -6,6 +6,7 @@ import com.rose.gateway.minecraft.chat.processing.tokens.result.UserMentionBuild
 import com.rose.gateway.shared.processing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
+import org.intellij.lang.annotations.Language
 
 class UserMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
     companion object {
@@ -18,6 +19,7 @@ class UserMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenPro
         return ChatComponent.USER_MENTION
     }
 
+    @Language("RegExp")
     override fun regexPattern(): String {
         return "@[^\\s@]+"
     }

@@ -8,6 +8,7 @@ import dev.kord.common.entity.ChannelType
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import kotlinx.coroutines.flow.toSet
+import org.intellij.lang.annotations.Language
 
 class TextChannelMentionTokenProcessor(private val plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult> {
     companion object {
@@ -20,6 +21,7 @@ class TextChannelMentionTokenProcessor(private val plugin: GatewayPlugin) : Toke
         return ChatComponent.TEXT_CHANNEL_MENTION
     }
 
+    @Language("RegExp")
     override fun regexPattern(): String {
         return "@C=[^\\s@]+"
     }

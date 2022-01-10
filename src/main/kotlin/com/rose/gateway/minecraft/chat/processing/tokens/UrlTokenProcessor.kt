@@ -8,12 +8,14 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
+import org.intellij.lang.annotations.Language
 
 class UrlTokenProcessor : TokenProcessor<TokenProcessingResult> {
     override fun tokenType(): LixyTokenType {
         return ChatComponent.URL
     }
 
+    @Language("RegExp")
     override fun regexPattern(): String {
         return "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
     }
