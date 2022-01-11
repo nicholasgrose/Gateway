@@ -1,6 +1,9 @@
 name: Gateway
 version: '${version}'
 author: 'Nicholas Rose'
+description: Provides a configurable set of features that link the in-game chat to a Discord server via a Discord bot.
+website: https://github.com/nicholasgrose/Gateway
+prefix: Gateway
 
 main: com.rose.gateway.GatewayPlugin
 api-version: 1.18
