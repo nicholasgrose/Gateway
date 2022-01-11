@@ -9,16 +9,16 @@ import kotlinx.coroutines.runBlocking
 
 class PluginConfiguration(private val plugin: GatewayPlugin) {
     companion object {
-        private const val CONFIGURATION_PATH = "plugins/Gateway"
-        private const val CONFIGURATION_FILE = "Gateway.yaml"
-        private const val CONFIGURATION_FILE_PATH = "$CONFIGURATION_PATH/$CONFIGURATION_FILE"
+        const val CONFIG_FILE_NAME = "config.yaml"
     }
 
+    private val pluginDirPath = plugin.dataFolder.path
+    private val configFilePath = "$pluginDirPath/$CONFIG_FILE_NAME"
     private val exampleConfigurationUrl =
-        "https://raw.githubusercontent.com/nicholasgrose/Gateway/v${plugin.version}/examples/$CONFIGURATION_FILE"
+        "https://raw.githubusercontent.com/nicholasgrose/Gateway/v${plugin.version}/examples/$CONFIG_FILE_NAME"
 
     val configurationStringMap = ConfigurationStringMap(PluginSpec)
-    private val configurationLoader = ConfigurationLoader(PluginSpec, CONFIGURATION_FILE_PATH, exampleConfigurationUrl)
+    private val configurationLoader = ConfigurationLoader(PluginSpec, configFilePath, exampleConfigurationUrl)
     var configuration: Config? = configurationLoader.loadOrCreateConfig()
 
     fun reloadConfiguration(): Boolean {
@@ -49,6 +49,6 @@ class PluginConfiguration(private val plugin: GatewayPlugin) {
         val config = configuration ?: return
 
         config[item] = newValue
-        config.toYaml.toFile(CONFIGURATION_FILE_PATH)
+        config.toYaml.toFile(configFilePath)
     }
 }
