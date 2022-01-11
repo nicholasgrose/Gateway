@@ -1,11 +1,9 @@
 # Settings for the DiscordBot plugin.
 plugin:
-
-  # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.
-  botToken: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
   # Settings for how the Discord bot, functions.
   bot:
+    # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.
+    token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     # The names of the channels in which the bot should post/accept chat messages.
     botChannels:

@@ -5,7 +5,7 @@ import com.rose.gateway.configuration.specs.PluginSpec
 
 object BotConfiguration {
     fun PluginConfiguration.botToken(): String {
-        return get(PluginSpec.botToken) ?: ""
+        return get(PluginSpec.BotSpec.token) ?: ""
     }
 
     fun PluginConfiguration.memberQueryMax(): Int {

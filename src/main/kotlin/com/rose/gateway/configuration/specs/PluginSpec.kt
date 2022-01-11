@@ -10,12 +10,12 @@ import com.uchuhimo.konf.ConfigSpec
 import kotlinx.coroutines.runBlocking
 
 object PluginSpec : ConfigSpec(), ResponsiveSpec {
-    val botToken by required<String>(
-        description = "The token used by the bot to access discord." +
-            "Accessible at https://discord.com/developers/applications/."
-    )
-
     object BotSpec : ConfigSpec(), ResponsiveSpec {
+        val token by required<String>(
+            description = "The token used by the bot to access discord." +
+                "Accessible at https://discord.com/developers/applications/."
+        )
+
         val botChannels by optional(
             listOf<String>(),
             description = "The names of the channels in which the bot" +
@@ -68,6 +68,7 @@ object PluginSpec : ConfigSpec(), ResponsiveSpec {
         }
 
         override fun setConfigChangeActions(plugin: GatewayPlugin) {
+            token.afterSet { _, _ -> plugin.restartBot() }
             botChannels.afterSet { _, _ -> runBlocking { plugin.discordBot.fillBotChannels() } }
             ExtensionsSpec.setConfigChangeActions(plugin)
         }
@@ -102,7 +103,6 @@ object PluginSpec : ConfigSpec(), ResponsiveSpec {
     }
 
     override fun setConfigChangeActions(plugin: GatewayPlugin) {
-        botToken.afterSet { _, _ -> plugin.restartBot() }
         BotSpec.setConfigChangeActions(plugin)
         MinecraftSpec.setConfigChangeActions(plugin)
     }
