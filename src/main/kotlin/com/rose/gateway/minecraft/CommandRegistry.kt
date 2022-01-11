@@ -28,6 +28,18 @@ class CommandRegistry(val plugin: GatewayPlugin) {
             }
         }
 
+        command("discord-whisper") {
+            runner { context ->
+                TODO("Not yet implemented")
+            }
+        }
+
+        command("discord") {
+            runner { context ->
+                TODO("Not yet implemented")
+            }
+        }
+
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
