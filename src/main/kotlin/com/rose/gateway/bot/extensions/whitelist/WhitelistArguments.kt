@@ -6,5 +6,8 @@ import dev.kord.common.annotation.KordPreview
 
 @OptIn(KordPreview::class)
 class WhitelistArguments : Arguments() {
-    val username by string("username", "The user to modify the whitelist status of.")
+    val username by string {
+        name = "username"
+        description = "The user to modify the whitelist status of."
+    }
 }
