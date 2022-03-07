@@ -1,13 +1,19 @@
 plugins {
+    // https://kotlinlang.org/
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "1.0.6"
+    // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
-    id("io.gitlab.arturbosch.detekt") version "1.19.0"
+    // https://detekt.dev/
+    id("io.gitlab.arturbosch.detekt") version "1.20.0-RC1"
 }
 
 group = "com.rose"
 version = "1.5.0"
+val minecraftVersion = "1.18.2"
 
 repositories {
     mavenCentral()
@@ -27,14 +33,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.18.1-R0.1-SNAPSHOT")
+    // https://papermc.io/using-the-api#gradle
+    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "$minecraftVersion-R0.1-SNAPSHOT")
+    // https://github.com/uchuhimo/konf
     implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
+    // https://kordex.kotlindiscord.com/
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
         version = "1.5.2-SNAPSHOT"
     )
+    // https://github.com/utybo/Lixy
     implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
+    // https://github.com/kittinunf/fuel
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")
 }
 
@@ -74,7 +85,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
+        minecraftVersion("$minecraftVersion")
     }
 
     clean {
