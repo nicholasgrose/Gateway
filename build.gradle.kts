@@ -49,6 +49,10 @@ dependencies {
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")
 }
 
+ktlint {
+    version.set("0.44.0")
+}
+
 tasks {
     compileKotlin {
         kotlinOptions {
