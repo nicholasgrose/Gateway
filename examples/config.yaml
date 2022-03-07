@@ -1,4 +1,4 @@
-# Settings for the DiscordBot plugin.
+# Settings for the Gateway plugin.
 plugin:
   # Settings for how the Discord bot, functions.
   bot:

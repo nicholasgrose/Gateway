@@ -1,53 +1,53 @@
 name: Publish Release
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
-    paths:
-      - build.gradle.kts
+        paths:
+            - '**/gradle.properties'
 
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+    publish:
+        runs-on: ubuntu-latest
 
-    steps:
-      # https://github.com/marketplace/actions/checkout
-      -   uses: actions/checkout@v3
+        steps:
+            # https://github.com/marketplace/actions/checkout
+            -   uses: actions/checkout@v3
 
-      # https://github.com/marketplace/actions/setup-java-jdk
-      -   name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: 17
-            distribution: temurin
+            # https://github.com/marketplace/actions/setup-java-jdk
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v3
+                with:
+                    java-version: 17
+                    distribution: temurin
 
-      -   name: Set gradlew execution permission
-          run: chmod u+x gradlew
+            -   name: Set gradlew execution permission
+                run: chmod u+x gradlew
 
-      # https://github.com/marketplace/actions/gradle-build-action
-      - name: Build artifacts
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
+            # https://github.com/marketplace/actions/gradle-build-action
+            -   name: Build artifacts
+                uses: gradle/gradle-build-action@v2
+                with:
+                    arguments: build
 
-      # https://github.com/marketplace/actions/generate-version
-      -   name: Get release version
-          uses: HardNorth/github-version-generate@v1
-        with:
-          version-source: file
-          version-file: build.gradle.kts
-          version-file-extraction-pattern: '(?<=version = ").+(?=")'
+            # https://github.com/marketplace/actions/generate-version
+            -   name: Get release version
+                uses: HardNorth/github-version-generate@v1
+            with:
+                version-source: file
+                version-file: gradle.properties
+                version-file-extraction-pattern: '(?<=version=).+'
 
-      # https://github.com/marketplace/actions/create-release
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          name: Gateway ${{ env.RELEASE_VERSION }}
-          tag: v${{ env.RELEASE_VERSION }}
-          generateReleaseNotes: true
-          artifacts: 'build/libs/*.jar'
-          token: ${{ secrets.GITHUB_TOKEN }}
+                # https://github.com/marketplace/actions/create-release
+                -   name: Create release
+                    uses: ncipollo/release-action@v1
+                    with:
+                        name: Gateway ${{ env.RELEASE_VERSION }}
+                        tag: v${{ env.RELEASE_VERSION }}
+                        generateReleaseNotes: true
+                        artifacts: 'build/libs/*.jar'
+                        token: ${{ secrets.GITHUB_TOKEN }}
