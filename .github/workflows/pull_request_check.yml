@@ -54,5 +54,5 @@ jobs:
             # https://github.com/marketplace/actions/run-detekt-with-reviewdog
             -   name: Run detekt with reviewdog
                 uses: alaegin/Detekt-Action@v1
-            with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
