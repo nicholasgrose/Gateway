@@ -88,6 +88,10 @@ tasks {
         minecraftVersion("$minecraftVersion")
     }
 
+    create("runChecks") {
+        dependsOn(ktlintFormat, detekt)
+    }
+
     clean {
         delete("build")
     }
