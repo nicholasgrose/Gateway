@@ -37,17 +37,17 @@ jobs:
             # https://github.com/marketplace/actions/generate-version
             -   name: Get release version
                 uses: HardNorth/github-version-generate@v1
-            with:
-                version-source: file
-                version-file: gradle.properties
-                version-file-extraction-pattern: '(?<=version=).+'
+                with:
+                    version-source: file
+                    version-file: gradle.properties
+                    version-file-extraction-pattern: '(?<=version=).+'
 
-                # https://github.com/marketplace/actions/create-release
-                -   name: Create release
-                    uses: ncipollo/release-action@v1
-                    with:
-                        name: Gateway ${{ env.RELEASE_VERSION }}
-                        tag: v${{ env.RELEASE_VERSION }}
-                        generateReleaseNotes: true
-                        artifacts: 'build/libs/*.jar'
-                        token: ${{ secrets.GITHUB_TOKEN }}
+            # https://github.com/marketplace/actions/create-release
+            -   name: Create release
+                uses: ncipollo/release-action@v1
+                with:
+                    name: Gateway ${{ env.RELEASE_VERSION }}
+                    tag: v${{ env.RELEASE_VERSION }}
+                    generateReleaseNotes: true
+                    artifacts: 'build/libs/*.jar'
+                    token: ${{ secrets.GITHUB_TOKEN }}
