@@ -11,9 +11,24 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.20.0-RC1"
 }
 
-group = "com.rose"
-version = "1.5.0"
-val minecraftVersion = "1.18.2"
+val projectVersion: String by project
+val projectGroup: String by project
+
+val ktlintVersion: String by project
+
+val minecraftVersion: String by project
+val paperApiRevision: String by project
+val konfVersion: String by project
+val kordexVersion: String by project
+val lixyVersion: String by project
+val fuelVersion: String by project
+
+val jvmVersion: String by project
+val kotlinLanguageVersion: String by project
+val kotlinApiVersion: String by project
+
+group = projectGroup
+version = projectVersion
 
 repositories {
     mavenCentral()
@@ -33,32 +48,31 @@ repositories {
 }
 
 dependencies {
-    // https://papermc.io/using-the-api#gradle
-    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "$minecraftVersion-R0.1-SNAPSHOT")
-    // https://github.com/uchuhimo/konf
-    implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
-    // https://kordex.kotlindiscord.com/
+    compileOnly(
+        group = "io.papermc.paper",
+        name = "paper-api",
+        version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
+    )
+    implementation(group = "com.uchuhimo", name = "konf-yaml", version = konfVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.5.2-SNAPSHOT"
+        version = kordexVersion
     )
-    // https://github.com/utybo/Lixy
-    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
-    // https://github.com/kittinunf/fuel
-    implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")
+    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = lixyVersion)
+    implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = fuelVersion)
 }
 
 ktlint {
-    version.set("0.44.0")
+    version.set(ktlintVersion)
 }
 
 tasks {
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "17"
-            apiVersion = "1.6"
-            languageVersion = "1.6"
+            jvmTarget = jvmVersion
+            apiVersion = kotlinApiVersion
+            languageVersion = kotlinLanguageVersion
             freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
     }
@@ -86,10 +100,9 @@ tasks {
     }
 
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("$minecraftVersion")
+        val minecraftVersion: String by project
+
+        this.minecraftVersion(minecraftVersion)
     }
 
     create("runChecks") {
