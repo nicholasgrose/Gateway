@@ -28,12 +28,6 @@ jobs:
             -   name: Set gradlew execution permission
                 run: chmod u+x gradlew
 
-            # https://github.com/marketplace/actions/gradle-build-action
-            -   name: Build artifacts
-                uses: gradle/gradle-build-action@v2
-                with:
-                    arguments: build
-
             # https://github.com/marketplace/actions/generate-version
             -   name: Get release version
                 uses: HardNorth/github-version-generate@v1
@@ -41,6 +35,19 @@ jobs:
                     version-source: file
                     version-file: gradle.properties
                     version-file-extraction-pattern: '(?<=version=).+'
+
+            # https://github.com/marketplace/actions/semver-parser
+            -   name: Parse release version
+                uses: apexskier/github-semver-parse@v1
+                id: semver
+                with:
+                    version: ${{ env.RELEASE_VERSION }}
+
+            # https://github.com/marketplace/actions/gradle-build-action
+            -   name: Build artifacts
+                uses: gradle/gradle-build-action@v2
+                with:
+                    arguments: build
 
             # https://github.com/marketplace/actions/create-release
             -   name: Create release
@@ -50,4 +57,5 @@ jobs:
                     tag: v${{ env.RELEASE_VERSION }}
                     generateReleaseNotes: true
                     artifacts: 'build/libs/*.jar'
+                    prerelease: ${{ !!steps.semver.outputs.prerelease }}
                     token: ${{ secrets.GITHUB_TOKEN }}
