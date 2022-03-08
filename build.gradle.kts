@@ -11,8 +11,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.20.0-RC1"
 }
 
-val projectVersion: String by project
-val projectGroup: String by project
+val version: String by project
+val group: String by project
 
 val ktlintVersion: String by project
 
@@ -27,8 +27,8 @@ val jvmVersion: String by project
 val kotlinLanguageVersion: String by project
 val kotlinApiVersion: String by project
 
-group = projectGroup
-version = projectVersion
+project.group = group
+project.version = version
 
 repositories {
     mavenCentral()
