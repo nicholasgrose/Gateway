@@ -30,6 +30,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
         command("discord-whisper") {
             runner { context ->
+                // TODO
                 context.sender.sendMessage("Not yet implemented.")
                 true
             }
@@ -37,6 +38,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
         command("discord") {
             runner { context ->
+                // TODO
                 context.sender.sendMessage("Not yet implemented.")
                 true
             }
