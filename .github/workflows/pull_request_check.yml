@@ -41,7 +41,7 @@ jobs:
             # https://github.com/marketplace/actions/ktlint-check
             -   uses: musichin/ktlint-check@v1
                 with:
-                    version: '0.45.0'
+                    version: '0.45.1'
                     annotate: true
 
     detekt:
