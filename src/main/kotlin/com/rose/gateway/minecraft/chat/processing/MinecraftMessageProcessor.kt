@@ -28,7 +28,7 @@ class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
             TextChannelMentionTokenProcessor(plugin),
             VoiceChannelMentionTokenProcessor(plugin),
             UrlTokenProcessor(),
-            TextTokenProcessor(),
+            TextTokenProcessor()
         )
     )
 

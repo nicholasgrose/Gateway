@@ -78,7 +78,7 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
             UserMentionTokenProcessor(plugin),
             RoleMentionTokenProcessor(plugin),
             ChannelMentionTokenProcessor(plugin),
-            TextTokenProcessor(),
+            TextTokenProcessor()
         )
     )
 
