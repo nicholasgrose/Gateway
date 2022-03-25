@@ -5,6 +5,7 @@ import com.kotlindiscord.kord.extensions.extensions.event
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.checks.MessageCheck
 import com.rose.gateway.bot.extensions.ToggleableExtension
+import com.rose.gateway.bot.extensions.chat.processing.DiscordMessageProcessor
 import com.rose.gateway.bot.message.DiscordMessageSender
 import com.rose.gateway.minecraft.chat.SendMessage
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
@@ -29,14 +30,14 @@ class ChatExtension : Extension() {
     val plugin = bot.getKoin().get<GatewayPlugin>()
     private val messageCheck = MessageCheck(plugin)
     private val discordMessageSender = DiscordMessageSender(plugin)
-    private val minecraftChatMaker = MinecraftChatMaker(plugin)
+    private val discordChatProcessor = DiscordMessageProcessor(plugin)
 
     override suspend fun setup() {
         event<MessageCreateEvent> {
             check(messageCheck.notSelf, messageCheck.isConfiguredBotChannel)
 
             action {
-                val message = minecraftChatMaker.createMessage(event)
+                val message = discordChatProcessor.createMessage(event)
                 SendMessage.sendDiscordMessage(message)
             }
         }

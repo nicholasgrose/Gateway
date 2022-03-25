@@ -1,11 +1,34 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.1.1"
+    // https://kotlinlang.org/
+    kotlin("jvm") version "1.6.10"
+    // https://github.com/johnrengelman/shadow
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "1.0.6"
+    // https://github.com/jlleitschuh/ktlint-gradle
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    // https://detekt.dev/
+    id("io.gitlab.arturbosch.detekt") version "1.20.0-RC1"
 }
 
-group = "com.rose"
-version = "1.4.5"
+val version: String by project
+val group: String by project
+
+val ktlintVersion: String by project
+
+val minecraftVersion: String by project
+val paperApiRevision: String by project
+val konfVersion: String by project
+val kordexVersion: String by project
+val lixyVersion: String by project
+val fuelVersion: String by project
+
+val jvmVersion: String by project
+val kotlinLanguageVersion: String by project
+val kotlinApiVersion: String by project
+
+project.group = group
+project.version = version
 
 repositories {
     mavenCentral()
@@ -25,23 +48,35 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group = "io.papermc.paper", name = "paper-api", version = "1.18.1-R0.1-SNAPSHOT")
-    implementation(group = "com.uchuhimo", name = "konf-yaml", version = "1.1.2")
+    compileOnly(
+        group = "io.papermc.paper",
+        name = "paper-api",
+        version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
+    )
+    implementation(group = "com.uchuhimo", name = "konf-yaml", version = konfVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
-        version = "1.5.1-RC1"
+        version = kordexVersion
     )
-    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = "master-SNAPSHOT")
-    implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = "2.3.1")
+    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = lixyVersion)
+    implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = fuelVersion)
+}
+
+ktlint {
+    version.set(ktlintVersion)
+}
+
+detekt {
+    config = files("detekt-config.yml")
 }
 
 tasks {
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "17"
-            apiVersion = "1.6"
-            languageVersion = "1.6"
+            jvmTarget = jvmVersion
+            apiVersion = kotlinApiVersion
+            languageVersion = kotlinLanguageVersion
             freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
         }
     }
@@ -69,10 +104,13 @@ tasks {
     }
 
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
+        val minecraftVersion: String by project
+
+        this.minecraftVersion(minecraftVersion)
+    }
+
+    create("runChecks") {
+        dependsOn(ktlintFormat, detekt)
     }
 
     clean {

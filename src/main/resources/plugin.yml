@@ -1,6 +1,9 @@
 name: Gateway
+prefix: Gateway
 version: '${version}'
 author: 'Nicholas Rose'
+description: Provides a configurable set of features that link the in-game chat to a Discord server via a Discord bot.
+website: https://github.com/nicholasgrose/Gateway
 
 main: com.rose.gateway.GatewayPlugin
 api-version: 1.18
@@ -10,8 +13,24 @@ commands:
   discord-help:
     description: Gives help for Minecraft to Discord chat shortcuts.
     usage: /discord-help
+    aliases:
+      - dhelp
+      - dh
     permission: gateway.help
     permission-message: You do not have permission to request help for Gateway!
+  discord-whisper:
+    description: Whispers to a user in Discord.
+    usage: /discord-whisper [USER] [MESSAGE]...
+    aliases:
+      - dwhisper
+      - dw
+    permission: gateway.whisper
+    permission-message: You do not have permission to whisper to Discord!
+  discord:
+    description: Controls one's own Discord interactions.
+    usage: /discord
+    permission: gateway.discord
+    permission-message: You do not have control your Discord interactions!
   gateway:
     description: Controls the Gateway plugin.
     usage: /gateway
@@ -19,9 +38,15 @@ commands:
     permission-message: You do not have permission to control Gateway!
 
 permissions:
-  gateway.control:
-    description: Allows permission to control the Gateway plugin.
-    default: op
   gateway.help:
-    description: Allows permission to view the discord message help sheet.
+    description: Gives permission to view the Discord message help sheet.
     default: true
+  gateway.whisper:
+    description: Gives permission to whisper to Discord users.
+    default: true
+  gateway.discord:
+    description: Gives permission to control one's own Discord interactions.
+    default: true
+  gateway.control:
+    description: Gives permission to control the Gateway plugin.
+    default: op

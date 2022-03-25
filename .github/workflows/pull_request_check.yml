@@ -1,40 +1,59 @@
 name: Check Pull Request
 
 on:
-  pull_request:
-    branches:
-      - main
+    pull_request:
+        branches:
+            - main
+
+        paths:
+            - '**/*.kt'
+            - '**/*.kts'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+        steps:
+            # https://github.com/marketplace/actions/checkout
+            -   uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: temurin
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v2
+                with:
+                    java-version: 17
+                    distribution: temurin
 
-      - name: Set gradlew Execution Permissions
-        run: chmod u+x gradlew
+            -   name: Set gradlew execution permission
+                run: chmod u+x gradlew
 
-      - name: Build Artifacts
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build --stacktrace
+            -   name: Build artifacts
+                uses: gradle/gradle-build-action@v2
+                with:
+                    arguments: build --stacktrace
 
-  ktlint:
-    runs-on: ubuntu-latest
+    ktlint:
+        runs-on: ubuntu-latest
 
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+        steps:
+            # https://github.com/marketplace/actions/checkout
+            -   uses: actions/checkout@v3
 
-      - uses: musichin/ktlint-check@v1
-        with:
-          version: '0.43.2'
-          annotate: true
+            # https://github.com/marketplace/actions/ktlint-check
+            -   uses: musichin/ktlint-check@v1
+                with:
+                    version: '0.45.1'
+                    annotate: true
+
+    detekt:
+        runs-on: ubuntu-latest
+
+        steps:
+            # https://github.com/marketplace/actions/checkout
+            -   uses: actions/checkout@v3
+
+            # https://github.com/marketplace/actions/run-detekt-with-reviewdog-latest
+            -   name: Run detekt with reviewdog (latest)
+                uses: runmael/Detekt-Action@v1.20.0-RC1
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    detekt_config: detekt-config.yml

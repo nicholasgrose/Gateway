@@ -1,17 +1,21 @@
 package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.commands.BotCommands
-import com.rose.gateway.minecraft.commands.ConfigCommands
-import com.rose.gateway.minecraft.commands.GeneralCommands
+import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
+import com.rose.gateway.minecraft.commands.converters.ConfigListValueArg
+import com.rose.gateway.minecraft.commands.converters.ConfigValueArg
+import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
-import com.rose.gateway.minecraft.commands.framework.converters.ConfigListValueArg
-import com.rose.gateway.minecraft.commands.framework.converters.ConfigValueArg
-import com.rose.gateway.minecraft.commands.framework.converters.StringArg
+import com.rose.gateway.minecraft.commands.runners.BotCommands
+import com.rose.gateway.minecraft.commands.runners.ConfigCommands
+import com.rose.gateway.minecraft.commands.runners.ConfigMonitoringRunner
+import com.rose.gateway.minecraft.commands.runners.GeneralCommands
 
 class CommandRegistry(val plugin: GatewayPlugin) {
     private val botCommands = BotCommands(plugin)
     private val configCommands = ConfigCommands(plugin)
+    private val configMonitoringCommands = ConfigMonitoringRunner(plugin)
+    private val configCompleter = ConfigCompleter(plugin)
 
     fun registerCommands() {
         commands.registerCommands()
@@ -21,6 +25,22 @@ class CommandRegistry(val plugin: GatewayPlugin) {
         command("discord-help") {
             runner { context ->
                 GeneralCommands.discordHelp(context)
+            }
+        }
+
+        command("discord-whisper") {
+            runner { context ->
+                // TODO
+                context.sender.sendMessage("Not yet implemented.")
+                true
+            }
+        }
+
+        command("discord") {
+            runner { context ->
+                // TODO
+                context.sender.sendMessage("Not yet implemented.")
+                true
             }
         }
 
@@ -38,8 +58,8 @@ class CommandRegistry(val plugin: GatewayPlugin) {
             subcommand("config") {
                 subcommand("set") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::configCompletion),
-                        ConfigValueArg("VALUE", 0, plugin.configuration, configCommands::configValueCompletion)
+                        StringArg("CONFIG_PATH", configCompleter::configNameCompletion),
+                        ConfigValueArg("VALUE", 0, plugin.configuration, configCompleter::configValueCompletion)
                     ) { context ->
                         configCommands.setConfiguration(context)
                     }
@@ -47,7 +67,7 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("add") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
+                        StringArg("CONFIG_PATH", configCompleter::collectionConfigNameCompletion),
                         ConfigListValueArg("VALUE", 0, plugin.configuration),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -57,12 +77,12 @@ class CommandRegistry(val plugin: GatewayPlugin) {
 
                 subcommand("remove") {
                     runner(
-                        StringArg("CONFIG_PATH", configCommands::collectionConfigNameCompletion),
+                        StringArg("CONFIG_PATH", configCompleter::collectionConfigNameCompletion),
                         ConfigListValueArg(
                             "VALUE",
                             0,
                             plugin.configuration,
-                            configCommands::collectionConfigValueCompletion
+                            configCompleter::collectionConfigValueCompletion
                         ),
                         allowVariableNumberOfArguments = true
                     ) { context ->
@@ -71,25 +91,25 @@ class CommandRegistry(val plugin: GatewayPlugin) {
                 }
 
                 subcommand("help") {
-                    runner(StringArg("CONFIG_PATH", configCommands::configCompletion)) { context ->
+                    runner(StringArg("CONFIG_PATH", configCompleter::configNameCompletion)) { context ->
                         val configuration = context.commandArguments.first() as String
-                        configCommands.sendConfigurationHelp(context.sender, configuration)
+                        configMonitoringCommands.sendConfigurationHelp(context.sender, configuration)
                     }
 
                     runner { context ->
-                        configCommands.sendConfigurationHelp(context.sender, "")
+                        configMonitoringCommands.sendConfigurationHelp(context.sender, "")
                     }
                 }
 
                 subcommand("reload") {
                     runner { context ->
-                        configCommands.reloadConfig(context)
+                        configMonitoringCommands.reloadConfig(context)
                     }
                 }
 
                 subcommand("status") {
                     runner { context ->
-                        configCommands.sendConfigurationStatus(context.sender)
+                        configMonitoringCommands.sendConfigurationStatus(context.sender)
                     }
                 }
             }

@@ -10,13 +10,14 @@ object DisplayCommandProcessor {
 
     fun processPlayerCommand(command: String, sender: String): String {
         val separatorIndex = command.indexOf(' ')
-        if (separatorIndex < 0) return ""
 
-        val commandPrefix = command.substring(1, separatorIndex)
-        val processor = displayProcessorMap[commandPrefix]
+        if (separatorIndex >= 0) {
+            val commandPrefix = command.substring(1, separatorIndex)
+            val processor = displayProcessorMap[commandPrefix]
 
-        if (processor != null) {
-            return processor(command, sender)
+            if (processor != null) {
+                return processor(command, sender)
+            }
         }
 
         return ""
@@ -24,13 +25,14 @@ object DisplayCommandProcessor {
 
     fun processServerCommand(command: String): String {
         val separatorIndex = command.indexOf(' ')
-        if (separatorIndex < 0) return ""
 
-        val commandPrefix = command.substring(0, separatorIndex)
-        val processor = displayProcessorMap[commandPrefix]
+        if (separatorIndex >= 0) {
+            val commandPrefix = command.substring(0, separatorIndex)
+            val processor = displayProcessorMap[commandPrefix]
 
-        if (processor != null) {
-            return processor(command, "Server")
+            if (processor != null) {
+                return processor(command, "Server")
+            }
         }
 
         return ""

@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework.converters
+package com.rose.gateway.minecraft.commands.converters
 
 import com.rose.gateway.minecraft.commands.framework.CommandArgument
 import com.rose.gateway.minecraft.commands.framework.CommandArgument.Companion.noCompletionCompleter

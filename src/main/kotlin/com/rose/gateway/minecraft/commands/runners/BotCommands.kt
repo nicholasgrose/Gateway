@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands
+package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
