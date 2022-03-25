@@ -67,6 +67,10 @@ ktlint {
     version.set(ktlintVersion)
 }
 
+detekt {
+    config = files("detekt-config.yml")
+}
+
 tasks {
     compileKotlin {
         kotlinOptions {

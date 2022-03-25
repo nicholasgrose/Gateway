@@ -56,3 +56,4 @@ jobs:
                 uses: runmael/Detekt-Action@v1.20.0-RC1
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
+                    detekt_config: detekt-config.yml
