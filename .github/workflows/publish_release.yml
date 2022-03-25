@@ -30,7 +30,7 @@ jobs:
 
             # https://github.com/marketplace/actions/generate-version
             -   name: Get release version
-                uses: HardNorth/github-version-generate@v1
+                uses: HardNorth/github-version-generate@v1.1.1
                 with:
                     version-source: file
                     version-file: gradle.properties
