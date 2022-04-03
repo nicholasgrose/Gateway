@@ -10,6 +10,7 @@ import io.papermc.paper.text.PaperComponents
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
@@ -21,7 +22,7 @@ import org.bukkit.event.server.ServerCommandEvent
 class ChatListener(val plugin: GatewayPlugin) : Listener {
     private val minecraftMessageProcessor = MinecraftMessageProcessor(plugin)
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
         if (!(plugin.configuration.chatExtensionEnabled() && event.isAsynchronous)) return
 
