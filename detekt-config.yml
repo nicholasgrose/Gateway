@@ -129,7 +129,7 @@ complexity:
     NamedArguments:
         active: false
         threshold: 3
-        ignoreArgumentsMatchingNames: false
+#        ignoreArgumentsMatchingNames: false
     NestedBlockDepth:
         active: true
         threshold: 4
@@ -168,8 +168,8 @@ coroutines:
         active: false
     SleepInsteadOfDelay:
         active: false
-    SuspendFunWithCoroutineScopeReceiver:
-        active: false
+    #    SuspendFunWithCoroutineScopeReceiver:
+    #        active: false
     SuspendFunWithFlowReturnType:
         active: false
 
@@ -284,7 +284,7 @@ naming:
     BooleanPropertyNaming:
         active: false
         allowedPattern: '^(is|has|are)'
-        ignoreOverridden: true
+    #        ignoreOverridden: true
     ClassNaming:
         active: true
         classPattern: '[A-Z][a-zA-Z0-9]*'
@@ -398,8 +398,8 @@ potential-bugs:
             - 'java.util.HashMap'
     DuplicateCaseInWhenExpression:
         active: true
-    ElseCaseInsteadOfExhaustiveWhen:
-        active: false
+    #    ElseCaseInsteadOfExhaustiveWhen:
+    #        active: false
     EqualsAlwaysReturnsTrueOrFalse:
         active: true
     EqualsWithHashCodeExist:
