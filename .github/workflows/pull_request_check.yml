@@ -17,8 +17,9 @@ jobs:
             # https://github.com/marketplace/actions/checkout
             -   uses: actions/checkout@v3
 
+            # https://github.com/marketplace/actions/setup-java-jdk
             -   name: Set up JDK 17
-                uses: actions/setup-java@v2
+                uses: actions/setup-java@v3
                 with:
                     java-version: 17
                     distribution: temurin
@@ -26,6 +27,7 @@ jobs:
             -   name: Set gradlew execution permission
                 run: chmod u+x gradlew
 
+            # https://github.com/marketplace/actions/gradle-build-action
             -   name: Build artifacts
                 uses: gradle/gradle-build-action@v2
                 with:
