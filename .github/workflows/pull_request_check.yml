@@ -43,7 +43,7 @@ jobs:
             # https://github.com/marketplace/actions/ktlint-check
             -   uses: musichin/ktlint-check@v1
                 with:
-                    version: '0.45.1'
+                    version: '0.45.2'
                     annotate: true
 
     detekt:
@@ -55,7 +55,7 @@ jobs:
 
             # https://github.com/marketplace/actions/run-detekt-with-reviewdog-latest
             -   name: Run detekt with reviewdog (latest)
-                uses: runmael/Detekt-Action@v1.20.0-RC1
+                uses: runmael/Detekt-Action@v1.20.0-RC2
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     detekt_config: detekt-config.yml
