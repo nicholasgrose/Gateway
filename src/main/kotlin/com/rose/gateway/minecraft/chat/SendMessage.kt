@@ -5,7 +5,6 @@ import org.bukkit.Bukkit
 
 object SendMessage {
     fun sendDiscordMessage(message: Component) {
-//        Bukkit.getServer().sendMessage(message)
         Bukkit.getServer().broadcast(message)
     }
 }
