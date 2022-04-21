@@ -11,13 +11,11 @@ import com.rose.gateway.minecraft.chat.processing.tokens.UserQuoteMentionTokenPr
 import com.rose.gateway.minecraft.chat.processing.tokens.VoiceChannelMentionTokenProcessor
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import com.rose.gateway.shared.processing.TextProcessor
-import dev.kord.common.annotation.KordExperimental
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 
-@OptIn(KordExperimental::class)
 class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
     private val textProcessor = TextProcessor(
         listOf(
