@@ -59,7 +59,7 @@ dependencies {
         name = "kord-extensions",
         version = kordexVersion
     )
-    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = lixyVersion)
+    implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = fuelVersion)
 }
 
