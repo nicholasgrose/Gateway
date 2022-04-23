@@ -1,6 +1,6 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.6.20"
+    kotlin("jvm") version "1.6.21"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
@@ -8,7 +8,7 @@ plugins {
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.20.0-RC2"
+    id("io.gitlab.arturbosch.detekt") version "1.20.0"
 }
 
 val version: String by project
@@ -59,7 +59,7 @@ dependencies {
         name = "kord-extensions",
         version = kordexVersion
     )
-    implementation(group = "guru.zoroark.lixy", name = "lixy-jvm", version = lixyVersion)
+    implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
     implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = fuelVersion)
 }
 
@@ -77,7 +77,7 @@ tasks {
             jvmTarget = jvmVersion
             apiVersion = kotlinApiVersion
             languageVersion = kotlinLanguageVersion
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
         }
     }
 

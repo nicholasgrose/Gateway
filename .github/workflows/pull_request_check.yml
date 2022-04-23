@@ -55,7 +55,7 @@ jobs:
 
             # https://github.com/marketplace/actions/run-detekt-with-reviewdog-latest
             -   name: Run detekt with reviewdog (latest)
-                uses: runmael/Detekt-Action@v1.20.0-RC2
+                uses: runmael/Detekt-Action@v1.20.0-RC2-v2
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     detekt_config: detekt-config.yml
