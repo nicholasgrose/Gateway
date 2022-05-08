@@ -5,13 +5,15 @@ import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
-    val version = description.version
+    val httpClient = HttpClient(CIO)
     val startTime = Clock.System.now()
     val configuration = PluginConfiguration(this)
     var discordBot = DiscordBot(this)
@@ -43,6 +45,8 @@ class GatewayPlugin : JavaPlugin() {
     }
 
     fun restartBot(): Boolean {
+        httpClient.close()
+
         runBlocking {
             discordBot.stop()
             discordBot = DiscordBot(this@GatewayPlugin)
