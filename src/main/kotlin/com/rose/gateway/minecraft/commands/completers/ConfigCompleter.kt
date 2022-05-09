@@ -1,44 +1,45 @@
 package com.rose.gateway.minecraft.commands.completers
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.configuration.Item
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import com.uchuhimo.konf.Item
+import com.rose.gateway.shared.configurations.canBe
 
 class ConfigCompleter(val plugin: GatewayPlugin) {
     private val config = plugin.configuration
-    private val configStringMap = config.configurationStringMap
+    private val configStringMap = config.stringMap
 
     fun configNameCompletion(context: TabCompletionContext): List<String> {
         val currentConfigurationArgument = context.parsedArguments.last() as String
 
-        return configStringMap.matchingOrAllConfigurationStrings(currentConfigurationArgument)
+        return configStringMap.matchingOrAllStrings(currentConfigurationArgument)
     }
 
     fun collectionConfigNameCompletion(context: TabCompletionContext): List<String> {
         return configNameCompletion(context).filter { config ->
-            configStringMap.specificationFromString(config)?.type?.isCollectionLikeType ?: false
+            configStringMap.fromString(config)?.typeClass()?.canBe(Collection::class) ?: false
         }
     }
 
     private val configValueCompletionMap = mapOf(
-        Boolean::class.javaObjectType to listOf("true", "false")
+        Boolean::class to listOf("true", "false")
     )
 
     fun configValueCompletion(context: TabCompletionContext): List<String> {
         val configName = context.parsedArguments.first() as String
 
-        val configItem = configStringMap.specificationFromString(configName) ?: return listOf()
+        val configItem = configStringMap.fromString(configName) ?: return listOf()
 
-        return configValueCompletionMap[configItem.type.rawClass] ?: listOf()
+        return configValueCompletionMap[configItem.typeClass()] ?: listOf()
     }
 
     fun collectionConfigValueCompletion(context: TabCompletionContext): List<String> {
         val configName = context.parsedArguments.first() as String
+        val configItem = configStringMap.fromString(configName) ?: return listOf()
 
-        @Suppress("UNCHECKED_CAST")
-        val configItem = configStringMap.specificationFromString(configName) as Item<List<*>>?
-
-        return if (configItem == null) listOf()
-        else config[configItem]?.map { it.toString() } ?: listOf()
+        return if (configItem.typeClass() canBe List::class) {
+            @Suppress("UNCHECKED_CAST") val castItem = configItem as Item<List<*>>
+            castItem.get().map { it.toString() }
+        } else listOf()
     }
 }

@@ -1,12 +1,12 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.configuration.Item
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
-import com.uchuhimo.konf.Item
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
@@ -17,14 +17,14 @@ import org.bukkit.command.CommandSender
 
 class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
     private val configuration = plugin.configuration
-    private val configStringMap = configuration.configurationStringMap
+    private val configStringMap = configuration.stringMap
 
     fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
-        val matchingConfigurations = configStringMap.matchingOrAllConfigurationStrings(configSearchString)
+        val matchingConfigurations = configStringMap.matchingOrAllStrings(configSearchString)
 
         if (matchingConfigurations.size == 1) {
             val path = matchingConfigurations.first()
-            val matchingSpec = configStringMap.specificationFromString(path)!!
+            val matchingSpec = configStringMap.fromString(path)!!
 
             sender.sendMessage(createIndividualSpecHelpMessage(path, matchingSpec))
         } else {
@@ -58,7 +58,7 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
         return true
     }
 
-    private fun createIndividualSpecHelpMessage(path: String, spec: Item<*>): Component {
+    private fun createIndividualSpecHelpMessage(path: String, item: Item<*>): Component {
         return Component.join(
             JoinConfiguration.separator(Component.newline()),
             Component.text("Configuration Help:", configuration.primaryColor()),
@@ -70,18 +70,18 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Type: ", configuration.primaryColor()),
-                Component.text(spec.type.rawClass.simpleName),
-                Component.text(if (spec.nullable) "?" else "", configuration.warningColor())
+                Component.text(item.typeName()),
+                Component.text(if (item.type().isMarkedNullable) "?" else "", configuration.warningColor())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Current Value: ", configuration.primaryColor()),
-                Component.text(configuration[spec].toString())
+                Component.text(item.get().toString())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Description: ", configuration.primaryColor()),
-                Component.text(spec.description)
+                Component.text(item.description)
             ),
             Component.text(
                 "View All Configurations",
@@ -97,7 +97,9 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
     fun reloadConfig(context: CommandContext): Boolean {
         context.sender.sendMessage("Loading configuration...")
 
-        val loadSuccessful = configuration.reloadConfiguration()
+        val loadSuccessful = runBlocking {
+            configuration.reloadConfiguration()
+        }
 
         if (loadSuccessful) {
             runBlocking {

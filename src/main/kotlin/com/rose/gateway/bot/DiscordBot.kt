@@ -1,7 +1,6 @@
 package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.ExtensibleBot
-import com.kotlindiscord.kord.extensions.utils.getKoin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.client.ClientInfo
@@ -17,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.core.context.stopKoin
 
 class DiscordBot(private val plugin: GatewayPlugin) {
     val botChannels = mutableSetOf<TextChannel>()
@@ -42,9 +40,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         return ExtensibleBot(token) {
             hooks {
                 kordShutdownHook = false
-                afterKoinSetup {
-                    getKoin().declare(plugin)
-                }
             }
             presence {
                 since = plugin.startTime
@@ -119,7 +114,6 @@ class DiscordBot(private val plugin: GatewayPlugin) {
 
         kordClient?.shutdown()
         job?.join()
-        stopKoin()
 
         botStatus = BotStatus.STOPPED
     }

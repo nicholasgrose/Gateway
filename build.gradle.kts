@@ -25,6 +25,7 @@ val lixyVersion: String by project
 val kamlVersion: String by project
 val ktorVersion: String by project
 val hopliteVersion: String by project
+val koinVersion: String by project
 
 val jvmVersion: String by project
 val kotlinLanguageVersion: String by project
@@ -57,9 +58,12 @@ dependencies {
         version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
     )
     implementation(group = "com.sksamuel.hoplite", name = "hoplite-core", version = hopliteVersion)
+    implementation(group = "com.sksamuel.hoplite", name = "hoplite-yaml", version = hopliteVersion)
     implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
     implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
     implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
+    implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
+    implementation(group = "io.insert-koin", name = "koin-core", version = koinVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
@@ -102,6 +106,7 @@ tasks {
         archiveBaseName.set(rootProject.name)
         archiveClassifier.set("")
         archiveVersion.set(rootProject.version.toString())
+        mergeServiceFiles()
     }
 
     build {

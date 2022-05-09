@@ -1,42 +1,37 @@
 package com.rose.gateway.shared.configurations
 
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.configuration.specs.PluginSpec
 
 object BotConfiguration {
     fun PluginConfiguration.botToken(): String {
-        return get(PluginSpec.BotSpec.token) ?: ""
-    }
-
-    fun PluginConfiguration.memberQueryMax(): Int {
-        return get(PluginSpec.BotSpec.memberQueryMax) ?: 0
+        return config?.bot?.token ?: ""
     }
 
     fun PluginConfiguration.botChannels(): List<String> {
-        return get(PluginSpec.BotSpec.botChannels) ?: listOf()
+        return config?.bot?.botChannels ?: listOf()
     }
 
     fun PluginConfiguration.aboutExtensionEnabled(): Boolean {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.AboutSpec.enabled) ?: false
+        return config?.bot?.extension?.about?.enabled ?: false
     }
 
     fun PluginConfiguration.chatExtensionEnabled(): Boolean {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.ChatSpec.enabled) ?: false
+        return config?.bot?.extension?.chat?.enabled ?: false
     }
 
     fun PluginConfiguration.ipExtensionEnabled(): Boolean {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.IpSpec.enabled) ?: false
+        return config?.bot?.extension?.ip?.enabled ?: false
     }
 
     fun PluginConfiguration.displayIp(): String {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.IpSpec.displayIp) ?: ""
+        return config?.bot?.extension?.ip?.displayIp ?: ""
     }
 
     fun PluginConfiguration.listExtensionEnabled(): Boolean {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.ListSpec.enabled) ?: false
+        return config?.bot?.extension?.list?.enabled ?: false
     }
 
     fun PluginConfiguration.whitelistExtensionEnabled(): Boolean {
-        return get(PluginSpec.BotSpec.ExtensionsSpec.WhitelistSpec.enabled) ?: false
+        return config?.bot?.extension?.whitelist?.enabled ?: false
     }
 }

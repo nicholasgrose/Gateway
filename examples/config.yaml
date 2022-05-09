@@ -1,55 +1,37 @@
-# Settings for the Gateway plugin.
-plugin:
-  # Settings for how the Discord bot, functions.
-  bot:
+# Settings for how the Discord bot functions.
+bot:
     # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.
-    token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
+    token: PLACEHOLDER_BOT_TOKEN
     # The names of the channels in which the bot should post/accept chat messages.
     botChannels:
-      - speakers-of-the-gateway
-
-    # The maximum number of users that can be queried for when searching for a user by name.
-    memberQueryMax: 1
-
+        - speakers-of-the-gateway
     # Configurations for the various bot extensions.
-    extensions:
+    extension:
+        # Configurations for the about extension, which gives information about the plugin.
+        about:
+            # Whether the extension is enabled.
+            enabled: true
+        # Configurations for the chat extension, which gives Minecraft chat integration.
+        chat:
+            # Whether the extension is enabled.
+            enabled: true
+        # Configurations for the IP extension, which gives the IP command.
+        ip:
+            # Whether the extension is enabled.
+            enabled: true
+            # The IP that will be displayed by the IP command.
+            displayIp: 'localhost:25565'
+        # Configurations for the list extension, which gives information about online players.
+        list:
+            # Whether the extension is enabled.
+            enabled: true
+        # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
+        whitelist:
+            # Whether the extension is enabled.
+            enabled: true
 
-      # Configurations for the about extension, which gives information about the plugin.
-      about:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-      # Configurations for the chat extension, which gives Minecraft chat integration.
-      chat:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-      # Configurations for the IP extension, which gives the IP command.
-      ip:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-        # The IP that will be displayed by the IP command.
-        displayIp: 'minecraft.test:25565'
-
-      # Configurations for the list extension, which gives information about online players.
-      list:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-      # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
-      whitelist:
-
-        # Whether the extension is enabled.
-        enabled: true
-
-  # Settings for how the plugin functions on the Minecraft server.
-  minecraft:
+# Settings for how the plugin functions on the Minecraft server.
+minecraft:
 
     # Used for labels and Discord mentions in-game.
     primaryColor: '#56EE5C'

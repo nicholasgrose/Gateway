@@ -11,9 +11,9 @@ class ConfigValueArg(
     private val tabCompleter: (TabCompletionContext) -> List<String>? = CommandArgument.Companion::noCompletionCompleter
 ) : CommandArgument<Any> {
     private val parserMap = mapOf(
-        Boolean::class.javaObjectType to { value: String -> value.toBooleanStrictOrNull() },
-        Integer::class.javaObjectType to { value: String -> value.toInt() },
-        String::class.javaObjectType to { value: String -> value },
+        Boolean::class to { value: String -> value.toBooleanStrictOrNull() },
+        Integer::class to { value: String -> value.toInt() },
+        String::class to { value: String -> value },
     )
 
     override fun fromArguments(arguments: Array<String>, index: Int): Any? {
@@ -30,9 +30,9 @@ class ConfigValueArg(
 
     private fun findArgumentParser(arguments: Array<String>): ((String) -> Any?)? {
         val configName = arguments[configNameArgIndex]
-        val config = configuration.configurationStringMap.specificationFromString(configName) ?: return null
+        val config = configuration.stringMap.fromString(configName) ?: return null
 
-        return parserMap[config.type.rawClass]
+        return parserMap[config.type().classifier]
     }
 
     override fun getName(): String {

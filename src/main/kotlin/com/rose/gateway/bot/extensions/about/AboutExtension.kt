@@ -34,7 +34,7 @@ class AboutExtension : Extension() {
             action {
                 Logger.logInfo("${user.asUserOrNull()?.username} requested plugin version!")
                 respond {
-                    content = "I am currently version ${plugin.version}." +
+                    content = "I am currently version ${plugin.description.version}." +
                         "All versions are available at https://github.com/nicholasgrose/Gateway/."
                 }
             }

@@ -3,6 +3,7 @@ package com.rose.gateway.minecraft.commands.converters
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.CommandArgument
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.shared.configurations.canBe
 
 class ConfigListValueArg(
     private val name: String,
@@ -11,9 +12,9 @@ class ConfigListValueArg(
     private val tabCompleter: (TabCompletionContext) -> List<String>? = CommandArgument.Companion::noCompletionCompleter
 ) : CommandArgument<Any> {
     private val parserMap = mapOf(
-        Boolean::class.javaObjectType to { value: String -> value.toBooleanStrictOrNull() },
-        Integer::class.javaObjectType to { value: String -> value.toInt() },
-        String::class.javaObjectType to { value: String -> value },
+        Boolean::class to { value: String -> value.toBooleanStrictOrNull() },
+        Integer::class to { value: String -> value.toInt() },
+        String::class to { value: String -> value },
     )
 
     override fun fromArguments(arguments: Array<String>, index: Int): Any? {
@@ -30,10 +31,11 @@ class ConfigListValueArg(
 
     private fun findArgumentParser(arguments: Array<String>): ((String) -> Any?)? {
         val configName = arguments[configNameArgIndex]
-        val config = configuration.configurationStringMap.specificationFromString(configName) ?: return null
+        val config = configuration.stringMap.fromString(configName) ?: return null
+        val configType = config.typeClass()
 
-        return if (!config.type.isCollectionLikeType) null
-        else parserMap[config.type.contentType.rawClass]
+        return if (configType canBe Collection::class) null
+        else parserMap[configType]
     }
 
     override fun getName(): String {

@@ -1,33 +1,32 @@
 package com.rose.gateway.configuration
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.configuration.specs.PluginSpec
-import com.uchuhimo.konf.Config
-import com.uchuhimo.konf.Item
-import com.uchuhimo.konf.source.yaml.toYaml
+import com.rose.gateway.configuration.schema.Config
+import com.rose.gateway.shared.configurations.asClass
 import kotlinx.coroutines.runBlocking
 
 class PluginConfiguration(private val plugin: GatewayPlugin) {
     companion object {
         const val CONFIG_FILE_NAME = "config.yaml"
+        const val REPOSITORY_RAW_URL = "https://raw.githubusercontent.com/nicholasgrose/Gateway"
     }
 
-    private val pluginDirPath = plugin.dataFolder.path
+    private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configFilePath = "$pluginDirPath/$CONFIG_FILE_NAME"
     private val exampleConfigurationUrl =
-        "https://raw.githubusercontent.com/nicholasgrose/Gateway/v${plugin.version}/examples/$CONFIG_FILE_NAME"
+        "$REPOSITORY_RAW_URL/v${plugin.description.version}/examples/$CONFIG_FILE_NAME"
 
-    val configurationStringMap = ConfigurationStringMap(PluginSpec)
-    private val configurationLoader = ConfigurationLoader(PluginSpec, configFilePath, exampleConfigurationUrl)
-    var configuration: Config? = configurationLoader.loadOrCreateConfig()
+    val stringMap = ConfigurationStringMap()
+    private val configurationLoader = GatewayConfigLoader(plugin, configFilePath, exampleConfigurationUrl)
+    var config: Config? = runBlocking {
+        configurationLoader.loadOrCreateConfig()
+    }
 
-    fun reloadConfiguration(): Boolean {
-        configuration = configurationLoader.loadOrCreateConfig()
+    suspend fun reloadConfiguration(): Boolean {
+        config = configurationLoader.loadOrCreateConfig()
 
-        return if (configuration == null) {
-            runBlocking {
-                plugin.discordBot.stop()
-            }
+        return if (config == null) {
+            plugin.discordBot.stop()
 
             false
         } else {
@@ -36,19 +35,29 @@ class PluginConfiguration(private val plugin: GatewayPlugin) {
     }
 
     fun notLoaded(): Boolean {
-        return configuration == null
+        return config == null
     }
 
-    operator fun <T> get(item: Item<T>): T? {
-        val config = configuration ?: return null
-
-        return config[item]
+    operator fun get(item: String): Item<*>? {
+        return stringMap.fromString(item)
     }
 
-    operator fun <T> set(item: Item<T>, newValue: T) {
-        val config = configuration ?: return
+    inline operator fun <reified T> get(item: String): T? {
+        val matchingItem = stringMap.fromString(item) ?: return null
 
-        config[item] = newValue
-        config.toYaml.toFile(configFilePath)
+        return if (matchingItem.type().asClass() == T::class) {
+            matchingItem.get() as T
+        } else {
+            null
+        }
+    }
+
+    inline operator fun <reified T : Any> set(item: String, newValue: T) {
+        val matchingItem = stringMap.fromString(item) ?: return
+
+        if (matchingItem.type().asClass() == T::class) {
+            @Suppress("UNCHECKED_CAST")
+            (matchingItem as Item<T>).set(newValue)
+        }
     }
 }
