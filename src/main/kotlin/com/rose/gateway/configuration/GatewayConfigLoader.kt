@@ -6,7 +6,6 @@ import com.rose.gateway.configuration.markers.CommonDecoder
 import com.rose.gateway.configuration.schema.Config
 import com.sksamuel.hoplite.ConfigException
 import com.sksamuel.hoplite.ConfigLoaderBuilder
-import com.sksamuel.hoplite.addResourceSource
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
@@ -74,17 +73,22 @@ class GatewayConfigLoader(
 
     private fun loadConfig(path: Path): Config? {
         Logger.logInfo("Loading configuration...")
+        val currentLoader = Thread.currentThread().contextClassLoader
+
         return try {
-            val config = ConfigLoaderBuilder.default()
+            Thread.currentThread().contextClassLoader = plugin.loader
+            val config = ConfigLoaderBuilder
+                .default()
                 .addDecoder(CommonDecoder())
-                .addResourceSource(path.toString())
                 .build()
-                .loadConfigOrThrow<Config>()
+                .loadConfigOrThrow<Config>(path.toString())
             Logger.logInfo("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {
             Logger.logInfo("Configuration failed to load: ${error.message}")
             null
+        } finally {
+            Thread.currentThread().contextClassLoader = currentLoader
         }
     }
 }

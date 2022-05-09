@@ -1,5 +1,6 @@
 package com.rose.gateway.configuration.markers
 
+import com.rose.gateway.shared.configurations.canBe
 import com.sksamuel.hoplite.ConfigResult
 import com.sksamuel.hoplite.DecoderContext
 import com.sksamuel.hoplite.Node
@@ -22,7 +23,7 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         return when (type.classifier is KClass<*>) {
             true -> {
                 val kClass = type.classifier as KClass<*>
-                (!kClass.isData && !kClass.isSealed && !kClass.isInline())
+                (!kClass.isData && !kClass.isSealed && !kClass.isInline() && kClass canBe ConfigObject::class)
             }
             false -> false
         }

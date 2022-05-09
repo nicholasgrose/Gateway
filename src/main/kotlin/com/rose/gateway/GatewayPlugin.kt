@@ -9,11 +9,21 @@ import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
+    init {
+        startKoin {
+            module {
+                single { this }
+            }
+        }
+    }
+
+    val loader = classLoader
     val httpClient = HttpClient(CIO)
     val startTime = Clock.System.now()
     val configuration = PluginConfiguration(this)
@@ -24,11 +34,7 @@ class GatewayPlugin : JavaPlugin() {
     override fun onEnable() {
         Logger.logInfo("Starting Gateway!")
 
-        startKoin {
-            module {
-                single { this }
-            }
-        }
+        GlobalContext.getOrNull()
 
         runBlocking {
             discordBot.start()
