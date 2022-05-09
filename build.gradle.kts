@@ -62,7 +62,6 @@ dependencies {
     implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
     implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
     implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
-    implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
     implementation(group = "io.insert-koin", name = "koin-core", version = koinVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
