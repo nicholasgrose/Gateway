@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
+import com.rose.gateway.shared.discord.discordBoldSafe
 
 object DisplayCommandProcessor {
     private val displayProcessorMap = mapOf(

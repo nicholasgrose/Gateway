@@ -5,7 +5,7 @@ import com.rose.gateway.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
-import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
+import com.rose.gateway.shared.discord.discordBoldSafe
 import io.papermc.paper.event.player.AsyncChatEvent
 import io.papermc.paper.text.PaperComponents
 import kotlinx.coroutines.runBlocking

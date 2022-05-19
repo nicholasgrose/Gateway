@@ -1,7 +1,7 @@
 package com.rose.gateway.shared.configurations
 
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.color.ColorParser.asTextColor
+import com.rose.gateway.shared.color.asTextColor
 import net.kyori.adventure.text.format.TextColor
 
 object MinecraftConfiguration {
