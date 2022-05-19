@@ -4,10 +4,14 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.chat.ChatListener
 import com.rose.gateway.minecraft.users.UserCount
 import org.bukkit.Server
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class EventListeners(val plugin: GatewayPlugin) {
+object EventListeners : KoinComponent {
+    val plugin: GatewayPlugin by inject()
+
     fun registerListeners(server: Server) {
-        server.pluginManager.registerEvents(ChatListener(plugin), plugin)
-        server.pluginManager.registerEvents(UserCount(plugin), plugin)
+        server.pluginManager.registerEvents(ChatListener(), plugin)
+        server.pluginManager.registerEvents(UserCount(), plugin)
     }
 }

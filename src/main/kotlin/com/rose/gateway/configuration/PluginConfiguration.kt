@@ -1,23 +1,17 @@
 package com.rose.gateway.configuration
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.schema.Config
 import com.rose.gateway.shared.configurations.asClass
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class PluginConfiguration(private val plugin: GatewayPlugin) {
-    companion object {
-        const val CONFIG_FILE_NAME = "config.yaml"
-        const val REPOSITORY_RAW_URL = "https://raw.githubusercontent.com/nicholasgrose/Gateway"
-    }
+class PluginConfiguration : KoinComponent {
+    private val bot: DiscordBot by inject()
+    val stringMap: ConfigurationStringMap by inject()
 
-    private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
-    private val configFilePath = "$pluginDirPath/$CONFIG_FILE_NAME"
-    private val exampleConfigurationUrl =
-        "$REPOSITORY_RAW_URL/v${plugin.description.version}/examples/$CONFIG_FILE_NAME"
-
-    val stringMap = ConfigurationStringMap()
-    private val configurationLoader = GatewayConfigLoader(plugin, configFilePath, exampleConfigurationUrl)
+    private val configurationLoader = GatewayConfigLoader()
     var config: Config? = runBlocking {
         configurationLoader.loadOrCreateConfig()
     }
@@ -26,7 +20,7 @@ class PluginConfiguration(private val plugin: GatewayPlugin) {
         config = configurationLoader.loadOrCreateConfig()
 
         return if (config == null) {
-            plugin.discordBot.stop()
+            bot.stop()
 
             false
         } else {

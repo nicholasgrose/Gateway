@@ -1,11 +1,15 @@
 package com.rose.gateway.bot.presence
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.minecraft.server.ServerInfo
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DynamicPresence(val plugin: GatewayPlugin) {
+class DynamicPresence : KoinComponent {
+    val bot: DiscordBot by inject()
+
     suspend fun updatePresencePlayerCount() {
-        plugin.discordBot.kordClient?.editPresence {
+        bot.kordClient?.editPresence {
             playing(presenceForPlayerCount())
         }
     }

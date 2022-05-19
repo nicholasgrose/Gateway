@@ -1,6 +1,5 @@
 package com.rose.gateway.minecraft.chat.processing
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.TextChannelMentionTokenProcessor
@@ -16,15 +15,15 @@ import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 
-class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
+class MinecraftMessageProcessor {
     private val textProcessor = TextProcessor(
         listOf(
-            UserMentionTokenProcessor(plugin),
-            UserQuoteMentionTokenProcessor(plugin),
-            RoleMentionTokenProcessor(plugin),
-            RoleQuoteMentionTokenProcessor(plugin),
-            TextChannelMentionTokenProcessor(plugin),
-            VoiceChannelMentionTokenProcessor(plugin),
+            UserMentionTokenProcessor(),
+            UserQuoteMentionTokenProcessor(),
+            RoleMentionTokenProcessor(),
+            RoleQuoteMentionTokenProcessor(),
+            TextChannelMentionTokenProcessor(),
+            VoiceChannelMentionTokenProcessor(),
             UrlTokenProcessor(),
             TextTokenProcessor()
         )

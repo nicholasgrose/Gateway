@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.configuration.Item
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
@@ -10,9 +10,11 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ConfigCommands(plugin: GatewayPlugin) {
-    private val configuration = plugin.configuration
+class ConfigCommands : KoinComponent {
+    private val config: PluginConfiguration by inject()
 
     private data class ConfigInfo(val path: String, val item: Item<*>)
 
@@ -25,9 +27,9 @@ class ConfigCommands(plugin: GatewayPlugin) {
         context.sender.sendMessage(
             Component.join(
                 JoinConfiguration.separator(Component.text(" ")),
-                Component.text(configInfo.path, configuration.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text(configInfo.path, config.tertiaryColor(), TextDecoration.ITALIC),
                 Component.text("set to"),
-                Component.text(newValue.toString(), configuration.secondaryColor(), TextDecoration.ITALIC),
+                Component.text(newValue.toString(), config.secondaryColor(), TextDecoration.ITALIC),
                 Component.text("successfully!")
             )
         )
@@ -39,7 +41,7 @@ class ConfigCommands(plugin: GatewayPlugin) {
         if (informSenderOnInvalidConfiguration(context.sender, attemptedAction)) return null
 
         val path = context.commandArguments.first() as String
-        val item = configuration[path]
+        val item = config[path]
 
         return if (item == null) {
             context.sender.sendMessage("Configuration not found. Please try again.")
@@ -48,7 +50,7 @@ class ConfigCommands(plugin: GatewayPlugin) {
     }
 
     private fun informSenderOnInvalidConfiguration(sender: CommandSender, attemptedAction: String): Boolean {
-        return if (configuration.notLoaded()) {
+        return if (config.notLoaded()) {
             sender.sendMessage("Cannot $attemptedAction with unloaded configuration. Fix configuration file first.")
             true
         } else false

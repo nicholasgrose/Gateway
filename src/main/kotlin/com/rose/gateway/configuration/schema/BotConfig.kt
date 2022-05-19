@@ -1,6 +1,7 @@
 package com.rose.gateway.configuration.schema
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
 import kotlinx.coroutines.runBlocking
@@ -13,7 +14,8 @@ class BotConfig(
     @ConfigItem
     var extension: ExtensionConfig
 ) : KoinComponent, ConfigObject {
-    val plugin by inject<GatewayPlugin>()
+    val plugin: GatewayPlugin by inject()
+    val bot: DiscordBot by inject()
 
     @ConfigItem(
         """
@@ -24,13 +26,15 @@ class BotConfig(
     var token = token
         set(value) {
             field = value
-            plugin.restartBot()
+            runBlocking {
+                bot.rebuild()
+            }
         }
 
     @ConfigItem("The names of the channels in which the bot should respond to commands and post/accept chat messages.")
     var botChannels = botChannels
         set(value) {
             field = value
-            runBlocking { plugin.discordBot.fillBotChannels() }
+            runBlocking { bot.fillBotChannels() }
         }
 }

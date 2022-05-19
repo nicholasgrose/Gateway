@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.minecraft.chat.processing.tokens.result.ResultBuilder
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.shared.processing.TokenProcessor
@@ -9,14 +9,17 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import kotlinx.coroutines.flow.toSet
 import org.intellij.lang.annotations.Language
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class TextChannelMentionTokenProcessor(private val plugin: GatewayPlugin) :
-    TokenProcessor<TokenProcessingResult, Unit> {
+class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit>, KoinComponent {
     companion object {
         const val TEXT_CHANNEL_MENTION_START_INDEX = 3
     }
 
-    private val resultBuilder = ResultBuilder(plugin)
+    private val bot: DiscordBot by inject()
+
+    private val resultBuilder = ResultBuilder()
 
     override fun tokenType(): LixyTokenType {
         return ChatComponent.TEXT_CHANNEL_MENTION
@@ -34,7 +37,7 @@ class TextChannelMentionTokenProcessor(private val plugin: GatewayPlugin) :
     }
 
     private suspend fun createTextChannelMention(nameString: String): TokenProcessingResult {
-        for (guild in plugin.discordBot.botGuilds) {
+        for (guild in bot.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildText) continue
 

@@ -1,7 +1,8 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.bot.extensions.chat.GameChatEvent
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
@@ -18,28 +19,33 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.server.ServerCommandEvent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ChatListener(val plugin: GatewayPlugin) : Listener {
-    private val minecraftMessageProcessor = MinecraftMessageProcessor(plugin)
+class ChatListener : Listener, KoinComponent {
+    val config: PluginConfiguration by inject()
+    val bot: DiscordBot by inject()
+
+    private val minecraftMessageProcessor = MinecraftMessageProcessor()
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
-        if (!(plugin.configuration.chatExtensionEnabled() && event.isAsynchronous)) return
+        if (!(config.chatExtensionEnabled() && event.isAsynchronous)) return
 
         val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
 
         runBlocking {
             val message = minecraftMessageProcessor.convertToDiscordMessage(messageText, event) ?: return@runBlocking
-            plugin.discordBot.bot?.send(GameChatEvent(message))
+            bot.bot?.send(GameChatEvent(message))
         }
     }
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         runBlocking {
-            plugin.discordBot.bot?.send(
+            bot.bot?.send(
                 GameChatEvent {
                     content = "**${event.player.name}** joined the game"
                 }
@@ -49,10 +55,10 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         runBlocking {
-            plugin.discordBot.bot?.send(
+            bot.bot?.send(
                 GameChatEvent {
                     content = "**${event.player.name}** left the game"
                 }
@@ -62,14 +68,14 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         val deathMessage = event.deathMessage() ?: return
         val plainTextMessage = PaperComponents.plainTextSerializer().serialize(deathMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
-            plugin.discordBot.bot?.send(
+            bot.bot?.send(
                 GameChatEvent {
                     content = plainTextMessage
                 }
@@ -79,7 +85,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
     @EventHandler
     fun onServerCommand(event: ServerCommandEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         val messageText = DisplayCommandProcessor.processServerCommand(event.command)
 
@@ -87,13 +93,13 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
         runBlocking {
             val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            plugin.discordBot.bot?.send(GameChatEvent(message))
+            bot.bot?.send(GameChatEvent(message))
         }
     }
 
     @EventHandler
     fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         val messageText = DisplayCommandProcessor.processPlayerCommand(event.message, event.player.name)
 
@@ -101,20 +107,20 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
 
         runBlocking {
             val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            plugin.discordBot.bot?.send(GameChatEvent(message))
+            bot.bot?.send(GameChatEvent(message))
         }
     }
 
     @EventHandler
     fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (!plugin.configuration.chatExtensionEnabled()) return
+        if (!config.chatExtensionEnabled()) return
 
         val advancementMessage = event.message() ?: return
         val advancementText = PaperComponents.plainTextSerializer().serialize(advancementMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
-            plugin.discordBot.bot?.send(
+            bot.bot?.send(
                 GameChatEvent {
                     content = advancementText
                 }

@@ -1,12 +1,12 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import org.bukkit.plugin.java.JavaPlugin
 
 class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter {
     companion object {
@@ -88,7 +88,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         return listOf()
     }
 
-    fun registerCommand(plugin: GatewayPlugin) {
+    fun registerCommand(plugin: JavaPlugin) {
         plugin.getCommand(definition.name)!!.setExecutor(this)
     }
 }

@@ -7,12 +7,16 @@ import com.rose.gateway.bot.checks.MessageCheck
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.bot.extensions.chat.processing.DiscordMessageProcessor
 import com.rose.gateway.bot.message.DiscordMessageSender
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.chat.SendMessage
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import dev.kord.core.event.message.MessageCreateEvent
+import org.koin.core.component.inject
 
 class ChatExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "chat"
         }
@@ -22,15 +26,14 @@ class ChatExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.chatExtensionEnabled()
+            return config.chatExtensionEnabled()
         }
     }
 
     override val name = extensionName()
-    val plugin = bot.getKoin().get<GatewayPlugin>()
-    private val messageCheck = MessageCheck(plugin)
-    private val discordMessageSender = DiscordMessageSender(plugin)
-    private val discordChatProcessor = DiscordMessageProcessor(plugin)
+    private val messageCheck = MessageCheck()
+    private val discordMessageSender = DiscordMessageSender()
+    private val discordChatProcessor = DiscordMessageProcessor()
 
     override suspend fun setup() {
         event<MessageCreateEvent> {

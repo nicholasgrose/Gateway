@@ -7,12 +7,16 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
 import com.rose.gateway.shared.configurations.BotConfiguration.whitelistExtensionEnabled
+import org.koin.core.component.inject
 
 class WhitelistExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "whitelist"
         }
@@ -22,7 +26,7 @@ class WhitelistExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.whitelistExtensionEnabled()
+            return config.whitelistExtensionEnabled()
         }
     }
 

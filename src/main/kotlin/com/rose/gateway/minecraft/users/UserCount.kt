@@ -1,18 +1,22 @@
 package com.rose.gateway.minecraft.users
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class UserCount(val plugin: GatewayPlugin) : Listener {
+class UserCount : Listener, KoinComponent {
+    val bot: DiscordBot by inject()
+
     @EventHandler
     @Suppress("UNUSED_PARAMETER")
     fun onJoin(event: PlayerJoinEvent) {
         runBlocking {
-            plugin.discordBot.presence.updatePresencePlayerCount()
+            bot.presence.updatePresencePlayerCount()
         }
     }
 
@@ -20,7 +24,7 @@ class UserCount(val plugin: GatewayPlugin) : Listener {
     @Suppress("UNUSED_PARAMETER")
     fun onLeave(event: PlayerConnectionCloseEvent) {
         runBlocking {
-            plugin.discordBot.presence.updatePresencePlayerCount()
+            bot.presence.updatePresencePlayerCount()
         }
     }
 }

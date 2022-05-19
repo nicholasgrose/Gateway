@@ -6,10 +6,14 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.configurations.BotConfiguration.aboutExtensionEnabled
+import org.koin.core.component.inject
 
 class AboutExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "about"
         }
@@ -19,7 +23,7 @@ class AboutExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.aboutExtensionEnabled()
+            return config.aboutExtensionEnabled()
         }
     }
 

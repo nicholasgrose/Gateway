@@ -5,36 +5,43 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
 import com.rose.gateway.shared.configurations.BotConfiguration.botToken
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DiscordBot(private val plugin: GatewayPlugin) {
+class DiscordBot : KoinComponent {
+    private val plugin: GatewayPlugin by inject()
+    private val config: PluginConfiguration by inject()
+
     val botChannels = mutableSetOf<TextChannel>()
     val botGuilds = mutableSetOf<Guild>()
     private var job: Job? = null
     var botStatus = BotStatus.NOT_STARTED
 
-    val bot = try {
-        if (plugin.configuration.notLoaded()) {
-            botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+    var bot = buildBot()
+    val presence = DynamicPresence()
+
+    private fun buildBot(): ExtensibleBot? {
+        return try {
+            if (config.notLoaded()) {
+                botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+                null
+            } else {
+                runBlocking { createBot(config.botToken()) }
+            }
+        } catch (e: KordInitializationException) {
+            botStatus = BotStatus.STOPPED because e.localizedMessage
             null
-        } else {
-            runBlocking { createBot(plugin.configuration.botToken()) }
         }
-    } catch (e: KordInitializationException) {
-        botStatus = BotStatus.STOPPED because e.localizedMessage
-        null
     }
-    val presence = DynamicPresence(plugin)
 
     private suspend fun createBot(token: String): ExtensibleBot {
         return ExtensibleBot(token) {
@@ -57,7 +64,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     }
 
     val kordClient = bot?.getKoin()?.get<Kord>()
-    private val clientInfo = ClientInfo(plugin)
+    val clientInfo = ClientInfo()
 
     suspend fun start() {
         if (bot == null) return
@@ -81,7 +88,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         botChannels.clear()
         botGuilds.clear()
 
-        val validBotChannels = plugin.configuration.botChannels()
+        val validBotChannels = config.botChannels()
         kordClient?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
@@ -96,16 +103,15 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         }
     }
 
-    private fun launchBotInNewThread() {
-        job = CoroutineScope(Dispatchers.Default).launch {
-            try {
-                botStatus = BotStatus.RUNNING
-                bot!!.start()
-            } catch (error: KordInitializationException) {
-                val message = "An error occurred while running bot: ${error.message}"
-                Logger.logInfo(message)
-                botStatus = BotStatus.STOPPED because message
-            }
+    private suspend fun launchBotInNewThread() {
+        job = try {
+            botStatus = BotStatus.RUNNING
+            bot?.startAsync()
+        } catch (error: KordInitializationException) {
+            val message = "An error occurred while running bot: ${error.message}"
+            Logger.logInfo(message)
+            botStatus = BotStatus.STOPPED because message
+            null
         }
     }
 
@@ -116,5 +122,18 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         job?.join()
 
         botStatus = BotStatus.STOPPED
+        TODO("Not yet supported fully on bot")
+    }
+
+    fun isRunning(): Boolean = botStatus == BotStatus.RUNNING
+
+    suspend fun rebuild() {
+        stop()
+        bot = buildBot()
+        start()
+    }
+
+    fun restart() {
+        TODO("Does not yet exist on bot")
     }
 }

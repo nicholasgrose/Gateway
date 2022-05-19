@@ -1,7 +1,9 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
@@ -14,10 +16,13 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
-    private val configuration = plugin.configuration
-    private val configStringMap = configuration.stringMap
+class ConfigMonitoringRunner : KoinComponent {
+    private val config: PluginConfiguration by inject()
+    private val configStringMap: ConfigurationStringMap by inject()
+    private val bot: DiscordBot by inject()
 
     fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
         val matchingConfigurations = configStringMap.matchingOrAllStrings(configSearchString)
@@ -32,13 +37,13 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
                 Component.join(
                     JoinConfiguration.noSeparators(),
                     Component.text("* "),
-                    Component.text(config, configuration.tertiaryColor(), TextDecoration.ITALIC)
+                    Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
                         .hoverEvent(
                             HoverEvent.showText(
                                 Component.join(
                                     JoinConfiguration.noSeparators(),
                                     Component.text("Get help for "),
-                                    Component.text(config, configuration.tertiaryColor(), TextDecoration.ITALIC)
+                                    Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
                                 )
                             )
                         )
@@ -49,7 +54,7 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
             sender.sendMessage(
                 Component.join(
                     JoinConfiguration.separator(Component.newline()),
-                    Component.text("Available Configurations: ", configuration.primaryColor()),
+                    Component.text("Available Configurations: ", config.primaryColor()),
                     Component.join(JoinConfiguration.separator(Component.newline()), configurations)
                 )
             )
@@ -61,31 +66,31 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
     private fun createIndividualSpecHelpMessage(path: String, item: Item<*>): Component {
         return Component.join(
             JoinConfiguration.separator(Component.newline()),
-            Component.text("Configuration Help:", configuration.primaryColor()),
+            Component.text("Configuration Help:", config.primaryColor()),
             Component.join(
                 JoinConfiguration.noSeparators(),
-                Component.text("Name: ", configuration.primaryColor()),
-                Component.text(path, configuration.tertiaryColor(), TextDecoration.ITALIC)
+                Component.text("Name: ", config.primaryColor()),
+                Component.text(path, config.tertiaryColor(), TextDecoration.ITALIC)
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
-                Component.text("Type: ", configuration.primaryColor()),
+                Component.text("Type: ", config.primaryColor()),
                 Component.text(item.typeName()),
-                Component.text(if (item.type().isMarkedNullable) "?" else "", configuration.warningColor())
+                Component.text(if (item.type().isMarkedNullable) "?" else "", config.warningColor())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
-                Component.text("Current Value: ", configuration.primaryColor()),
+                Component.text("Current Value: ", config.primaryColor()),
                 Component.text(item.get().toString())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
-                Component.text("Description: ", configuration.primaryColor()),
+                Component.text("Description: ", config.primaryColor()),
                 Component.text(item.description)
             ),
             Component.text(
                 "View All Configurations",
-                configuration.secondaryColor(),
+                config.secondaryColor(),
                 TextDecoration.UNDERLINED,
                 TextDecoration.ITALIC
             )
@@ -98,12 +103,12 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
         context.sender.sendMessage("Loading configuration...")
 
         val loadSuccessful = runBlocking {
-            configuration.reloadConfiguration()
+            config.reloadConfiguration()
         }
 
         if (loadSuccessful) {
             runBlocking {
-                plugin.restartBot()
+                bot.rebuild()
             }
 
             context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
@@ -118,9 +123,9 @@ class ConfigMonitoringRunner(private val plugin: GatewayPlugin) {
         sender.sendMessage(
             Component.join(
                 JoinConfiguration.separator(Component.text(" ")),
-                Component.text("Config Status:", configuration.primaryColor()),
+                Component.text("Config Status:", config.primaryColor()),
                 Component.text(
-                    if (configuration.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
+                    if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
                 )
             )
         )

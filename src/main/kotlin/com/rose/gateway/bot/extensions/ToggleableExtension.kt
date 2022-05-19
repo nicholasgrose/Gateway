@@ -2,8 +2,9 @@ package com.rose.gateway.bot.extensions
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.rose.gateway.GatewayPlugin
+import org.koin.core.component.KoinComponent
 
-interface ToggleableExtension {
+interface ToggleableExtension : KoinComponent {
     fun extensionName(): String
     fun extensionConstructor(): () -> Extension
     fun isEnabled(plugin: GatewayPlugin): Boolean

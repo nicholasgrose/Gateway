@@ -6,11 +6,15 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.server.ServerInfo
 import com.rose.gateway.shared.configurations.BotConfiguration.listExtensionEnabled
+import org.koin.core.component.inject
 
 class ListExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "list"
         }
@@ -20,7 +24,7 @@ class ListExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.listExtensionEnabled()
+            return config.listExtensionEnabled()
         }
     }
 

@@ -1,6 +1,5 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.UserMentionBuilder
 import com.rose.gateway.shared.processing.TokenProcessor
@@ -8,12 +7,12 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
-class UserQuoteMentionTokenProcessor(plugin: GatewayPlugin) : TokenProcessor<TokenProcessingResult, Unit> {
+class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val USER_QUOTE_MENTION_START_INDEX = 2
     }
 
-    private val mentionBuilder = UserMentionBuilder(plugin)
+    private val mentionBuilder = UserMentionBuilder()
 
     override fun tokenType(): LixyTokenType {
         return ChatComponent.USER_QUOTE_MENTION

@@ -6,20 +6,29 @@ import com.rose.gateway.configuration.markers.CommonDecoder
 import com.rose.gateway.configuration.schema.Config
 import com.sksamuel.hoplite.ConfigException
 import com.sksamuel.hoplite.ConfigLoaderBuilder
+import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.nio.file.Files
 import java.nio.file.Path
 
-class GatewayConfigLoader(
-    private val plugin: GatewayPlugin,
-    configFile: String,
-    private val configUrl: String
-) {
-    private val configPath = Path.of(configFile)
+class GatewayConfigLoader : KoinComponent {
+    private val plugin: GatewayPlugin by inject()
+    private val httpClient: HttpClient by inject()
+
+    companion object {
+        const val CONFIG_FILE_NAME = "config.yaml"
+        const val REPOSITORY_RAW_URL = "https://raw.githubusercontent.com/nicholasgrose/Gateway"
+    }
+
+    private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
+    private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
+    private val configUrl = "$REPOSITORY_RAW_URL/v${plugin.description.version}/examples/$CONFIG_FILE_NAME"
 
     suspend fun loadOrCreateConfig(): Config? {
         if (ensureConfigurationFileExists(configPath)) {
@@ -56,7 +65,7 @@ class GatewayConfigLoader(
     }
 
     private suspend fun createConfigurationFile(): Boolean {
-        val result = plugin.httpClient.get(configUrl)
+        val result = httpClient.get(configUrl)
 
         return if (result.status == HttpStatusCode.OK) {
             withContext(Dispatchers.IO) {
@@ -73,22 +82,20 @@ class GatewayConfigLoader(
 
     private fun loadConfig(path: Path): Config? {
         Logger.logInfo("Loading configuration...")
-        val currentLoader = Thread.currentThread().contextClassLoader
 
         return try {
-            Thread.currentThread().contextClassLoader = plugin.loader
-            val config = ConfigLoaderBuilder
-                .default()
-                .addDecoder(CommonDecoder())
-                .build()
-                .loadConfigOrThrow<Config>(path.toString())
+            val config = plugin.inClassContext {
+                ConfigLoaderBuilder
+                    .default()
+                    .addDecoder(CommonDecoder())
+                    .build()
+                    .loadConfigOrThrow<Config>(path.toString())
+            }
             Logger.logInfo("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {
             Logger.logInfo("Configuration failed to load: ${error.message}")
             null
-        } finally {
-            Thread.currentThread().contextClassLoader = currentLoader
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.rose.gateway.bot.extensions.chat.processing
 
-import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.component.ComponentBuilder
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
 import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
@@ -15,9 +15,11 @@ import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
-    private val pluginConfiguration = plugin.configuration
+class DiscordMessageProcessor : KoinComponent {
+    private val config: PluginConfiguration by inject()
 
     suspend fun createMessage(event: MessageCreateEvent): Component {
         return Component.join(
@@ -33,7 +35,7 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
         return Component.join(
             JoinConfiguration.noSeparators(),
             Component.text("<"),
-            ComponentBuilder.discordMemberComponent(event.member!!, plugin),
+            ComponentBuilder.discordMemberComponent(event.member!!),
             Component.text("> ")
         )
     }
@@ -44,11 +46,11 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
         return Component.join(
             JoinConfiguration.noSeparators(),
             Component.text("(Replying to ")
-                .color(pluginConfiguration.primaryColor())
+                .color(config.primaryColor())
                 .decorate(TextDecoration.ITALIC),
             referenceComponent,
             Component.text(") ")
-                .color(pluginConfiguration.primaryColor())
+                .color(config.primaryColor())
                 .decorate(TextDecoration.ITALIC)
         )
     }
@@ -62,7 +64,7 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
     private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {
         val member = referencedMessageAuthor(referencedMessage, event) ?: return null
 
-        return ComponentBuilder.atDiscordMemberComponent(member, plugin.configuration.secondaryColor(), plugin)
+        return ComponentBuilder.atDiscordMemberComponent(member, config.secondaryColor())
             .decorate(TextDecoration.ITALIC)
     }
 
@@ -75,9 +77,9 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
     private val textProcessor = TextProcessor(
         listOf(
             UrlTokenProcessor(),
-            UserMentionTokenProcessor(plugin),
-            RoleMentionTokenProcessor(plugin),
-            ChannelMentionTokenProcessor(plugin),
+            UserMentionTokenProcessor(),
+            RoleMentionTokenProcessor(),
+            ChannelMentionTokenProcessor(),
             TextTokenProcessor()
         )
     )
@@ -94,19 +96,19 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
 
         return Component.text(" (Attachments: ")
             .decorate(TextDecoration.ITALIC)
-            .color(pluginConfiguration.primaryColor())
+            .color(config.primaryColor())
             .append(
                 Component.join(
                     JoinConfiguration.separator(
                         Component.text(", ")
                             .decorate(TextDecoration.ITALIC)
-                            .color(pluginConfiguration.primaryColor())
+                            .color(config.primaryColor())
                     ),
                     event.message.attachments.mapIndexed { index, attachment ->
                         Component.text("Attachment$index")
                             .decorate(TextDecoration.UNDERLINED)
                             .decorate(TextDecoration.ITALIC)
-                            .color(pluginConfiguration.tertiaryColor())
+                            .color(config.tertiaryColor())
                             .hoverEvent(HoverEvent.showText(Component.text("Open attachment link")))
                             .clickEvent(ClickEvent.openUrl(attachment.url))
                     }
@@ -115,7 +117,7 @@ class DiscordMessageProcessor(private val plugin: GatewayPlugin) {
             .append(
                 Component.text(")")
                     .decorate(TextDecoration.ITALIC)
-                    .color(pluginConfiguration.primaryColor())
+                    .color(config.primaryColor())
             )
     }
 }

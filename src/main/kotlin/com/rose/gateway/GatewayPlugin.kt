@@ -1,6 +1,7 @@
 package com.rose.gateway
 
 import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
@@ -9,62 +10,65 @@ import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.context.GlobalContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 @Suppress("unused")
-class GatewayPlugin : JavaPlugin() {
-    init {
-        startKoin {
-            module {
-                single { this }
-            }
-        }
-    }
+class GatewayPlugin : JavaPlugin(), KoinComponent {
+    val bot: DiscordBot by inject()
 
-    val loader = classLoader
-    val httpClient = HttpClient(CIO)
     val startTime = Clock.System.now()
-    val configuration = PluginConfiguration(this)
-    var discordBot = DiscordBot(this)
-    private val eventListeners = EventListeners(this)
-    private val commandRegistry = CommandRegistry(this)
 
     override fun onEnable() {
         Logger.logInfo("Starting Gateway!")
 
-        GlobalContext.getOrNull()
+        setupKoin()
 
         runBlocking {
-            discordBot.start()
+            bot.start()
         }
 
-        eventListeners.registerListeners(server)
-        commandRegistry.registerCommands()
+        EventListeners.registerListeners(server)
+        CommandRegistry.registerCommands()
 
         Logger.logInfo("Gateway started!")
+    }
+
+    private fun setupKoin() {
+        startKoin {
+            modules(
+                module {
+                    single { this@GatewayPlugin }
+                    single { PluginConfiguration() }
+                    single { ConfigurationStringMap() }
+                    single { DiscordBot() }
+                    single { HttpClient(CIO) }
+                }
+            )
+        }
     }
 
     override fun onDisable() {
         Logger.logInfo("Stopping Gateway!")
 
         runBlocking {
-            discordBot.stop()
+            bot.stop()
         }
 
         Logger.logInfo("Gateway stopped!")
     }
 
-    fun restartBot(): Boolean {
-        httpClient.close()
+    fun <T> inClassContext(code: () -> T): T {
+        val currentThread = Thread.currentThread()
+        val oldLoader = currentThread.contextClassLoader
+        currentThread.contextClassLoader = classLoader
 
-        runBlocking {
-            discordBot.stop()
-            discordBot = DiscordBot(this@GatewayPlugin)
-            discordBot.start()
+        return try {
+            code()
+        } finally {
+            currentThread.contextClassLoader = oldLoader
         }
-
-        return discordBot.bot != null
     }
 }
