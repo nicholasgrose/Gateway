@@ -17,26 +17,7 @@ import org.koin.dsl.module
 
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin(), KoinComponent {
-    val bot: DiscordBot by inject()
-
-    val startTime = Clock.System.now()
-
-    override fun onEnable() {
-        Logger.logInfo("Starting Gateway!")
-
-        setupKoin()
-
-        runBlocking {
-            bot.start()
-        }
-
-        EventListeners.registerListeners(server)
-        CommandRegistry.registerCommands()
-
-        Logger.logInfo("Gateway started!")
-    }
-
-    private fun setupKoin() {
+    init {
         startKoin {
             modules(
                 module {
@@ -48,6 +29,23 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
                 }
             )
         }
+    }
+
+    val bot: DiscordBot by inject()
+
+    val startTime = Clock.System.now()
+
+    override fun onEnable() {
+        Logger.logInfo("Starting Gateway!")
+
+        runBlocking {
+            bot.start()
+        }
+
+        EventListeners.registerListeners(server)
+        CommandRegistry.registerCommands()
+
+        Logger.logInfo("Gateway started!")
     }
 
     override fun onDisable() {
