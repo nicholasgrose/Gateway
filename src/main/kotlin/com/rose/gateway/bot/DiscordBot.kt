@@ -6,8 +6,8 @@ import com.rose.gateway.Logger
 import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
-import com.rose.gateway.shared.configurations.BotConfiguration.botToken
+import com.rose.gateway.shared.configurations.botChannels
+import com.rose.gateway.shared.configurations.botToken
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel

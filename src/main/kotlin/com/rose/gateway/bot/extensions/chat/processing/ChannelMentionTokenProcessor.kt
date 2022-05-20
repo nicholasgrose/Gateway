@@ -1,7 +1,7 @@
 package com.rose.gateway.bot.extensions.chat.processing
 
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
+import com.rose.gateway.shared.configurations.primaryColor
 import com.rose.gateway.shared.processing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent

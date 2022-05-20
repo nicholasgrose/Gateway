@@ -4,7 +4,7 @@ import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.bot.DiscordBotConstants.MEMBER_QUERY_MAX
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.component.ComponentBuilder
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
+import com.rose.gateway.shared.configurations.primaryColor
 import dev.kord.common.annotation.KordExperimental
 import kotlinx.coroutines.flow.firstOrNull
 import org.koin.core.component.KoinComponent

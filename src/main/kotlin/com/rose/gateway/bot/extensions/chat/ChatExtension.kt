@@ -9,7 +9,7 @@ import com.rose.gateway.bot.extensions.chat.processing.DiscordMessageProcessor
 import com.rose.gateway.bot.message.DiscordMessageSender
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.chat.SendMessage
-import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
+import com.rose.gateway.shared.configurations.chatExtensionEnabled
 import dev.kord.core.event.message.MessageCreateEvent
 import org.koin.core.component.inject
 

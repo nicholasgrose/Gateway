@@ -10,7 +10,7 @@ import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
-import com.rose.gateway.shared.configurations.BotConfiguration.whitelistExtensionEnabled
+import com.rose.gateway.shared.configurations.whitelistExtensionEnabled
 import org.koin.core.component.inject
 
 class WhitelistExtension : Extension() {

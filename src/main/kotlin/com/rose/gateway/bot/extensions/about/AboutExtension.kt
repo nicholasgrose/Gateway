@@ -7,7 +7,7 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.configurations.BotConfiguration.aboutExtensionEnabled
+import com.rose.gateway.shared.configurations.aboutExtensionEnabled
 import org.koin.core.component.inject
 
 class AboutExtension : Extension() {

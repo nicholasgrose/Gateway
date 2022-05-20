@@ -4,7 +4,7 @@ import com.rose.gateway.Logger
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
+import com.rose.gateway.shared.configurations.primaryColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.command.CommandSender

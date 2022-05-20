@@ -2,9 +2,9 @@ package com.rose.gateway.bot.extensions.chat.processing
 
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.shared.component.ComponentBuilder
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
+import com.rose.gateway.shared.configurations.primaryColor
+import com.rose.gateway.shared.configurations.secondaryColor
+import com.rose.gateway.shared.configurations.tertiaryColor
 import com.rose.gateway.shared.processing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message

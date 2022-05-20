@@ -12,14 +12,14 @@ class PluginConfiguration : KoinComponent {
     val stringMap: ConfigurationStringMap by inject()
 
     private val configurationLoader = GatewayConfigLoader()
-    var config: Config? = runBlocking {
+    var config: Config = runBlocking {
         configurationLoader.loadOrCreateConfig()
     }
 
     suspend fun reloadConfiguration(): Boolean {
         config = configurationLoader.loadOrCreateConfig()
 
-        return if (config == null) {
+        return if (notLoaded()) {
             bot.stop()
 
             false
@@ -29,14 +29,10 @@ class PluginConfiguration : KoinComponent {
     }
 
     fun saveConfiguration() {
-        val config = config ?: return
-
         configurationLoader.saveConfig(config)
     }
 
-    fun notLoaded(): Boolean {
-        return config == null
-    }
+    fun notLoaded(): Boolean = config == DEFAULT_CONFIG
 
     operator fun get(item: String): Item<*>? {
         return stringMap.fromString(item)

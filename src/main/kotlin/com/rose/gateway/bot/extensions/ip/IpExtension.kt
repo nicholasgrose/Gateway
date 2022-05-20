@@ -6,8 +6,8 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.configurations.BotConfiguration.displayIp
-import com.rose.gateway.shared.configurations.BotConfiguration.ipExtensionEnabled
+import com.rose.gateway.shared.configurations.displayIp
+import com.rose.gateway.shared.configurations.ipExtensionEnabled
 import org.koin.core.component.inject
 
 class IpExtension : Extension() {

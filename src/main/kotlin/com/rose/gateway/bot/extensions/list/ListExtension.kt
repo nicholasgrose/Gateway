@@ -8,7 +8,7 @@ import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.server.ServerInfo
-import com.rose.gateway.shared.configurations.BotConfiguration.listExtensionEnabled
+import com.rose.gateway.shared.configurations.listExtensionEnabled
 import org.koin.core.component.inject
 
 class ListExtension : Extension() {

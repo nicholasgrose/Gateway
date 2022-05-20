@@ -5,10 +5,10 @@ import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.tertiaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
+import com.rose.gateway.shared.configurations.primaryColor
+import com.rose.gateway.shared.configurations.secondaryColor
+import com.rose.gateway.shared.configurations.tertiaryColor
+import com.rose.gateway.shared.configurations.warningColor
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration

@@ -32,7 +32,7 @@ class GatewayConfigLoader : KoinComponent {
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
     private val configUrl = "$REPOSITORY_RAW_URL/v${plugin.description.version}/examples/$CONFIG_FILE_NAME"
 
-    suspend fun loadOrCreateConfig(): Config? {
+    suspend fun loadOrCreateConfig(): Config {
         if (ensureConfigurationFileExists(configPath)) {
             val configuration = loadConfig(configPath)
 
@@ -41,7 +41,7 @@ class GatewayConfigLoader : KoinComponent {
             }
         }
 
-        return null
+        return DEFAULT_CONFIG
     }
 
     private suspend fun ensureConfigurationFileExists(configurationFilePath: Path): Boolean {

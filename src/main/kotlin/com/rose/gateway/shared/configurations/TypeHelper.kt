@@ -1,7 +1,9 @@
 package com.rose.gateway.shared.configurations
 
 import com.rose.gateway.Logger
+import com.rose.gateway.configuration.markers.ConfigItem
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 fun KType.asClass(): KClass<*> {
@@ -16,3 +18,11 @@ fun KType.asClass(): KClass<*> {
 }
 
 infix fun KClass<*>.canBe(other: KClass<*>): Boolean = other.java.isAssignableFrom(this.java)
+
+fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
+    return this.filter { it.isConfigItem() }
+}
+
+private fun <V> KProperty<V>.isConfigItem(): Boolean {
+    return this.annotations.any { it is ConfigItem }
+}

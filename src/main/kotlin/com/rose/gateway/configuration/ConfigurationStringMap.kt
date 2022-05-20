@@ -1,16 +1,18 @@
 package com.rose.gateway.configuration
 
+import com.rose.gateway.Logger
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
 import com.rose.gateway.configuration.schema.Config
 import com.rose.gateway.shared.collections.trie.Trie
 import com.rose.gateway.shared.configurations.canBe
+import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-class ConfigurationStringMap {
+class ConfigurationStringMap : KoinComponent {
     private val itemMap = mutableMapOf<String, Item<*>>()
     private val specificationTrie = Trie()
 
@@ -40,6 +42,7 @@ class ConfigurationStringMap {
             fillInItemMap(classifier, propertyString)
         } else if (property is KMutableProperty1<*, *>) {
             itemMap[propertyString] = Item(property, configAnnotation.description)
+            Logger.logInfo(itemMap[propertyString]!!.get().toString())
         }
     }
 

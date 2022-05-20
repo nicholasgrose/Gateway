@@ -1,9 +1,9 @@
 package com.rose.gateway.shared.component
 
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.secondaryColor
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.warningColor
+import com.rose.gateway.shared.configurations.primaryColor
+import com.rose.gateway.shared.configurations.secondaryColor
+import com.rose.gateway.shared.configurations.warningColor
 import dev.kord.core.entity.Member
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
