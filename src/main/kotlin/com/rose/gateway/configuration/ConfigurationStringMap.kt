@@ -1,6 +1,5 @@
 package com.rose.gateway.configuration
 
-import com.rose.gateway.Logger
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
 import com.rose.gateway.configuration.schema.Config
@@ -42,7 +41,6 @@ class ConfigurationStringMap : KoinComponent {
             fillInItemMap(classifier, propertyString)
         } else if (property is KMutableProperty1<*, *>) {
             itemMap[propertyString] = Item(property, configAnnotation.description)
-            Logger.logInfo(itemMap[propertyString]!!.get().toString())
         }
     }
 
