@@ -4,15 +4,19 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
+import com.rose.gateway.configuration.markers.SurrogateBasedSerializer
+import com.rose.gateway.configuration.markers.SurrogateConverter
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@Serializable(with = BotConfigSerializer::class)
 class BotConfig(
     token: String,
     botChannels: List<String>,
     @ConfigItem
-    var extension: ExtensionConfig
+    val extensions: ExtensionsConfig
 ) : KoinComponent, ConfigObject {
     val plugin: GatewayPlugin by inject()
     val bot: DiscordBot by inject()
@@ -38,3 +42,27 @@ class BotConfig(
             runBlocking { bot.fillBotChannels() }
         }
 }
+
+@Serializable
+data class BotConfigSurrogate(
+    val token: String,
+    val botChannels: List<String>,
+    val extensions: ExtensionsConfig
+) {
+    companion object : SurrogateConverter<BotConfig, BotConfigSurrogate> {
+        override fun fromBase(base: BotConfig): BotConfigSurrogate = BotConfigSurrogate(
+            base.token,
+            base.botChannels,
+            base.extensions
+        )
+
+        override fun toBase(surrogate: BotConfigSurrogate): BotConfig = BotConfig(
+            surrogate.token,
+            surrogate.botChannels,
+            surrogate.extensions
+        )
+    }
+}
+
+object BotConfigSerializer :
+    SurrogateBasedSerializer<BotConfig, BotConfigSurrogate>(BotConfigSurrogate.serializer(), BotConfigSurrogate)

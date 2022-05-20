@@ -1,5 +1,6 @@
 package com.rose.gateway.configuration
 
+import com.charleskorn.kaml.Yaml
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.configuration.markers.CommonDecoder
@@ -12,6 +13,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.nio.file.Files
@@ -84,12 +86,12 @@ class GatewayConfigLoader : KoinComponent {
         Logger.logInfo("Loading configuration...")
 
         return try {
-            val config = plugin.inClassContext {
+            val config: Config = plugin.inClassContext {
                 ConfigLoaderBuilder
                     .default()
                     .addDecoder(CommonDecoder())
                     .build()
-                    .loadConfigOrThrow<Config>(path.toString())
+                    .loadConfigOrThrow(path.toString())
             }
             Logger.logInfo("Configuration loaded successfully.")
             config
@@ -97,5 +99,11 @@ class GatewayConfigLoader : KoinComponent {
             Logger.logInfo("Configuration failed to load: ${error.message}")
             null
         }
+    }
+
+    fun saveConfig(config: Config) {
+        val configYaml = Yaml.default.encodeToString(config)
+
+        Files.writeString(configPath, configYaml)
     }
 }

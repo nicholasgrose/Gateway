@@ -28,6 +28,12 @@ class PluginConfiguration : KoinComponent {
         }
     }
 
+    fun saveConfiguration() {
+        val config = config ?: return
+
+        configurationLoader.saveConfig(config)
+    }
+
     fun notLoaded(): Boolean {
         return config == null
     }

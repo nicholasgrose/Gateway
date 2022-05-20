@@ -15,6 +15,4 @@ fun KType.asClass(): KClass<*> {
     }
 }
 
-infix fun KClass<*>.canBe(other: KClass<*>): Boolean {
-    return other.java.isAssignableFrom(this.java)
-}
+infix fun KClass<*>.canBe(other: KClass<*>): Boolean = other.java.isAssignableFrom(this.java)

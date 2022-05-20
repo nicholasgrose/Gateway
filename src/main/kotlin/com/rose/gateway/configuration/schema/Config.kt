@@ -2,10 +2,12 @@ package com.rose.gateway.configuration.schema
 
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Config(
     @ConfigItem
-    var bot: BotConfig,
+    val bot: BotConfig,
     @ConfigItem
-    var minecraft: MinecraftConfig
+    val minecraft: MinecraftConfig
 ) : ConfigObject

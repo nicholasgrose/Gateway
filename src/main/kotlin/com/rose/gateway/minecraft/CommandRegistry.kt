@@ -113,6 +113,12 @@ object CommandRegistry : KoinComponent {
                     }
                 }
 
+                subcommand("save") {
+                    runner { context ->
+                        configMonitoringCommands.saveConfig(context)
+                    }
+                }
+
                 subcommand("status") {
                     runner { context ->
                         configMonitoringCommands.sendConfigurationStatus(context.sender)

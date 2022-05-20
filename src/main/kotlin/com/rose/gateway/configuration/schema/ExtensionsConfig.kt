@@ -2,16 +2,18 @@ package com.rose.gateway.configuration.schema
 
 import com.rose.gateway.configuration.markers.ConfigItem
 import com.rose.gateway.configuration.markers.ConfigObject
+import kotlinx.serialization.Serializable
 
-data class ExtensionConfig(
+@Serializable
+data class ExtensionsConfig(
     @ConfigItem
-    var about: AboutConfig,
+    val about: AboutConfig,
     @ConfigItem
-    var chat: ChatConfig,
+    val chat: ChatConfig,
     @ConfigItem
-    var ip: IpConfig,
+    val ip: IpConfig,
     @ConfigItem
-    var list: ListConfig,
+    val list: ListConfig,
     @ConfigItem
-    var whitelist: WhitelistConfig
+    val whitelist: WhitelistConfig
 ) : ConfigObject

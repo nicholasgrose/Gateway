@@ -12,26 +12,26 @@ object BotConfiguration {
     }
 
     fun PluginConfiguration.aboutExtensionEnabled(): Boolean {
-        return config?.bot?.extension?.about?.enabled ?: false
+        return config?.bot?.extensions?.about?.enabled ?: false
     }
 
     fun PluginConfiguration.chatExtensionEnabled(): Boolean {
-        return config?.bot?.extension?.chat?.enabled ?: false
+        return config?.bot?.extensions?.chat?.enabled ?: false
     }
 
     fun PluginConfiguration.ipExtensionEnabled(): Boolean {
-        return config?.bot?.extension?.ip?.enabled ?: false
+        return config?.bot?.extensions?.ip?.enabled ?: false
     }
 
     fun PluginConfiguration.displayIp(): String {
-        return config?.bot?.extension?.ip?.displayIp ?: ""
+        return config?.bot?.extensions?.ip?.displayIp ?: ""
     }
 
     fun PluginConfiguration.listExtensionEnabled(): Boolean {
-        return config?.bot?.extension?.list?.enabled ?: false
+        return config?.bot?.extensions?.list?.enabled ?: false
     }
 
     fun PluginConfiguration.whitelistExtensionEnabled(): Boolean {
-        return config?.bot?.extension?.whitelist?.enabled ?: false
+        return config?.bot?.extensions?.whitelist?.enabled ?: false
     }
 }

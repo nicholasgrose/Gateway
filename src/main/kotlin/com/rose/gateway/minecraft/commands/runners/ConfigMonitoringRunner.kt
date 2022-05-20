@@ -119,6 +119,13 @@ class ConfigMonitoringRunner : KoinComponent {
         return true
     }
 
+    fun saveConfig(context: CommandContext): Boolean {
+        config.saveConfiguration()
+        context.sender.sendMessage("Saved current configuration.")
+
+        return true
+    }
+
     fun sendConfigurationStatus(sender: CommandSender): Boolean {
         sender.sendMessage(
             Component.join(
