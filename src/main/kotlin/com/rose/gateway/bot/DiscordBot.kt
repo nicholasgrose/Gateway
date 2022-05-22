@@ -1,6 +1,7 @@
 package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.ExtensibleBot
+import com.kotlindiscord.kord.extensions.utils.loadModule
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.client.ClientInfo
@@ -35,7 +36,9 @@ class DiscordBot : KoinComponent {
                 botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
                 null
             } else {
-                runBlocking { createBot(config.botToken()) }
+                runBlocking {
+                    createBot(config.botToken())
+                }
             }
         } catch (e: KordInitializationException) {
             botStatus = BotStatus.STOPPED because e.localizedMessage
@@ -47,6 +50,13 @@ class DiscordBot : KoinComponent {
         return ExtensibleBot(token) {
             hooks {
                 kordShutdownHook = false
+
+                afterKoinSetup {
+                    loadModule {
+                        single { plugin }
+                        single { config }
+                    }
+                }
             }
             presence {
                 since = plugin.startTime
@@ -64,7 +74,6 @@ class DiscordBot : KoinComponent {
     }
 
     val kordClient = bot?.getKoin()?.get<Kord>()
-    val clientInfo = ClientInfo()
 
     suspend fun start() {
         if (bot == null) return
@@ -92,7 +101,7 @@ class DiscordBot : KoinComponent {
         kordClient?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
-                    clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
+                    ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
                     channel is TextChannel &&
                     channel.name in validBotChannels
                 ) {
@@ -118,11 +127,10 @@ class DiscordBot : KoinComponent {
     suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
-        kordClient?.shutdown()
+        bot?.stop()
         job?.join()
 
         botStatus = BotStatus.STOPPED
-        TODO("Not yet supported fully on bot")
     }
 
     fun isRunning(): Boolean = botStatus == BotStatus.RUNNING
@@ -133,7 +141,8 @@ class DiscordBot : KoinComponent {
         start()
     }
 
-    fun restart() {
-        TODO("Does not yet exist on bot")
+    suspend fun restart() {
+        stop()
+        start()
     }
 }

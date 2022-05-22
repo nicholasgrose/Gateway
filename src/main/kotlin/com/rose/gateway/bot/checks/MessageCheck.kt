@@ -8,7 +8,7 @@ import dev.kord.core.Kord
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MessageCheck : KoinComponent {
+object MessageCheck : KoinComponent {
     val bot: DiscordBot by inject()
 
     val isConfiguredBotChannel: Check<*> = {

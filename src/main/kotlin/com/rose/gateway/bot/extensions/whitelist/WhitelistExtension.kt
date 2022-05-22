@@ -31,8 +31,6 @@ class WhitelistExtension : Extension() {
     }
 
     override val name: String = extensionName()
-    val plugin = bot.getKoin().get<GatewayPlugin>()
-    private val whitelistManager = Whitelist(plugin)
 
     override suspend fun setup() {
         ephemeralSlashCommand {
@@ -45,7 +43,7 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.logInfo("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
-                    val status = when (whitelistManager.addToWhitelist(arguments.username)) {
+                    val status = when (Whitelist.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred adding ${arguments.username} to whitelist."
@@ -62,7 +60,7 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.logInfo("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
-                    val status = when (whitelistManager.removeFromWhitelist(arguments.username)) {
+                    val status = when (Whitelist.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
                         WhitelistState.STATE_INVALID ->
@@ -80,7 +78,7 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.logInfo("${user.asUserOrNull()?.username} requested list of whitelisted players!")
-                    val whitelistedPlayers = whitelistManager.whitelistedPlayersAsString()
+                    val whitelistedPlayers = Whitelist.whitelistedPlayersAsString()
                     val response =
                         if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."
                         else "Players currently whitelisted: $whitelistedPlayers"

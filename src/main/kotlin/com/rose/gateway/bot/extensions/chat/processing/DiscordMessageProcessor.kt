@@ -18,7 +18,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DiscordMessageProcessor : KoinComponent {
+object DiscordMessageProcessor : KoinComponent {
     private val config: PluginConfiguration by inject()
 
     suspend fun createMessage(event: MessageCreateEvent): Component {

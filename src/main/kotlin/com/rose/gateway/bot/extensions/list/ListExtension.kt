@@ -29,7 +29,6 @@ class ListExtension : Extension() {
     }
 
     override val name: String = extensionName()
-    val plugin = getKoin().get<GatewayPlugin>()
 
     override suspend fun setup() {
         ephemeralSlashCommand {

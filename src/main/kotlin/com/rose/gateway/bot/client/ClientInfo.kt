@@ -7,7 +7,7 @@ import dev.kord.core.entity.channel.GuildChannel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ClientInfo : KoinComponent {
+object ClientInfo : KoinComponent {
     val bot: DiscordBot by inject()
 
     suspend fun hasChannelPermissions(channel: GuildChannel, permissions: Permissions): Boolean {

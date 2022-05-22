@@ -31,23 +31,20 @@ class ChatExtension : Extension() {
     }
 
     override val name = extensionName()
-    private val messageCheck = MessageCheck()
-    private val discordMessageSender = DiscordMessageSender()
-    private val discordChatProcessor = DiscordMessageProcessor()
 
     override suspend fun setup() {
         event<MessageCreateEvent> {
-            check(messageCheck.notSelf, messageCheck.isConfiguredBotChannel)
+            check(MessageCheck.notSelf, MessageCheck.isConfiguredBotChannel)
 
             action {
-                val message = discordChatProcessor.createMessage(event)
+                val message = DiscordMessageProcessor.createMessage(event)
                 SendMessage.sendDiscordMessage(message)
             }
         }
 
         event<GameChatEvent> {
             action {
-                discordMessageSender.sendGameChatMessage(event.message)
+                DiscordMessageSender.sendGameChatMessage(event.message)
             }
         }
     }

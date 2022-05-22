@@ -27,8 +27,8 @@ class AboutExtension : Extension() {
         }
     }
 
+    val plugin: GatewayPlugin by inject()
     override val name = extensionName()
-    val plugin = bot.getKoin().get<GatewayPlugin>()
 
     override suspend fun setup() {
         ephemeralSlashCommand {
