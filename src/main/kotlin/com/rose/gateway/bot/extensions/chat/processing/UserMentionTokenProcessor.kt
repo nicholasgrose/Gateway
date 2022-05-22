@@ -17,7 +17,7 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     private val config: PluginConfiguration by inject()
 
     companion object {
-        const val SNOWFLAKE_START_INDEX = 3
+        const val SNOWFLAKE_START_INDEX = 2
     }
 
     override fun tokenType(): LixyTokenType {
@@ -26,7 +26,7 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
 
     @Language("RegExp")
     override fun regexPattern(): String {
-        return "<@!\\d+>"
+        return "<@\\d+>"
     }
 
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
