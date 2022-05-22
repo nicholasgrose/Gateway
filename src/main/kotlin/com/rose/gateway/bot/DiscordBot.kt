@@ -73,7 +73,7 @@ class DiscordBot : KoinComponent {
         }
     }
 
-    val kordClient = bot?.getKoin()?.get<Kord>()
+    fun kordClient(): Kord? = bot?.getKoin()?.get()
 
     suspend fun start() {
         if (bot == null) return
@@ -94,11 +94,12 @@ class DiscordBot : KoinComponent {
     }
 
     suspend fun fillBotChannels() {
+        val validBotChannels = config.botChannels()
+
         botChannels.clear()
         botGuilds.clear()
 
-        val validBotChannels = config.botChannels()
-        kordClient?.guilds?.collect { guild ->
+        kordClient()?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
                     ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
@@ -133,16 +134,18 @@ class DiscordBot : KoinComponent {
         botStatus = BotStatus.STOPPED
     }
 
-    fun isRunning(): Boolean = botStatus == BotStatus.RUNNING
+    private suspend fun close() {
+        botStatus = BotStatus.STOPPING
 
-    suspend fun rebuild() {
-        stop()
-        bot = buildBot()
-        start()
+        bot?.close()
+        job?.join()
+
+        botStatus = BotStatus.STOPPED
     }
 
-    suspend fun restart() {
-        stop()
+    suspend fun rebuild() {
+        close()
+        bot = buildBot()
         start()
     }
 }

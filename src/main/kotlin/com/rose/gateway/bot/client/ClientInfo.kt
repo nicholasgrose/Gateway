@@ -16,6 +16,6 @@ object ClientInfo : KoinComponent {
     }
 
     private suspend fun getPermissionsForChannel(channel: GuildChannel): Permissions {
-        return channel.permissionsForMember(bot.kordClient!!.selfId)
+        return channel.permissionsForMember(bot.kordClient()!!.selfId)
     }
 }

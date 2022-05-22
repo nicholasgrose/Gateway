@@ -9,7 +9,7 @@ class DynamicPresence : KoinComponent {
     val bot: DiscordBot by inject()
 
     suspend fun updatePresencePlayerCount() {
-        bot.kordClient?.editPresence {
+        bot.kordClient()?.editPresence {
             playing(presenceForPlayerCount())
         }
     }

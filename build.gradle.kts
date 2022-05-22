@@ -25,7 +25,6 @@ val lixyVersion: String by project
 val kamlVersion: String by project
 val ktorVersion: String by project
 val hopliteVersion: String by project
-val koinVersion: String by project
 
 val jvmVersion: String by project
 val kotlinLanguageVersion: String by project

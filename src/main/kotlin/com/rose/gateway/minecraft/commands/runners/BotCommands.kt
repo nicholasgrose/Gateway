@@ -1,6 +1,7 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.Logger
+import com.rose.gateway.bot.BotStatus
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
@@ -20,10 +21,11 @@ class BotCommands : KoinComponent {
         sendAndLogMessage(context.sender, "Restarting the Discord bot...")
 
         runBlocking {
-            bot.restart()
+            bot.stop()
+            bot.start()
         }
 
-        if (bot.isRunning()) {
+        if (bot.botStatus == BotStatus.RUNNING) {
             sendAndLogMessage(context.sender, "Discord bot restarted.")
         } else {
             sendAndLogMessage(context.sender, "Discord bot failed to restart. Check bot status for more info.")
