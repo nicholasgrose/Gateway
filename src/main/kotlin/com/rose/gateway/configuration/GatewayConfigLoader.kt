@@ -86,13 +86,17 @@ class GatewayConfigLoader : KoinComponent {
         Logger.logInfo("Loading configuration...")
 
         return try {
-            val config: Config = plugin.inClassContext {
-                ConfigLoaderBuilder
-                    .default()
-                    .addDecoder(CommonDecoder())
-                    .build()
-                    .loadConfigOrThrow(path.toString())
-            }
+            val config: Config = ConfigLoaderBuilder
+                .empty()
+                .withClassLoader(plugin.loader)
+                .addDefaultDecoders()
+                .addDefaultPreprocessors()
+                .addDefaultParamMappers()
+                .addDefaultPropertySources()
+                .addDefaultParsers()
+                .addDecoder(CommonDecoder())
+                .build()
+                .loadConfigOrThrow(path.toString())
             Logger.logInfo("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {

@@ -34,6 +34,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
     val bot: DiscordBot by inject()
 
     val startTime = Clock.System.now()
+    val loader = classLoader
 
     override fun onEnable() {
         Logger.logInfo("Starting Gateway!")
@@ -56,17 +57,5 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
         }
 
         Logger.logInfo("Gateway stopped!")
-    }
-
-    fun <T> inClassContext(code: () -> T): T {
-        val currentThread = Thread.currentThread()
-        val oldLoader = currentThread.contextClassLoader
-        currentThread.contextClassLoader = classLoader
-
-        return try {
-            code()
-        } finally {
-            currentThread.contextClassLoader = oldLoader
-        }
     }
 }
