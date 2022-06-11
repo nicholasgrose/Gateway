@@ -1,6 +1,6 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
     // https://kotlinlang.org/docs/serialization.html
     kotlin("plugin.serialization") version "1.6.21"
     // https://github.com/johnrengelman/shadow
@@ -61,7 +61,6 @@ dependencies {
     implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
     implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
     implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
-//    implementation(group = "io.insert-koin", name = "koin-core", version = koinVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
