@@ -6,7 +6,6 @@ import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import io.papermc.paper.event.player.AsyncChatEvent
-import io.papermc.paper.text.PaperComponents
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
