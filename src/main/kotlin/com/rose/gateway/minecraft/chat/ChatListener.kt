@@ -65,7 +65,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         val deathMessage = event.deathMessage() ?: return
-        val plainTextMessage = PaperComponents.plainTextSerializer().serialize(deathMessage)
+        val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
@@ -110,7 +110,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         val advancementMessage = event.message() ?: return
-        val advancementText = PaperComponents.plainTextSerializer().serialize(advancementMessage)
+        val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
