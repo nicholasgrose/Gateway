@@ -6,7 +6,6 @@ import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
 import com.rose.gateway.shared.configurations.BotConfiguration.chatExtensionEnabled
 import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
 import io.papermc.paper.event.player.AsyncChatEvent
-import io.papermc.paper.text.PaperComponents
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
@@ -65,7 +64,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         val deathMessage = event.deathMessage() ?: return
-        val plainTextMessage = PaperComponents.plainTextSerializer().serialize(deathMessage)
+        val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
@@ -110,7 +109,7 @@ class ChatListener(val plugin: GatewayPlugin) : Listener {
         if (!plugin.configuration.chatExtensionEnabled()) return
 
         val advancementMessage = event.message() ?: return
-        val advancementText = PaperComponents.plainTextSerializer().serialize(advancementMessage)
+        val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
             .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
         runBlocking {
