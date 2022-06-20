@@ -6,7 +6,7 @@ description: Provides a configurable set of features that link the in-game chat 
 website: https://github.com/nicholasgrose/Gateway
 
 main: com.rose.gateway.GatewayPlugin
-api-version: 1.18
+api-version: 1.19
 load: POSTWORLD
 
 commands:
