@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ConfigMonitoringRunner : KoinComponent {
+object ConfigMonitoringRunner : KoinComponent {
     private val config: PluginConfiguration by inject()
     private val configStringMap: ConfigurationStringMap by inject()
     private val bot: DiscordBot by inject()

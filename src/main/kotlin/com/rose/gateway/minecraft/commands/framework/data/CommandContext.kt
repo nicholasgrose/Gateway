@@ -8,5 +8,5 @@ data class CommandContext<A : RunnerArguments<A>>(
     val sender: CommandSender,
     val command: org.bukkit.command.Command,
     val label: String,
-    val commandArguments: A
+    val arguments: A
 )

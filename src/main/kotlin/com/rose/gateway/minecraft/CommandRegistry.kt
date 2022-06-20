@@ -18,9 +18,6 @@ object CommandRegistry : KoinComponent {
     private val plugin: GatewayPlugin by inject()
     private val config: PluginConfiguration by inject()
 
-    private val botCommands = BotCommands()
-    private val configCommands = ConfigCommands()
-    private val configMonitoringCommands = ConfigMonitoringRunner()
     private val configCompleter = ConfigCompleter()
 
     fun registerCommands() {
@@ -53,11 +50,11 @@ object CommandRegistry : KoinComponent {
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
-                    runner { context -> botCommands.restartBot(context) }
+                    runner { context -> BotCommands.restartBot(context) }
                 }
 
                 subcommand("status") {
-                    runner { context -> botCommands.botStatus(context) }
+                    runner { context -> BotCommands.botStatus(context) }
                 }
             }
 
@@ -67,7 +64,7 @@ object CommandRegistry : KoinComponent {
                         StringArg("CONFIG_PATH", configCompleter::configNameCompletion),
                         ConfigValueArg("VALUE", 0, config, configCompleter::configValueCompletion)
                     ) { context ->
-                        configCommands.setConfiguration(context)
+                        ConfigCommands.setConfiguration(context)
                     }
                 }
 
@@ -77,7 +74,7 @@ object CommandRegistry : KoinComponent {
                         ConfigListValueArg("VALUE", 0, config),
                         allowVariableNumberOfArguments = true
                     ) { context ->
-                        configCommands.addConfiguration(context)
+                        ConfigCommands.addConfiguration(context)
                     }
                 }
 
@@ -92,36 +89,36 @@ object CommandRegistry : KoinComponent {
                         ),
                         allowVariableNumberOfArguments = true
                     ) { context ->
-                        configCommands.removeConfiguration(context)
+                        ConfigCommands.removeConfiguration(context)
                     }
                 }
 
                 subcommand("help") {
                     runner(StringArg("CONFIG_PATH", configCompleter::configNameCompletion)) { context ->
-                        val configuration = context.commandArguments.first() as String
-                        configMonitoringCommands.sendConfigurationHelp(context.sender, configuration)
+                        val configuration = context.arguments.first() as String
+                        ConfigMonitoringRunner.sendConfigurationHelp(context.sender, configuration)
                     }
 
                     runner { context ->
-                        configMonitoringCommands.sendConfigurationHelp(context.sender, "")
+                        ConfigMonitoringRunner.sendConfigurationHelp(context.sender, "")
                     }
                 }
 
                 subcommand("reload") {
                     runner { context ->
-                        configMonitoringCommands.reloadConfig(context)
+                        ConfigMonitoringRunner.reloadConfig(context)
                     }
                 }
 
                 subcommand("save") {
                     runner { context ->
-                        configMonitoringCommands.saveConfig(context)
+                        ConfigMonitoringRunner.saveConfig(context)
                     }
                 }
 
                 subcommand("status") {
                     runner { context ->
-                        configMonitoringCommands.sendConfigurationStatus(context.sender)
+                        ConfigMonitoringRunner.sendConfigurationStatus(context.sender)
                     }
                 }
             }

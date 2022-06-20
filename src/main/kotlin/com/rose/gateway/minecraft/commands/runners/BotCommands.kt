@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class BotCommands : KoinComponent {
+object BotCommands : KoinComponent {
     val config: PluginConfiguration by inject()
     val bot: DiscordBot by inject()
 

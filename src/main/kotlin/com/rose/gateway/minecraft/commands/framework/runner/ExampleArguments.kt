@@ -13,8 +13,6 @@ class ExampleArguments : RunnerArguments<ExampleArguments>() {
     }
 }
 
-class ExampleRunner : CommandRunner<ExampleArguments> {
-    override fun runCommand(context: CommandContext<ExampleArguments>) {
-        TODO("Not yet implemented")
-    }
+fun exampleExecutor(context: CommandContext<ExampleArguments>): Boolean {
+    TODO("Not yet implemented")
 }

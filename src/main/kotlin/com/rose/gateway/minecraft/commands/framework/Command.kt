@@ -1,61 +1,37 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
 
 class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter {
-    companion object {
-        fun subcommandRunner(context: CommandContext): Boolean {
-            val subcommand = context.commandArguments.first() as String
-            val childCommand = context.definition.subcommands[subcommand]
-            val arguments = context.rawCommandArguments
-
-            return if (childCommand == null) false
-            else {
-                childCommand.onCommand(
-                    sender = context.sender,
-                    command = context.command,
-                    label = context.label,
-                    args = arguments.subList(1, arguments.size).toTypedArray()
-                )
-                true
-            }
-        }
-    }
-
     override fun onCommand(
         sender: CommandSender,
         command: org.bukkit.command.Command,
         label: String,
         args: Array<String>
     ): Boolean {
-        var success = false
+        var succeeded = false
 
         for (executor in definition.executors) {
-            val commandArguments = executor.argumentParser.parseAllArguments(args)
+            val result = executor.tryExecute(
+                definition = definition,
+                sender = sender,
+                command = command,
+                label = label,
+                rawArguments = args
+            )
 
-            if (commandArguments != null) {
-                success = executor.executor(
-                    CommandContext(
-                        definition = definition,
-                        sender = sender,
-                        command = command,
-                        label = label,
-                        rawCommandArguments = args.toList(),
-                        commandArguments = commandArguments
-                    )
-                )
+            if (result != null) {
+                succeeded = result
 
-                if (!success) break
+                if (!succeeded) break
             }
         }
 
-        if (!success) sendArgumentErrorMessage(sender)
+        if (!succeeded) sendArgumentErrorMessage(sender)
 
         return true
     }
@@ -71,16 +47,7 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         args: Array<String>
     ): List<String> {
         for (executor in definition.executors) {
-            val tabCompletions = executor.argumentParser.getTabCompletions(
-                TabCompletionContext(
-                    sender = sender,
-                    command = command,
-                    alias = alias,
-                    rawArguments = args.toList(),
-                    parsedArguments = executor.argumentParser.parseArgumentSubset(args) ?: continue,
-                    commandDefinition = definition
-                )
-            )
+            val tabCompletions = executor.completions(sender, command, alias, definition, args)
 
             if (tabCompletions != null) return tabCompletions
         }

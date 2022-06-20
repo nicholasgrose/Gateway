@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ConfigCommands : KoinComponent {
+object ConfigCommands : KoinComponent {
     private val config: PluginConfiguration by inject()
 
     private data class ConfigInfo(val path: String, val item: Item<*>)
