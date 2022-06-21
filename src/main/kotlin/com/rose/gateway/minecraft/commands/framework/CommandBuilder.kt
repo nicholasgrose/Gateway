@@ -3,6 +3,7 @@ package com.rose.gateway.minecraft.commands.framework
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
+import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 import com.rose.gateway.shared.collections.builders.trieOf
 
@@ -43,6 +44,8 @@ class CommandBuilder(private val name: String) {
 
         children.add(build(newCommandBuilder))
     }
+
+    fun runner(commandFunction: (CommandContext<NoArguments>) -> Boolean) = runner(::NoArguments, commandFunction)
 
     fun <A : RunnerArguments<A>> runner(
         arguments: () -> A,

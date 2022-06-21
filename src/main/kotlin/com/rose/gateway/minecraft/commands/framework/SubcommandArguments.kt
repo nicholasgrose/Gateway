@@ -6,7 +6,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 import com.rose.gateway.minecraft.commands.framework.runner.string
 
 class SubcommandArguments(private val subcommands: List<String>) : RunnerArguments<SubcommandArguments>(
-    allowUnusedArguments = true
+    unusedArgumentsAllowed = true
 ) {
     companion object {
         fun forSubcommands(subcommands: List<String>): () -> SubcommandArguments {
@@ -28,18 +28,18 @@ class SubcommandArguments(private val subcommands: List<String>) : RunnerArgumen
     )
 
     override fun completions(context: TabCompletionContext<SubcommandArguments>): List<String> {
-        val rawArguments = context.arguments.rawArguments
         val definition = context.commandDefinition
 
-        return if (rawArguments.size > 1) {
-            val subcommand = definition.subcommands[context.arguments.subcommand]
+        return if (hasUnusedArgs()) {
+            val subcommand = definition.subcommands[subcommand]
+
             subcommand?.onTabComplete(
-                context.sender,
-                context.command,
-                context.alias,
-                rawArguments.subList(1, rawArguments.size).toTypedArray()
+                sender = context.sender,
+                command = context.command,
+                alias = context.alias,
+                args = remainingArguments()
             ) ?: listOf()
-        } else definition.subcommandNames.searchOrGetAll(rawArguments.first())
+        } else definition.subcommandNames.searchOrGetAll(subcommand)
     }
 }
 

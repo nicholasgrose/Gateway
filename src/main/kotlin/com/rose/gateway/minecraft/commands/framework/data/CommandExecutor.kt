@@ -32,7 +32,7 @@ data class CommandExecutor<A : RunnerArguments<A>>(
     fun arguments(rawArguments: Array<String>): A {
         val args = arguments()
 
-        args.rawArguments.addAll(rawArguments)
+        args.forArguments(rawArguments.toList())
 
         return args
     }

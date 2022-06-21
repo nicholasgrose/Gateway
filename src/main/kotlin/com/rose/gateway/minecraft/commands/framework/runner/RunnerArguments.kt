@@ -1,21 +1,61 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import kotlin.reflect.KProperty
 
 open class RunnerArguments<A : RunnerArguments<A>>(
-    val allowUnusedArguments: Boolean = false
+    val unusedArgumentsAllowed: Boolean = false
 ) {
-    val rawArguments: MutableList<String> = mutableListOf()
-    private val parsers: List<ArgParser> = listOf()
+    var rawArguments: List<String> = listOf()
+    val parsers: MutableList<RunnerArg<*, A>> = mutableListOf()
+    private var finalParseResult: ParseResult<MutableMap<RunnerArg<*, A>, Any?>, A> = fillFinalParseResults()
+
+    fun forArguments(rawArgs: List<String>) {
+        rawArguments = rawArgs
+
+        finalParseResult = fillFinalParseResults()
+    }
+
+    private fun fillFinalParseResults(): ParseResult<MutableMap<RunnerArg<*, A>, Any?>, A> {
+        @Suppress("UNCHECKED_CAST")
+        var currentContext = ParseContext(this as A, 0)
+        val resultMap = mutableMapOf<RunnerArg<*, A>, Any?>()
+
+        for (parser in parsers) {
+            val result = parser.parseValue(currentContext)
+
+            currentContext = result.context
+
+            if (result.succeeded) {
+                resultMap[parser] = result.result
+            } else {
+                return ParseResult(
+                    succeeded = false,
+                    result = resultMap,
+                    context = currentContext
+                )
+            }
+        }
+
+        return ParseResult(
+            succeeded = true,
+            result = resultMap,
+            context = currentContext
+        )
+    }
 
     fun remainingArguments(): Array<String> {
-        TODO()
+        return rawArguments.subList(finalParseResult.context.currentIndex, rawArguments.size).toTypedArray()
     }
 
     fun valid(): Boolean {
-        TODO()
+        if (!unusedArgumentsAllowed && hasUnusedArgs()) {
+            return false
+        }
+
+        return parsers.all { finalParseResult.result.containsKey(it) }
     }
+
+    fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
 
     open fun documentation(): String {
         return if (parsers.isEmpty()) ""
@@ -23,36 +63,14 @@ open class RunnerArguments<A : RunnerArguments<A>>(
             separator = "] [",
             prefix = "[",
             postfix = "]"
-        ) { parser -> "${parser.name}=${parser.type}" }
+        ) { parser -> "${parser.name()}=${parser.typeName()}" }
     }
 
     open fun completions(context: TabCompletionContext<A>): List<String>? {
-        TODO()
-    }
-}
+        val nextArg = parsers.firstOrNull {
+            !finalParseResult.result.containsKey(it)
+        }
 
-interface RunnerArg<T, A : RunnerArguments<A>> {
-    operator fun getValue(thisRef: RunnerArguments<A>, property: KProperty<*>): T
-}
-
-fun <A : RunnerArguments<A>> RunnerArguments<A>.string(body: StringArgBuilder<A>.() -> Unit): StringArg<A> {
-    val builder = StringArgBuilder<A>()
-
-    body(builder)
-
-    return builder.buildAndCheck()
-}
-
-class StringArg<A : RunnerArguments<A>>(val builder: StringArgBuilder<A>) : RunnerArg<String, A> {
-    override fun getValue(thisRef: RunnerArguments<A>, property: KProperty<*>): String {
-        TODO("Not yet implemented")
-    }
-}
-
-class StringArgBuilder<A : RunnerArguments<A>> : ArgBuilder<StringArg<A>, A>() {
-    override fun checkValidity() = Unit
-
-    override fun build(): StringArg<A> {
-        return StringArg(this)
+        return nextArg?.completions(context)
     }
 }
