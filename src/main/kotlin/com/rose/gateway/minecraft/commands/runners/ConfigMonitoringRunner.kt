@@ -5,6 +5,7 @@ import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.shared.configurations.primaryColor
 import com.rose.gateway.shared.configurations.secondaryColor
 import com.rose.gateway.shared.configurations.tertiaryColor
@@ -99,7 +100,7 @@ object ConfigMonitoringRunner : KoinComponent {
         )
     }
 
-    fun reloadConfig(context: CommandContext): Boolean {
+    fun reloadConfig(context: CommandContext<NoArguments>): Boolean {
         context.sender.sendMessage("Loading configuration...")
 
         val loadSuccessful = runBlocking {
@@ -119,7 +120,7 @@ object ConfigMonitoringRunner : KoinComponent {
         return true
     }
 
-    fun saveConfig(context: CommandContext): Boolean {
+    fun saveConfig(context: CommandContext<NoArguments>): Boolean {
         config.saveConfiguration()
         context.sender.sendMessage("Saved current configuration.")
 

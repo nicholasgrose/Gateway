@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
 import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.converters.ConfigListValueArg
 import com.rose.gateway.minecraft.commands.converters.ConfigValueArg
@@ -94,7 +95,7 @@ object CommandRegistry : KoinComponent {
                 }
 
                 subcommand("help") {
-                    runner(StringArg("CONFIG_PATH", configCompleter::configNameCompletion)) { context ->
+                    runner(::ConfigValueArgs) { context ->
                         val configuration = context.arguments.first() as String
                         ConfigMonitoringRunner.sendConfigurationHelp(context.sender, configuration)
                     }

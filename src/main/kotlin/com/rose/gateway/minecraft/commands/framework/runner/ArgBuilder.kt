@@ -2,15 +2,15 @@ package com.rose.gateway.minecraft.commands.framework.runner
 
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
-abstract class ArgBuilder<T, A : RunnerArguments<A>> {
+abstract class ArgBuilder<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> {
     lateinit var name: String
     lateinit var description: String
     var completer: (TabCompletionContext<A>) -> List<String> = { listOf() }
 
     abstract fun checkValidity()
-    abstract fun build(): T
+    abstract fun build(): R
 
-    fun buildAndCheck(): T {
+    fun buildAndCheck(): R {
         checkOwnValidity()
         checkValidity()
 

@@ -2,16 +2,17 @@ package com.rose.gateway.minecraft.commands.completers
 
 import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
+import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import com.rose.gateway.shared.configurations.canBe
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ConfigCompleter : KoinComponent {
+object ConfigCompleter : KoinComponent {
     private val configStringMap: ConfigurationStringMap by inject()
 
-    fun configNameCompletion(context: TabCompletionContext): List<String> {
-        val currentConfigurationArgument = context.parsedArguments.last() as String
+    fun configNameCompletion(context: TabCompletionContext<ConfigNameArgs>): List<String> {
+        val currentConfigurationArgument = context.arguments.configPath ?: ""
 
         return configStringMap.matchingOrAllStrings(currentConfigurationArgument)
     }

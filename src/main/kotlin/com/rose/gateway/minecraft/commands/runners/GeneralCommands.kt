@@ -1,9 +1,10 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 
 object GeneralCommands {
-    fun discordHelp(context: CommandContext): Boolean {
+    fun discordHelp(context: CommandContext<NoArguments>): Boolean {
         context.sender.sendMessage(
             """
             You can mention in Discord in the following ways:

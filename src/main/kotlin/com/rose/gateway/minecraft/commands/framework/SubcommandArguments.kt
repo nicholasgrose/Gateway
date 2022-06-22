@@ -1,9 +1,8 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.converters.string
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
-import com.rose.gateway.minecraft.commands.framework.runner.string
 
 class SubcommandArguments(private val subcommands: List<String>) : RunnerArguments<SubcommandArguments>(
     unusedArgumentsAllowed = true
@@ -16,9 +15,24 @@ class SubcommandArguments(private val subcommands: List<String>) : RunnerArgumen
         }
     }
 
-    val subcommand by string {
+    val subcommand: String? by string {
         name = "subcommand"
         description = "The subcommand to run."
+        completer = { context ->
+            val command = context.arguments.subcommand ?: ""
+            val definition = context.commandDefinition
+
+            if (hasUnusedArgs()) {
+                val subcommand = definition.subcommands[command]
+
+                subcommand?.onTabComplete(
+                    sender = context.sender,
+                    command = context.command,
+                    alias = context.alias,
+                    args = remainingArguments()
+                ) ?: listOf()
+            } else definition.subcommandNames.searchOrGetAll(command)
+        }
     }
 
     override fun documentation(): String = subcommands.joinToString(
@@ -26,21 +40,6 @@ class SubcommandArguments(private val subcommands: List<String>) : RunnerArgumen
         prefix = "[",
         postfix = "]"
     )
-
-    override fun completions(context: TabCompletionContext<SubcommandArguments>): List<String> {
-        val definition = context.commandDefinition
-
-        return if (hasUnusedArgs()) {
-            val subcommand = definition.subcommands[subcommand]
-
-            subcommand?.onTabComplete(
-                sender = context.sender,
-                command = context.command,
-                alias = context.alias,
-                args = remainingArguments()
-            ) ?: listOf()
-        } else definition.subcommandNames.searchOrGetAll(subcommand)
-    }
 }
 
 fun subcommandRunner(context: CommandContext<SubcommandArguments>): Boolean {

@@ -5,6 +5,7 @@ import com.rose.gateway.bot.BotStatus
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.shared.configurations.primaryColor
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
@@ -17,7 +18,7 @@ object BotCommands : KoinComponent {
     val config: PluginConfiguration by inject()
     val bot: DiscordBot by inject()
 
-    fun restartBot(context: CommandContext): Boolean {
+    fun restartBot(context: CommandContext<NoArguments>): Boolean {
         sendAndLogMessage(context.sender, "Restarting the Discord bot...")
 
         runBlocking {
@@ -39,7 +40,7 @@ object BotCommands : KoinComponent {
         sender.sendMessage(message)
     }
 
-    fun botStatus(context: CommandContext): Boolean {
+    fun botStatus(context: CommandContext<NoArguments>): Boolean {
         val status = bot.botStatus
         context.sender.sendMessage(
             Component.join(

@@ -6,8 +6,8 @@ open class RunnerArguments<A : RunnerArguments<A>>(
     val unusedArgumentsAllowed: Boolean = false
 ) {
     var rawArguments: List<String> = listOf()
-    val parsers: MutableList<RunnerArg<*, A>> = mutableListOf()
-    private var finalParseResult: ParseResult<MutableMap<RunnerArg<*, A>, Any?>, A> = fillFinalParseResults()
+    val parsers: MutableList<RunnerArg<*, A, *>> = mutableListOf()
+    var finalParseResult: ParseResult<MutableMap<RunnerArg<*, A, *>, ParseResult<*, A>>, A> = fillFinalParseResults()
 
     fun forArguments(rawArgs: List<String>) {
         rawArguments = rawArgs
@@ -15,10 +15,10 @@ open class RunnerArguments<A : RunnerArguments<A>>(
         finalParseResult = fillFinalParseResults()
     }
 
-    private fun fillFinalParseResults(): ParseResult<MutableMap<RunnerArg<*, A>, Any?>, A> {
+    private fun fillFinalParseResults(): ParseResult<MutableMap<RunnerArg<*, A, *>, ParseResult<*, A>>, A> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
-        val resultMap = mutableMapOf<RunnerArg<*, A>, Any?>()
+        val resultMap = mutableMapOf<RunnerArg<*, A, *>, ParseResult<*, A>>()
 
         for (parser in parsers) {
             val result = parser.parseValue(currentContext)
@@ -26,7 +26,7 @@ open class RunnerArguments<A : RunnerArguments<A>>(
             currentContext = result.context
 
             if (result.succeeded) {
-                resultMap[parser] = result.result
+                resultMap[parser] = result
             } else {
                 return ParseResult(
                     succeeded = false,
@@ -52,7 +52,7 @@ open class RunnerArguments<A : RunnerArguments<A>>(
             return false
         }
 
-        return parsers.all { finalParseResult.result.containsKey(it) }
+        return parsers.all { finalParseResult.result?.get(it)?.succeeded ?: false }
     }
 
     fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
@@ -68,7 +68,7 @@ open class RunnerArguments<A : RunnerArguments<A>>(
 
     open fun completions(context: TabCompletionContext<A>): List<String>? {
         val nextArg = parsers.firstOrNull {
-            !finalParseResult.result.containsKey(it)
+            !(finalParseResult.result?.containsKey(it) ?: false)
         }
 
         return nextArg?.completions(context)
