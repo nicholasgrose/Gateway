@@ -11,7 +11,7 @@ import org.koin.core.component.inject
 object ConfigCompleter : KoinComponent {
     private val configStringMap: ConfigurationStringMap by inject()
 
-    fun configNameCompletion(context: TabCompletionContext<ConfigNameArgs>): List<String> {
+    fun <A : ConfigNameArgs<A>> configNameCompletion(context: TabCompletionContext<A>): List<String> {
         val currentConfigurationArgument = context.arguments.configPath ?: ""
 
         return configStringMap.matchingOrAllStrings(currentConfigurationArgument)

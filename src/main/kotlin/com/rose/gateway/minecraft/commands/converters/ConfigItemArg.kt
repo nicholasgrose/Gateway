@@ -22,26 +22,30 @@ class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
     override fun parseValue(context: ParseContext<A>): ParseResult<Item<*>, A> {
         val args = context.arguments
         val currentIndex = context.currentIndex
-        val configName = args.rawArguments.getOrNull(currentIndex)
+        val configName = context.arguments.rawArguments.getOrNull(currentIndex)
+            ?: return ParseResult(
+                succeeded = false,
+                context = ParseContext(
+                    arguments = args,
+                    currentIndex = currentIndex + 1
+                ),
+                result = null
+            )
 
-        if (configName != null) {
-            val matchingConfigItems = config.stringMap.matchingOrAllStrings(configName)
+        val matchingConfigItems = config.stringMap.matchingOrAllStrings(configName)
 
-            if (matchingConfigItems.size == 1) {
-                val item = config[matchingConfigItems.first()]
+        return if (matchingConfigItems.size == 1) {
+            val item = config[matchingConfigItems.first()]
 
-                ParseResult(
-                    succeeded = item != null,
-                    context = ParseContext(
-                        arguments = args,
-                        currentIndex = currentIndex + 1
-                    ),
-                    result = item
-                )
-            }
-        }
-
-        return ParseResult(
+            ParseResult(
+                succeeded = item != null,
+                context = ParseContext(
+                    arguments = args,
+                    currentIndex = currentIndex + 1
+                ),
+                result = item
+            )
+        } else ParseResult(
             succeeded = false,
             context = ParseContext(
                 arguments = args,

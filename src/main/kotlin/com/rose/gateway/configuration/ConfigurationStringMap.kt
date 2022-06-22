@@ -40,7 +40,7 @@ class ConfigurationStringMap : KoinComponent {
         ) {
             fillInItemMap(classifier, propertyString)
         } else if (property is KMutableProperty1<*, *>) {
-            itemMap[propertyString] = Item(property, configAnnotation.description)
+            itemMap[propertyString] = Item(property, propertyString, configAnnotation.description)
         }
     }
 
@@ -51,4 +51,6 @@ class ConfigurationStringMap : KoinComponent {
     fun matchingOrAllStrings(configurationString: String): List<String> {
         return specificationTrie.searchOrGetAll(configurationString)
     }
+
+    fun allStrings(): List<String> = specificationTrie.toList()
 }

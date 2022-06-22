@@ -4,6 +4,8 @@ import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.shared.configurations.primaryColor
@@ -25,7 +27,17 @@ object ConfigMonitoringRunner : KoinComponent {
     private val configStringMap: ConfigurationStringMap by inject()
     private val bot: DiscordBot by inject()
 
-    fun sendConfigurationHelp(sender: CommandSender, configSearchString: String): Boolean {
+    fun sendConfigurationHelp(context: CommandContext<ConfigValueArgs>): Boolean {
+        val configItem = context.arguments.configItem ?: return false
+
+        context.sender.sendMessage(createIndividualSpecHelpMessage(configItem.path, configItem))
+
+        return true
+    }
+
+    fun sendConfigurationSearchHelp(context: CommandContext<ConfigNameArgs>): Boolean {
+        val sender = context.sender
+        val configSearchString = context.arguments.configPath ?: ""
         val matchingConfigurations = configStringMap.matchingOrAllStrings(configSearchString)
 
         if (matchingConfigurations.size == 1) {
@@ -34,34 +46,44 @@ object ConfigMonitoringRunner : KoinComponent {
 
             sender.sendMessage(createIndividualSpecHelpMessage(path, matchingSpec))
         } else {
-            val configurations = matchingConfigurations.map { config ->
-                Component.join(
-                    JoinConfiguration.noSeparators(),
-                    Component.text("* "),
-                    Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                        .hoverEvent(
-                            HoverEvent.showText(
-                                Component.join(
-                                    JoinConfiguration.noSeparators(),
-                                    Component.text("Get help for "),
-                                    Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                                )
-                            )
-                        )
-                        .clickEvent(ClickEvent.runCommand("/gateway config help $config"))
-                )
-            }
-
-            sender.sendMessage(
-                Component.join(
-                    JoinConfiguration.separator(Component.newline()),
-                    Component.text("Available Configurations: ", config.primaryColor()),
-                    Component.join(JoinConfiguration.separator(Component.newline()), configurations)
-                )
-            )
+            sendConfigListHelp(sender, matchingConfigurations)
         }
 
         return true
+    }
+
+    fun sendAllConfigurationHelp(sender: CommandSender): Boolean {
+        sendConfigListHelp(sender, configStringMap.allStrings())
+
+        return true
+    }
+
+    private fun sendConfigListHelp(sender: CommandSender, items: List<String>) {
+        val configs = items.map { config ->
+            Component.join(
+                JoinConfiguration.noSeparators(),
+                Component.text("* "),
+                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
+                    .hoverEvent(
+                        HoverEvent.showText(
+                            Component.join(
+                                JoinConfiguration.noSeparators(),
+                                Component.text("Get help for "),
+                                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
+                            )
+                        )
+                    )
+                    .clickEvent(ClickEvent.runCommand("/gateway config help $config"))
+            )
+        }
+
+        sender.sendMessage(
+            Component.join(
+                JoinConfiguration.separator(Component.newline()),
+                Component.text("Available Configurations: ", config.primaryColor()),
+                Component.join(JoinConfiguration.separator(Component.newline()), configs)
+            )
+        )
     }
 
     private fun createIndividualSpecHelpMessage(path: String, item: Item<*>): Component {
