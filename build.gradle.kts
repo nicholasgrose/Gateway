@@ -1,8 +1,8 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.10"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.7.0"
+    kotlin("plugin.serialization") version "1.7.10"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
@@ -10,7 +10,7 @@ plugins {
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.21.0-RC1"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0-RC2"
 }
 
 val version: String by project
