@@ -8,13 +8,20 @@ fun <T, A : RunnerArguments<A>, B : ArgBuilder<T, A, R>, R : RunnerArg<T, A, R>>
     builderConstructor: () -> B,
     body: B.() -> Unit
 ): R {
-    val builder = builderConstructor()
-
-    body(builder)
-
-    val arg = builder.buildAndCheck()
+    val arg = genericArgBuilder(builderConstructor, body)
 
     this.parsers.add(arg)
 
     return arg
+}
+
+fun <T, A : RunnerArguments<A>, B : ArgBuilder<T, A, R>, R : RunnerArg<T, A, R>> genericArgBuilder(
+    builderConstructor: () -> B,
+    body: B.() -> Unit
+): R {
+    val builder = builderConstructor()
+
+    body(builder)
+
+    return builder.buildAndCheck()
 }

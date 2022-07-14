@@ -6,24 +6,24 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
-fun <A : RunnerArguments<A>> intArg(body: IntArgBuilder<A>.() -> Unit): IntArg<A> =
-    genericArgBuilder(::IntArgBuilder, body)
+fun <A : RunnerArguments<A>> booleanArg(body: BooleanArgBuilder<A>.() -> Unit): BooleanArg<A> =
+    genericArgBuilder(::BooleanArgBuilder, body)
 
-fun <A : RunnerArguments<A>> RunnerArguments<A>.int(body: IntArgBuilder<A>.() -> Unit): IntArg<A> =
-    genericParser(::IntArgBuilder, body)
+fun <A : RunnerArguments<A>> RunnerArguments<A>.boolean(body: BooleanArgBuilder<A>.() -> Unit): BooleanArg<A> =
+    genericParser(::BooleanArgBuilder, body)
 
-class IntArg<A : RunnerArguments<A>>(builder: IntArgBuilder<A>) :
-    RunnerArg<Int, A, IntArg<A>>(builder) {
-    override fun typeName(): String = Int::class.simpleName.toString()
+class BooleanArg<A : RunnerArguments<A>>(builder: BooleanArgBuilder<A>) :
+    RunnerArg<Boolean, A, BooleanArg<A>>(builder) {
+    override fun typeName(): String = Boolean::class.simpleName.toString()
 
     private val internalParser = stringArg<A> {
         name = builder.name
         description = builder.description
     }
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Int, A> {
+    override fun parseValue(context: ParseContext<A>): ParseResult<Boolean, A> {
         val stringResult = internalParser.parseValue(context)
-        val result = stringResult.result?.toInt()
+        val result = stringResult.result?.toBooleanStrictOrNull()
 
         return ParseResult(
             succeeded = result != null,
@@ -33,10 +33,10 @@ class IntArg<A : RunnerArguments<A>>(builder: IntArgBuilder<A>) :
     }
 }
 
-class IntArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Int, A, IntArg<A>>() {
+class BooleanArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Boolean, A, BooleanArg<A>>() {
     override fun checkValidity() = Unit
 
-    override fun build(): IntArg<A> {
-        return IntArg(this)
+    override fun build(): BooleanArg<A> {
+        return BooleanArg(this)
     }
 }

@@ -1,52 +1,80 @@
 package com.rose.gateway.minecraft.commands.converters
 
+import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.framework.CommandArgument
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import com.rose.gateway.shared.configurations.canBe
+import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
+import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
+import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
+import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.reflect.KProperty
 
-class ConfigListValueArg(
-    private val name: String,
-    private val configNameArgIndex: Int,
-    private val configuration: PluginConfiguration,
-    private val tabCompleter: (TabCompletionContext) -> List<String>? = CommandArgument.Companion::noCompletionCompleter
-) : CommandArgument<Any> {
-    private val parserMap = mapOf(
-        Boolean::class to { value: String -> value.toBooleanStrictOrNull() },
-        Integer::class to { value: String -> value.toInt() },
-        String::class to { value: String -> value },
-    )
+fun <A : RunnerArguments<A>> RunnerArguments<A>.configListValue(
+    body: ConfigListValueArgBuilder<A>.() -> Unit
+): ConfigListValueArg<A> =
+    genericParser(::ConfigListValueArgBuilder, body)
 
-    override fun fromArguments(arguments: Array<String>, index: Int): Any? {
-        if (!arguments.indices.contains(configNameArgIndex)) return null
+class ConfigListValueArg<A : RunnerArguments<A>>(val builder: ConfigListValueArgBuilder<A>) :
+    RunnerArg<List<Any?>, A, ConfigListValueArg<A>>(builder), KoinComponent {
+    val config: PluginConfiguration by inject()
 
-        val parser = findArgumentParser(arguments)
+    override fun typeName(): String = "ConfigListValue"
 
-        return try {
-            parser?.invoke(arguments[index])
-        } catch (e: NumberFormatException) {
-            null
+    val internalParser = configValueArg<A> {
+        name = builder.name
+        description = builder.description
+        itemArg = builder.itemArg
+    }
+
+    override fun parseValue(context: ParseContext<A>): ParseResult<List<Any?>, A> {
+        val configItem = builder.itemArg.getter.call(context.arguments)
+            ?: return ParseResult(
+                succeeded = false,
+                context = context,
+                result = null
+            )
+
+        val result = parseValueForItem(context, configItem)
+
+        return ParseResult(
+            succeeded = result.succeeded,
+            result = result.result,
+            context = result.context
+        )
+    }
+
+
+
+    private fun <T> parseValueForItem(context: ParseContext<A>, configItem: Item<T>): ParseResult<T, A> {
+        val parser = parserMap[configItem.typeClass()]
+
+        return if (parser == null) ParseResult(
+            succeeded = false,
+            result = null,
+            context = context
+        ) else {
+            val parseResult = parser.parseValue(context)
+
+            @Suppress("UNCHECKED_CAST")
+            ParseResult(
+                succeeded = parseResult.succeeded,
+                result = parseResult.result as T?,
+                context = parseResult.context
+            )
         }
     }
+}
 
-    private fun findArgumentParser(arguments: Array<String>): ((String) -> Any?)? {
-        val configName = arguments[configNameArgIndex]
-        val config = configuration.stringMap.fromString(configName) ?: return null
-        val configType = config.typeClass()
+class ConfigListValueArgBuilder<A : RunnerArguments<A>> : ArgBuilder<List<Any?>, A, ConfigListValueArg<A>>() {
+    lateinit var itemArg: KProperty<Item<*>?>
 
-        return if (configType canBe Collection::class) null
-        else parserMap[configType]
+    override fun checkValidity() {
+        if (!::itemArg.isInitialized) error("Corresponding ConfigItemArg not initialized for ConfigListValueArg")
     }
 
-    override fun getName(): String {
-        return name
-    }
-
-    override fun getTypeName(): String {
-        return "ConfigType"
-    }
-
-    override fun completeTab(tabCompletionContext: TabCompletionContext): List<String>? {
-        return tabCompleter(tabCompletionContext)
+    override fun build(): ConfigListValueArg<A> {
+        return ConfigListValueArg(this)
     }
 }

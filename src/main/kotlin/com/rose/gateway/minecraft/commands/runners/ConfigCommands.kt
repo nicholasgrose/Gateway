@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.shared.configurations.canBe
 import com.rose.gateway.shared.configurations.secondaryColor
@@ -18,18 +19,18 @@ object ConfigCommands : KoinComponent {
 
     private data class ConfigInfo(val path: String, val item: Item<*>)
 
-    fun setConfiguration(context: CommandContext): Boolean {
-        val configInfo = configItemFromContext(context, "set") ?: return true
+    fun setConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
+        val args = context.arguments
+        val configItem = args.configItem!!
 
-        val newValue = context.commandArguments[1]
-        setConfiguration(configInfo.item, newValue)
+        setConfiguration(configItem, args.configItem)
 
         context.sender.sendMessage(
             Component.join(
                 JoinConfiguration.separator(Component.text(" ")),
-                Component.text(configInfo.path, config.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text(configItem.path, config.tertiaryColor(), TextDecoration.ITALIC),
                 Component.text("set to"),
-                Component.text(newValue.toString(), config.secondaryColor(), TextDecoration.ITALIC),
+                Component.text(args.configValue.toString(), config.secondaryColor(), TextDecoration.ITALIC),
                 Component.text("successfully!")
             )
         )
