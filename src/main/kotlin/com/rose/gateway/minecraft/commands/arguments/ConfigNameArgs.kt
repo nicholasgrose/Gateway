@@ -8,6 +8,6 @@ class ConfigNameArgs : RunnerArguments<ConfigNameArgs>() {
     val configPath: String? by string {
         name = "CONFIG_PATH"
         description = "The config to modify."
-        completer = ConfigCompleter::configNameCompletion
+        completer = ConfigCompleter::configNameArgsNameCompletion
     }
 }

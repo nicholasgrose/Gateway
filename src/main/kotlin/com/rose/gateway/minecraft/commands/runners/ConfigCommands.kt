@@ -10,14 +10,11 @@ import com.rose.gateway.shared.configurations.tertiaryColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigCommands : KoinComponent {
     private val config: PluginConfiguration by inject()
-
-    private data class ConfigInfo(val path: String, val item: Item<*>)
 
     fun setConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
         val args = context.arguments
@@ -38,25 +35,6 @@ object ConfigCommands : KoinComponent {
         return true
     }
 
-    private fun configItemFromContext(context: CommandContext, attemptedAction: String): ConfigInfo? {
-        if (informSenderOnInvalidConfiguration(context.sender, attemptedAction)) return null
-
-        val path = context.commandArguments.first() as String
-        val item = config[path]
-
-        return if (item == null) {
-            context.sender.sendMessage("Configuration not found. Please try again.")
-            null
-        } else ConfigInfo(path, item)
-    }
-
-    private fun informSenderOnInvalidConfiguration(sender: CommandSender, attemptedAction: String): Boolean {
-        return if (config.notLoaded()) {
-            sender.sendMessage("Cannot $attemptedAction with unloaded configuration. Fix configuration file first.")
-            true
-        } else false
-    }
-
     private inline fun <T, reified U> setConfiguration(item: Item<T>, newValue: U) {
         if (U::class canBe item.typeClass()) {
             @Suppress("UNCHECKED_CAST")
@@ -64,17 +42,16 @@ object ConfigCommands : KoinComponent {
         }
     }
 
-    fun addConfiguration(context: CommandContext): Boolean {
-        val configInfo = configItemFromContext(context, "add") ?: return true
+    fun addConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
+        val configItem = context.arguments.configItem ?: return true
+        val values = context.arguments.configValue as List<*>
 
-        val newValues = context.commandArguments.subList(1, context.commandArguments.size)
-
-        addToConfiguration(configInfo.item, newValues)
+        addToConfiguration(configItem, values)
 
         return true
     }
 
-    private fun <T> addToConfiguration(item: Item<T>, newValues: List<Any?>) {
+    private fun <T> addToConfiguration(item: Item<T>, newValues: List<*>) {
         val currentValues = item.get()
 
         if (currentValues !is List<*>) {
@@ -84,22 +61,21 @@ object ConfigCommands : KoinComponent {
         }
     }
 
-    private fun <T, N> currentValuesWithNewValuesAppended(currentValues: List<N>, newValues: List<Any?>): T {
+    private fun <T, N> currentValuesWithNewValuesAppended(currentValues: List<N>, newValues: List<*>): T {
         @Suppress("UNCHECKED_CAST")
         return (newValues as List<N>).toCollection(currentValues.toMutableList()) as T
     }
 
-    fun removeConfiguration(context: CommandContext): Boolean {
-        val configInfo = configItemFromContext(context, "remove") ?: return true
+    fun removeConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
+        val configItem = context.arguments.configItem ?: return true
+        val values = context.arguments.configValue as List<*>
 
-        val newValues = context.commandArguments.subList(1, context.commandArguments.size)
-
-        removeFromConfiguration(configInfo.item, newValues)
+        removeFromConfiguration(configItem, values)
 
         return true
     }
 
-    private fun <T> removeFromConfiguration(item: Item<T>, valuesToBeRemoved: List<Any?>) {
+    private fun <T> removeFromConfiguration(item: Item<T>, valuesToBeRemoved: List<*>) {
         val currentValues = item.get()
 
         if (currentValues !is List<*>) {
@@ -109,12 +85,13 @@ object ConfigCommands : KoinComponent {
         }
     }
 
-    private fun <T, N> currentValuesWithNewValuesRemoved(currentValues: List<N>, valuesToBeRemoved: List<Any?>): T {
-        val newValues = currentValues.toMutableList()
-        @Suppress("UNCHECKED_CAST")
-        newValues.removeAll((valuesToBeRemoved as List<N>).toSet())
+    private fun <T, N> currentValuesWithNewValuesRemoved(currentValues: List<N>, valuesToBeRemoved: List<*>): T {
+        val mutableCurrentValues = currentValues.toMutableList()
 
         @Suppress("UNCHECKED_CAST")
-        return newValues as T
+        mutableCurrentValues.removeAll((valuesToBeRemoved as List<N>).toSet())
+
+        @Suppress("UNCHECKED_CAST")
+        return mutableCurrentValues as T
     }
 }

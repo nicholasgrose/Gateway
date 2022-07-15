@@ -9,6 +9,6 @@ class ConfigItemArgs : RunnerArguments<ConfigItemArgs>() {
     val configItem: Item<*>? by configItem {
         name = "CONFIG_PATH"
         description = "The config to modify."
-        completer = ConfigCompleter::configNameCompletion
+        completer = ConfigCompleter::configItemArgsNameCompletion
     }
 }

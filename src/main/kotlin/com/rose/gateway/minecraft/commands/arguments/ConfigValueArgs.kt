@@ -10,7 +10,7 @@ class ConfigValueArgs : RunnerArguments<ConfigValueArgs>() {
     val configItem: Item<*>? by configItem {
         name = "CONFIG_PATH"
         description = "The config to modify."
-        completer = ConfigCompleter::configNameCompletion
+        completer = ConfigCompleter::configValueArgsNameCompletion
     }
     val configValue: Any? by configValue {
         name = "CONFIG_VALUE"
