@@ -7,6 +7,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.shared.configurations.canBe
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KClass
@@ -46,27 +47,35 @@ class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<
     }
 
     private fun <T> parseValueForItem(context: ParseContext<A>, configItem: Item<T>): ParseResult<T, A> {
-        val parserMap = parserMap<T>()
-        val parser = parserMap[configItem.typeClass()]
+        val parser = parserFor(configItem) ?: return failedParseResult(context)
+        val parseResult = parser.parseValue(context)
 
-        return if (parser == null) ParseResult(
-            succeeded = false,
-            result = null,
-            context = context
-        ) else {
-            val parseResult = parser.parseValue(context)
-
-            @Suppress("UNCHECKED_CAST")
-            ParseResult(
-                succeeded = parseResult.succeeded,
-                result = parseResult.result as T?,
-                context = parseResult.context
-            )
-        }
+        return ParseResult(
+            succeeded = parseResult.succeeded,
+            result = parseResult.result,
+            context = parseResult.context
+        )
     }
 
-    private fun <T> parserMap(): Map<KClass<out Any>, RunnerArg<out Any, A, *>> = mapOf(
-        Boolean::class to booleanArg<A> {
+    private fun <T> parserFor(configItem: Item<T>): RunnerArg<T, A, *>? {
+        val configClass = configItem.typeClass()
+
+        @Suppress("UNCHECKED_CAST")
+        return if (configClass canBe List::class) {
+            val configType = configClass.typeParameters.first().upperBounds.first().classifier?.run {
+                if (this is KClass<*>) this else null
+            }
+
+            listArg {
+                name = builder.name
+                description = builder.description
+                type = configType!!
+            } as RunnerArg<T, A, *>?
+        } else parserMap()[configClass] as RunnerArg<T, A, *>?
+    }
+
+    private fun parserMap(): Map<KClass<out Any>, RunnerArg<out Any, A, *>> = mapOf(
+        Boolean::class to booleanArg {
             name = builder.name
             description = builder.description
         },
@@ -78,10 +87,6 @@ class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<
             name = builder.name
             description = builder.description
             hungry = true
-        },
-        List::class to listArg<T, A> {
-            name = builder.name
-            description = builder.description
         }
     )
 }

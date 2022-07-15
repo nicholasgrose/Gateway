@@ -16,5 +16,6 @@ class ConfigValueArgs : RunnerArguments<ConfigValueArgs>() {
         name = "CONFIG_VALUE"
         description = "The value to give to the corresponding config."
         itemArg = ::configItem
+        completer = ConfigCompleter::configValueCompletion
     }
 }

@@ -1,14 +1,9 @@
 package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
-import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
-import com.rose.gateway.minecraft.commands.converters.ConfigListValueArg
-import com.rose.gateway.minecraft.commands.converters.ConfigValueArg
-import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
@@ -19,7 +14,6 @@ import org.koin.core.component.inject
 
 object CommandRegistry : KoinComponent {
     private val plugin: GatewayPlugin by inject()
-    private val config: PluginConfiguration by inject()
 
     fun registerCommands() {
         commands.registerCommands()
@@ -67,26 +61,13 @@ object CommandRegistry : KoinComponent {
                 }
 
                 subcommand("add") {
-                    runner(
-                        StringArg("CONFIG_PATH", configCompleter::collectionConfigNameCompletion),
-                        ConfigListValueArg("VALUE", 0, config),
-                        allowVariableNumberOfArguments = true
-                    ) { context ->
+                    runner(::ConfigValueArgs) { context ->
                         ConfigCommands.addConfiguration(context)
                     }
                 }
 
                 subcommand("remove") {
-                    runner(
-                        StringArg("CONFIG_PATH", configCompleter::collectionConfigNameCompletion),
-                        ConfigListValueArg(
-                            "VALUE",
-                            0,
-                            config,
-                            configCompleter::collectionConfigValueCompletion
-                        ),
-                        allowVariableNumberOfArguments = true
-                    ) { context ->
+                    runner(::ConfigValueArgs) { context ->
                         ConfigCommands.removeConfiguration(context)
                     }
                 }

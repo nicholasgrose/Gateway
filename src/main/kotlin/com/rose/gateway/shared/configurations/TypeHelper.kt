@@ -5,6 +5,7 @@ import com.rose.gateway.configuration.markers.ConfigItem
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 
 fun KType.asClass(): KClass<*> {
     val classifier = this.classifier
@@ -17,7 +18,7 @@ fun KType.asClass(): KClass<*> {
     }
 }
 
-infix fun KClass<*>.canBe(other: KClass<*>): Boolean = other.java.isAssignableFrom(this.java)
+infix fun KClass<*>.canBe(other: KClass<*>): Boolean = this.isSubclassOf(other)
 
 fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
     return this.filter { it.isConfigItem() }
