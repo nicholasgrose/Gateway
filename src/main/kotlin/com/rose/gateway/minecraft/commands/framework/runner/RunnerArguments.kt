@@ -17,14 +17,19 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
         val resultMap = mutableMapOf<RunnerArg<*, A, *>, ParseResult<*, A>>()
+        var intermediateParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
 
         for (parser in parsers) {
+            finalParseResult = intermediateParseResult
+
             val result = parser.parseValidValue(currentContext)
 
             currentContext = result.context
 
             if (result.succeeded) {
                 resultMap[parser] = result
+
+                intermediateParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
             } else {
                 return ParseResult(
                     succeeded = false,

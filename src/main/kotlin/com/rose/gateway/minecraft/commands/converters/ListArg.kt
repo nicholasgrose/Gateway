@@ -34,11 +34,10 @@ class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val build
             currentResult = parser.parseValidValue(currentResult.context)
         }
 
-        return if (results.isEmpty()) failedParseResult(context)
-        else ParseResult(
+        return ParseResult(
             succeeded = true,
             result = results.map { it.result!! },
-            context = results.last().context
+            context = results.lastOrNull()?.context ?: context
         )
     }
 }

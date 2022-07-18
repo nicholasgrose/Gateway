@@ -77,11 +77,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         val subcommand = children[subcommandName]
 
         return subcommand?.definition?.executors?.any {
-            val args = it.arguments()
-
-            args.forArguments(result)
-
-            args.valid()
+            it.arguments(result.toTypedArray()).valid()
         } ?: false
     }
 
