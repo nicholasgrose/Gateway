@@ -22,7 +22,7 @@ class BooleanArg<A : RunnerArguments<A>>(builder: BooleanArgBuilder<A>) :
     }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Boolean, A> {
-        val stringResult = internalParser.parseValue(context)
+        val stringResult = internalParser.parseValidValue(context)
         val result = stringResult.result?.toBooleanStrictOrNull()
 
         return ParseResult(

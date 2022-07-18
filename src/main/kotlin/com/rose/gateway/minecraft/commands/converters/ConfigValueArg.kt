@@ -18,11 +18,6 @@ fun <A : RunnerArguments<A>> RunnerArguments<A>.configValue(
 ): ConfigValueArg<A> =
     genericParser(::ConfigValueArgBuilder, body)
 
-fun <A : RunnerArguments<A>> configValueArg(
-    body: ConfigValueArgBuilder<A>.() -> Unit
-): ConfigValueArg<A> =
-    genericArgBuilder(::ConfigValueArgBuilder, body)
-
 class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<A>) :
     RunnerArg<Any?, A, ConfigValueArg<A>>(builder), KoinComponent {
     val config: PluginConfiguration by inject()
@@ -30,7 +25,7 @@ class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<
     override fun typeName(): String = "ConfigValue"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Any?, A> {
-        val configItem = builder.itemArg.getter.call(context.arguments)
+        val configItem = builder.itemArg.getter.call()
             ?: return ParseResult(
                 succeeded = false,
                 context = context,
@@ -48,7 +43,7 @@ class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<
 
     private fun <T> parseValueForItem(context: ParseContext<A>, configItem: Item<T>): ParseResult<T, A> {
         val parser = parserFor(configItem) ?: return failedParseResult(context)
-        val parseResult = parser.parseValue(context)
+        val parseResult = parser.parseValidValue(context)
 
         return ParseResult(
             succeeded = parseResult.succeeded,
@@ -65,12 +60,42 @@ class ConfigValueArg<A : RunnerArguments<A>>(val builder: ConfigValueArgBuilder<
             val configType = configClass.typeParameters.first().upperBounds.first().classifier?.run {
                 if (this is KClass<*>) this else null
             }
+            val listParser = when {
+                configType == null -> null
+                configType canBe Boolean::class -> {
+                    listArg<Boolean, A, BooleanArg<A>> {
+                        name = builder.name
+                        description = builder.description
+                        argType = booleanArg<A> {
+                            name = builder.name
+                            description = builder.description
+                        }
+                    }
+                }
+                configType canBe Int::class -> {
+                    listArg<Int, A, IntArg<A>> {
+                        name = builder.name
+                        description = builder.description
+                        argType = intArg {
+                            name = builder.name
+                            description = builder.description
+                        }
+                    }
+                }
+                configType canBe String::class -> {
+                    listArg<String, A, StringArg<A>> {
+                        name = builder.name
+                        description = builder.description
+                        argType = stringArg {
+                            name = builder.name
+                            description = builder.description
+                        }
+                    }
+                }
+                else -> null
+            }
 
-            listArg {
-                name = builder.name
-                description = builder.description
-                type = configType!!
-            } as RunnerArg<T, A, *>?
+            if (listParser == null) null else listParser as RunnerArg<T, A, *>?
         } else parserMap()[configClass] as RunnerArg<T, A, *>?
     }
 

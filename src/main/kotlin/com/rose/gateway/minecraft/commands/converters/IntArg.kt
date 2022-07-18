@@ -22,7 +22,7 @@ class IntArg<A : RunnerArguments<A>>(builder: IntArgBuilder<A>) :
     }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Int, A> {
-        val stringResult = internalParser.parseValue(context)
+        val stringResult = internalParser.parseValidValue(context)
         val result = stringResult.result?.toInt()
 
         return ParseResult(

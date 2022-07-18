@@ -5,30 +5,33 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
-import kotlin.reflect.KClass
 
-fun <T : Any, A : RunnerArguments<A>> listArg(body: ListArgBuilder<T, A>.() -> Unit): ListArg<T, A> =
-    genericArgBuilder(::ListArgBuilder, body)
-
-fun <T : Any, A : RunnerArguments<A>> RunnerArguments<A>.list(body: ListArgBuilder<T, A>.() -> Unit): ListArg<T, A> =
+fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> RunnerArguments<A>.list(
+    body: ListArgBuilder<T, A, R>.() -> Unit
+): ListArg<T, A, R> =
     genericParser(::ListArgBuilder, body)
 
-class ListArg<T : Any, A : RunnerArguments<A>>(val builder: ListArgBuilder<T, A>) :
-    RunnerArg<List<T>, A, ListArg<T, A>>(builder) {
+fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> listArg(
+    body: ListArgBuilder<T, A, R>.() -> Unit
+): ListArg<T, A, R> =
+    genericArgBuilder(::ListArgBuilder, body)
+
+class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val builder: ListArgBuilder<T, A, R>) :
+    RunnerArg<List<T>, A, ListArg<T, A, R>>(builder) {
     override fun typeName(): String = List::class.simpleName.toString()
 
     override fun parseValue(context: ParseContext<A>): ParseResult<List<T>, A> {
-        val parser = parserMap()[builder.type] ?: return failedParseResult(context)
+        val parser = builder.argType
         val results = mutableListOf<ParseResult<T, A>>()
 
         @Suppress("UNCHECKED_CAST")
-        var currentResult = parser.parseValue(context) as ParseResult<T, A>
+        var currentResult = parser.parseValidValue(context)
 
         while (currentResult.succeeded) {
             results.add(currentResult)
 
             @Suppress("UNCHECKED_CAST")
-            currentResult = parser.parseValue(context) as ParseResult<T, A>
+            currentResult = parser.parseValidValue(currentResult.context)
         }
 
         return if (results.isEmpty()) failedParseResult(context)
@@ -38,31 +41,17 @@ class ListArg<T : Any, A : RunnerArguments<A>>(val builder: ListArgBuilder<T, A>
             context = results.last().context
         )
     }
-
-    private fun parserMap(): Map<KClass<out Any>, RunnerArg<out Any, A, *>> = mapOf(
-        Boolean::class to booleanArg {
-            name = builder.name
-            description = builder.description
-        },
-        Integer::class to intArg {
-            name = builder.name
-            description = builder.description
-        },
-        String::class to stringArg {
-            name = builder.name
-            description = builder.description
-        }
-    )
 }
 
-class ListArgBuilder<T : Any, A : RunnerArguments<A>> : ArgBuilder<List<T>, A, ListArg<T, A>>() {
-    lateinit var type: KClass<T>
+class ListArgBuilder<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> :
+    ArgBuilder<List<T>, A, ListArg<T, A, R>>() {
+    lateinit var argType: RunnerArg<T, A, R>
 
     override fun checkValidity() {
-        if (!::type.isInitialized) error("no type given for list argument")
+        if (!::argType.isInitialized) error("no type given for list argument")
     }
 
-    override fun build(): ListArg<T, A> {
+    override fun build(): ListArg<T, A, R> {
         return ListArg(this)
     }
 }

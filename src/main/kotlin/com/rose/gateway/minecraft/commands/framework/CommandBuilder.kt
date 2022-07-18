@@ -9,23 +9,23 @@ import com.rose.gateway.shared.collections.builders.trieOf
 
 class CommandBuilder(private val name: String) {
     companion object {
-        private fun subcommandExecutor(subcommands: List<String>): CommandExecutor<SubcommandArguments> =
+        private fun subcommandExecutor(children: Map<String, Command>): CommandExecutor<SubcommandArguments> =
             CommandExecutor(
                 ::subcommandRunner,
-                SubcommandArguments.forSubcommands(subcommands)
+                SubcommandArguments.forChildCommands(children)
             )
 
         fun build(builder: CommandBuilder): Command {
-            val subCommands = builder.children.map { child -> child.definition.name }
-            val subcommandNames = trieOf(subCommands)
-            if (subCommands.isNotEmpty()) builder.executors.add(subcommandExecutor(subCommands))
+            val subcommandMap = builder.children.associateBy { child -> child.definition.name }
+            val subcommandNames = trieOf(subcommandMap.keys)
+            if (subcommandMap.isNotEmpty()) builder.executors.add(subcommandExecutor(subcommandMap))
 
             return Command(
                 CommandDefinition(
                     name = builder.name,
                     documentation = builder.generateBuilderDocumentation(),
                     executors = builder.executors,
-                    subcommands = builder.children.associateBy { child -> child.definition.name },
+                    subcommands = subcommandMap,
                     subcommandNames = subcommandNames
                 )
             )
@@ -73,7 +73,7 @@ class CommandBuilder(private val name: String) {
         var currentBuilder: CommandBuilder? = this
 
         while (currentBuilder != null) {
-            commandUsageParts.add(currentBuilder.name)
+            commandUsageParts.add(0, currentBuilder.name)
             currentBuilder = currentBuilder.parent
         }
 

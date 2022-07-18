@@ -1,16 +1,24 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.converters.list
 import com.rose.gateway.minecraft.commands.converters.string
+import com.rose.gateway.minecraft.commands.converters.stringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
-class SubcommandArguments(private val subcommands: List<String>) : RunnerArguments<SubcommandArguments>(
-    unusedArgumentsAllowed = true
-) {
+class SubcommandArguments(private val children: Map<String, Command>) : RunnerArguments<SubcommandArguments>() {
+    private val validator = Regex(subcommandRegex())
+
+    private fun subcommandRegex(): String {
+        return children.keys.joinToString("|", "^(", ")$")
+    }
+
     companion object {
-        fun forSubcommands(subcommands: List<String>): () -> SubcommandArguments {
+        fun forChildCommands(children: Map<String, Command>): () -> SubcommandArguments {
             return {
-                SubcommandArguments(subcommands)
+                SubcommandArguments(children)
             }
         }
     }
@@ -18,24 +26,66 @@ class SubcommandArguments(private val subcommands: List<String>) : RunnerArgumen
     val subcommand: String? by string {
         name = "subcommand"
         description = "The subcommand to run."
-        completer = { context ->
-            val command = context.arguments.subcommand ?: ""
-            val definition = context.commandDefinition
-
-            if (hasUnusedArgs()) {
-                val subcommand = definition.subcommands[command]
-
-                subcommand?.onTabComplete(
-                    sender = context.sender,
-                    command = context.command,
-                    alias = context.alias,
-                    args = remainingArguments()
-                ) ?: listOf()
-            } else definition.subcommandNames.searchOrGetAll(command)
+        completer = ::subcommandCompleter
+        validator = ::subcommandValidator
+    }
+    val remainingArgs: List<String>? by list {
+        argType = stringArg {
+            name = "Remaining Arg"
+            description = "One of the args remaining."
         }
+        name = "Remaining Args"
+        description = "All of the args to be passed to subcommands."
+        completer = ::remainingArgsCompleter
+        validator = ::remainingArgsValidator
     }
 
-    override fun documentation(): String = subcommands.joinToString(
+    private fun subcommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
+        val command = context.arguments.rawArguments.first()
+        val definition = context.commandDefinition
+
+        return definition.subcommandNames.searchOrGetAll(command)
+    }
+
+    private fun subcommandValidator(result: ParseResult<String, SubcommandArguments>): Boolean {
+        result.result ?: return false
+
+        return validator.matches(result.result)
+    }
+
+    private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
+        val args = context.arguments
+        val subcommandName = args.subcommand!!
+        val subcommand = children[subcommandName]
+        val rawArguments = args.rawArguments
+        val remainderStartIndex = args.lastSuccessfulResult()?.context?.currentIndex ?: return listOf()
+        val remainingRawArgs = rawArguments.subList(remainderStartIndex, rawArguments.size).toTypedArray()
+
+        return if (remainingRawArgs.isEmpty()) listOf()
+        else subcommand?.onTabComplete(
+            sender = context.sender,
+            command = context.command,
+            alias = context.alias,
+            args = remainingRawArgs
+        ) ?: listOf()
+    }
+
+    private fun remainingArgsValidator(parseResult: ParseResult<List<String>, SubcommandArguments>): Boolean {
+        val result = parseResult.result ?: return false
+
+        val subcommandName = parseResult.context.arguments.subcommand
+        val subcommand = children[subcommandName]
+
+        return subcommand?.definition?.executors?.any {
+            val args = it.arguments()
+
+            args.forArguments(result)
+
+            args.valid()
+        } ?: false
+    }
+
+    override fun documentation(): String = children.keys.joinToString(
         separator = " | ",
         prefix = "[",
         postfix = "]"
@@ -44,9 +94,9 @@ class SubcommandArguments(private val subcommands: List<String>) : RunnerArgumen
 
 fun subcommandRunner(context: CommandContext<SubcommandArguments>): Boolean {
     val childCommand = context.definition.subcommands[context.arguments.subcommand]
-    val remainingArguments = context.arguments.remainingArguments()
+    val remainingArguments = context.arguments.remainingArgs?.toTypedArray()
 
-    return if (childCommand == null) false
+    return if (childCommand == null || remainingArguments == null) false
     else {
         childCommand.onCommand(
             sender = context.sender,

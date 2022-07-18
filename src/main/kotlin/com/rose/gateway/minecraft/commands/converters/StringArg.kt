@@ -43,7 +43,7 @@ class StringArg<A : RunnerArguments<A>>(val builder: StringArgBuilder<A>) :
             succeeded = result != null,
             context = ParseContext(
                 arguments = args,
-                currentIndex = if (result == null) currentIndex else currentIndex + 1
+                currentIndex = currentIndex + 1
             ),
             result = result
         )

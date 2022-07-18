@@ -2,9 +2,7 @@ package com.rose.gateway.minecraft.commands.framework.runner
 
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
-open class RunnerArguments<A : RunnerArguments<A>>(
-    val unusedArgumentsAllowed: Boolean = false
-) {
+open class RunnerArguments<A : RunnerArguments<A>> {
     var rawArguments: List<String> = listOf()
     val parsers: MutableList<RunnerArg<*, A, *>> = mutableListOf()
     var finalParseResult: ParseResult<MutableMap<RunnerArg<*, A, *>, ParseResult<*, A>>, A> = fillFinalParseResults()
@@ -21,7 +19,7 @@ open class RunnerArguments<A : RunnerArguments<A>>(
         val resultMap = mutableMapOf<RunnerArg<*, A, *>, ParseResult<*, A>>()
 
         for (parser in parsers) {
-            val result = parser.parseValue(currentContext)
+            val result = parser.parseValidValue(currentContext)
 
             currentContext = result.context
 
@@ -47,8 +45,16 @@ open class RunnerArguments<A : RunnerArguments<A>>(
         return rawArguments.subList(finalParseResult.context.currentIndex, rawArguments.size).toTypedArray()
     }
 
+    fun lastSuccessfulResult(): ParseResult<*, A>? {
+        val lastSuccessfulArg = parsers.lastOrNull {
+            finalParseResult.result?.containsKey(it) ?: false
+        } ?: return null
+
+        return finalParseResult.result?.get(lastSuccessfulArg)
+    }
+
     fun valid(): Boolean {
-        if (!unusedArgumentsAllowed && hasUnusedArgs()) {
+        if (hasUnusedArgs()) {
             return false
         }
 
