@@ -31,13 +31,13 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
             }
         }
 
-        if (!succeeded) sendArgumentErrorMessage(sender)
+        if (!succeeded) sender.sendMessage(
+            definition.executors.joinToString("\n") {
+                it.arguments(args).documentation()
+            }
+        )
 
         return true
-    }
-
-    private fun sendArgumentErrorMessage(sender: CommandSender) {
-        sender.sendMessage(definition.documentation)
     }
 
     override fun onTabComplete(

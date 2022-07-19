@@ -7,6 +7,7 @@ abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(priv
     open fun name(): String = builder.name
     abstract fun typeName(): String
     open fun completions(context: TabCompletionContext<A>): List<String>? = builder.completer(context)
+    open fun generateDocs(args: A): String = builder.docGenerator(args)
     abstract fun parseValue(context: ParseContext<A>): ParseResult<T, A>
 
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {

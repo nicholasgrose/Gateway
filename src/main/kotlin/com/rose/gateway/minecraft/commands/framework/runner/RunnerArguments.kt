@@ -66,15 +66,13 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         return parsers.all { finalParseResult.result?.get(it)?.succeeded ?: false }
     }
 
-    fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
+    private fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
 
     open fun documentation(): String {
-        return if (parsers.isEmpty()) ""
-        else parsers.joinToString(
-            separator = "] [",
-            prefix = "[",
-            postfix = "]"
-        ) { parser -> "${parser.name()}=${parser.typeName()}" }
+        return parsers.joinToString(" ") { parser ->
+            @Suppress("UNCHECKED_CAST")
+            parser.generateDocs(this as A)
+        }
     }
 
     open fun completions(context: TabCompletionContext<A>): List<String>? {

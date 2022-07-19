@@ -14,7 +14,7 @@ import kotlin.reflect.full.memberProperties
 data class Item<T>(
     val property: KMutableProperty<T>,
     val path: String,
-    val description: String,
+    val description: String
 ) : KoinComponent {
     private val config: PluginConfiguration by inject()
 

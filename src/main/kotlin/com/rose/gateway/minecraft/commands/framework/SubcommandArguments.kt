@@ -28,6 +28,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         description = "The subcommand to run."
         completer = ::subcommandCompleter
         validator = ::subcommandValidator
+        docGenerator = ::subcommandDocGenerator
     }
     val remainingArgs: List<String>? by list {
         argType = stringArg {
@@ -38,6 +39,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         description = "All of the args to be passed to subcommands."
         completer = ::remainingArgsCompleter
         validator = ::remainingArgsValidator
+        docGenerator = ::remainingArgsDocGenerator
     }
 
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
@@ -51,6 +53,15 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         result.result ?: return false
 
         return validator.matches(result.result)
+    }
+
+    private fun subcommandDocGenerator(args: SubcommandArguments): String {
+        return args.subcommand
+            ?: children.keys.joinToString(
+                separator = " | ",
+                prefix = "[",
+                postfix = "]"
+            )
     }
 
     private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
@@ -81,11 +92,19 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         } ?: false
     }
 
-    override fun documentation(): String = children.keys.joinToString(
-        separator = " | ",
-        prefix = "[",
-        postfix = "]"
-    )
+    private fun remainingArgsDocGenerator(args: SubcommandArguments): String {
+        val subcommandName = args.subcommand
+        val subcommand = children[subcommandName]
+
+        return if (subcommand == null) ""
+        else {
+            val executor = subcommand.definition.executors.firstOrNull()
+            val remainderStartIndex = args.lastSuccessfulResult()?.context?.currentIndex ?: return ""
+            val remainingRawArgs = rawArguments.subList(remainderStartIndex, rawArguments.size).toTypedArray()
+
+            executor?.arguments(remainingRawArgs)?.documentation() ?: ""
+        }
+    }
 }
 
 fun subcommandRunner(context: CommandContext<SubcommandArguments>): Boolean {

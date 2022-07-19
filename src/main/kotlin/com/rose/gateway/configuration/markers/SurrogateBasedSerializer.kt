@@ -11,7 +11,7 @@ interface SurrogateConverter<T, S> {
 
 open class SurrogateBasedSerializer<T : Any, S : Any>(
     private val surrogateSerializer: KSerializer<S>,
-    private val converter: SurrogateConverter<T, S>,
+    private val converter: SurrogateConverter<T, S>
 ) : KSerializer<T> {
     override val descriptor = surrogateSerializer.descriptor
 
