@@ -37,7 +37,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
     val loader = classLoader
 
     override fun onEnable() {
-        Logger.logInfo("Starting Gateway!")
+        Logger.info("Starting Gateway!")
 
         runBlocking {
             bot.start()
@@ -46,16 +46,16 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
         EventListeners.registerListeners(server)
         CommandRegistry.registerCommands()
 
-        Logger.logInfo("Gateway started!")
+        Logger.info("Gateway started!")
     }
 
     override fun onDisable() {
-        Logger.logInfo("Stopping Gateway!")
+        Logger.info("Stopping Gateway!")
 
         runBlocking {
             bot.stop()
         }
 
-        Logger.logInfo("Gateway stopped!")
+        Logger.info("Gateway stopped!")
     }
 }

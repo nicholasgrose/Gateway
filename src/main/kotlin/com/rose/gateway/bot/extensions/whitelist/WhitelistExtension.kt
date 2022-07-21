@@ -42,7 +42,7 @@ class WhitelistExtension : Extension() {
                 description = "Adds a player to the whitelist."
 
                 action {
-                    Logger.logInfo("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
+                    Logger.info("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
                     val status = when (Whitelist.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
@@ -59,7 +59,7 @@ class WhitelistExtension : Extension() {
                 description = "Removes a player from the whitelist."
 
                 action {
-                    Logger.logInfo("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
+                    Logger.info("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
                     val status = when (Whitelist.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
@@ -77,7 +77,7 @@ class WhitelistExtension : Extension() {
                 description = "Lists all currently whitelisted players."
 
                 action {
-                    Logger.logInfo("${user.asUserOrNull()?.username} requested list of whitelisted players!")
+                    Logger.info("${user.asUserOrNull()?.username} requested list of whitelisted players!")
                     val whitelistedPlayers = Whitelist.whitelistedPlayersAsString()
                     val response =
                         if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."

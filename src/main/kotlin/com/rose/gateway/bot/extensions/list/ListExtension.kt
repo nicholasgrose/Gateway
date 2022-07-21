@@ -36,7 +36,7 @@ class ListExtension : Extension() {
             description = "Gives a list of all online players."
 
             action {
-                Logger.logInfo("${user.asUserOrNull()?.username} requested player list!")
+                Logger.info("${user.asUserOrNull()?.username} requested player list!")
                 val playerList = ServerInfo.playerListAsString()
                 val response =
                     if (playerList.isEmpty()) "No players online."

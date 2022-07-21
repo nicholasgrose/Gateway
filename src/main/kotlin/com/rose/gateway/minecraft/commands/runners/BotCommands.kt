@@ -36,7 +36,7 @@ object BotCommands : KoinComponent {
     }
 
     private fun sendAndLogMessage(sender: CommandSender, message: String) {
-        Logger.logInfo(message)
+        Logger.info(message)
         sender.sendMessage(message)
     }
 

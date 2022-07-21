@@ -84,7 +84,7 @@ class DiscordBot : KoinComponent {
         fillBotChannels()
         launchBotInNewThread()
 
-        Logger.logInfo("Bot ready!")
+        Logger.info("Bot ready!")
     }
 
     private suspend fun unloadDisabledExtensions() {
@@ -119,8 +119,8 @@ class DiscordBot : KoinComponent {
             bot?.startAsync()
         } catch (error: KordInitializationException) {
             val message = "An error occurred while running bot: ${error.message}"
-            Logger.logInfo(message)
             botStatus = BotStatus.STOPPED because message
+            Logger.warning("Could not start Discord bot. Check status for info.")
             null
         }
     }

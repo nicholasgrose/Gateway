@@ -36,7 +36,7 @@ class AboutExtension : Extension() {
             description = "Gives the current version of the Gateway plugin."
 
             action {
-                Logger.logInfo("${user.asUserOrNull()?.username} requested plugin version!")
+                Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
                 respond {
                     content = "I am currently version ${plugin.description.version}." +
                         "All versions are available at https://github.com/nicholasgrose/Gateway/."
@@ -49,7 +49,7 @@ class AboutExtension : Extension() {
             description = "Summon the block god for a moment."
 
             action {
-                Logger.logInfo("${user.asUserOrNull()?.username} used the super secret command!")
+                Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
                 respond {
                     @Suppress("HttpUrlsUsage")
                     content = "http://www.scpwiki.com/church-of-the-broken-god-hub"

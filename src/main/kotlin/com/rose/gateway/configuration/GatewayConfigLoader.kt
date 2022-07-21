@@ -45,22 +45,22 @@ class GatewayConfigLoader : KoinComponent {
     }
 
     private suspend fun ensureConfigurationFileExists(configurationFilePath: Path): Boolean {
-        Logger.logInfo("Checking configuration file existence...")
+        Logger.info("Checking configuration file existence...")
 
         if (!Files.exists(configurationFilePath)) {
-            Logger.logInfo("No configuration file found. Downloading...")
+            Logger.info("No configuration file found. Downloading...")
 
             val configurationFileCreated = createConfigurationFile()
 
             if (!configurationFileCreated) {
-                Logger.logInfo("Failed to create new configuration file.")
+                Logger.info("Failed to create new configuration file.")
 
                 return false
             } else {
-                Logger.logInfo("Successfully created new configuration file.")
+                Logger.info("Successfully created new configuration file.")
             }
         } else {
-            Logger.logInfo("Configuration file found.")
+            Logger.info("Configuration file found.")
         }
 
         return true
@@ -77,13 +77,13 @@ class GatewayConfigLoader : KoinComponent {
             }
             true
         } else {
-            Logger.logInfo("Could not get configuration file! You will need download or create it manually.")
+            Logger.info("Could not get configuration file! You will need download or create it manually.")
             false
         }
     }
 
     private fun loadConfig(path: Path): Config? {
-        Logger.logInfo("Loading configuration...")
+        Logger.info("Loading configuration...")
 
         return try {
             val config: Config = ConfigLoaderBuilder
@@ -97,10 +97,10 @@ class GatewayConfigLoader : KoinComponent {
                 .addDecoder(CommonDecoder())
                 .build()
                 .loadConfigOrThrow(path.toString())
-            Logger.logInfo("Configuration loaded successfully.")
+            Logger.info("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {
-            Logger.logInfo("Configuration failed to load: ${error.message}")
+            Logger.info("Configuration failed to load: ${error.message}")
             null
         }
     }
