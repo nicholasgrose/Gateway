@@ -55,7 +55,7 @@ jobs:
 
             # https://github.com/marketplace/actions/pr-run-detekt-with-reviewdog
             -   name: Run detekt with reviewdog
-                uses: devindi/action-detekt@v1.20.4
+                uses: alaegin/Detekt-Action@v1.21.0-RC2
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     detekt_config: detekt-config.yml
