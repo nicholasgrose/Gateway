@@ -32,9 +32,10 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         }
 
         if (!succeeded) sender.sendMessage(
-            definition.executors.joinToString("\n") {
-                it.arguments(args).documentation()
-            }
+            "Usage:\n" +
+                definition.executors.joinToString("\n") {
+                    definition.documentation + " " + it.arguments(args).documentation()
+                }
         )
 
         return true

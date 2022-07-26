@@ -57,28 +57,14 @@ class CommandBuilder(private val name: String) {
     }
 
     private fun generateBuilderDocumentation(): String {
-        val usages = executors.joinToString(separator = "\n") { executor ->
-            generateExecutorUsage(executor)
+        var topParent = this
+        var nextParent = topParent.parent
+
+        while (nextParent != null) {
+            topParent = nextParent
+            nextParent = topParent.parent
         }
 
-        return if (executors.size == 1) {
-            "Correct Usage: $usages"
-        } else {
-            "Correct Usages:\n$usages"
-        }
-    }
-
-    private fun generateExecutorUsage(executor: CommandExecutor<*>): String {
-        val commandUsageParts = mutableListOf<String>()
-        var currentBuilder: CommandBuilder? = this
-
-        while (currentBuilder != null) {
-            commandUsageParts.add(0, currentBuilder.name)
-            currentBuilder = currentBuilder.parent
-        }
-
-        commandUsageParts.add(executor.generateUsageDocumentation())
-
-        return commandUsageParts.joinToString(separator = " ", prefix = "/")
+        return "/${topParent.name}"
     }
 }
