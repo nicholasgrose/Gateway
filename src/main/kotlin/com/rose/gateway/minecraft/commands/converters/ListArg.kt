@@ -11,26 +11,19 @@ fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> RunnerArguments<A>
 ): ListArg<T, A, R> =
     genericParser(::ListArgBuilder, body)
 
-fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> listArg(
-    body: ListArgBuilder<T, A, R>.() -> Unit
-): ListArg<T, A, R> =
-    genericArgBuilder(::ListArgBuilder, body)
-
-class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val builder: ListArgBuilder<T, A, R>) :
+class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(builder: ListArgBuilder<T, A, R>) :
     RunnerArg<List<T>, A, ListArg<T, A, R>>(builder) {
-    override fun typeName(): String = List::class.simpleName.toString()
+    private val parser = builder.element
+
+    override fun typeName(): String = "List<${parser.typeName()}>"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<List<T>, A> {
-        val parser = builder.argType
         val results = mutableListOf<ParseResult<T, A>>()
-
-        @Suppress("UNCHECKED_CAST")
         var currentResult = parser.parseValidValue(context)
 
         while (currentResult.succeeded) {
             results.add(currentResult)
 
-            @Suppress("UNCHECKED_CAST")
             currentResult = parser.parseValidValue(currentResult.context)
         }
 
@@ -44,10 +37,16 @@ class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val build
 
 class ListArgBuilder<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> :
     ArgBuilder<List<T>, A, ListArg<T, A, R>>() {
-    lateinit var argType: RunnerArg<T, A, R>
+    init {
+        completer = {
+            element.completions(it)
+        }
+    }
+
+    lateinit var element: RunnerArg<T, A, R>
 
     override fun checkValidity() {
-        if (!::argType.isInitialized) error("no type given for list argument")
+        if (!::element.isInitialized) error("no type given for list argument")
     }
 
     override fun build(): ListArg<T, A, R> {

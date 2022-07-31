@@ -1,10 +1,15 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.converters.ProcessorArg
+import com.rose.gateway.minecraft.commands.converters.StringArg
+import com.rose.gateway.minecraft.commands.converters.failedParseResult
 import com.rose.gateway.minecraft.commands.converters.list
+import com.rose.gateway.minecraft.commands.converters.processor
 import com.rose.gateway.minecraft.commands.converters.string
 import com.rose.gateway.minecraft.commands.converters.stringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
@@ -23,23 +28,29 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         }
     }
 
-    val subcommand: String? by string {
+    val subcommand by string {
         name = "subcommand"
         description = "The subcommand to run."
         completer = ::subcommandCompleter
         validator = ::subcommandValidator
         docGenerator = ::subcommandDocGenerator
     }
-    val remainingArgs: List<String>? by list {
-        argType = stringArg {
+    val remainingArgs by list {
+        element = stringArg {
             name = "Remaining Arg"
             description = "One of the args remaining."
         }
         name = "Remaining Args"
         description = "All of the args to be passed to subcommands."
-        completer = ::remainingArgsCompleter
-        validator = ::remainingArgsValidator
-        docGenerator = ::remainingArgsDocGenerator
+    }
+
+    @Suppress("unused")
+    val nextCommand by processor {
+        name = "Next Command"
+        description = "Handles status of next executor"
+        processor = ::nextCommandProcessor
+        completer = ::nextCommandCompleter
+        docGenerator = ::nextCommandDocGenerator
     }
 
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
@@ -49,13 +60,16 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         return definition.subcommandNames.searchOrGetAll(command)
     }
 
-    private fun subcommandValidator(result: ParseResult<String, SubcommandArguments>): Boolean {
+    private fun subcommandValidator(
+        result: ParseResult<String, SubcommandArguments>
+    ): Boolean {
         result.result ?: return false
 
         return validator.matches(result.result)
     }
 
-    private fun subcommandDocGenerator(args: SubcommandArguments): String {
+    @Suppress("UNUSED_PARAMETER")
+    private fun subcommandDocGenerator(args: SubcommandArguments, arg: StringArg<SubcommandArguments>): String {
         return args.subcommand
             ?: children.keys.joinToString(
                 separator = " | ",
@@ -64,45 +78,55 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
             )
     }
 
-    private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
+    private fun nextCommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
         val args = context.arguments
         val subcommandName = args.subcommand!!
         val subcommand = children[subcommandName]
-        val rawArguments = args.rawArguments
-        val remainderStartIndex = args.lastSuccessfulResult()?.context?.currentIndex ?: return listOf()
-        val remainingRawArgs = rawArguments.subList(remainderStartIndex, rawArguments.size).toTypedArray()
+        val remainingRawArgs = args.remainingArgs ?: return listOf()
 
         return if (remainingRawArgs.isEmpty()) listOf()
         else subcommand?.onTabComplete(
             sender = context.sender,
             command = context.command,
             alias = context.alias,
-            args = remainingRawArgs
+            args = remainingRawArgs.toTypedArray()
         ) ?: listOf()
     }
 
-    private fun remainingArgsValidator(parseResult: ParseResult<List<String>, SubcommandArguments>): Boolean {
-        val result = parseResult.result ?: return false
+    private fun nextCommandProcessor(
+        context: ParseContext<SubcommandArguments>
+    ): ParseResult<Unit, SubcommandArguments> {
+        val args = context.arguments
+        val remainingArgs = args.remainingArgs ?: return failedParseResult(context)
 
-        val subcommandName = parseResult.context.arguments.subcommand
+        val subcommandName = args.subcommand
         val subcommand = children[subcommandName]
 
-        return subcommand?.definition?.executors?.any {
-            it.arguments(result.toTypedArray()).valid()
+        val succeeded = subcommand?.definition?.executors?.any {
+            it.arguments(remainingArgs.toTypedArray()).valid()
         } ?: false
+
+        return ParseResult(
+            succeeded = succeeded,
+            result = Unit,
+            context = context
+        )
     }
 
-    private fun remainingArgsDocGenerator(args: SubcommandArguments): String {
+    @Suppress("UNUSED_PARAMETER")
+    private fun nextCommandDocGenerator(
+        args: SubcommandArguments,
+        arg: ProcessorArg<Unit, SubcommandArguments>
+    ): String {
+        val remainingRawArgs = args.remainingArgs ?: return "no additional args found for docs"
         val subcommandName = args.subcommand
         val subcommand = children[subcommandName]
 
         return if (subcommand == null) ""
         else {
             val executor = subcommand.definition.executors.firstOrNull()
-            val remainderStartIndex = args.lastSuccessfulResult()?.context?.currentIndex ?: return ""
-            val remainingRawArgs = rawArguments.subList(remainderStartIndex, rawArguments.size).toTypedArray()
 
-            executor?.arguments(remainingRawArgs)?.documentation() ?: ""
+            executor?.arguments(remainingRawArgs.toTypedArray())?.documentation() ?: "no executor found for docs"
         }
     }
 }

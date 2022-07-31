@@ -14,7 +14,7 @@ fun <A : RunnerArguments<A>> RunnerArguments<A>.string(body: StringArgBuilder<A>
 
 class StringArg<A : RunnerArguments<A>>(val builder: StringArgBuilder<A>) :
     RunnerArg<String, A, StringArg<A>>(builder) {
-    override fun typeName(): String = String::class.simpleName.toString()
+    override fun typeName(): String = "String"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
         val args = context.arguments

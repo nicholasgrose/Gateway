@@ -2,96 +2,109 @@ package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
+import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.shared.configurations.canBe
+import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.shared.configurations.secondaryColor
 import com.rose.gateway.shared.configurations.tertiaryColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigCommands : KoinComponent {
     private val config: PluginConfiguration by inject()
 
-    fun setConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
+    fun <T, A : ConfigArgs<T, A, R>, R : RunnerArg<T, A, R>> setConfig(context: CommandContext<A>): Boolean {
         val args = context.arguments
-        val configItem = args.configItem!!
+        val item = args.item
+        val value = args.value
 
-        setConfiguration(configItem, args.configItem)
+        if (item == null || value == null) return false
 
-        context.sender.sendMessage(
+        item.set(value)
+        sendConfirmation(context.sender, item, value)
+
+        return true
+    }
+
+    private fun <T> sendConfirmation(sender: CommandSender, item: Item<T>, value: T) {
+        sender.sendMessage(
             Component.join(
                 JoinConfiguration.separator(Component.text(" ")),
-                Component.text(configItem.path, config.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
                 Component.text("set to"),
-                Component.text(args.configValue.toString(), config.secondaryColor(), TextDecoration.ITALIC),
+                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
                 Component.text("successfully!")
             )
         )
-
-        return true
     }
 
-    private inline fun <T, reified U> setConfiguration(item: Item<T>, newValue: U) {
-        if (U::class canBe item.typeClass()) {
-            @Suppress("UNCHECKED_CAST")
-            item.set(newValue as T)
-        }
+    private fun <T> sendAddConfirmation(sender: CommandSender, item: Item<T>, value: T) {
+        sender.sendMessage(
+            Component.join(
+                JoinConfiguration.separator(Component.text(" ")),
+                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
+                Component.text("added to"),
+                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text("successfully!")
+            )
+        )
     }
 
-    fun addConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
-        val configItem = context.arguments.configItem ?: return true
-        val values = context.arguments.configValue as List<*>
+    private fun <T> sendRemoveConfirmation(sender: CommandSender, item: Item<T>, value: T) {
+        sender.sendMessage(
+            Component.join(
+                JoinConfiguration.separator(Component.text(" ")),
+                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
+                Component.text("removed from"),
+                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
+                Component.text("successfully!")
+            )
+        )
+    }
+
+    fun <T : Any, A : ConfigListArgs<T, A, R>, R : StringArg<A>> addConfiguration(context: CommandContext<A>): Boolean {
+        val configItem = context.arguments.item
+        val values = context.arguments.value
+
+        if (configItem == null || values == null) return true
 
         addToConfiguration(configItem, values)
+        sendAddConfirmation(context.sender, configItem, values)
 
         return true
     }
 
-    private fun <T> addToConfiguration(item: Item<T>, newValues: List<*>) {
+    private fun <T> addToConfiguration(item: Item<List<T>>, additionalValues: List<T>) {
         val currentValues = item.get()
+        val newValues = currentValues + additionalValues
 
-        if (currentValues !is List<*>) {
-            return
-        } else {
-            item.set(currentValuesWithNewValuesAppended(currentValues, newValues))
-        }
+        item.set(newValues)
     }
 
-    private fun <T, N> currentValuesWithNewValuesAppended(currentValues: List<N>, newValues: List<*>): T {
-        @Suppress("UNCHECKED_CAST")
-        return (newValues as List<N>).toCollection(currentValues.toMutableList()) as T
-    }
+    fun <T : Any, A : ConfigListArgs<T, A, R>, R : StringArg<A>> removeConfiguration(
+        context: CommandContext<A>
+    ): Boolean {
+        val configItem = context.arguments.item
+        val values = context.arguments.value
 
-    fun removeConfiguration(context: CommandContext<ConfigValueArgs>): Boolean {
-        val configItem = context.arguments.configItem ?: return true
-        val values = context.arguments.configValue as List<*>
+        if (configItem == null || values == null) return true
 
         removeFromConfiguration(configItem, values)
+        sendRemoveConfirmation(context.sender, configItem, values)
 
         return true
     }
 
-    private fun <T> removeFromConfiguration(item: Item<T>, valuesToBeRemoved: List<*>) {
+    private fun <T> removeFromConfiguration(item: Item<List<T>>, valuesToBeRemoved: List<T>) {
         val currentValues = item.get()
+        val newValues = currentValues - valuesToBeRemoved.toSet()
 
-        if (currentValues !is List<*>) {
-            return
-        } else {
-            item.set(currentValuesWithNewValuesRemoved(currentValues, valuesToBeRemoved))
-        }
-    }
-
-    private fun <T, N> currentValuesWithNewValuesRemoved(currentValues: List<N>, valuesToBeRemoved: List<*>): T {
-        val mutableCurrentValues = currentValues.toMutableList()
-
-        @Suppress("UNCHECKED_CAST")
-        mutableCurrentValues.removeAll((valuesToBeRemoved as List<N>).toSet())
-
-        @Suppress("UNCHECKED_CAST")
-        return mutableCurrentValues as T
+        item.set(newValues)
     }
 }

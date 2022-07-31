@@ -13,7 +13,7 @@ fun KType.asClass(): KClass<*> {
     return if (classifier is KClass<*>) {
         classifier
     } else {
-        Logger.info("Attempted to convert non-class type to class.")
+        Logger.warning("Attempted to convert non-class type to class.")
         Nothing::class
     }
 }

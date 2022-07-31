@@ -17,11 +17,9 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
         val resultMap = mutableMapOf<RunnerArg<*, A, *>, ParseResult<*, A>>()
-        var intermediateParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
+        finalParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
 
         for (parser in parsers) {
-            finalParseResult = intermediateParseResult
-
             val result = parser.parseValidValue(currentContext)
 
             currentContext = result.context
@@ -29,7 +27,7 @@ open class RunnerArguments<A : RunnerArguments<A>> {
             if (result.succeeded) {
                 resultMap[parser] = result
 
-                intermediateParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
+                finalParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
             } else {
                 return ParseResult(
                     succeeded = false,
@@ -68,6 +66,8 @@ open class RunnerArguments<A : RunnerArguments<A>> {
 
     private fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
 
+    fun argsParsed(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
+
     open fun documentation(): String {
         return parsers.joinToString(" ") { parser ->
             @Suppress("UNCHECKED_CAST")
@@ -75,11 +75,13 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         }
     }
 
-    open fun completions(context: TabCompletionContext<A>): List<String>? {
+    open fun completions(context: TabCompletionContext<A>): List<String> {
+        if (argsParsed() + 1 < rawArguments.size) return listOf()
+
         val nextArg = parsers.firstOrNull {
             !(finalParseResult.result?.containsKey(it) ?: false)
-        }
+        } ?: parsers.lastOrNull()
 
-        return nextArg?.completions(context)
+        return nextArg?.completions(context) ?: listOf()
     }
 }

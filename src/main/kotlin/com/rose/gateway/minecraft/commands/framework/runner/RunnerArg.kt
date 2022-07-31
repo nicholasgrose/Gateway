@@ -4,10 +4,12 @@ import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import kotlin.reflect.KProperty
 
 abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(private val builder: ArgBuilder<T, A, R>) {
-    open fun name(): String = builder.name
+    fun name(): String = builder.name
     abstract fun typeName(): String
-    open fun completions(context: TabCompletionContext<A>): List<String>? = builder.completer(context)
-    open fun generateDocs(args: A): String = builder.docGenerator(args)
+    fun completions(context: TabCompletionContext<A>): List<String> = builder.completer(context)
+
+    @Suppress("UNCHECKED_CAST")
+    fun generateDocs(args: A): String = builder.docGenerator(args, this as R)
     abstract fun parseValue(context: ParseContext<A>): ParseResult<T, A>
 
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {

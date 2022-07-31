@@ -43,7 +43,7 @@ data class CommandExecutor<A : RunnerArguments<A>>(
         alias: String,
         commandDefinition: CommandDefinition,
         rawArguments: Array<String>
-    ): List<String>? {
+    ): List<String> {
         val args = arguments(rawArguments)
 
         return args.completions(
@@ -56,6 +56,4 @@ data class CommandExecutor<A : RunnerArguments<A>>(
             )
         )
     }
-
-    fun generateUsageDocumentation(): String = arguments().documentation()
 }

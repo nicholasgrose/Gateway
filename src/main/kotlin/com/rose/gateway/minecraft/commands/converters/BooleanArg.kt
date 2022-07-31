@@ -6,9 +6,6 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
-fun <A : RunnerArguments<A>> booleanArg(body: BooleanArgBuilder<A>.() -> Unit): BooleanArg<A> =
-    genericArgBuilder(::BooleanArgBuilder, body)
-
 fun <A : RunnerArguments<A>> RunnerArguments<A>.boolean(body: BooleanArgBuilder<A>.() -> Unit): BooleanArg<A> =
     genericParser(::BooleanArgBuilder, body)
 
@@ -34,6 +31,10 @@ class BooleanArg<A : RunnerArguments<A>>(builder: BooleanArgBuilder<A>) :
 }
 
 class BooleanArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Boolean, A, BooleanArg<A>>() {
+    init {
+        this.completer = { listOf("true", "false") }
+    }
+
     override fun checkValidity() = Unit
 
     override fun build(): BooleanArg<A> {

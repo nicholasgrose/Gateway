@@ -2,14 +2,14 @@ package com.rose.gateway.configuration
 
 import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.schema.Config
-import com.rose.gateway.shared.configurations.asClass
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.reflect.KType
 
 class PluginConfiguration : KoinComponent {
     private val bot: DiscordBot by inject()
-    val stringMap: ConfigurationStringMap by inject()
+    private val stringMap: ConfigurationStringMap by inject()
 
     private val configurationLoader = GatewayConfigLoader()
     var config: Config = runBlocking {
@@ -34,26 +34,18 @@ class PluginConfiguration : KoinComponent {
 
     fun notLoaded(): Boolean = config == DEFAULT_CONFIG
 
+    fun allItems(): List<Item<*>> = stringMap.itemMap.values.toList()
+
     operator fun get(item: String): Item<*>? {
         return stringMap.fromString(item)
     }
 
-    inline operator fun <reified T> get(item: String): T? {
-        val matchingItem = stringMap.fromString(item) ?: return null
+    operator fun <T : Any> get(type: KType, item: String): Item<T>? {
+        val match = get(item)
 
-        return if (matchingItem.type().asClass() == T::class) {
-            matchingItem.get() as T
-        } else {
-            null
-        }
-    }
-
-    inline operator fun <reified T : Any> set(item: String, newValue: T) {
-        val matchingItem = stringMap.fromString(item) ?: return
-
-        if (matchingItem.type().asClass() == T::class) {
+        return if (match != null && match.type() == type) {
             @Suppress("UNCHECKED_CAST")
-            (matchingItem as Item<T>).set(newValue)
-        }
+            match as Item<T>
+        } else null
     }
 }

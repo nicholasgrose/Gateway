@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 class ConfigurationStringMap : KoinComponent {
-    private val itemMap = mutableMapOf<String, Item<*>>()
+    val itemMap = mutableMapOf<String, Item<*>>()
     private val specificationTrie = Trie()
 
     init {

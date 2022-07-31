@@ -6,15 +6,12 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
-fun <A : RunnerArguments<A>> intArg(body: IntArgBuilder<A>.() -> Unit): IntArg<A> =
-    genericArgBuilder(::IntArgBuilder, body)
-
 fun <A : RunnerArguments<A>> RunnerArguments<A>.int(body: IntArgBuilder<A>.() -> Unit): IntArg<A> =
     genericParser(::IntArgBuilder, body)
 
 class IntArg<A : RunnerArguments<A>>(builder: IntArgBuilder<A>) :
     RunnerArg<Int, A, IntArg<A>>(builder) {
-    override fun typeName(): String = Int::class.simpleName.toString()
+    override fun typeName(): String = "Int"
 
     private val internalParser = stringArg<A> {
         name = builder.name

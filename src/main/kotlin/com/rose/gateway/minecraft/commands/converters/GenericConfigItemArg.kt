@@ -9,12 +9,15 @@ import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.reflect.KType
 
-fun <A : RunnerArguments<A>> RunnerArguments<A>.configItem(body: ConfigItemArgBuilder<A>.() -> Unit): ConfigItemArg<A> =
-    genericParser(::ConfigItemArgBuilder, body)
+fun <T : Any, A : RunnerArguments<A>> RunnerArguments<A>.typedConfigItem(
+    body: GenericConfigItemArgBuilder<T, A>.() -> Unit
+): GenericConfigItemArg<T, A> =
+    genericParser(::GenericConfigItemArgBuilder, body)
 
-class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
-    RunnerArg<Item<*>, A, ConfigItemArg<A>>(builder), KoinComponent {
+class GenericConfigItemArg<T : Any, A : RunnerArguments<A>>(val builder: GenericConfigItemArgBuilder<T, A>) :
+    RunnerArg<Item<T>, A, GenericConfigItemArg<T, A>>(builder), KoinComponent {
     val config: PluginConfiguration by inject()
 
     override fun typeName(): String = String::class.simpleName.toString()
@@ -24,12 +27,12 @@ class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
         description = "Parses the string for the item."
     }
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Item<*>, A> {
+    override fun parseValue(context: ParseContext<A>): ParseResult<Item<T>, A> {
         val stringResult = internalStringParser.parseValue(context)
 
         return if (stringResult.succeeded && stringResult.result != null) {
             val nextString = stringResult.result
-            val matchedConfig = config[nextString]
+            val matchedConfig = config.get<T>(builder.type, nextString)
 
             ParseResult(
                 succeeded = matchedConfig != null,
@@ -40,10 +43,15 @@ class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
     }
 }
 
-class ConfigItemArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Item<*>, A, ConfigItemArg<A>>() {
-    override fun checkValidity() = Unit
+class GenericConfigItemArgBuilder<T : Any, A : RunnerArguments<A>> :
+    ArgBuilder<Item<T>, A, GenericConfigItemArg<T, A>>() {
+    lateinit var type: KType
 
-    override fun build(): ConfigItemArg<A> {
-        return ConfigItemArg(this)
+    override fun checkValidity() {
+        if (!::type.isInitialized) error("No type give for item arg.")
+    }
+
+    override fun build(): GenericConfigItemArg<T, A> {
+        return GenericConfigItemArg(this)
     }
 }

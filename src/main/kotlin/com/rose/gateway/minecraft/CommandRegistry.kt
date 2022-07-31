@@ -1,9 +1,12 @@
 package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.minecraft.commands.arguments.ConfigBooleanArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigValueArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
+import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
+import com.rose.gateway.minecraft.commands.arguments.removeStringListConfigArgs
 import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
@@ -55,19 +58,23 @@ object CommandRegistry : KoinComponent {
 
             subcommand("config") {
                 subcommand("set") {
-                    runner(::ConfigValueArgs) { context ->
-                        ConfigCommands.setConfiguration(context)
+                    runner(::ConfigBooleanArgs) { context ->
+                        ConfigCommands.setConfig(context)
+                    }
+
+                    runner(::ConfigStringArgs) { context ->
+                        ConfigCommands.setConfig(context)
                     }
                 }
 
                 subcommand("add") {
-                    runner(::ConfigValueArgs) { context ->
+                    runner(::addStringListConfigArgs) { context ->
                         ConfigCommands.addConfiguration(context)
                     }
                 }
 
                 subcommand("remove") {
-                    runner(::ConfigValueArgs) { context ->
+                    runner(::removeStringListConfigArgs) { context ->
                         ConfigCommands.removeConfiguration(context)
                     }
                 }
