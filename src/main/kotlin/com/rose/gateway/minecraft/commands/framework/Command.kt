@@ -14,22 +14,19 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
         label: String,
         args: Array<String>
     ): Boolean {
-        var succeeded = false
+        val mostSuccessfulExecutors = determineMostSuccessfulExecutors(args)
+        val chosenExecutor = mostSuccessfulExecutors.firstOrNull()
 
-        for (executor in definition.executors) {
-            val result = executor.tryExecute(
+        val succeeded = if (chosenExecutor == null) {
+            false
+        } else {
+            chosenExecutor.tryExecute(
                 definition = definition,
                 sender = sender,
                 command = command,
                 label = label,
                 rawArguments = args
-            )
-
-            if (result != null) {
-                succeeded = result
-
-                if (!succeeded) break
-            }
+            ) ?: false
         }
 
         if (!succeeded) sender.sendMessage(
