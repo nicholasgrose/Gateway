@@ -15,7 +15,6 @@ import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-@Suppress("unused")
 class GatewayPlugin : JavaPlugin(), KoinComponent {
     init {
         startKoin {

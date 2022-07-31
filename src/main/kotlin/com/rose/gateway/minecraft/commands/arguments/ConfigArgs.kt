@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.arguments
 
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.converters.BooleanArg
 import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.converters.boolean
@@ -8,8 +8,6 @@ import com.rose.gateway.minecraft.commands.converters.string
 import com.rose.gateway.minecraft.commands.converters.typedConfigItem
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -20,23 +18,21 @@ open class ConfigArgs<
     >(
     configType: KType,
     valueArg: A.() -> RunnerArg<T, A, R>
-) : KoinComponent, RunnerArguments<A>() {
-    private val config: PluginConfiguration by inject()
-
+) : RunnerArguments<A>() {
     val item by typedConfigItem<T, A> {
         name = "CONFIG_ITEM"
         description = "The item to modify."
         type = configType
         completer = {
-            configItemsWithType(config, configType)
+            configItemsWithType(configType)
         }
     }
 
     @Suppress("UNCHECKED_CAST", "LeakingThis")
     val value by (this as A).valueArg()
 
-    private fun configItemsWithType(config: PluginConfiguration, type: KType): List<String> {
-        val items = config.allItems()
+    private fun configItemsWithType(type: KType): List<String> {
+        val items = ConfigCompleter.allConfigItems()
         val matchedItems = items.filter {
             val itemType = it.type()
 

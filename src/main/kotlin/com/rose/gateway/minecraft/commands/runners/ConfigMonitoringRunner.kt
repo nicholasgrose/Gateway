@@ -4,7 +4,6 @@ import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
@@ -26,14 +25,6 @@ object ConfigMonitoringRunner : KoinComponent {
     private val config: PluginConfiguration by inject()
     private val configStringMap: ConfigurationStringMap by inject()
     private val bot: DiscordBot by inject()
-
-    fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
-        val configItem = context.arguments.configItem ?: return false
-
-        context.sender.sendMessage(createIndividualSpecHelpMessage(configItem.path, configItem))
-
-        return true
-    }
 
     fun sendConfigurationSearchHelp(context: CommandContext<ConfigNameArgs>): Boolean {
         val sender = context.sender

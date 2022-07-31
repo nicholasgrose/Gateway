@@ -6,7 +6,6 @@ import com.rose.gateway.shared.configurations.canBe
 import com.rose.gateway.shared.configurations.filterConfigItems
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
@@ -22,12 +21,8 @@ data class Item<T>(
         return property.returnType
     }
 
-    fun typeClass(): KClass<*> {
-        return type().asClass()
-    }
-
     fun typeName(): String {
-        return typeClass().simpleName.toString()
+        return type().toString()
     }
 
     fun get(): T {

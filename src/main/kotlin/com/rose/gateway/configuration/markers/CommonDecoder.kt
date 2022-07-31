@@ -25,6 +25,7 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
                 val kClass = type.classifier as KClass<*>
                 (!kClass.isData && !kClass.isSealed && !kClass.isInline() && kClass canBe ConfigObject::class)
             }
+
             false -> false
         }
     }

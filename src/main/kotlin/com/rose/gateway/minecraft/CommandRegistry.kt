@@ -2,7 +2,6 @@ package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.arguments.ConfigBooleanArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
 import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
@@ -80,10 +79,6 @@ object CommandRegistry : KoinComponent {
                 }
 
                 subcommand("help") {
-                    runner(::ConfigItemArgs) { context ->
-                        ConfigMonitoringRunner.sendConfigurationHelp(context)
-                    }
-
                     runner(::ConfigNameArgs) { context ->
                         ConfigMonitoringRunner.sendConfigurationSearchHelp(context)
                     }

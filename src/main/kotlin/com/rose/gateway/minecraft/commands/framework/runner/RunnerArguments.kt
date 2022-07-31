@@ -48,7 +48,7 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         return rawArguments.subList(finalParseResult.context.currentIndex, rawArguments.size).toTypedArray()
     }
 
-    fun lastSuccessfulResult(): ParseResult<*, A>? {
+    private fun lastSuccessfulResult(): ParseResult<*, A>? {
         val lastSuccessfulArg = parsers.lastOrNull {
             finalParseResult.result?.containsKey(it) ?: false
         } ?: return null

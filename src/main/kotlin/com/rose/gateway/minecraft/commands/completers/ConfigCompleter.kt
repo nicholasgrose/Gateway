@@ -1,20 +1,16 @@
 package com.rose.gateway.minecraft.commands.completers
 
 import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.configuration.Item
+import com.rose.gateway.configuration.PluginConfiguration
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigCompleter : KoinComponent {
+    private val config: PluginConfiguration by inject()
     private val configStringMap: ConfigurationStringMap by inject()
 
-    @Suppress("UNUSED_PARAMETER")
-    fun configNameArgsNameCompletion(context: TabCompletionContext<ConfigNameArgs>): List<String> =
-        configStringMap.allStrings()
+    fun allConfigStrings(): List<String> = configStringMap.allStrings()
 
-    @Suppress("UNUSED_PARAMETER")
-    fun configItemArgsNameCompletion(context: TabCompletionContext<ConfigItemArgs>): List<String> =
-        configStringMap.allStrings()
+    fun allConfigItems(): List<Item<*>> = config.allItems()
 }
