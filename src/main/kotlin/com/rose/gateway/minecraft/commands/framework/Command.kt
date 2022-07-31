@@ -32,7 +32,8 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
         if (!succeeded) sender.sendMessage(
             "Usage:\n" +
                 definition.executors.joinToString("\n") {
-                    definition.documentation + " " + it.arguments(args).documentation()
+                    it.arguments(args).usages()
+                        .joinToString("\n") { usage -> "${definition.baseCommand} $usage" }
                 }
         )
 

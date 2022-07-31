@@ -23,7 +23,7 @@ class CommandBuilder(private val name: String) {
             return Command(
                 CommandDefinition(
                     name = builder.name,
-                    documentation = builder.generateBuilderDocumentation(),
+                    baseCommand = builder.generateBuilderDocumentation(),
                     executors = builder.executors,
                     subcommands = subcommandMap,
                     subcommandNames = subcommandNames

@@ -9,7 +9,7 @@ abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(priv
     fun completions(context: TabCompletionContext<A>): List<String> = builder.completer(context)
 
     @Suppress("UNCHECKED_CAST")
-    fun generateDocs(args: A): String = builder.docGenerator(args, this as R)
+    fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as R)
     abstract fun parseValue(context: ParseContext<A>): ParseResult<T, A>
 
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {

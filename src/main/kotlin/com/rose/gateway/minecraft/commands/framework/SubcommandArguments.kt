@@ -1,5 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.converters.ListArg
 import com.rose.gateway.minecraft.commands.converters.ProcessorArg
 import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.converters.failedParseResult
@@ -33,7 +34,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         description = "The subcommand to run."
         completer = ::subcommandCompleter
         validator = ::subcommandValidator
-        docGenerator = ::subcommandDocGenerator
+        usageGenerator = ::subcommandUsageGenerator
     }
     val remainingArgs by list {
         element = stringArg {
@@ -42,6 +43,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         }
         name = "Remaining Args"
         description = "All of the args to be passed to subcommands."
+        usageGenerator = ::remainingArgsUsageGenerator
     }
 
     @Suppress("unused")
@@ -50,7 +52,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         description = "Handles status of next executor"
         processor = ::nextCommandProcessor
         completer = ::nextCommandCompleter
-        docGenerator = ::nextCommandDocGenerator
+        usageGenerator = ::nextCommandUsageGenerator
     }
 
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
@@ -69,13 +71,18 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun subcommandDocGenerator(args: SubcommandArguments, arg: StringArg<SubcommandArguments>): String {
-        return args.subcommand
-            ?: children.keys.joinToString(
-                separator = " | ",
-                prefix = "[",
-                postfix = "]"
-            )
+    private fun subcommandUsageGenerator(args: SubcommandArguments, arg: StringArg<SubcommandArguments>): List<String> {
+        val subcommand = args.subcommand
+
+        return if (subcommand == null) children.keys.toList() else listOf(subcommand)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun remainingArgsUsageGenerator(
+        args: SubcommandArguments,
+        arg: ListArg<String, SubcommandArguments, StringArg<SubcommandArguments>>
+    ): List<String> {
+        return listOf()
     }
 
     private fun nextCommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
@@ -114,19 +121,20 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun nextCommandDocGenerator(
+    private fun nextCommandUsageGenerator(
         args: SubcommandArguments,
         arg: ProcessorArg<Unit, SubcommandArguments>
-    ): String {
-        val remainingRawArgs = args.remainingArgs ?: return "no additional args found for docs"
+    ): List<String> {
+        val remainingRawArgs = args.remainingArgs ?: return listOf()
         val subcommandName = args.subcommand
         val subcommand = children[subcommandName]
 
-        return if (subcommand == null) ""
+        return if (subcommand == null) listOf()
         else {
             val executor = subcommand.definition.executors.firstOrNull()
+            val subcommandDocs = executor?.arguments(remainingRawArgs.toTypedArray())?.usages()
 
-            executor?.arguments(remainingRawArgs.toTypedArray())?.documentation() ?: "no executor found for docs"
+            subcommandDocs ?: listOf()
         }
     }
 }

@@ -7,7 +7,7 @@ abstract class ArgBuilder<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> {
     lateinit var description: String
     var completer: (TabCompletionContext<A>) -> List<String> = { listOf() }
     var validator: (ParseResult<T, A>) -> Boolean = { true }
-    var docGenerator: (A, R) -> String = { _, arg -> "[$name=${arg.typeName()}]" }
+    var usageGenerator: (A, R) -> List<String> = { _, arg -> listOf("[$name=${arg.typeName()}]") }
 
     abstract fun checkValidity()
     abstract fun build(): R

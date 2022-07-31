@@ -5,7 +5,7 @@ import com.rose.gateway.shared.collections.trie.Trie
 
 data class CommandDefinition(
     val name: String,
-    val documentation: String,
+    val baseCommand: String,
     val executors: List<CommandExecutor<*>>,
     val subcommands: Map<String, Command>,
     val subcommandNames: Trie

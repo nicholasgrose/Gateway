@@ -68,11 +68,26 @@ open class RunnerArguments<A : RunnerArguments<A>> {
 
     fun argsParsed(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
 
-    open fun documentation(): String {
-        return parsers.joinToString(" ") { parser ->
+    fun usages(): List<String> {
+        val parserUsages = parsers.map {
             @Suppress("UNCHECKED_CAST")
-            parser.generateDocs(this as A)
+            it.generateUsages(this as A)
         }
+        var allUsages = mutableListOf<String>()
+
+        for (usageList in parserUsages) {
+            if (usageList.isEmpty()) continue
+
+            allUsages = if (allUsages.isEmpty()) {
+                usageList.toMutableList()
+            } else {
+                usageList.flatMap { usage ->
+                    allUsages.map { existingUsage -> "$existingUsage $usage" }
+                }.toMutableList()
+            }
+        }
+
+        return allUsages
     }
 
     open fun completions(context: TabCompletionContext<A>): List<String> {
