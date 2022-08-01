@@ -10,7 +10,6 @@ import com.rose.gateway.bot.message.DiscordMessageSender
 import com.rose.gateway.configuration.PluginConfiguration
 import com.rose.gateway.minecraft.chat.SendMessage
 import com.rose.gateway.shared.configurations.chatExtensionEnabled
-import dev.kord.core.event.message.MessageCreateEvent
 import org.koin.core.component.inject
 
 class ChatExtension : Extension() {
@@ -33,7 +32,7 @@ class ChatExtension : Extension() {
     override val name = extensionName()
 
     override suspend fun setup() {
-        event<MessageCreateEvent> {
+        event {
             check(MessageCheck.notSelf, MessageCheck.isConfiguredBotChannel)
 
             action {

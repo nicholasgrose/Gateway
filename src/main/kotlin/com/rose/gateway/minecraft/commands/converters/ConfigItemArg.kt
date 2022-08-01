@@ -10,9 +10,6 @@ import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-fun <A : RunnerArguments<A>> RunnerArguments<A>.configItem(body: ConfigItemArgBuilder<A>.() -> Unit): ConfigItemArg<A> =
-    genericParser(::ConfigItemArgBuilder, body)
-
 class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
     RunnerArg<Item<*>, A, ConfigItemArg<A>>(builder), KoinComponent {
     val config: PluginConfiguration by inject()
