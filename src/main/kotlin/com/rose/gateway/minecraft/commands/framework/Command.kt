@@ -67,7 +67,7 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
      * @param rawArgs The incoming arguments to be parsed.
      * @return List of executors in order of definition.
      */
-    private fun determineMostSuccessfulExecutors(rawArgs: Array<String>): MutableList<CommandExecutor<*>> {
+    private fun determineMostSuccessfulExecutors(rawArgs: Array<String>): List<CommandExecutor<*>> {
         val mostSuccessfulExecutors = mutableListOf<CommandExecutor<*>>()
         var successThreshold = 0
         var executorsMustBeSuccessful = false

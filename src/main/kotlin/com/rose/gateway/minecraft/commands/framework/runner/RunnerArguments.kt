@@ -73,24 +73,24 @@ open class RunnerArguments<A : RunnerArguments<A>> {
             @Suppress("UNCHECKED_CAST")
             it.generateUsages(this as A)
         }
-        var allUsages = mutableListOf<String>()
+        var allUsages = listOf<String>()
 
         for (usageList in parserUsages) {
             if (usageList.isEmpty()) continue
 
             allUsages = if (allUsages.isEmpty()) {
-                usageList.toMutableList()
+                usageList.toList()
             } else {
                 usageList.flatMap { usage ->
                     allUsages.map { existingUsage -> "$existingUsage $usage" }
-                }.toMutableList()
+                }.toList()
             }
         }
 
         return allUsages
     }
 
-    open fun completions(context: TabCompletionContext<A>): List<String> {
+    fun completions(context: TabCompletionContext<A>): List<String> {
         if (argsParsed() + 1 < rawArguments.size) return listOf()
 
         val nextArg = parsers.firstOrNull {
