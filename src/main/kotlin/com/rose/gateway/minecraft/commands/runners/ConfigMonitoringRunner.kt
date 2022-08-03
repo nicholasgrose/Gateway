@@ -4,7 +4,7 @@ import com.rose.gateway.bot.DiscordBot
 import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.Item
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.commands.arguments.ConfigNameArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.shared.configurations.primaryColor
@@ -25,23 +25,6 @@ object ConfigMonitoringRunner : KoinComponent {
     private val config: PluginConfiguration by inject()
     private val configStringMap: ConfigurationStringMap by inject()
     private val bot: DiscordBot by inject()
-
-    fun sendConfigurationSearchHelp(context: CommandContext<ConfigNameArgs>): Boolean {
-        val sender = context.sender
-        val configSearchString = context.arguments.configPath ?: ""
-        val matchingConfigurations = configStringMap.matchingOrAllStrings(configSearchString)
-
-        if (matchingConfigurations.size == 1) {
-            val path = matchingConfigurations.first()
-            val matchingSpec = configStringMap.fromString(path)!!
-
-            sender.sendMessage(createIndividualSpecHelpMessage(path, matchingSpec))
-        } else {
-            sendConfigListHelp(sender, matchingConfigurations)
-        }
-
-        return true
-    }
 
     fun sendAllConfigurationHelp(sender: CommandSender): Boolean {
         sendConfigListHelp(sender, configStringMap.allStrings())
@@ -77,14 +60,14 @@ object ConfigMonitoringRunner : KoinComponent {
         )
     }
 
-    private fun createIndividualSpecHelpMessage(path: String, item: Item<*>): Component {
+    private fun createIndividualSpecHelpMessage(item: Item<*>): Component {
         return Component.join(
             JoinConfiguration.separator(Component.newline()),
             Component.text("Configuration Help:", config.primaryColor()),
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Name: ", config.primaryColor()),
-                Component.text(path, config.tertiaryColor(), TextDecoration.ITALIC)
+                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC)
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
@@ -150,6 +133,14 @@ object ConfigMonitoringRunner : KoinComponent {
                 )
             )
         )
+
+        return true
+    }
+
+    fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
+        val item = context.arguments.item ?: return false
+
+        context.sender.sendMessage(createIndividualSpecHelpMessage(item))
 
         return true
     }

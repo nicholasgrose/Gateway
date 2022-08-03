@@ -3,10 +3,19 @@ package com.rose.gateway.minecraft.commands.framework.runner
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import kotlin.reflect.KProperty
 
-abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(private val builder: ArgBuilder<T, A, R>) {
+abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(
+    private val builder: ArgBuilder<T, A, R>,
+    private val completesAfterSatisfied: Boolean = false
+) {
     fun name(): String = builder.name
     abstract fun typeName(): String
-    fun completions(context: TabCompletionContext<A>): List<String> = builder.completer(context)
+    fun completions(context: TabCompletionContext<A>): List<String> {
+        return when {
+            completesAfterSatisfied -> builder.completer(context)
+            context.arguments.wasSuccessful(this) -> listOf()
+            else -> builder.completer(context)
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as R)

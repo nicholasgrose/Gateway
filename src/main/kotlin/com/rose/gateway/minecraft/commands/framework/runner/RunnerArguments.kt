@@ -44,10 +44,6 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         )
     }
 
-    fun remainingArguments(): Array<String> {
-        return rawArguments.subList(finalParseResult.context.currentIndex, rawArguments.size).toTypedArray()
-    }
-
     private fun lastSuccessfulResult(): ParseResult<*, A>? {
         val lastSuccessfulArg = parsers.lastOrNull {
             finalParseResult.result?.containsKey(it) ?: false
@@ -64,7 +60,13 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         return parsers.all { finalParseResult.result?.get(it)?.succeeded ?: false }
     }
 
-    private fun hasUnusedArgs(): Boolean = rawArguments.size > finalParseResult.context.currentIndex
+    private fun hasUnusedArgs(): Boolean = remainingArgs() > 0
+
+    private fun remainingArgs(): Int {
+        val lastIndex = lastSuccessfulResult()?.context?.currentIndex ?: 0
+
+        return rawArguments.size - lastIndex
+    }
 
     fun argsParsed(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
 
@@ -91,12 +93,21 @@ open class RunnerArguments<A : RunnerArguments<A>> {
     }
 
     fun completions(context: TabCompletionContext<A>): List<String> {
-        if (argsParsed() + 1 < rawArguments.size) return listOf()
+        val nextArg = if (hasUnusedArgs()) {
+            parsers.firstOrNull {
+                !(wasSuccessful(it))
+            } ?: parsers.lastOrNull()
+        } else {
+            parsers.lastOrNull {
+                wasSuccessful(it)
+            } ?: parsers.firstOrNull()
+        }
 
-        val nextArg = parsers.firstOrNull {
-            !(finalParseResult.result?.containsKey(it) ?: false)
-        } ?: parsers.lastOrNull()
-
-        return nextArg?.completions(context) ?: listOf()
+        return when {
+            remainingArgs() > 1 -> listOf()
+            else -> nextArg?.completions(context) ?: listOf()
+        }
     }
+
+    fun wasSuccessful(arg: RunnerArg<*, A, *>): Boolean = finalParseResult.result?.containsKey(arg) ?: false
 }

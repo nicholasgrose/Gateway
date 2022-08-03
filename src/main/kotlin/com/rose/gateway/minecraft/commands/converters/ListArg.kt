@@ -12,7 +12,10 @@ fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> RunnerArguments<A>
     genericParser(::ListArgBuilder, body)
 
 class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(builder: ListArgBuilder<T, A, R>) :
-    RunnerArg<List<T>, A, ListArg<T, A, R>>(builder) {
+    RunnerArg<List<T>, A, ListArg<T, A, R>>(
+        builder,
+        completesAfterSatisfied = true
+    ) {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
@@ -28,7 +31,7 @@ class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(builder: 
         }
 
         return ParseResult(
-            succeeded = true,
+            succeeded = results.all { it.succeeded },
             result = results.map { it.result!! },
             context = results.lastOrNull()?.context ?: context
         )

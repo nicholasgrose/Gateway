@@ -12,7 +12,10 @@ fun <T, A : RunnerArguments<A>> RunnerArguments<A>.processor(
     genericParser(::ProcessorArgBuilder, body)
 
 class ProcessorArg<T, A : RunnerArguments<A>>(val builder: ProcessorArgBuilder<T, A>) :
-    RunnerArg<T, A, ProcessorArg<T, A>>(builder) {
+    RunnerArg<T, A, ProcessorArg<T, A>>(
+        builder,
+        completesAfterSatisfied = builder.completeAfterSatisfied
+    ) {
     override fun typeName(): String = "CustomProcessor"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<T, A> {
@@ -22,6 +25,7 @@ class ProcessorArg<T, A : RunnerArguments<A>>(val builder: ProcessorArgBuilder<T
 
 class ProcessorArgBuilder<T, A : RunnerArguments<A>> : ArgBuilder<T, A, ProcessorArg<T, A>>() {
     lateinit var processor: (ParseContext<A>) -> ParseResult<T, A>
+    var completeAfterSatisfied = false
 
     override fun checkValidity() {
         if (!::processor.isInitialized) error("no processor given to processor argument")

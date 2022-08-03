@@ -5,6 +5,7 @@ import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.converters.list
 import com.rose.gateway.minecraft.commands.converters.stringArg
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -21,7 +22,12 @@ open class ConfigListArgs<
     valueArg
 )
 
-class StringListConfigArgs(stringCompleter: (TabCompletionContext<StringListConfigArgs>) -> List<String>) :
+class StringListConfigArgs(
+    stringCompleter: (
+        TabCompletionContext<StringListConfigArgs>
+    ) -> List<String>,
+    stringValidator: (ParseResult<String, StringListConfigArgs>) -> Boolean
+) :
     ConfigListArgs<String, StringListConfigArgs, StringArg<StringListConfigArgs>>(
         typeOf<List<String>>(),
         {
@@ -32,17 +38,40 @@ class StringListConfigArgs(stringCompleter: (TabCompletionContext<StringListConf
                     name = "VALUE"
                     description = "String to add."
                     completer = stringCompleter
+                    validator = stringValidator
+                }
+                validator = {
+                    when {
+                        it.result == null -> false
+                        it.result.isEmpty() -> false
+                        else -> true
+                    }
                 }
             }
         }
     )
 
-fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs { listOf() }
-fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs {
-    val currentValues = it.arguments.item?.get() ?: listOf()
-    val itemsSlatedForRemoval = it.arguments.value
+fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
+    { listOf() },
+    {
+        val item = it.context.arguments.item
 
-    if (itemsSlatedForRemoval == null) {
-        currentValues
-    } else currentValues - itemsSlatedForRemoval.toSet()
-}
+        item?.get()?.contains(it.result)?.not() ?: false
+    }
+)
+
+fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
+    {
+        val currentValues = it.arguments.item?.get() ?: listOf()
+        val itemsSlatedForRemoval = it.arguments.value
+
+        if (itemsSlatedForRemoval == null) {
+            currentValues
+        } else currentValues - itemsSlatedForRemoval.toSet()
+    },
+    {
+        val item = it.context.arguments.item
+
+        item?.get()?.contains(it.result) ?: false
+    }
+)
