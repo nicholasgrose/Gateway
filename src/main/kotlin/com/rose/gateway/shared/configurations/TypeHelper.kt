@@ -1,24 +1,18 @@
 package com.rose.gateway.shared.configurations
 
-import com.rose.gateway.Logger
 import com.rose.gateway.configuration.markers.ConfigItem
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
-fun KType.asClass(): KClass<*> {
+fun KType.asClass(): KClass<*>? {
     val classifier = this.classifier
 
-    return if (classifier is KClass<*>) {
-        classifier
-    } else {
-        Logger.warning("Attempted to convert non-class type to class.")
-        Nothing::class
-    }
+    return classifier as? KClass<*>
 }
 
-infix fun KClass<*>.canBe(other: KClass<*>): Boolean = this.isSubclassOf(other)
+infix fun KClass<*>?.canBe(other: KClass<*>): Boolean = this?.isSubclassOf(other) ?: false
 
 fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
     return this.filter { it.isConfigItem() }

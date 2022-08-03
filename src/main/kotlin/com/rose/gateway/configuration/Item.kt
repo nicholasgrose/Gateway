@@ -22,7 +22,13 @@ data class Item<T>(
     }
 
     fun typeName(): String {
-        return type().toString()
+        val type = type()
+        val simpleName = type.asClass()?.simpleName.toString()
+        val suffix = if (type.arguments.isEmpty()) "" else type.arguments.joinToString(", ", "<", ">") {
+            it.type?.asClass()?.simpleName.toString()
+        }
+
+        return "$simpleName$suffix"
     }
 
     fun get(): T {
