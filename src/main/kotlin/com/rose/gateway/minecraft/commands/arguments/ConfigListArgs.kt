@@ -34,18 +34,12 @@ class StringListConfigArgs(
             list {
                 name = "VALUES"
                 description = "Values to add."
+                requireNonEmpty = true
                 element = stringArg {
                     name = "VALUE"
                     description = "String to add."
                     completer = stringCompleter
                     validator = stringValidator
-                }
-                validator = {
-                    when {
-                        it.result == null -> false
-                        it.result.isEmpty() -> false
-                        else -> true
-                    }
                 }
             }
         }

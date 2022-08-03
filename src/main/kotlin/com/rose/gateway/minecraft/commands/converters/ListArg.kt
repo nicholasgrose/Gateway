@@ -11,7 +11,7 @@ fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> RunnerArguments<A>
 ): ListArg<T, A, R> =
     genericParser(::ListArgBuilder, body)
 
-class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(builder: ListArgBuilder<T, A, R>) :
+class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val builder: ListArgBuilder<T, A, R>) :
     RunnerArg<List<T>, A, ListArg<T, A, R>>(
         builder,
         completesAfterSatisfied = true
@@ -30,7 +30,8 @@ class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(builder: 
             currentResult = parser.parseValidValue(currentResult.context)
         }
 
-        return ParseResult(
+        return if (builder.requireNonEmpty && results.isEmpty()) failedParseResult(context)
+        else ParseResult(
             succeeded = results.all { it.succeeded },
             result = results.map { it.result!! },
             context = results.lastOrNull()?.context ?: context
@@ -47,6 +48,7 @@ class ListArgBuilder<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> :
     }
 
     lateinit var element: RunnerArg<T, A, R>
+    var requireNonEmpty = true
 
     override fun checkValidity() {
         if (!::element.isInitialized) error("no type given for list argument")
