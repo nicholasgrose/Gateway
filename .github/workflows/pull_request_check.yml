@@ -53,7 +53,7 @@ jobs:
             # https://github.com/marketplace/actions/checkout
             -   uses: actions/checkout@v3
 
-            # https://github.com/marketplace/actions/pr-run-detekt-with-reviewdog
+            # https://github.com/marketplace/actions/run-detekt-with-reviewdog
             -   name: Run detekt with reviewdog
                 uses: alaegin/Detekt-Action@v1.21.0-RC2
                 with:
