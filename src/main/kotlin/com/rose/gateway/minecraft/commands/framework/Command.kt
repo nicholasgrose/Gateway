@@ -1,67 +1,43 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import org.bukkit.command.CommandExecutor
+import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
+import com.rose.gateway.shared.collections.builders.trieOf
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
+import org.bukkit.plugin.java.JavaPlugin
 
-class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter {
-    companion object {
-        fun subcommandRunner(context: CommandContext): Boolean {
-            val subcommand = context.commandArguments.first() as String
-            val childCommand = context.definition.subcommands[subcommand]
-            val arguments = context.rawCommandArguments
-
-            return if (childCommand == null) false
-            else {
-                childCommand.onCommand(
-                    sender = context.sender,
-                    command = context.command,
-                    label = context.label,
-                    args = arguments.subList(1, arguments.size).toTypedArray()
-                )
-                true
-            }
-        }
-    }
-
+class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExecutor, TabCompleter {
     override fun onCommand(
         sender: CommandSender,
         command: org.bukkit.command.Command,
         label: String,
         args: Array<String>
     ): Boolean {
-        var success = false
+        val mostSuccessfulExecutors = determineMostSuccessfulExecutors(args)
+        val chosenExecutor = mostSuccessfulExecutors.firstOrNull()
 
-        for (executor in definition.executors) {
-            val commandArguments = executor.argumentParser.parseAllArguments(args)
-
-            if (commandArguments != null) {
-                success = executor.executor(
-                    CommandContext(
-                        definition = definition,
-                        sender = sender,
-                        command = command,
-                        label = label,
-                        rawCommandArguments = args.toList(),
-                        commandArguments = commandArguments
-                    )
-                )
-
-                if (!success) break
-            }
+        val succeeded = if (chosenExecutor == null) {
+            false
+        } else {
+            chosenExecutor.tryExecute(
+                definition = definition,
+                sender = sender,
+                command = command,
+                label = label,
+                rawArguments = args
+            ) ?: false
         }
 
-        if (!success) sendArgumentErrorMessage(sender)
+        if (!succeeded) sender.sendMessage(
+            "Usage:\n" +
+                definition.executors.joinToString("\n") {
+                    it.arguments(args).usages()
+                        .joinToString("\n") { usage -> "${definition.baseCommand} $usage" }
+                }
+        )
 
         return true
-    }
-
-    private fun sendArgumentErrorMessage(sender: CommandSender) {
-        sender.sendMessage(definition.documentation)
     }
 
     override fun onTabComplete(
@@ -70,25 +46,60 @@ class Command(val definition: CommandDefinition) : CommandExecutor, TabCompleter
         alias: String,
         args: Array<String>
     ): List<String> {
-        for (executor in definition.executors) {
-            val tabCompletions = executor.argumentParser.getTabCompletions(
-                TabCompletionContext(
-                    sender = sender,
-                    command = command,
-                    alias = alias,
-                    rawArguments = args.toList(),
-                    parsedArguments = executor.argumentParser.parseArgumentSubset(args) ?: continue,
-                    commandDefinition = definition
-                )
-            )
+        val mostSuccessfulExecutors = determineMostSuccessfulExecutors(args)
 
-            if (tabCompletions != null) return tabCompletions
-        }
+        val tabCompletions = trieOf(
+            mostSuccessfulExecutors
+                .map {
+                    it.completions(sender, command, alias, definition, args)
+                }.flatten()
+        )
 
-        return listOf()
+        return tabCompletions.searchOrGetAll(args.last()).sorted()
     }
 
-    fun registerCommand(plugin: GatewayPlugin) {
+    /**
+     * Determines which executors are considered the most successful.
+     *
+     * Success is defined as either being successful or having the most arguments successfully parsed.
+     * The returned executors are in the same order they were defined.
+     *
+     * @param rawArgs The incoming arguments to be parsed.
+     * @return List of executors in order of definition.
+     */
+    private fun determineMostSuccessfulExecutors(rawArgs: Array<String>): List<CommandExecutor<*>> {
+        val mostSuccessfulExecutors = mutableListOf<CommandExecutor<*>>()
+        var successThreshold = 0
+        var executorsMustBeSuccessful = false
+
+        for (executor in definition.executors) {
+            val argResult = executor.arguments(rawArgs)
+            val argsParsed = argResult.argsParsed()
+
+            when {
+                argResult.valid() -> {
+                    if (!executorsMustBeSuccessful) {
+                        mostSuccessfulExecutors.clear()
+                        executorsMustBeSuccessful = true
+                    }
+
+                    mostSuccessfulExecutors.add(executor)
+                }
+
+                executorsMustBeSuccessful && !argResult.valid() -> continue
+                argsParsed == successThreshold -> mostSuccessfulExecutors.add(executor)
+                argsParsed > successThreshold -> {
+                    successThreshold = argsParsed
+                    mostSuccessfulExecutors.clear()
+                    mostSuccessfulExecutors.add(executor)
+                }
+            }
+        }
+
+        return mostSuccessfulExecutors
+    }
+
+    fun registerCommand(plugin: JavaPlugin) {
         plugin.getCommand(definition.name)!!.setExecutor(this)
     }
 }

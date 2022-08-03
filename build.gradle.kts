@@ -1,6 +1,8 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
+    // https://kotlinlang.org/docs/serialization.html
+    kotlin("plugin.serialization") version "1.7.10"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
@@ -8,7 +10,7 @@ plugins {
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.20.0"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0"
 }
 
 val version: String by project
@@ -18,10 +20,11 @@ val ktlintVersion: String by project
 
 val minecraftVersion: String by project
 val paperApiRevision: String by project
-val konfVersion: String by project
 val kordexVersion: String by project
 val lixyVersion: String by project
-val fuelVersion: String by project
+val kamlVersion: String by project
+val ktorVersion: String by project
+val hopliteVersion: String by project
 
 val jvmVersion: String by project
 val kotlinLanguageVersion: String by project
@@ -53,22 +56,21 @@ dependencies {
         name = "paper-api",
         version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
     )
-    implementation(group = "com.uchuhimo", name = "konf-yaml", version = konfVersion)
+    implementation(group = "com.sksamuel.hoplite", name = "hoplite-core", version = hopliteVersion)
+    implementation(group = "com.sksamuel.hoplite", name = "hoplite-yaml", version = hopliteVersion)
+    implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
+    implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
+    implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
         version = kordexVersion
     )
     implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
-    implementation(group = "com.github.kittinunf.fuel", name = "fuel", version = fuelVersion)
 }
 
 ktlint {
     version.set(ktlintVersion)
-}
-
-detekt {
-    config = files("detekt-config.yml")
 }
 
 tasks {
@@ -97,6 +99,7 @@ tasks {
         archiveBaseName.set(rootProject.name)
         archiveClassifier.set("")
         archiveVersion.set(rootProject.version.toString())
+        mergeServiceFiles()
     }
 
     build {

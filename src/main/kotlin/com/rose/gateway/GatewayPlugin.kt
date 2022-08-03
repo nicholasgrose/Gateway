@@ -1,58 +1,60 @@
 package com.rose.gateway
 
 import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.configuration.ConfigurationStringMap
 import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.configuration.specs.PluginSpec
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
-@Suppress("unused")
-class GatewayPlugin : JavaPlugin() {
-    val version = description.version
+class GatewayPlugin : JavaPlugin(), KoinComponent {
+    init {
+        startKoin {
+            modules(
+                module {
+                    single { this@GatewayPlugin }
+                    single { PluginConfiguration() }
+                    single { ConfigurationStringMap() }
+                    single { DiscordBot() }
+                    single { HttpClient(CIO) }
+                }
+            )
+        }
+    }
+
+    val bot: DiscordBot by inject()
+
     val startTime = Clock.System.now()
-    val configuration = PluginConfiguration(this)
-    var discordBot = DiscordBot(this)
-    private val eventListeners = EventListeners(this)
-    private val commandRegistry = CommandRegistry(this)
+    val loader = classLoader
 
     override fun onEnable() {
-        Logger.logInfo("Starting Gateway!")
+        Logger.info("Starting Gateway!")
 
         runBlocking {
-            discordBot.start()
+            bot.start()
         }
 
-        setConfigurationChangeActions()
-        eventListeners.registerListeners(server)
-        commandRegistry.registerCommands()
+        EventListeners.registerListeners(server)
+        CommandRegistry.registerCommands()
 
-        Logger.logInfo("Gateway started!")
+        Logger.info("Gateway started!")
     }
 
     override fun onDisable() {
-        Logger.logInfo("Stopping Gateway!")
+        Logger.info("Stopping Gateway!")
 
         runBlocking {
-            discordBot.stop()
+            bot.stop()
         }
 
-        Logger.logInfo("Gateway stopped!")
-    }
-
-    fun restartBot(): Boolean {
-        runBlocking {
-            discordBot.stop()
-            discordBot = DiscordBot(this@GatewayPlugin)
-            discordBot.start()
-        }
-
-        return discordBot.bot != null
-    }
-
-    private fun setConfigurationChangeActions() {
-        PluginSpec.setConfigChangeActions(this)
+        Logger.info("Gateway stopped!")
     }
 }

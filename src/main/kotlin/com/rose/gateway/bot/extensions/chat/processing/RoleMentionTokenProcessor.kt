@@ -1,7 +1,7 @@
 package com.rose.gateway.bot.extensions.chat.processing
 
-import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.shared.configurations.MinecraftConfiguration.primaryColor
+import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.shared.configurations.primaryColor
 import com.rose.gateway.shared.processing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
@@ -9,8 +9,12 @@ import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class RoleMentionTokenProcessor(private val plugin: GatewayPlugin) : TokenProcessor<Component, MessageCreateEvent> {
+class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
+    private val config: PluginConfiguration by inject()
+
     companion object {
         const val SNOWFLAKE_START_INDEX = 3
     }
@@ -29,6 +33,6 @@ class RoleMentionTokenProcessor(private val plugin: GatewayPlugin) : TokenProces
         val id = Snowflake(snowflakeString)
         val role = additionalData.getGuild()!!.getRoleOrNull(id) ?: return Component.text(token.string)
 
-        return Component.text("@${role.name}", plugin.configuration.primaryColor())
+        return Component.text("@${role.name}", config.primaryColor())
     }
 }

@@ -1,49 +1,61 @@
 package com.rose.gateway.bot
 
 import com.kotlindiscord.kord.extensions.ExtensibleBot
-import com.kotlindiscord.kord.extensions.utils.getKoin
+import com.kotlindiscord.kord.extensions.utils.loadModule
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.client.ClientInfo
 import com.rose.gateway.bot.presence.DynamicPresence
-import com.rose.gateway.shared.configurations.BotConfiguration.botChannels
-import com.rose.gateway.shared.configurations.BotConfiguration.botToken
+import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.shared.configurations.botChannels
+import com.rose.gateway.shared.configurations.botToken
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.core.context.stopKoin
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class DiscordBot(private val plugin: GatewayPlugin) {
+class DiscordBot : KoinComponent {
+    private val plugin: GatewayPlugin by inject()
+    private val config: PluginConfiguration by inject()
+
     val botChannels = mutableSetOf<TextChannel>()
     val botGuilds = mutableSetOf<Guild>()
     private var job: Job? = null
     var botStatus = BotStatus.NOT_STARTED
 
-    val bot = try {
-        if (plugin.configuration.notLoaded()) {
-            botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+    var bot = buildBot()
+    val presence = DynamicPresence()
+
+    private fun buildBot(): ExtensibleBot? {
+        return try {
+            if (config.notLoaded()) {
+                botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+                null
+            } else {
+                runBlocking {
+                    createBot(config.botToken())
+                }
+            }
+        } catch (e: KordInitializationException) {
+            botStatus = BotStatus.STOPPED because e.localizedMessage
             null
-        } else {
-            runBlocking { createBot(plugin.configuration.botToken()) }
         }
-    } catch (e: KordInitializationException) {
-        botStatus = BotStatus.STOPPED because e.localizedMessage
-        null
     }
-    val presence = DynamicPresence(plugin)
 
     private suspend fun createBot(token: String): ExtensibleBot {
         return ExtensibleBot(token) {
             hooks {
                 kordShutdownHook = false
+
                 afterKoinSetup {
-                    getKoin().declare(plugin)
+                    loadModule {
+                        single { plugin }
+                        single { config }
+                    }
                 }
             }
             presence {
@@ -61,8 +73,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         }
     }
 
-    val kordClient = bot?.getKoin()?.get<Kord>()
-    private val clientInfo = ClientInfo(plugin)
+    fun kordClient(): Kord? = bot?.getKoin()?.get()
 
     suspend fun start() {
         if (bot == null) return
@@ -73,7 +84,7 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         fillBotChannels()
         launchBotInNewThread()
 
-        Logger.logInfo("Bot ready!")
+        Logger.info("Bot ready!")
     }
 
     private suspend fun unloadDisabledExtensions() {
@@ -83,14 +94,15 @@ class DiscordBot(private val plugin: GatewayPlugin) {
     }
 
     suspend fun fillBotChannels() {
+        val validBotChannels = config.botChannels()
+
         botChannels.clear()
         botGuilds.clear()
 
-        val validBotChannels = plugin.configuration.botChannels()
-        kordClient?.guilds?.collect { guild ->
+        kordClient()?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (
-                    clientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
+                    ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
                     channel is TextChannel &&
                     channel.name in validBotChannels
                 ) {
@@ -101,26 +113,39 @@ class DiscordBot(private val plugin: GatewayPlugin) {
         }
     }
 
-    private fun launchBotInNewThread() {
-        job = CoroutineScope(Dispatchers.Default).launch {
-            try {
-                botStatus = BotStatus.RUNNING
-                bot!!.start()
-            } catch (error: KordInitializationException) {
-                val message = "An error occurred while running bot: ${error.message}"
-                Logger.logInfo(message)
-                botStatus = BotStatus.STOPPED because message
-            }
+    private suspend fun launchBotInNewThread() {
+        job = try {
+            botStatus = BotStatus.RUNNING
+            bot?.startAsync()
+        } catch (error: KordInitializationException) {
+            val message = "An error occurred while running bot: ${error.message}"
+            botStatus = BotStatus.STOPPED because message
+            Logger.warning("Could not start Discord bot. Check status for info.")
+            null
         }
     }
 
     suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
-        kordClient?.shutdown()
+        bot?.stop()
         job?.join()
-        stopKoin()
 
         botStatus = BotStatus.STOPPED
+    }
+
+    private suspend fun close() {
+        botStatus = BotStatus.STOPPING
+
+        bot?.close()
+        job?.join()
+
+        botStatus = BotStatus.STOPPED
+    }
+
+    suspend fun rebuild() {
+        close()
+        bot = buildBot()
+        start()
     }
 }

@@ -1,30 +1,39 @@
 package com.rose.gateway.minecraft.commands.converters
 
-import com.rose.gateway.minecraft.commands.framework.CommandArgument
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
+import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
+import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
+import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 
-@Deprecated("Might be useful in the future, but currently not used, in favor of ConfigValueArg.")
-class IntArg(
-    private val name: String,
-    private val tabCompleter: (TabCompletionContext) -> List<String>? = CommandArgument.Companion::noCompletionCompleter
-) : CommandArgument<Int> {
-    override fun fromArguments(arguments: Array<String>, index: Int): Int? {
-        return try {
-            Integer.parseInt(arguments[index])
-        } catch (e: NumberFormatException) {
-            null
-        }
+fun <A : RunnerArguments<A>> RunnerArguments<A>.int(body: IntArgBuilder<A>.() -> Unit): IntArg<A> =
+    genericParser(::IntArgBuilder, body)
+
+class IntArg<A : RunnerArguments<A>>(builder: IntArgBuilder<A>) :
+    RunnerArg<Int, A, IntArg<A>>(builder) {
+    override fun typeName(): String = "Int"
+
+    private val internalParser = stringArg<A> {
+        name = builder.name
+        description = builder.description
     }
 
-    override fun getName(): String {
-        return name
-    }
+    override fun parseValue(context: ParseContext<A>): ParseResult<Int, A> {
+        val stringResult = internalParser.parseValidValue(context)
+        val result = stringResult.result?.toInt()
 
-    override fun completeTab(tabCompletionContext: TabCompletionContext): List<String>? {
-        return tabCompleter(tabCompletionContext)
+        return ParseResult(
+            succeeded = result != null,
+            context = stringResult.context,
+            result = result
+        )
     }
+}
 
-    override fun getTypeName(): String {
-        return "Integer"
+class IntArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Int, A, IntArg<A>>() {
+    override fun checkValidity() = Unit
+
+    override fun build(): IntArg<A> {
+        return IntArg(this)
     }
 }

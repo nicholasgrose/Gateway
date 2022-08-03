@@ -5,11 +5,15 @@ import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.shared.configurations.BotConfiguration.displayIp
-import com.rose.gateway.shared.configurations.BotConfiguration.ipExtensionEnabled
+import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.shared.configurations.displayIp
+import com.rose.gateway.shared.configurations.ipExtensionEnabled
+import org.koin.core.component.inject
 
 class IpExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "ip"
         }
@@ -19,12 +23,11 @@ class IpExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.ipExtensionEnabled()
+            return config.ipExtensionEnabled()
         }
     }
 
     override val name = extensionName()
-    val plugin = bot.getKoin().get<GatewayPlugin>()
 
     override suspend fun setup() {
         ephemeralSlashCommand {
@@ -33,7 +36,7 @@ class IpExtension : Extension() {
 
             action {
                 respond {
-                    content = "Current IP: ```${plugin.configuration.displayIp()}```"
+                    content = "Current IP: ```${config.displayIp()}```"
                 }
             }
         }

@@ -1,11 +1,17 @@
 package com.rose.gateway
 
-import org.bukkit.Bukkit
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object Logger {
-    private val bukkitLogger = Bukkit.getLogger()
+object Logger : KoinComponent {
+    private val plugin: GatewayPlugin by inject()
+    private val pluginLogger = plugin.logger
 
-    fun logInfo(message: String) {
-        bukkitLogger.info("[Gateway] $message")
+    fun info(message: String) {
+        pluginLogger.info(message)
+    }
+
+    fun warning(message: String) {
+        pluginLogger.warning(message)
     }
 }

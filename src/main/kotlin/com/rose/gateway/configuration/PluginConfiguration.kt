@@ -1,33 +1,26 @@
 package com.rose.gateway.configuration
 
-import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.configuration.specs.PluginSpec
-import com.uchuhimo.konf.Config
-import com.uchuhimo.konf.Item
-import com.uchuhimo.konf.source.yaml.toYaml
+import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.configuration.schema.Config
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.reflect.KType
 
-class PluginConfiguration(private val plugin: GatewayPlugin) {
-    companion object {
-        const val CONFIG_FILE_NAME = "config.yaml"
+class PluginConfiguration : KoinComponent {
+    private val bot: DiscordBot by inject()
+    private val stringMap: ConfigurationStringMap by inject()
+
+    private val configurationLoader = GatewayConfigLoader()
+    var config: Config = runBlocking {
+        configurationLoader.loadOrCreateConfig()
     }
 
-    private val pluginDirPath = plugin.dataFolder.path
-    private val configFilePath = "$pluginDirPath/$CONFIG_FILE_NAME"
-    private val exampleConfigurationUrl =
-        "https://raw.githubusercontent.com/nicholasgrose/Gateway/v${plugin.version}/examples/$CONFIG_FILE_NAME"
+    suspend fun reloadConfiguration(): Boolean {
+        config = configurationLoader.loadOrCreateConfig()
 
-    val configurationStringMap = ConfigurationStringMap(PluginSpec)
-    private val configurationLoader = ConfigurationLoader(PluginSpec, configFilePath, exampleConfigurationUrl)
-    var configuration: Config? = configurationLoader.loadOrCreateConfig()
-
-    fun reloadConfiguration(): Boolean {
-        configuration = configurationLoader.loadOrCreateConfig()
-
-        return if (configuration == null) {
-            runBlocking {
-                plugin.discordBot.stop()
-            }
+        return if (notLoaded()) {
+            bot.stop()
 
             false
         } else {
@@ -35,20 +28,24 @@ class PluginConfiguration(private val plugin: GatewayPlugin) {
         }
     }
 
-    fun notLoaded(): Boolean {
-        return configuration == null
+    fun saveConfiguration() {
+        configurationLoader.saveConfig(config)
     }
 
-    operator fun <T> get(item: Item<T>): T? {
-        val config = configuration ?: return null
+    fun notLoaded(): Boolean = config == DEFAULT_CONFIG
 
-        return config[item]
+    fun allItems(): List<Item<*>> = stringMap.itemMap.values.toList()
+
+    operator fun get(item: String): Item<*>? {
+        return stringMap.fromString(item)
     }
 
-    operator fun <T> set(item: Item<T>, newValue: T) {
-        val config = configuration ?: return
+    operator fun <T : Any> get(type: KType, item: String): Item<T>? {
+        val match = get(item)
 
-        config[item] = newValue
-        config.toYaml.toFile(configFilePath)
+        return if (match != null && match.type() == type) {
+            @Suppress("UNCHECKED_CAST")
+            match as Item<T>
+        } else null
     }
 }

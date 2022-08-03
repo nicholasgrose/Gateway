@@ -9,6 +9,7 @@ import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Permissions
 
 object DiscordBotConstants {
+    const val MEMBER_QUERY_MAX = 1
     val BOT_EXTENSIONS = setOf(AboutExtension, ChatExtension, IpExtension, ListExtension, WhitelistExtension)
     val REQUIRED_PERMISSIONS = Permissions(
         setOf(

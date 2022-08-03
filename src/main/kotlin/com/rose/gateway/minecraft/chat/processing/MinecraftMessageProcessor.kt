@@ -1,6 +1,5 @@
 package com.rose.gateway.minecraft.chat.processing
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.RoleQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.TextChannelMentionTokenProcessor
@@ -9,22 +8,22 @@ import com.rose.gateway.minecraft.chat.processing.tokens.UrlTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.UserMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.UserQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.VoiceChannelMentionTokenProcessor
-import com.rose.gateway.shared.discord.StringModifiers.discordBoldSafe
+import com.rose.gateway.shared.discord.discordBoldSafe
 import com.rose.gateway.shared.processing.TextProcessor
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 
-class MinecraftMessageProcessor(val plugin: GatewayPlugin) {
+class MinecraftMessageProcessor {
     private val textProcessor = TextProcessor(
         listOf(
-            UserMentionTokenProcessor(plugin),
-            UserQuoteMentionTokenProcessor(plugin),
-            RoleMentionTokenProcessor(plugin),
-            RoleQuoteMentionTokenProcessor(plugin),
-            TextChannelMentionTokenProcessor(plugin),
-            VoiceChannelMentionTokenProcessor(plugin),
+            UserMentionTokenProcessor(),
+            UserQuoteMentionTokenProcessor(),
+            RoleMentionTokenProcessor(),
+            RoleQuoteMentionTokenProcessor(),
+            TextChannelMentionTokenProcessor(),
+            VoiceChannelMentionTokenProcessor(),
             UrlTokenProcessor(),
             TextTokenProcessor()
         )

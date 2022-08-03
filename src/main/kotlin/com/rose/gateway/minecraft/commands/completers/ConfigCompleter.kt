@@ -1,44 +1,16 @@
 package com.rose.gateway.minecraft.commands.completers
 
-import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import com.uchuhimo.konf.Item
+import com.rose.gateway.configuration.ConfigurationStringMap
+import com.rose.gateway.configuration.Item
+import com.rose.gateway.configuration.PluginConfiguration
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ConfigCompleter(val plugin: GatewayPlugin) {
-    private val config = plugin.configuration
-    private val configStringMap = config.configurationStringMap
+object ConfigCompleter : KoinComponent {
+    private val config: PluginConfiguration by inject()
+    private val configStringMap: ConfigurationStringMap by inject()
 
-    fun configNameCompletion(context: TabCompletionContext): List<String> {
-        val currentConfigurationArgument = context.parsedArguments.last() as String
+    fun allConfigStrings(): List<String> = configStringMap.allStrings()
 
-        return configStringMap.matchingOrAllConfigurationStrings(currentConfigurationArgument)
-    }
-
-    fun collectionConfigNameCompletion(context: TabCompletionContext): List<String> {
-        return configNameCompletion(context).filter { config ->
-            configStringMap.specificationFromString(config)?.type?.isCollectionLikeType ?: false
-        }
-    }
-
-    private val configValueCompletionMap = mapOf(
-        Boolean::class.javaObjectType to listOf("true", "false")
-    )
-
-    fun configValueCompletion(context: TabCompletionContext): List<String> {
-        val configName = context.parsedArguments.first() as String
-
-        val configItem = configStringMap.specificationFromString(configName) ?: return listOf()
-
-        return configValueCompletionMap[configItem.type.rawClass] ?: listOf()
-    }
-
-    fun collectionConfigValueCompletion(context: TabCompletionContext): List<String> {
-        val configName = context.parsedArguments.first() as String
-
-        @Suppress("UNCHECKED_CAST")
-        val configItem = configStringMap.specificationFromString(configName) as Item<List<*>>?
-
-        return if (configItem == null) listOf()
-        else config[configItem]?.map { it.toString() } ?: listOf()
-    }
+    fun allConfigItems(): List<Item<*>> = config.allItems()
 }

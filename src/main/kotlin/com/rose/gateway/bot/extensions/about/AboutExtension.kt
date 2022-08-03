@@ -6,10 +6,14 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.Logger
 import com.rose.gateway.bot.extensions.ToggleableExtension
-import com.rose.gateway.shared.configurations.BotConfiguration.aboutExtensionEnabled
+import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.shared.configurations.aboutExtensionEnabled
+import org.koin.core.component.inject
 
 class AboutExtension : Extension() {
     companion object : ToggleableExtension {
+        val config: PluginConfiguration by inject()
+
         override fun extensionName(): String {
             return "about"
         }
@@ -19,12 +23,12 @@ class AboutExtension : Extension() {
         }
 
         override fun isEnabled(plugin: GatewayPlugin): Boolean {
-            return plugin.configuration.aboutExtensionEnabled()
+            return config.aboutExtensionEnabled()
         }
     }
 
+    val plugin: GatewayPlugin by inject()
     override val name = extensionName()
-    val plugin = bot.getKoin().get<GatewayPlugin>()
 
     override suspend fun setup() {
         ephemeralSlashCommand {
@@ -32,9 +36,9 @@ class AboutExtension : Extension() {
             description = "Gives the current version of the Gateway plugin."
 
             action {
-                Logger.logInfo("${user.asUserOrNull()?.username} requested plugin version!")
+                Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
                 respond {
-                    content = "I am currently version ${plugin.version}." +
+                    content = "I am currently version ${plugin.description.version}." +
                         "All versions are available at https://github.com/nicholasgrose/Gateway/."
                 }
             }
@@ -45,7 +49,7 @@ class AboutExtension : Extension() {
             description = "Summon the block god for a moment."
 
             action {
-                Logger.logInfo("${user.asUserOrNull()?.username} used the super secret command!")
+                Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
                 respond {
                     @Suppress("HttpUrlsUsage")
                     content = "http://www.scpwiki.com/church-of-the-broken-god-hub"
