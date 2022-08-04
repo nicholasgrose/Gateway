@@ -48,9 +48,5 @@ class ConfigurationStringMap : KoinComponent {
         return itemMap[configurationString]
     }
 
-    fun matchingOrAllStrings(configurationString: String): List<String> {
-        return specificationTrie.searchOrGetAll(configurationString)
-    }
-
     fun allStrings(): List<String> = specificationTrie.toList()
 }
