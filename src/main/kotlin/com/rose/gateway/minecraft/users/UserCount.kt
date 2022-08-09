@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.users
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBot
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

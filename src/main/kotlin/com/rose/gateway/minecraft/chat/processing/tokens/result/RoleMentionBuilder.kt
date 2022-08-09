@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens.result
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBot
 import kotlinx.coroutines.flow.toSet
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

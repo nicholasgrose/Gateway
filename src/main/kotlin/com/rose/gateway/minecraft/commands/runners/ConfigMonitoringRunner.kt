@@ -1,16 +1,16 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.ConfigStringMap
+import com.rose.gateway.config.Item
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.config.extensions.secondaryColor
+import com.rose.gateway.config.extensions.tertiaryColor
+import com.rose.gateway.config.extensions.warningColor
+import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
-import com.rose.gateway.shared.configurations.primaryColor
-import com.rose.gateway.shared.configurations.secondaryColor
-import com.rose.gateway.shared.configurations.tertiaryColor
-import com.rose.gateway.shared.configurations.warningColor
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
@@ -22,8 +22,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigMonitoringRunner : KoinComponent {
-    private val config: PluginConfiguration by inject()
-    private val configStringMap: ConfigurationStringMap by inject()
+    private val config: PluginConfig by inject()
+    private val configStringMap: ConfigStringMap by inject()
     private val bot: DiscordBot by inject()
 
     fun sendAllConfigurationHelp(sender: CommandSender): Boolean {

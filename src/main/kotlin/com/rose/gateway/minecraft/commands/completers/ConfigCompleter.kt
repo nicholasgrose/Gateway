@@ -1,14 +1,14 @@
 package com.rose.gateway.minecraft.commands.completers
 
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.ConfigStringMap
+import com.rose.gateway.config.Item
+import com.rose.gateway.config.PluginConfig
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigCompleter : KoinComponent {
-    private val config: PluginConfiguration by inject()
-    private val configStringMap: ConfigurationStringMap by inject()
+    private val config: PluginConfig by inject()
+    private val configStringMap: ConfigStringMap by inject()
 
     fun allConfigStrings(): List<String> = configStringMap.allStrings()
 

@@ -1,11 +1,11 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.bot.extensions.chat.GameChatEvent
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.chatExtensionEnabled
+import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
+import com.rose.gateway.discord.text.discordBoldSafe
 import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
-import com.rose.gateway.shared.configurations.chatExtensionEnabled
-import com.rose.gateway.shared.discord.discordBoldSafe
 import io.papermc.paper.event.player.AsyncChatEvent
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -22,7 +22,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ChatListener : Listener, KoinComponent {
-    val config: PluginConfiguration by inject()
+    val config: PluginConfig by inject()
     val bot: DiscordBot by inject()
 
     private val minecraftMessageProcessor = MinecraftMessageProcessor()

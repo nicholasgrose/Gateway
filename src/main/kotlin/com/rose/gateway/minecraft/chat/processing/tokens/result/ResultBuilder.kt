@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens.result
 
-import com.rose.gateway.shared.component.ComponentBuilder
+import com.rose.gateway.minecraft.component.ComponentBuilder
 
 class ResultBuilder {
     fun mentionResult(minecraftText: String, discordText: String): TokenProcessingResult {

@@ -1,12 +1,12 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.Logger
-import com.rose.gateway.bot.BotStatus
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.discord.bot.BotStatus
+import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
-import com.rose.gateway.shared.configurations.primaryColor
+import com.rose.gateway.minecraft.logging.Logger
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
@@ -15,7 +15,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object BotCommands : KoinComponent {
-    val config: PluginConfiguration by inject()
+    val config: PluginConfig by inject()
     val bot: DiscordBot by inject()
 
     fun restartBot(context: CommandContext<NoArguments>): Boolean {

@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
-import com.rose.gateway.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.chat.processing.tokens.result.ResultBuilder
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.shared.processing.TokenProcessor

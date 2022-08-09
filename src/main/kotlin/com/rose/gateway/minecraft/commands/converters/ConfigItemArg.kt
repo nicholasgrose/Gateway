@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.converters
 
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.Item
+import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
@@ -15,7 +15,7 @@ fun <A : RunnerArguments<A>> RunnerArguments<A>.configItem(body: ConfigItemArgBu
 
 class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
     RunnerArg<Item<*>, A, ConfigItemArg<A>>(builder), KoinComponent {
-    val config: PluginConfiguration by inject()
+    val config: PluginConfig by inject()
 
     override fun typeName(): String = String::class.simpleName.toString()
 

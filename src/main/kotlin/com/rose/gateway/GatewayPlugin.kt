@@ -1,10 +1,11 @@
 package com.rose.gateway
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.ConfigStringMap
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
+import com.rose.gateway.minecraft.logging.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.runBlocking
@@ -33,8 +34,8 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
             modules(
                 module {
                     single { this@GatewayPlugin }
-                    single { PluginConfiguration() }
-                    single { ConfigurationStringMap() }
+                    single { PluginConfig() }
+                    single { ConfigStringMap() }
                     single { DiscordBot() }
                     single { HttpClient(CIO) }
                 }

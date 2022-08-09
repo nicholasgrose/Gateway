@@ -1,14 +1,14 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.Item
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.secondaryColor
+import com.rose.gateway.config.extensions.tertiaryColor
 import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
 import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.shared.configurations.secondaryColor
-import com.rose.gateway.shared.configurations.tertiaryColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.TextDecoration
@@ -17,7 +17,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object ConfigCommands : KoinComponent {
-    private val config: PluginConfiguration by inject()
+    private val config: PluginConfig by inject()
 
     fun <T, A : ConfigArgs<T, A, R>, R : RunnerArg<T, A, R>> setConfig(context: CommandContext<A>): Boolean {
         val args = context.arguments
