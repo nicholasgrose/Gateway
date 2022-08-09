@@ -21,22 +21,8 @@ import org.koin.dsl.module
  * @constructor Creates Gateway plugin. Should not be called except when the plugin is initially loaded by the server.
  */
 class GatewayPlugin : JavaPlugin(), KoinComponent {
-    val startTime = Clock.System.now()
-    val loader = classLoader
-    private val bot: DiscordBot by inject()
-
-    override fun onEnable() {
-        Logger.info("Starting Gateway!")
+    init {
         initializeKoin()
-
-        runBlocking {
-            bot.start()
-        }
-
-        EventListeners.registerListeners()
-        CommandRegistry.registerCommands()
-
-        Logger.info("Gateway started!")
     }
 
     /**
@@ -54,6 +40,23 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
                 }
             )
         }
+    }
+
+    val startTime = Clock.System.now()
+    val loader = classLoader
+    private val bot: DiscordBot by inject()
+
+    override fun onEnable() {
+        Logger.info("Starting Gateway!")
+
+        runBlocking {
+            bot.start()
+        }
+
+        EventListeners.registerListeners()
+        CommandRegistry.registerCommands()
+
+        Logger.info("Gateway started!")
     }
 
     override fun onDisable() {
