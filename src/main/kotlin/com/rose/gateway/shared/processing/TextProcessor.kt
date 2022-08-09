@@ -9,7 +9,7 @@ import guru.zoroark.lixy.matchers.matches
  *
  * @param ResultType The type to map each parsed token into.
  * @param AdditionalDataType The additional data that should be provided to each token processing operation.
- * @constructor Creates a TextProcessor defined by the provided [TokenProcessor]s.
+ * @constructor Creates a text processor defined by the provided [TokenProcessor]s.
  *
  * @param processors The list of [TokenProcessor]s to use for defining and processing tokens.
  *

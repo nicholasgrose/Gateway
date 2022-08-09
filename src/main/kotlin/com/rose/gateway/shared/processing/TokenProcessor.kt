@@ -9,7 +9,7 @@ import org.intellij.lang.annotations.Language
  *
  * @param ResultType The type of the result that is returned after processing a token.
  * @param AdditionalDataType The type that represents any additional data that will be needed for processing.
- * @constructor Creates a TokenProcessor.
+ * @constructor Creates a token processor.
  *
  * @see LixyToken
  * @see LixyTokenType
