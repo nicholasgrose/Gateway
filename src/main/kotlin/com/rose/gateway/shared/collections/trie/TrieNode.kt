@@ -9,7 +9,7 @@ import java.util.SortedMap
  * @property parent The next node up the [Trie], if any.
  * @property isTerminalNode Whether this node represents a complete string contained in the [Trie].
  * @property children All [TrieNode]s below this node, accessible by the next character they represent.
- * @constructor Creates a trie node with all the parameters provided.
+ * @constructor Creates a trie node.
  *
  * @see Trie
  */

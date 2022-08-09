@@ -51,21 +51,27 @@ repositories {
 }
 
 dependencies {
+    // Paper plugin development API.
     compileOnly(
         group = "io.papermc.paper",
         name = "paper-api",
         version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
     )
+    // Config library that provides nice parsing error descriptions.
     implementation(group = "com.sksamuel.hoplite", name = "hoplite-core", version = hopliteVersion)
     implementation(group = "com.sksamuel.hoplite", name = "hoplite-yaml", version = hopliteVersion)
+    // Library that supports loading and (more importantly) saving to YAML files.
     implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
+    // HTTP client library.
     implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
     implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
+    // Library for Discord bots.
     implementation(
         group = "com.kotlindiscord.kord.extensions",
         name = "kord-extensions",
         version = kordexVersion
     )
+    // Lexer library that supports regex.
     implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
 }
 

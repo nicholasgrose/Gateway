@@ -5,10 +5,11 @@ import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
 
 /**
- * A processor that can take a piece of text, parse it, and map the parsed result into the [ResultType].
+ * A processor that can takes text, parses it, and maps the result into the [ResultType].
  *
- * @param ResultType The type to map each parsed token into.
- * @param AdditionalDataType The additional data that should be provided to each token processing operation.
+ * @param ResultType The type that each parsed token is mapped into.
+ * @param AdditionalDataType The additional data that is provided when a token is mapped.
+ * (e.g. Unit, Int, DataClass, etc.)
  * @constructor Creates a text processor defined by the provided [TokenProcessor]s.
  *
  * @param processors The list of [TokenProcessor]s to use for defining and processing tokens.
@@ -19,7 +20,7 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
     private val tokenProcessorMap = processors.associateBy { it.tokenType() }
     private val lexer = lixy {
         state {
-            // This for-loop defines the regex of each processor as matching to that same processor's token type.
+            // Defining the regex of each processor as matching that processor's token type.
             for (processor in processors) {
                 matches(processor.regexPattern()) isToken processor.tokenType()
             }
@@ -27,7 +28,7 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
     }
 
     /**
-     * Breaks a string of text into a list of [LixyToken]s to be mapped through their respective [TokenProcessor].
+     * Breaks a string of text into a list of tokens to be mapped through their respective [TokenProcessor].
      *
      * @param text The text to parse and process.
      * @param additionalData The additional data to be used for token processing.

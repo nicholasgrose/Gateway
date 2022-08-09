@@ -5,7 +5,7 @@ import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
 /**
- * Defines and processes an individual [LixyToken], giving a some result after processing it.
+ * Defines and processes an individual [LixyToken], giving some result after processing it.
  *
  * @param ResultType The type of the result that is returned after processing a token.
  * @param AdditionalDataType The type that represents any additional data that will be needed for processing.
@@ -13,10 +13,11 @@ import org.intellij.lang.annotations.Language
  *
  * @see LixyToken
  * @see LixyTokenType
+ * @see TextProcessor
  */
 interface TokenProcessor<ResultType, AdditionalDataType> {
     /**
-     * Gives the type of the token that this token processor defines.
+     * Gives the [LixyTokenType] that this processor defines.
      *
      * @return The [LixyTokenType] defined.
      *
@@ -26,10 +27,11 @@ interface TokenProcessor<ResultType, AdditionalDataType> {
     fun tokenType(): LixyTokenType
 
     /**
-     * Gives the regular expression that the defined [LixyTokenType] should be represented by in the text.
+     * Gives the regex that the defined [LixyTokenType] is represented by in the text.
      *
-     * @return The regular expression in the form of a string.
+     * @return The regex in the form of a string.
      *
+     * @see LixyTokenType
      * @see tokenType
      */
     @Language("RegExp")

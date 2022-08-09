@@ -19,7 +19,7 @@ import org.koin.dsl.module
 /**
  * The base class and entry point for the Gateway plugin.
  *
- * @constructor Creates Gateway plugin. Should not be called except when the plugin is initially loaded by the server.
+ * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server.
  */
 class GatewayPlugin : JavaPlugin(), KoinComponent {
     init {
