@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.shared.processing.TokenProcessor
+import com.rose.gateway.shared.parsing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component

@@ -8,6 +8,8 @@ import com.rose.gateway.minecraft.EventListeners
 import com.rose.gateway.minecraft.logging.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
@@ -38,6 +40,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
                     single { ConfigStringMap() }
                     single { DiscordBot() }
                     single { HttpClient(CIO) }
+                    single { CoroutineScope(Dispatchers.Default) }
                 }
             )
         }

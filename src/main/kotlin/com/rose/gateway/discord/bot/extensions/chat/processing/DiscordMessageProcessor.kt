@@ -5,7 +5,7 @@ import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.config.extensions.secondaryColor
 import com.rose.gateway.config.extensions.tertiaryColor
 import com.rose.gateway.minecraft.component.ComponentBuilder
-import com.rose.gateway.shared.processing.TextProcessor
+import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent

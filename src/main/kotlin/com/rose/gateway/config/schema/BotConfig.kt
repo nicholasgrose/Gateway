@@ -1,11 +1,12 @@
 package com.rose.gateway.config.schema
 
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.markers.ConfigItem
 import com.rose.gateway.config.markers.ConfigObject
 import com.rose.gateway.config.markers.SurrogateBasedSerializer
 import com.rose.gateway.config.markers.SurrogateConverter
 import com.rose.gateway.discord.bot.DiscordBot
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
@@ -18,8 +19,8 @@ class BotConfig(
     @ConfigItem
     val extensions: ExtensionsConfig
 ) : KoinComponent, ConfigObject {
-    val plugin: GatewayPlugin by inject()
-    val bot: DiscordBot by inject()
+    private val bot: DiscordBot by inject()
+    private val pluginScope: CoroutineScope by inject()
 
     @ConfigItem(
         """
@@ -30,7 +31,7 @@ class BotConfig(
     var token = token
         set(value) {
             field = value
-            runBlocking {
+            pluginScope.launch {
                 bot.rebuild()
             }
         }

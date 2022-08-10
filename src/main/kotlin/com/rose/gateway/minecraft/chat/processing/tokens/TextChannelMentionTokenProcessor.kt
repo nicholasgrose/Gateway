@@ -3,7 +3,7 @@ package com.rose.gateway.minecraft.chat.processing.tokens
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.chat.processing.tokens.result.ResultBuilder
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.shared.processing.TokenProcessor
+import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.ChannelType
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType

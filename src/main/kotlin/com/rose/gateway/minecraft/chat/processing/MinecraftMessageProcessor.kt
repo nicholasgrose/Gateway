@@ -9,7 +9,7 @@ import com.rose.gateway.minecraft.chat.processing.tokens.UrlTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.UserMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.UserQuoteMentionTokenProcessor
 import com.rose.gateway.minecraft.chat.processing.tokens.VoiceChannelMentionTokenProcessor
-import com.rose.gateway.shared.processing.TextProcessor
+import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
