@@ -52,27 +52,19 @@ repositories {
 
 dependencies {
     // Paper plugin development API.
-    compileOnly(
-        group = "io.papermc.paper",
-        name = "paper-api",
-        version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
-    )
+    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperApiRevision-SNAPSHOT")
     // Config library that provides nice parsing error descriptions.
-    implementation(group = "com.sksamuel.hoplite", name = "hoplite-core", version = hopliteVersion)
-    implementation(group = "com.sksamuel.hoplite", name = "hoplite-yaml", version = hopliteVersion)
+    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
     // Library that supports loading and (more importantly) saving to YAML files.
-    implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
+    implementation("com.charleskorn.kaml:kaml:$kamlVersion")
     // HTTP client library.
-    implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
-    implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
     // Library for Discord bots.
-    implementation(
-        group = "com.kotlindiscord.kord.extensions",
-        name = "kord-extensions",
-        version = kordexVersion
-    )
+    implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
-    implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
+    implementation("guru.zoroark.lixy:lixy:$lixyVersion")
 }
 
 ktlint {
