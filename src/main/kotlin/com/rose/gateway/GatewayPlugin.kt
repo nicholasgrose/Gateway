@@ -17,13 +17,14 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import kotlin.coroutines.CoroutineContext
 
 /**
- * The base class and entry point for the Gateway plugin.
+ * The base class and entry point for the Gateway plugin. Also provides the scope for parallelized plugin operations.
  *
  * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server.
  */
-class GatewayPlugin : JavaPlugin(), KoinComponent {
+class GatewayPlugin : JavaPlugin(), KoinComponent, CoroutineScope {
     init {
         initializeKoin()
     }
@@ -40,7 +41,6 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
                     single { ConfigStringMap() }
                     single { DiscordBot() }
                     single { HttpClient(CIO) }
-                    single { CoroutineScope(Dispatchers.Default) }
                 }
             )
         }
@@ -72,4 +72,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
 
         Logger.info("Gateway stopped!")
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Default
 }
