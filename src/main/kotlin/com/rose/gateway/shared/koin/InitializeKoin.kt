@@ -11,7 +11,9 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 /**
- * Initializes Koin singletons for use throughout the Gateway plugin.
+ * Initializes Koin singletons for use throughout the plugin.
+ *
+ * @param plugin The plugin instance to be included as a singleton.
  */
 fun initializeKoin(plugin: GatewayPlugin) {
     startKoin {
