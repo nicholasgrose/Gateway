@@ -134,7 +134,7 @@ class DiscordBot : KoinComponent {
         botStatus = BotStatus.STOPPED
     }
 
-    private suspend fun close() {
+    suspend fun close() {
         botStatus = BotStatus.STOPPING
 
         bot?.close()

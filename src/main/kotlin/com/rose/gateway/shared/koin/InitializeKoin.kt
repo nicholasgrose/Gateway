@@ -1,0 +1,29 @@
+package com.rose.gateway.shared.koin
+
+import com.rose.gateway.GatewayPlugin
+import com.rose.gateway.config.ConfigStringMap
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
+
+/**
+ * Initializes Koin singletons for use throughout the Gateway plugin.
+ */
+fun initializeKoin(plugin: GatewayPlugin) {
+    startKoin {
+        modules(
+            module {
+                single { plugin }
+                single { PluginConfig() }
+                single { ConfigStringMap() }
+                single { DiscordBot() }
+                single { HttpClient(CIO) }
+                single { PluginCoroutineScope() }
+            }
+        )
+    }
+}
