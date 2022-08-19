@@ -27,6 +27,8 @@ class GatewayConfigFile : KoinComponent {
         const val CONFIG_FILE_NAME = "config.yaml"
     }
 
+    val defaultConfig = loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).notNullWithMissingDefaultConfigMessage()
+
     private val plugin: GatewayPlugin by inject()
 
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
@@ -42,7 +44,7 @@ class GatewayConfigFile : KoinComponent {
 
         val config = loadConfig(configPath.toString())
 
-        return config ?: loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).notNullWithMissingDefaultConfigMessage()
+        return config ?: defaultConfig
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.rose.gateway.config
 
 import com.rose.gateway.config.markers.ConfigObject
+import com.rose.gateway.config.markers.filterConfigItems
 import com.rose.gateway.shared.error.notNull
 import com.rose.gateway.shared.reflection.canBe
 import org.koin.core.component.KoinComponent

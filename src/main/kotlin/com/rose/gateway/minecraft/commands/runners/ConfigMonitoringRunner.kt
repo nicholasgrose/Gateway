@@ -101,7 +101,7 @@ object ConfigMonitoringRunner : KoinComponent {
         context.sender.sendMessage("Loading configuration...")
 
         pluginCoroutineScope.launch {
-            val loadSuccessful = config.reloadConfiguration()
+            val loadSuccessful = config.reloadConfig()
 
             if (loadSuccessful) {
                 context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
@@ -115,7 +115,7 @@ object ConfigMonitoringRunner : KoinComponent {
 
     fun saveConfig(context: CommandContext<NoArguments>): Boolean {
         pluginCoroutineScope.launch {
-            config.saveConfiguration()
+            config.saveConfig()
             context.sender.sendMessage("Saved current configuration.")
         }
 
