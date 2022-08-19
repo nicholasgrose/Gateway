@@ -34,7 +34,7 @@ open class ConfigArgs<
     private fun configItemsWithType(type: KType): List<String> {
         val items = ConfigCompleter.allConfigItems()
         val matchedItems = items.filter {
-            val itemType = it.type()
+            val itemType = it.type
 
             itemType == type
         }

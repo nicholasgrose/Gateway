@@ -43,7 +43,7 @@ class PluginConfig : KoinComponent {
     operator fun <T : Any> get(type: KType, item: String): Item<T>? {
         val match = get(item)
 
-        return if (match != null && match.type() == type) {
+        return if (match != null && match.type == type) {
             @Suppress("UNCHECKED_CAST")
             match as Item<T>
         } else null

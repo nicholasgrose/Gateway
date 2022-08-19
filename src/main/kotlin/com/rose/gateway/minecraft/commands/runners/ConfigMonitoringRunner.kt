@@ -11,6 +11,7 @@ import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.shared.reflection.simpleName
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
@@ -72,13 +73,13 @@ object ConfigMonitoringRunner : KoinComponent {
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Type: ", config.primaryColor()),
-                Component.text(item.typeName()),
-                Component.text(if (item.type().isMarkedNullable) "?" else "", config.warningColor())
+                Component.text(item.type.simpleName),
+                Component.text(if (item.type.isMarkedNullable) "?" else "", config.warningColor())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),
                 Component.text("Current Value: ", config.primaryColor()),
-                Component.text(item.get().toString())
+                Component.text(item.value.toString())
             ),
             Component.join(
                 JoinConfiguration.noSeparators(),

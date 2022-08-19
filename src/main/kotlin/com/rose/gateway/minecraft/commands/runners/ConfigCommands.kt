@@ -26,7 +26,7 @@ object ConfigCommands : KoinComponent {
 
         if (item == null || value == null) return false
 
-        item.set(value)
+        item.value = value
         sendConfirmation(context.sender, item, value)
 
         return true
@@ -81,10 +81,10 @@ object ConfigCommands : KoinComponent {
     }
 
     private fun <T> addToConfiguration(item: Item<List<T>>, additionalValues: List<T>) {
-        val currentValues = item.get()
+        val currentValues = item.value
         val newValues = currentValues + additionalValues
 
-        item.set(newValues)
+        item.value = newValues
     }
 
     fun <T : Any, A : ConfigListArgs<T, A, R>, R : StringArg<A>> removeConfiguration(
@@ -102,9 +102,9 @@ object ConfigCommands : KoinComponent {
     }
 
     private fun <T> removeFromConfiguration(item: Item<List<T>>, valuesToBeRemoved: List<T>) {
-        val currentValues = item.get()
+        val currentValues = item.value
         val newValues = currentValues - valuesToBeRemoved.toSet()
 
-        item.set(newValues)
+        item.value = newValues
     }
 }

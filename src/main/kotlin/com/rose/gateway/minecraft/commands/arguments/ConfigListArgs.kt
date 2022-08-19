@@ -50,13 +50,13 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
         val item = it.context.arguments.item
 
-        item?.get()?.contains(it.result)?.not() ?: false
+        item?.value?.contains(it.result)?.not() ?: false
     }
 )
 
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
-        val currentValues = it.arguments.item?.get() ?: listOf()
+        val currentValues = it.arguments.item?.value ?: listOf()
         val itemsSlatedForRemoval = it.arguments.value
 
         if (itemsSlatedForRemoval == null) {
@@ -66,6 +66,6 @@ fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
         val item = it.context.arguments.item
 
-        item?.get()?.contains(it.result) ?: false
+        item?.value?.contains(it.result) ?: false
     }
 )
