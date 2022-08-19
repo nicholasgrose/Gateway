@@ -1,6 +1,6 @@
 package com.rose.gateway.config.markers
 
-import com.rose.gateway.config.canBe
+import com.rose.gateway.shared.reflection.canBe
 import com.sksamuel.hoplite.ConfigResult
 import com.sksamuel.hoplite.DecoderContext
 import com.sksamuel.hoplite.Node
@@ -20,13 +20,14 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
     }
 
     override fun supports(type: KType): Boolean {
-        return when (type.classifier is KClass<*>) {
-            true -> {
-                val kClass = type.classifier as KClass<*>
-                (!kClass.isData && !kClass.isSealed && !kClass.isInline() && kClass canBe ConfigObject::class)
-            }
+        val classifier = type.classifier
 
-            false -> false
-        }
+        return if (classifier is KClass<*>) (
+            !classifier.isData &&
+                !classifier.isSealed &&
+                !classifier.isInline() &&
+                classifier canBe ConfigObject::class
+            )
+        else false
     }
 }

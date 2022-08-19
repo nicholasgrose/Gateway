@@ -1,11 +1,14 @@
 package com.rose.gateway.config
 
 import com.rose.gateway.config.markers.ConfigObject
+import com.rose.gateway.shared.reflection.asClass
+import com.rose.gateway.shared.reflection.canBe
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.typeOf
 
 data class Item<T>(
     val property: KMutableProperty<T>,
@@ -38,7 +41,7 @@ data class Item<T>(
         for (member in configProperties) {
             val result =
                 if (member == property) source
-                else if (member.returnType.asClass() canBe ConfigObject::class) {
+                else if (member.returnType canBe typeOf<ConfigObject>()) {
                     val memberValue = member.getter.call(source) as ConfigObject
 
                     containingObject(memberValue)

@@ -4,11 +4,15 @@ import com.rose.gateway.config.markers.ConfigItem
 import com.rose.gateway.config.markers.ConfigObject
 import com.rose.gateway.config.schema.Config
 import com.rose.gateway.shared.collections.trie.Trie
+import com.rose.gateway.shared.error.notNull
+import com.rose.gateway.shared.reflection.asClass
+import com.rose.gateway.shared.reflection.canBe
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.typeOf
 
 class ConfigStringMap : KoinComponent {
     val itemMap = mutableMapOf<String, Item<*>>()
@@ -31,13 +35,13 @@ class ConfigStringMap : KoinComponent {
 
     private fun addPropertyToMap(property: KProperty1<out Any, *>, prefix: String?, configAnnotation: ConfigItem) {
         val propertyString = if (prefix == null) property.name else "$prefix.${property.name}"
-        val classifier = property.returnType.classifier
+        val propertyType = property.returnType
 
-        if (classifier != null &&
-            classifier is KClass<*> &&
-            classifier canBe ConfigObject::class
-        ) {
-            fillInItemMap(classifier, propertyString)
+        if (propertyType canBe typeOf<ConfigObject>()) {
+            val propertyClass =
+                propertyType.asClass().notNull("non-object member of Gateway schema marked as ConfigObject")
+
+            fillInItemMap(propertyClass, propertyString)
         } else if (property is KMutableProperty1<*, *>) {
             itemMap[propertyString] = Item(property, propertyString, configAnnotation.description)
         }
