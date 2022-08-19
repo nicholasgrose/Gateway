@@ -4,9 +4,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
- * As class
+ * Gets the classifier of a type as a KClass if it is a KClass.
  *
- * @return
+ * @return KClass, if the type classifier is a KClass, or null, if it isn't.
  */
 fun KType.asClass(): KClass<*>? {
     val classifier = this.classifier
