@@ -2,6 +2,9 @@ package com.rose.gateway.shared.concurrency
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.job
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -13,5 +16,12 @@ import kotlin.coroutines.CoroutineContext
  */
 class PluginCoroutineScope : CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default
+        get() = SupervisorJob() + Dispatchers.Default
+
+    /**
+     * Cancels all active jobs in the coroutine context and then joins its job until it completes.
+     */
+    suspend fun cancelAndJoinContext() {
+        coroutineContext.job.cancelAndJoin()
+    }
 }

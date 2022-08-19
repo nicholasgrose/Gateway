@@ -4,6 +4,7 @@ import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
 import com.rose.gateway.minecraft.logging.Logger
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.koin.initializeKoin
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
@@ -23,7 +24,9 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
 
     val startTime = Clock.System.now()
     val loader = classLoader
+
     private val bot: DiscordBot by inject()
+    private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {
         Logger.info("Starting Gateway!")
@@ -43,6 +46,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
 
         runBlocking {
             bot.close()
+            coroutineScope.cancelAndJoinContext()
         }
 
         Logger.info("Gateway stopped!")

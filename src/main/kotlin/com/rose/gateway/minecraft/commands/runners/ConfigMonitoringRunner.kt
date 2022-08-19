@@ -7,12 +7,12 @@ import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.config.extensions.secondaryColor
 import com.rose.gateway.config.extensions.tertiaryColor
 import com.rose.gateway.config.extensions.warningColor
-import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.reflection.simpleName
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.event.ClickEvent
@@ -25,7 +25,7 @@ import org.koin.core.component.inject
 object ConfigMonitoringRunner : KoinComponent {
     private val config: PluginConfig by inject()
     private val configStringMap: ConfigStringMap by inject()
-    private val bot: DiscordBot by inject()
+    private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     fun sendAllConfigurationHelp(sender: CommandSender): Boolean {
         sendConfigListHelp(sender, configStringMap.allStrings())
@@ -100,18 +100,14 @@ object ConfigMonitoringRunner : KoinComponent {
     fun reloadConfig(context: CommandContext<NoArguments>): Boolean {
         context.sender.sendMessage("Loading configuration...")
 
-        val loadSuccessful = runBlocking {
-            config.reloadConfiguration()
-        }
+        pluginCoroutineScope.launch {
+            val loadSuccessful = config.reloadConfiguration()
 
-        if (loadSuccessful) {
-            runBlocking {
-                bot.rebuild()
+            if (loadSuccessful) {
+                context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
+            } else {
+                context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
             }
-
-            context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
-        } else {
-            context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
         }
 
         return true

@@ -5,12 +5,9 @@ import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.markers.CommonDecoder
 import com.rose.gateway.config.schema.Config
 import com.rose.gateway.minecraft.logging.Logger
+import com.rose.gateway.shared.error.notNull
 import com.sksamuel.hoplite.ConfigException
 import com.sksamuel.hoplite.ConfigLoaderBuilder
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
@@ -21,68 +18,56 @@ import java.nio.file.Path
 
 class GatewayConfigLoader : KoinComponent {
     private val plugin: GatewayPlugin by inject()
-    private val httpClient: HttpClient by inject()
 
     companion object {
+        const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
         const val CONFIG_FILE_NAME = "config.yaml"
-        const val REPOSITORY_RAW_URL = "https://raw.githubusercontent.com/nicholasgrose/Gateway"
     }
 
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
-    private val configUrl = "$REPOSITORY_RAW_URL/v${plugin.description.version}/examples/$CONFIG_FILE_NAME"
 
     suspend fun loadOrCreateConfig(): Config {
-        if (ensureConfigurationFileExists(configPath)) {
-            val configuration = loadConfig(configPath)
+        ensureConfigurationFileExists(configPath)
 
-            if (configuration != null) {
-                return configuration
-            }
+        val configuration = loadConfig(configPath.toString())
+
+        if (configuration != null) {
+            return configuration
         }
 
-        return DEFAULT_CONFIG
+        return loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).defaultConfigLoaded()
     }
 
-    private suspend fun ensureConfigurationFileExists(configurationFilePath: Path): Boolean {
+    private fun <T> T?.defaultConfigLoaded(): T {
+        return this.notNull("default config resource does not exist to be loaded")
+    }
+
+    private suspend fun ensureConfigurationFileExists(configurationFilePath: Path) {
         Logger.info("Checking configuration file existence...")
 
         if (!Files.exists(configurationFilePath)) {
-            Logger.info("No configuration file found. Downloading...")
+            Logger.warning("No configuration file found. Creating...")
 
-            val configurationFileCreated = createConfigurationFile()
-
-            if (!configurationFileCreated) {
-                Logger.info("Failed to create new configuration file.")
-
-                return false
-            } else {
-                Logger.info("Successfully created new configuration file.")
-            }
+            createConfigurationFile()
         } else {
             Logger.info("Configuration file found.")
         }
-
-        return true
     }
 
-    private suspend fun createConfigurationFile(): Boolean {
-        val result = httpClient.get(configUrl)
+    private suspend fun createConfigurationFile() {
+        withContext(Dispatchers.IO) {
+            val defaultConfig = plugin.loader.getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
+                .defaultConfigLoaded()
+                .readAllBytes()
 
-        return if (result.status == HttpStatusCode.OK) {
-            withContext(Dispatchers.IO) {
-                Files.createDirectories(configPath.parent)
-                Files.createFile(configPath)
-                Files.writeString(configPath, result.bodyAsText())
-            }
-            true
-        } else {
-            Logger.info("Could not get configuration file! You will need download or create it manually.")
-            false
+            Files.createDirectories(configPath.parent)
+            Files.createFile(configPath)
+            Files.write(configPath, defaultConfig)
         }
     }
 
-    private fun loadConfig(path: Path): Config? {
+    private fun loadConfig(path: String): Config? {
         Logger.info("Loading configuration...")
 
         return try {
@@ -96,7 +81,7 @@ class GatewayConfigLoader : KoinComponent {
                 .addDefaultParsers()
                 .addDecoder(CommonDecoder())
                 .build()
-                .loadConfigOrThrow(path.toString())
+                .loadConfigOrThrow(path)
             Logger.info("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {
