@@ -14,7 +14,7 @@ class PluginConfig : KoinComponent {
     private val stringMap: ConfigStringMap by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
-    private val configurationLoader = GatewayConfigLoader()
+    private val configurationLoader = GatewayConfigFile()
     var config: Config = runBlocking {
         configurationLoader.loadOrCreateConfig()
     }
@@ -39,7 +39,7 @@ class PluginConfig : KoinComponent {
 
     fun notLoaded(): Boolean = config == DEFAULT_CONFIG
 
-    fun saveConfiguration() {
+    suspend fun saveConfiguration() {
         configurationLoader.saveConfig(config)
     }
 

@@ -16,37 +16,52 @@ import org.koin.core.component.inject
 import java.nio.file.Files
 import java.nio.file.Path
 
-class GatewayConfigLoader : KoinComponent {
-    private val plugin: GatewayPlugin by inject()
-
+/**
+ * Class that provides methods for interfacing with the Gateway config file.
+ *
+ * @constructor Creates a gateway config file.
+ */
+class GatewayConfigFile : KoinComponent {
     companion object {
         const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
         const val CONFIG_FILE_NAME = "config.yaml"
     }
 
+    private val plugin: GatewayPlugin by inject()
+
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
 
+    /**
+     * Loads the gateway config file, creating it if it is missing.
+     *
+     * @return The loaded Gateway config object.
+     */
     suspend fun loadOrCreateConfig(): Config {
-        ensureConfigurationFileExists(configPath)
+        ensureConfigurationFileExists()
 
-        val configuration = loadConfig(configPath.toString())
+        val config = loadConfig(configPath.toString())
 
-        if (configuration != null) {
-            return configuration
-        }
-
-        return loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).defaultConfigLoaded()
+        return config ?: loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).notNullWithMissingDefaultConfigMessage()
     }
 
-    private fun <T> T?.defaultConfigLoaded(): T {
+    /**
+     * Asserts that a value is not null, raising an error with a message saying the default config file is missing.
+     *
+     * @param T The type to guarantee the value is.
+     * @return The non-nullable type.
+     */
+    private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T {
         return this.notNull("default config resource does not exist to be loaded")
     }
 
-    private suspend fun ensureConfigurationFileExists(configurationFilePath: Path) {
+    /**
+     * Ensures that a configuration file exists to be loaded.
+     */
+    private suspend fun ensureConfigurationFileExists() {
         Logger.info("Checking configuration file existence...")
 
-        if (!Files.exists(configurationFilePath)) {
+        if (!Files.exists(configPath)) {
             Logger.warning("No configuration file found. Creating...")
 
             createConfigurationFile()
@@ -55,10 +70,14 @@ class GatewayConfigLoader : KoinComponent {
         }
     }
 
+    /**
+     * Creates a new configuration file at the config path.
+     * The new file is a copy of the bundled default config file.
+     */
     private suspend fun createConfigurationFile() {
         withContext(Dispatchers.IO) {
             val defaultConfig = plugin.loader.getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
-                .defaultConfigLoaded()
+                .notNullWithMissingDefaultConfigMessage()
                 .readAllBytes()
 
             Files.createDirectories(configPath.parent)
@@ -67,6 +86,13 @@ class GatewayConfigLoader : KoinComponent {
         }
     }
 
+    /**
+     * Loads the config from the provided path.
+     * This path may reference a bundled jar resource file.
+     *
+     * @param path The path to load the config from.
+     * @return The loaded config or null, if it can't be loaded.
+     */
     private fun loadConfig(path: String): Config? {
         Logger.info("Loading configuration...")
 
@@ -85,14 +111,21 @@ class GatewayConfigLoader : KoinComponent {
             Logger.info("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {
-            Logger.info("Configuration failed to load: ${error.message}")
+            Logger.warning("Configuration failed to load: ${error.message}")
             null
         }
     }
 
-    fun saveConfig(config: Config) {
+    /**
+     * Saves the provided config object to the Gateway config file.
+     *
+     * @param config The config to save.
+     */
+    suspend fun saveConfig(config: Config) {
         val configYaml = Yaml.default.encodeToString(config)
 
-        Files.writeString(configPath, configYaml)
+        withContext(Dispatchers.IO) {
+            Files.writeString(configPath, configYaml)
+        }
     }
 }

@@ -114,8 +114,10 @@ object ConfigMonitoringRunner : KoinComponent {
     }
 
     fun saveConfig(context: CommandContext<NoArguments>): Boolean {
-        config.saveConfiguration()
-        context.sender.sendMessage("Saved current configuration.")
+        pluginCoroutineScope.launch {
+            config.saveConfiguration()
+            context.sender.sendMessage("Saved current configuration.")
+        }
 
         return true
     }
