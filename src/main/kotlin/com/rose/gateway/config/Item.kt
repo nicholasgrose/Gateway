@@ -42,7 +42,7 @@ data class Item<ValueType>(
     }
 
     /**
-     * Finds the [ConfigObject] that contains this item's property.
+     * Finds the [ConfigObject] that contains this item's property using a depth-first search.
      *
      * @param source The object to search.
      * @return The object found, if any.
