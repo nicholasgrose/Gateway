@@ -20,7 +20,7 @@ class GenericConfigItemArg<T : Any, A : RunnerArguments<A>>(val builder: Generic
     RunnerArg<Item<T>, A, GenericConfigItemArg<T, A>>(builder), KoinComponent {
     val config: PluginConfig by inject()
 
-    override fun typeName(): String = String::class.simpleName.toString()
+    override fun typeName(): String = "ConfigItemType"
 
     private val internalStringParser = stringArg<A> {
         name = "CONFIG_INTERNAL"

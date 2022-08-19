@@ -11,7 +11,7 @@ fun <A : RunnerArguments<A>> RunnerArguments<A>.boolean(body: BooleanArgBuilder<
 
 class BooleanArg<A : RunnerArguments<A>>(builder: BooleanArgBuilder<A>) :
     RunnerArg<Boolean, A, BooleanArg<A>>(builder) {
-    override fun typeName(): String = Boolean::class.simpleName.toString()
+    override fun typeName(): String = "Boolean"
 
     private val internalParser = stringArg<A> {
         name = builder.name

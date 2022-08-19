@@ -37,11 +37,11 @@ class PluginConfig : KoinComponent {
         }
     }
 
+    fun notLoaded(): Boolean = config == DEFAULT_CONFIG
+
     fun saveConfiguration() {
         configurationLoader.saveConfig(config)
     }
-
-    fun notLoaded(): Boolean = config == DEFAULT_CONFIG
 
     fun allItems(): List<Item<*>> = stringMap.itemMap.values.toList()
 
