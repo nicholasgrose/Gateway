@@ -12,7 +12,7 @@ class IpConfig(
     enabled: Boolean,
     @ConfigItem("The IP that will be displayed by the IP command.")
     var displayIp: String
-) : CommonExtensionConfig<IpConfig>(enabled, IpExtension.extensionName())
+) : CommonExtensionConfig(enabled, IpExtension.extensionName())
 
 @Serializable
 data class IpConfigSurrogate(val enabled: Boolean, val displayIp: String) {

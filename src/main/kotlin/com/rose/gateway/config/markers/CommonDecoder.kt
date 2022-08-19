@@ -10,6 +10,12 @@ import com.sksamuel.hoplite.decoder.isInline
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
+/**
+ * A decoder implementation for Hoplite to use when decoding the Gateway config schema.
+ * This is similar to the [DataClassDecoder] except that it only handles [ConfigObject]s and ignores data classes.
+ *
+ * @constructor Create a Common decoder.
+ */
 open class CommonDecoder : NullHandlingDecoder<Any> {
     companion object {
         val DECODER = DataClassDecoder()

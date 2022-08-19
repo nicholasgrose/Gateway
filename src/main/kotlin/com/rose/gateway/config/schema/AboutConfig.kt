@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = AboutConfigSerializer::class)
 class AboutConfig(
     enabled: Boolean
-) : CommonExtensionConfig<AboutConfig>(enabled, AboutExtension.extensionName())
+) : CommonExtensionConfig(enabled, AboutExtension.extensionName())
 
 @Serializable
 data class AboutConfigSurrogate(val enabled: Boolean) {

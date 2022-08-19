@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = WhitelistConfigSerializer::class)
 class WhitelistConfig(
     enabled: Boolean
-) : CommonExtensionConfig<WhitelistConfig>(enabled, WhitelistExtension.extensionName())
+) : CommonExtensionConfig(enabled, WhitelistExtension.extensionName())
 
 @Serializable
 data class WhitelistConfigSurrogate(val enabled: Boolean) {

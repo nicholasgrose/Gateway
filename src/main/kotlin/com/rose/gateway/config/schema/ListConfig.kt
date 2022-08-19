@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = ListConfigSerializer::class)
 class ListConfig(
     enabled: Boolean
-) : CommonExtensionConfig<ListConfig>(enabled, ListExtension.extensionName())
+) : CommonExtensionConfig(enabled, ListExtension.extensionName())
 
 @Serializable
 data class ListConfigSurrogate(val enabled: Boolean) {

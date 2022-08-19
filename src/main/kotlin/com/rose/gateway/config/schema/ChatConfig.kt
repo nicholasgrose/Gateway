@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = ChatConfigSerializer::class)
 class ChatConfig(
     enabled: Boolean
-) : CommonExtensionConfig<ChatConfig>(enabled, ChatExtension.extensionName())
+) : CommonExtensionConfig(enabled, ChatExtension.extensionName())
 
 @Serializable
 data class ChatConfigSurrogate(val enabled: Boolean) {
