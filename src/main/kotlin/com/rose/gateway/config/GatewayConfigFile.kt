@@ -24,15 +24,16 @@ import java.nio.file.Path
 class GatewayConfigFile : KoinComponent {
     companion object {
         const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
+        const val DEFAULT_CONFIG_FILE_RESOURCE_PATH = "/$DEFAULT_CONFIG_FILE_RESOURCE_NAME"
         const val CONFIG_FILE_NAME = "config.yaml"
     }
-
-    val defaultConfig = loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_NAME).notNullWithMissingDefaultConfigMessage()
 
     private val plugin: GatewayPlugin by inject()
 
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
+
+    val defaultConfig = loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
 
     /**
      * Loads the gateway config file, creating it if it is missing.

@@ -2,9 +2,9 @@ package com.rose.gateway.config.schema
 
 import com.rose.gateway.config.markers.CommonExtensionConfig
 import com.rose.gateway.config.markers.ConfigItem
-import com.rose.gateway.config.markers.SurrogateBasedSerializer
-import com.rose.gateway.config.markers.SurrogateConverter
 import com.rose.gateway.discord.bot.extensions.ip.IpExtension
+import com.rose.gateway.shared.serialization.SurrogateBasedSerializer
+import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
 
 @Serializable(with = IpConfigSerializer::class)

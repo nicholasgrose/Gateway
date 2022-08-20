@@ -2,10 +2,10 @@ package com.rose.gateway.config.schema
 
 import com.rose.gateway.config.markers.ConfigItem
 import com.rose.gateway.config.markers.ConfigObject
-import com.rose.gateway.config.markers.SurrogateBasedSerializer
-import com.rose.gateway.config.markers.SurrogateConverter
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import com.rose.gateway.shared.serialization.SurrogateBasedSerializer
+import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
@@ -23,10 +23,7 @@ class BotConfig(
     private val bot: DiscordBot by inject()
 
     @ConfigItem(
-        """
-            The token used by the bot to access discord.
-            Accessible at https://discord.com/developers/applications/.
-        """
+        "The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/."
     )
     var token = token
         set(value) {
