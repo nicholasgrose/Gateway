@@ -12,12 +12,22 @@ import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * The config for the Discord bot.
+ *
+ * @property token The token for the Discord bot.
+ * @property botChannels The channels in which the Discord bot should operate.
+ * @property extensions The config for the Discord bot's extensions.
+ * @constructor Creates a bot config with the given data.
+ *
+ * @param token The token to use initially.
+ * @param botChannels The bot channels to use initially.
+ */
 @Serializable(with = BotConfigSerializer::class)
 class BotConfig(
     token: String,
     botChannels: List<String>,
-    @ConfigItem
-    val extensions: ExtensionsConfig
+    @ConfigItem val extensions: ExtensionsConfig
 ) : KoinComponent, ConfigObject {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
     private val bot: DiscordBot by inject()
@@ -41,6 +51,16 @@ class BotConfig(
         }
 }
 
+/**
+ * Surrogate for serialization of [BotConfig].
+ *
+ * @property token The token for the Discord bot.
+ * @property botChannels The channels in which the Discord bot should operate.
+ * @property extensions The config for the Discord bot's extensions.
+ * @constructor Create a bot config surrogate.
+ *
+ * @see BotConfig
+ */
 @Serializable
 data class BotConfigSurrogate(
     val token: String,
@@ -62,5 +82,8 @@ data class BotConfigSurrogate(
     }
 }
 
+/**
+ * The serializer for [BotConfig].
+ */
 object BotConfigSerializer :
     SurrogateBasedSerializer<BotConfig, BotConfigSurrogate>(BotConfigSurrogate.serializer(), BotConfigSurrogate)
