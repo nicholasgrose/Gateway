@@ -60,6 +60,7 @@ class BotConfig(
  * @constructor Create a bot config surrogate.
  *
  * @see BotConfig
+ * @see BotConfigSerializer
  */
 @Serializable
 data class BotConfigSurrogate(
@@ -84,6 +85,9 @@ data class BotConfigSurrogate(
 
 /**
  * The serializer for [BotConfig].
+ *
+ * @see BotConfig
+ * @see BotConfigSurrogate
  */
 object BotConfigSerializer :
     SurrogateBasedSerializer<BotConfig, BotConfigSurrogate>(BotConfigSurrogate.serializer(), BotConfigSurrogate)
