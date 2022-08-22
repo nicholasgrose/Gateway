@@ -33,7 +33,7 @@ class ChatExtension : Extension() {
 
     override suspend fun setup() {
         event {
-            check(MessageCheck.notSelf, MessageCheck.isConfiguredBotChannel)
+            check(MessageCheck.notSelf, MessageCheck.isValidBotChannel)
 
             action {
                 val message = DiscordMessageProcessor.createMessage(event)

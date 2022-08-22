@@ -6,16 +6,21 @@ import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Provides functions for sending messages in Discord.
+ */
 object DiscordMessageSender : KoinComponent {
-    val bot: DiscordBot by inject()
+    private val bot: DiscordBot by inject()
 
+    /**
+     * Sends a message to all valid channels.
+     *
+     * @param message The message to send.
+     * @receiver The bot channels that the message is created in.
+     */
     suspend fun sendGameChatMessage(message: MessageCreateBuilder.() -> Unit) {
-        sendToAllBotChannels(message)
-    }
-
-    private suspend fun sendToAllBotChannels(builder: MessageCreateBuilder.() -> Unit) {
         for (channel in bot.context.botChannels) {
-            channel.createMessage(builder)
+            channel.createMessage(message)
         }
     }
 }
