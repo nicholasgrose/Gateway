@@ -7,7 +7,8 @@ import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 import com.rose.gateway.minecraft.logging.Logger
-import kotlinx.coroutines.runBlocking
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.command.CommandSender
@@ -15,21 +16,21 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 object BotCommands : KoinComponent {
-    val config: PluginConfig by inject()
-    val bot: DiscordBot by inject()
+    private val bot: DiscordBot by inject()
+    private val config: PluginConfig by inject()
+    private val pluginScope: PluginCoroutineScope by inject()
 
     fun restartBot(context: CommandContext<NoArguments>): Boolean {
         sendAndLogMessage(context.sender, "Restarting the Discord bot...")
 
-        runBlocking {
-            bot.stop()
-            bot.start()
-        }
+        pluginScope.launch {
+            bot.restart()
 
-        if (bot.botStatus == BotStatus.RUNNING) {
-            sendAndLogMessage(context.sender, "Discord bot restarted.")
-        } else {
-            sendAndLogMessage(context.sender, "Discord bot failed to restart. Check bot status for more info.")
+            if (bot.botStatus == BotStatus.RUNNING) {
+                sendAndLogMessage(context.sender, "Discord bot restarted.")
+            } else {
+                sendAndLogMessage(context.sender, "Discord bot failed to restart. Check bot status for more info.")
+            }
         }
 
         return true

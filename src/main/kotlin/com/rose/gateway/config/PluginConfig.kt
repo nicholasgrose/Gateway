@@ -21,7 +21,7 @@ class PluginConfig : KoinComponent {
 
     private val configFile = GatewayConfigFile()
     var config: Config = runBlocking {
-        configFile.loadOrCreateConfig()
+        configFile.safelyLoadConfig()
     }
 
     /**
@@ -30,11 +30,11 @@ class PluginConfig : KoinComponent {
      * @return Whether the config was successfully loaded.
      */
     suspend fun reloadConfig(): Boolean {
-        config = configFile.loadOrCreateConfig()
+        config = configFile.safelyLoadConfig()
 
         return if (notLoaded()) {
             pluginCoroutineScope.launch {
-                bot.stop()
+                bot.close()
             }
 
             false

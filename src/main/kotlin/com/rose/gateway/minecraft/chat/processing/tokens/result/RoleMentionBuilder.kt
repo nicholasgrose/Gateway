@@ -11,7 +11,7 @@ class RoleMentionBuilder : KoinComponent {
     private val resultBuilder = ResultBuilder()
 
     suspend fun createRoleMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.botGuilds) {
+        for (guild in bot.context.botGuilds) {
             for (role in guild.roles.toSet()) {
                 val minecraftText = "@${role.name}"
                 val discordText = "<@&${role.id}>"

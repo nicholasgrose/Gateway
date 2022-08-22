@@ -15,7 +15,7 @@ object MessageCheck : KoinComponent {
         val channelBehaviour = channelFor(event)
         val channel = channelBehaviour?.asChannelOrNull()
 
-        if (bot.botChannels.contains(channel)) pass()
+        if (bot.context.botChannels.contains(channel)) pass()
         else fail("Channel is not configured bot channel.")
     }
 

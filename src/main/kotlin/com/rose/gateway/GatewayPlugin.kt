@@ -29,8 +29,6 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
     private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {
-        Logger.info("Starting Gateway!")
-
         runBlocking {
             bot.start()
         }
@@ -42,8 +40,6 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
     }
 
     override fun onDisable() {
-        Logger.info("Stopping Gateway!")
-
         runBlocking {
             bot.close()
             coroutineScope.cancelAndJoinContext()

@@ -37,7 +37,7 @@ class VoiceChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, 
     }
 
     private suspend fun createVoiceChannelMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.botGuilds) {
+        for (guild in bot.context.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildVoice) continue
 

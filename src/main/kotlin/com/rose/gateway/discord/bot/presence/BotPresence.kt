@@ -5,7 +5,7 @@ import com.rose.gateway.minecraft.server.ServerInfo
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class DynamicPresence : KoinComponent {
+object BotPresence : KoinComponent {
     val bot: DiscordBot by inject()
 
     suspend fun updatePresencePlayerCount() {

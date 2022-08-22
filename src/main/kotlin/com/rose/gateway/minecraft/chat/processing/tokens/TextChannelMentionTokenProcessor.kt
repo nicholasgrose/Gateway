@@ -37,7 +37,7 @@ class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, U
     }
 
     private suspend fun createTextChannelMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.botGuilds) {
+        for (guild in bot.context.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildText) continue
 

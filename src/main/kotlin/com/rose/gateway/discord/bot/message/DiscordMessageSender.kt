@@ -14,7 +14,7 @@ object DiscordMessageSender : KoinComponent {
     }
 
     private suspend fun sendToAllBotChannels(builder: MessageCreateBuilder.() -> Unit) {
-        for (channel in bot.botChannels) {
+        for (channel in bot.context.botChannels) {
             channel.createMessage(builder)
         }
     }

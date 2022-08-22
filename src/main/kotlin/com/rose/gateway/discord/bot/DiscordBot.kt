@@ -4,87 +4,94 @@ import com.kotlindiscord.kord.extensions.ExtensibleBot
 import com.kotlindiscord.kord.extensions.utils.loadModule
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.botChannels
 import com.rose.gateway.config.extensions.botToken
-import com.rose.gateway.discord.bot.client.ClientInfo
-import com.rose.gateway.discord.bot.presence.DynamicPresence
+import com.rose.gateway.discord.bot.presence.BotPresence
 import com.rose.gateway.minecraft.logging.Logger
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import dev.kord.core.Kord
-import dev.kord.core.entity.Guild
-import dev.kord.core.entity.channel.TextChannel
 import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class DiscordBot : KoinComponent {
-    private val plugin: GatewayPlugin by inject()
     private val config: PluginConfig by inject()
+    private val plugin: GatewayPlugin by inject()
+    private val pluginScope: PluginCoroutineScope by inject()
 
-    val botChannels = mutableSetOf<TextChannel>()
-    val botGuilds = mutableSetOf<Guild>()
-    private var job: Job? = null
+    val context = BotContext()
     var botStatus = BotStatus.NOT_STARTED
-
-    var bot = buildBot()
-    val presence = DynamicPresence()
-
-    private fun buildBot(): ExtensibleBot? {
-        return try {
-            if (config.notLoaded()) {
-                botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
-                null
-            } else {
-                runBlocking {
-                    createBot(config.botToken())
-                }
-            }
-        } catch (e: KordInitializationException) {
-            botStatus = BotStatus.STOPPED because e.localizedMessage
-            null
-        }
+    var bot = runBlocking {
+        safelyBuildBot()
     }
 
-    private suspend fun createBot(token: String): ExtensibleBot {
-        return ExtensibleBot(token) {
-            hooks {
-                kordShutdownHook = false
+    private var botJob: Job? = null
 
-                afterKoinSetup {
-                    loadModule {
-                        single { plugin }
-                        single { config }
-                    }
+    private suspend fun safelyBuildBot(): ExtensibleBot? = try {
+        if (config.notLoaded()) {
+            Logger.warning("Bot construction failed because no configuration is loaded.")
+
+            botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
+
+            null
+        } else {
+            Logger.info("Building Discord bot...")
+
+            buildBot(config.botToken())
+        }
+    } catch (e: KordInitializationException) {
+        Logger.warning("Bot construction failed (${e.localizedMessage})")
+
+        botStatus = BotStatus.STOPPED because e.localizedMessage
+
+        null
+    }
+
+    private suspend fun buildBot(token: String): ExtensibleBot = ExtensibleBot(token) {
+        hooks {
+            kordShutdownHook = false
+
+            afterKoinSetup {
+                loadModule {
+                    single { plugin }
+                    single { config }
                 }
             }
-            presence {
-                since = plugin.startTime
-                playing(presence.presenceForPlayerCount())
-            }
-            applicationCommands {
-                enabled = true
-            }
-            extensions {
-                extensions.addAll(
-                    DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() }
-                )
-            }
+        }
+        presence {
+            since = plugin.startTime
+            playing(BotPresence.presenceForPlayerCount())
+        }
+        applicationCommands {
+            enabled = true
+        }
+        extensions {
+            extensions.addAll(
+                DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() }
+            )
         }
     }
 
     fun kordClient(): Kord? = bot?.getKoin()?.get()
 
     suspend fun start() {
-        if (bot == null) return
+        Logger.info("Starting Discord bot...")
+
+        if (bot == null) {
+            Logger.warning("Could not start because no valid bot exists. Check bot status for error.")
+
+            return
+        }
 
         botStatus = BotStatus.STARTING
 
         unloadDisabledExtensions()
-        fillBotChannels()
-        launchBotInNewThread()
+        context.fillBotChannels()
+        launchConcurrentBot()
 
-        Logger.info("Bot ready!")
+        Logger.info("Discord bot ready!")
     }
 
     private suspend fun unloadDisabledExtensions() {
@@ -93,59 +100,47 @@ class DiscordBot : KoinComponent {
         }
     }
 
-    suspend fun fillBotChannels() {
-        val validBotChannels = config.botChannels()
-
-        botChannels.clear()
-        botGuilds.clear()
-
-        kordClient()?.guilds?.collect { guild ->
-            guild.channels.collect { channel ->
-                if (
-                    ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
-                    channel is TextChannel &&
-                    channel.name in validBotChannels
-                ) {
-                    botChannels.add(channel)
-                    botGuilds.add(guild)
-                }
-            }
-        }
-    }
-
-    private suspend fun launchBotInNewThread() {
-        job = try {
+    private suspend fun launchConcurrentBot() {
+        botJob = try {
             botStatus = BotStatus.RUNNING
-            bot?.startAsync()
+
+            pluginScope.launch {
+                bot?.start()
+
+                botStatus = BotStatus.STOPPED
+            }
         } catch (error: KordInitializationException) {
             val message = "An error occurred while running bot: ${error.message}"
+
             botStatus = BotStatus.STOPPED because message
             Logger.warning("Could not start Discord bot. Check status for info.")
+
             null
         }
     }
 
-    suspend fun stop() {
+    private suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
         bot?.stop()
-        job?.join()
+        botJob?.join()
+    }
 
-        botStatus = BotStatus.STOPPED
+    suspend fun restart() {
+        stop()
+        start()
     }
 
     suspend fun close() {
         botStatus = BotStatus.STOPPING
 
         bot?.close()
-        job?.join()
-
-        botStatus = BotStatus.STOPPED
+        botJob?.join()
     }
 
     suspend fun rebuild() {
         close()
-        bot = buildBot()
+        bot = safelyBuildBot()
         start()
     }
 }

@@ -18,7 +18,7 @@ class UserMentionBuilder : KoinComponent {
 
     @OptIn(KordExperimental::class)
     suspend fun createUserMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.botGuilds) {
+        for (guild in bot.context.botGuilds) {
             val members = guild.getMembers(nameString, MEMBER_QUERY_MAX)
             val firstMember = members.firstOrNull() ?: break
             val discordText = "<@!${firstMember.id}>"

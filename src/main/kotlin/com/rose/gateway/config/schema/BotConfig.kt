@@ -47,7 +47,7 @@ class BotConfig(
     var botChannels = botChannels
         set(value) {
             field = value
-            runBlocking { bot.fillBotChannels() }
+            runBlocking { bot.context.fillBotChannels() }
         }
 }
 

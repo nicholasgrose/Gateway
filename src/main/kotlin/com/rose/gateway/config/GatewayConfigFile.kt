@@ -33,19 +33,27 @@ class GatewayConfigFile : KoinComponent {
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
 
-    val defaultConfig = loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
+    val defaultConfig = run {
+        Logger.info("Loading fallback config...")
+
+        loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
+    }
 
     /**
      * Loads the gateway config file, creating it if it is missing.
      *
      * @return The loaded Gateway config object.
      */
-    suspend fun loadOrCreateConfig(): Config {
+    suspend fun safelyLoadConfig(): Config {
         ensureConfigurationFileExists()
 
         val config = loadConfig(configPath.toString())
 
-        return config ?: defaultConfig
+        return if (config == null) {
+            Logger.warning("Fell back to default config.")
+
+            defaultConfig
+        } else config
     }
 
     /**
