@@ -16,6 +16,11 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * The Discord bot that the plugin runs.
+ *
+ * @constructor Creates a Discord bot on standby.
+ */
 class DiscordBot : KoinComponent {
     private val config: PluginConfig by inject()
     private val plugin: GatewayPlugin by inject()
@@ -29,6 +34,11 @@ class DiscordBot : KoinComponent {
 
     private var botJob: Job? = null
 
+    /**
+     * Builds a bot with error handling that returns null if building is impossible or fails.
+     *
+     * @return The build bot or null, if building failed.
+     */
     private suspend fun safelyBuildBot(): ExtensibleBot? = try {
         if (config.notLoaded()) {
             Logger.warning("Bot construction failed because no configuration is loaded.")
@@ -49,6 +59,12 @@ class DiscordBot : KoinComponent {
         null
     }
 
+    /**
+     * Builds the Discord bot on standby.
+     *
+     * @param token The token the bot will be started with.
+     * @return The build bot.
+     */
     private suspend fun buildBot(token: String): ExtensibleBot = ExtensibleBot(token) {
         hooks {
             kordShutdownHook = false
@@ -74,8 +90,16 @@ class DiscordBot : KoinComponent {
         }
     }
 
+    /**
+     * Gives the Kord client used by the Discord bot.
+     *
+     * @return The Kord client or null, if no Discord bot exists.
+     */
     fun kordClient(): Kord? = bot?.getKoin()?.get()
 
+    /**
+     * Starts the Discord bot.
+     */
     suspend fun start() {
         Logger.info("Starting Discord bot...")
 
@@ -94,12 +118,18 @@ class DiscordBot : KoinComponent {
         Logger.info("Discord bot ready!")
     }
 
+    /**
+     * Unloads disabled bot extensions.
+     */
     private suspend fun unloadDisabledExtensions() {
         for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
             if (!extension.isEnabled(plugin)) bot!!.unloadExtension(extension.extensionName())
         }
     }
 
+    /**
+     * Launches the bot in a new parallel task.
+     */
     private suspend fun launchConcurrentBot() {
         botJob = try {
             botStatus = BotStatus.RUNNING
@@ -119,6 +149,9 @@ class DiscordBot : KoinComponent {
         }
     }
 
+    /**
+     * Stops the Discord bot such that it can be restarted.
+     */
     private suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
@@ -126,11 +159,17 @@ class DiscordBot : KoinComponent {
         botJob?.join()
     }
 
+    /**
+     * Restart the Discord bot without rebuilding it.
+     */
     suspend fun restart() {
         stop()
         start()
     }
 
+    /**
+     * Fully shutdown the Discord bot. It cannot be restarted unless rebuilt.
+     */
     suspend fun close() {
         botStatus = BotStatus.STOPPING
 
@@ -138,6 +177,9 @@ class DiscordBot : KoinComponent {
         botJob?.join()
     }
 
+    /**
+     * Fully rebuilds the Discord bot and starts it.
+     */
     suspend fun rebuild() {
         close()
         bot = safelyBuildBot()

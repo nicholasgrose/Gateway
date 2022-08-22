@@ -8,6 +8,11 @@ import dev.kord.core.entity.channel.TextChannel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * The Discord context in which the bot operates.
+ *
+ * @constructor Creates an empty bot context.
+ */
 class BotContext : KoinComponent {
     private val bot: DiscordBot by inject()
     private val config: PluginConfig by inject()
@@ -15,6 +20,9 @@ class BotContext : KoinComponent {
     val botChannels = mutableSetOf<TextChannel>()
     val botGuilds = mutableSetOf<Guild>()
 
+    /**
+     * Fills the valid bot channel set and the valid bot guild set.
+     */
     suspend fun fillBotChannels() {
         val validBotChannels = config.botChannels()
 
@@ -29,6 +37,7 @@ class BotContext : KoinComponent {
                     channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)
+                    // The guilds are only added if they have valid channels for message sending.
                     botGuilds.add(guild)
                 }
             }
