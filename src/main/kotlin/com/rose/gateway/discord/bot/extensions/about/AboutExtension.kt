@@ -10,24 +10,24 @@ import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
 import org.koin.core.component.inject
 
+/**
+ * A Discord bot extension that provides Discord commands regarding the plugin.
+ *
+ * @constructor Create an "about extension".
+ */
 class AboutExtension : Extension() {
     companion object : ExtensionToggle {
-        val config: PluginConfig by inject()
+        private val config: PluginConfig by inject()
 
-        override fun extensionName(): String {
-            return "about"
-        }
+        override fun extensionName(): String = "about"
 
-        override fun extensionConstructor(): () -> Extension {
-            return ::AboutExtension
-        }
+        override fun extensionConstructor(): () -> Extension = ::AboutExtension
 
-        override fun isEnabled(): Boolean {
-            return config.aboutExtensionEnabled()
-        }
+        override fun isEnabled(): Boolean = config.aboutExtensionEnabled()
     }
 
-    val plugin: GatewayPlugin by inject()
+    private val plugin: GatewayPlugin by inject()
+
     override val name = extensionName()
 
     override suspend fun setup() {
@@ -37,6 +37,7 @@ class AboutExtension : Extension() {
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
+
                 respond {
                     content = "I am currently version ${plugin.description.version}." +
                         "All versions are available at https://github.com/nicholasgrose/Gateway/."
@@ -50,6 +51,7 @@ class AboutExtension : Extension() {
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
+
                 respond {
                     @Suppress("HttpUrlsUsage")
                     content = "http://www.scpwiki.com/church-of-the-broken-god-hub"

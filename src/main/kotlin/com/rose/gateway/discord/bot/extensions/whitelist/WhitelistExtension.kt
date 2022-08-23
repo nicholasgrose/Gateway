@@ -12,21 +12,20 @@ import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
 import org.koin.core.component.inject
 
+/**
+ * A Discord bot extension providing Discord commands to modify the whitelist.
+ *
+ * @constructor Create a "whitelist extension".
+ */
 class WhitelistExtension : Extension() {
     companion object : ExtensionToggle {
-        val config: PluginConfig by inject()
+        private val config: PluginConfig by inject()
 
-        override fun extensionName(): String {
-            return "whitelist"
-        }
+        override fun extensionName(): String = "whitelist"
 
-        override fun extensionConstructor(): () -> Extension {
-            return ::WhitelistExtension
-        }
+        override fun extensionConstructor(): () -> Extension = ::WhitelistExtension
 
-        override fun isEnabled(): Boolean {
-            return config.whitelistExtensionEnabled()
-        }
+        override fun isEnabled(): Boolean = config.whitelistExtensionEnabled()
     }
 
     override val name: String = extensionName()
@@ -42,11 +41,13 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
+
                     val status = when (Whitelist.addToWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully added to whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} already exists in whitelist."
                         WhitelistState.STATE_INVALID -> "An error occurred adding ${arguments.username} to whitelist."
                     }
+
                     respond {
                         content = status
                     }
@@ -59,12 +60,13 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
+
                     val status = when (Whitelist.removeFromWhitelist(arguments.username)) {
                         WhitelistState.STATE_MODIFIED -> "${arguments.username} successfully removed from whitelist."
                         WhitelistState.STATE_SUSTAINED -> "${arguments.username} does not exist in whitelist."
-                        WhitelistState.STATE_INVALID ->
-                            "An error occurred removing ${arguments.username} from whitelist."
+                        WhitelistState.STATE_INVALID -> "Error occurred removing ${arguments.username} from whitelist."
                     }
+
                     respond {
                         content = status
                     }
@@ -77,10 +79,11 @@ class WhitelistExtension : Extension() {
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} requested list of whitelisted players!")
+
                     val whitelistedPlayers = Whitelist.whitelistedPlayersAsString()
-                    val response =
-                        if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."
-                        else "Players currently whitelisted: $whitelistedPlayers"
+                    val response = if (whitelistedPlayers.isEmpty()) "No players currently whitelisted."
+                    else "Players currently whitelisted: $whitelistedPlayers"
+
                     respond {
                         content = response
                     }

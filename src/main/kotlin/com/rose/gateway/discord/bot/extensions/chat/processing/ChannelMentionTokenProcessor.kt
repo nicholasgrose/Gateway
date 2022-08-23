@@ -12,17 +12,18 @@ import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Token processor that defines the channel mention token and its processing.
+ *
+ * @constructor Create a channel mention token processor.
+ */
 class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
     private val config: PluginConfig by inject()
 
-    override fun tokenType(): LixyTokenType {
-        return DiscordChatComponent.CHANNEL_MENTION
-    }
+    override fun tokenType(): LixyTokenType = DiscordChatComponent.CHANNEL_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "<#\\d+>"
-    }
+    override fun regexPattern(): String = "<#\\d+>"
 
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(2 until token.string.length - 1)

@@ -12,6 +12,11 @@ import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Token processor that defines the role mention token and its processing.
+ *
+ * @constructor Create a role mention token processor.
+ */
 class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
     private val config: PluginConfig by inject()
 
@@ -19,14 +24,10 @@ class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
         const val SNOWFLAKE_START_INDEX = 3
     }
 
-    override fun tokenType(): LixyTokenType {
-        return DiscordChatComponent.ROLE_MENTION
-    }
+    override fun tokenType(): LixyTokenType = DiscordChatComponent.ROLE_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "<@&\\d+>"
-    }
+    override fun regexPattern(): String = "<@&\\d+>"
 
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)

@@ -10,21 +10,20 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.minecraft.server.ServerInfo
 import org.koin.core.component.inject
 
+/**
+ * A Discord bot extension providing Discord commands for listing players.
+ *
+ * @constructor Create a "list extension".
+ */
 class ListExtension : Extension() {
     companion object : ExtensionToggle {
-        val config: PluginConfig by inject()
+        private val config: PluginConfig by inject()
 
-        override fun extensionName(): String {
-            return "list"
-        }
+        override fun extensionName(): String = "list"
 
-        override fun extensionConstructor(): () -> Extension {
-            return ::ListExtension
-        }
+        override fun extensionConstructor(): () -> Extension = ::ListExtension
 
-        override fun isEnabled(): Boolean {
-            return config.listExtensionEnabled()
-        }
+        override fun isEnabled(): Boolean = config.listExtensionEnabled()
     }
 
     override val name: String = extensionName()
@@ -32,14 +31,14 @@ class ListExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "list"
-            description = "Gives a list of all online players."
+            description = "Lists all online players."
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
+
                 val playerList = ServerInfo.playerListAsString()
-                val response =
-                    if (playerList.isEmpty()) "No players online."
-                    else "Players online: $playerList"
+                val response = if (playerList.isEmpty()) "No players online." else "Players online: $playerList"
+
                 respond {
                     content = response
                 }

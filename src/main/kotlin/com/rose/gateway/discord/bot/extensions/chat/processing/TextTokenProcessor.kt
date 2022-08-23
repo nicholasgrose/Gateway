@@ -7,15 +7,16 @@ import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
+/**
+ * Token processor that defines a text token and its processing.
+ *
+ * @constructor Create a text token processor.
+ */
 class TextTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
-    override fun tokenType(): LixyTokenType {
-        return DiscordChatComponent.TEXT
-    }
+    override fun tokenType(): LixyTokenType = DiscordChatComponent.TEXT
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return ".[^<]*"
-    }
+    override fun regexPattern(): String = ".[^<]*"
 
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         return Component.text(token.string)

@@ -11,21 +11,20 @@ import com.rose.gateway.discord.bot.message.DiscordMessageSender
 import com.rose.gateway.minecraft.chat.SendMessage
 import org.koin.core.component.inject
 
+/**
+ * A Discord bot extension that handles the cross-chat functionality in Discord.
+ *
+ * @constructor Create a "chat extension".
+ */
 class ChatExtension : Extension() {
     companion object : ExtensionToggle {
-        val config: PluginConfig by inject()
+        private val config: PluginConfig by inject()
 
-        override fun extensionName(): String {
-            return "chat"
-        }
+        override fun extensionName(): String = "chat"
 
-        override fun extensionConstructor(): () -> Extension {
-            return ::ChatExtension
-        }
+        override fun extensionConstructor(): () -> Extension = ::ChatExtension
 
-        override fun isEnabled(): Boolean {
-            return config.chatExtensionEnabled()
-        }
+        override fun isEnabled(): Boolean = config.chatExtensionEnabled()
     }
 
     override val name = extensionName()
@@ -36,6 +35,7 @@ class ChatExtension : Extension() {
 
             action {
                 val message = DiscordMessageProcessor.createMessage(event)
+
                 SendMessage.sendDiscordMessage(message)
             }
         }

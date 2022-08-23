@@ -10,15 +10,16 @@ import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 import org.intellij.lang.annotations.Language
 
+/**
+ * Token processor that defines a URL token and its processing.
+ *
+ * @constructor Create a URL token processor.
+ */
 class UrlTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
-    override fun tokenType(): LixyTokenType {
-        return DiscordChatComponent.URL
-    }
+    override fun tokenType(): LixyTokenType = DiscordChatComponent.URL
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "(https?|ftp|file)://[-a-zA-Z\\d+&@#/%?=~_|!:,.;]*[-a-zA-Z\\d+&@#/%=~_|]"
-    }
+    override fun regexPattern(): String = "(https?|ftp|file)://[-a-zA-Z\\d+&@#/%?=~_|!:,.;]*[-a-zA-Z\\d+&@#/%=~_|]"
 
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val url = token.string
