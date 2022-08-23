@@ -123,7 +123,7 @@ class DiscordBot : KoinComponent {
      */
     private suspend fun unloadDisabledExtensions() {
         for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
-            if (!extension.isEnabled(plugin)) bot!!.unloadExtension(extension.extensionName())
+            if (!extension.isEnabled()) bot!!.unloadExtension(extension.extensionName())
         }
     }
 

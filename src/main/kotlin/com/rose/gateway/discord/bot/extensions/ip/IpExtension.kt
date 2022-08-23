@@ -3,15 +3,14 @@ package com.rose.gateway.discord.bot.extensions.ip
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.displayIp
 import com.rose.gateway.config.extensions.ipExtensionEnabled
-import com.rose.gateway.discord.bot.extensions.ToggleableExtension
+import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import org.koin.core.component.inject
 
 class IpExtension : Extension() {
-    companion object : ToggleableExtension {
+    companion object : ExtensionToggle {
         val config: PluginConfig by inject()
 
         override fun extensionName(): String {
@@ -22,7 +21,7 @@ class IpExtension : Extension() {
             return ::IpExtension
         }
 
-        override fun isEnabled(plugin: GatewayPlugin): Boolean {
+        override fun isEnabled(): Boolean {
             return config.ipExtensionEnabled()
         }
     }

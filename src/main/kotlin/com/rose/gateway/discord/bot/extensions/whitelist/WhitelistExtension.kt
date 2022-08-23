@@ -4,17 +4,16 @@ import com.kotlindiscord.kord.extensions.commands.application.slash.ephemeralSub
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.whitelistExtensionEnabled
-import com.rose.gateway.discord.bot.extensions.ToggleableExtension
+import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
 import org.koin.core.component.inject
 
 class WhitelistExtension : Extension() {
-    companion object : ToggleableExtension {
+    companion object : ExtensionToggle {
         val config: PluginConfig by inject()
 
         override fun extensionName(): String {
@@ -25,7 +24,7 @@ class WhitelistExtension : Extension() {
             return ::WhitelistExtension
         }
 
-        override fun isEnabled(plugin: GatewayPlugin): Boolean {
+        override fun isEnabled(): Boolean {
             return config.whitelistExtensionEnabled()
         }
     }

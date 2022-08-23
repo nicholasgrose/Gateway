@@ -6,12 +6,12 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.aboutExtensionEnabled
-import com.rose.gateway.discord.bot.extensions.ToggleableExtension
+import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
 import org.koin.core.component.inject
 
 class AboutExtension : Extension() {
-    companion object : ToggleableExtension {
+    companion object : ExtensionToggle {
         val config: PluginConfig by inject()
 
         override fun extensionName(): String {
@@ -22,7 +22,7 @@ class AboutExtension : Extension() {
             return ::AboutExtension
         }
 
-        override fun isEnabled(plugin: GatewayPlugin): Boolean {
+        override fun isEnabled(): Boolean {
             return config.aboutExtensionEnabled()
         }
     }
