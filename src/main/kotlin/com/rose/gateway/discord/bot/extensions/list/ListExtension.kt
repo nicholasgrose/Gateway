@@ -36,8 +36,12 @@ class ListExtension : Extension() {
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
 
-                val playerList = ServerInfo.playerListAsString()
-                val response = if (playerList.isEmpty()) "No players online." else "Players online: $playerList"
+                val playerList = ServerInfo.onlinePlayers
+                val response = if (playerList.isEmpty()) "No players online." else {
+                    val playerListString = ServerInfo.onlinePlayers.joinToString(", ") { player -> player.name }
+
+                    "Players online: $playerListString"
+                }
 
                 respond {
                     content = response
