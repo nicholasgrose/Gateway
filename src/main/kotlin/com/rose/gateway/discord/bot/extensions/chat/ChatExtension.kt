@@ -8,7 +8,7 @@ import com.rose.gateway.discord.bot.checks.MessageCheck
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.discord.bot.extensions.chat.processing.DiscordMessageProcessor
 import com.rose.gateway.discord.bot.message.DiscordMessageSender
-import com.rose.gateway.minecraft.chat.SendMessage
+import com.rose.gateway.minecraft.server.Console
 import org.koin.core.component.inject
 
 /**
@@ -36,7 +36,7 @@ class ChatExtension : Extension() {
             action {
                 val message = DiscordMessageProcessor.createMessage(event)
 
-                SendMessage.sendDiscordMessage(message)
+                Console.broadcastMessage(message)
             }
         }
 
