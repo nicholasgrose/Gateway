@@ -2,40 +2,33 @@ package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.discord.text.discordBoldSafe
 
-object DisplayCommandProcessor {
+object CommandTextExtractor {
     private val displayProcessorMap = mapOf(
-        "me" to DisplayCommandProcessor::processMe,
-        "say" to DisplayCommandProcessor::processSay
+        "me" to CommandTextExtractor::processMe,
+        "say" to CommandTextExtractor::processSay
     )
 
-    fun processPlayerCommand(command: String, sender: String): String {
-        val separatorIndex = command.indexOf(' ')
-
-        if (separatorIndex >= 0) {
-            val commandPrefix = command.substring(1, separatorIndex)
-            val processor = displayProcessorMap[commandPrefix]
-
-            if (processor != null) {
-                return processor(command, sender)
-            }
-        }
-
-        return ""
+    fun processPlayerCommand(command: String, sender: String): String? {
+        return extractCommandText(command, 1, sender)
     }
 
-    fun processServerCommand(command: String): String {
-        val separatorIndex = command.indexOf(' ')
+    fun processServerCommand(command: String): String? {
+        return extractCommandText(command, 0, "Server")
+    }
+
+    private fun extractCommandText(fullCommand: String, commandStartIndex: Int, senderName: String): String? {
+        val separatorIndex = fullCommand.indexOf(' ')
 
         if (separatorIndex >= 0) {
-            val commandPrefix = command.substring(0, separatorIndex)
+            val commandPrefix = fullCommand.substring(commandStartIndex, separatorIndex)
             val processor = displayProcessorMap[commandPrefix]
 
             if (processor != null) {
-                return processor(command, "Server")
+                return processor(fullCommand, senderName)
             }
         }
 
-        return ""
+        return null
     }
 
     private fun processMe(command: String, sender: String): String {
