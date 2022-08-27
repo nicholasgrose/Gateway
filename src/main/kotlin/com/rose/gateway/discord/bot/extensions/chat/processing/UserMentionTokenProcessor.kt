@@ -2,7 +2,7 @@ package com.rose.gateway.discord.bot.extensions.chat.processing
 
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.primaryColor
-import com.rose.gateway.minecraft.component.ComponentBuilder
+import com.rose.gateway.minecraft.component.atMember
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
@@ -35,6 +35,6 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
         val id = Snowflake(snowflakeString)
         val member = additionalData.getGuild()!!.getMemberOrNull(id) ?: return Component.text(token.string)
 
-        return ComponentBuilder.atDiscordMemberComponent(member, config.primaryColor())
+        return atMember(member, config.primaryColor())
     }
 }

@@ -3,21 +3,23 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
-import com.rose.gateway.config.extensions.secondaryColor
-import com.rose.gateway.config.extensions.tertiaryColor
-import com.rose.gateway.config.extensions.warningColor
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.italic
+import com.rose.gateway.minecraft.component.item
+import com.rose.gateway.minecraft.component.join
+import com.rose.gateway.minecraft.component.joinNewLine
+import com.rose.gateway.minecraft.component.joinSpace
+import com.rose.gateway.minecraft.component.plus
+import com.rose.gateway.minecraft.component.runCommandOnClick
+import com.rose.gateway.minecraft.component.showTextOnHover
+import com.rose.gateway.minecraft.component.underlined
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.reflection.simpleName
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.JoinConfiguration
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.event.HoverEvent
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -35,65 +37,31 @@ object ConfigMonitoringRunner : KoinComponent {
 
     private fun sendConfigListHelp(sender: CommandSender, items: List<String>) {
         val configs = items.map { config ->
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("* "),
-                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                    .hoverEvent(
-                        HoverEvent.showText(
-                            Component.join(
-                                JoinConfiguration.noSeparators(),
-                                Component.text("Get help for "),
-                                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                            )
-                        )
-                    )
-                    .clickEvent(ClickEvent.runCommand("/gateway config help $config"))
-            )
+            Component.text("* ") + item(config)
         }
 
         sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.newline()),
-                Component.text("Available Configurations: ", config.primaryColor()),
-                Component.join(JoinConfiguration.separator(Component.newline()), configs)
+            joinNewLine(
+                ColorComponent.primary("Available Configurations: "),
+                joinNewLine(configs)
             )
         )
     }
 
     private fun createIndividualSpecHelpMessage(item: Item<*>): Component {
-        return Component.join(
-            JoinConfiguration.separator(Component.newline()),
-            Component.text("Configuration Help:", config.primaryColor()),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Name: ", config.primaryColor()),
-                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC)
-            ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Type: ", config.primaryColor()),
+        return joinNewLine(
+            ColorComponent.primary("Configuration Help:"),
+            ColorComponent.primary("Name: ") + ColorComponent.tertiary(item.path).italic(),
+            join(
+                ColorComponent.primary("Type: "),
                 Component.text(item.type.simpleName),
-                Component.text(if (item.type.isMarkedNullable) "?" else "", config.warningColor())
+                ColorComponent.warning(if (item.type.isMarkedNullable) "?" else "")
             ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Current Value: ", config.primaryColor()),
-                Component.text(item.value.toString())
-            ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Description: ", config.primaryColor()),
-                Component.text(item.description)
-            ),
-            Component.text(
-                "View All Configurations",
-                config.secondaryColor(),
-                TextDecoration.UNDERLINED,
-                TextDecoration.ITALIC
-            )
-                .hoverEvent(HoverEvent.showText(Component.text("Click to view all configurations.")))
-                .clickEvent(ClickEvent.runCommand("/gateway config help"))
+            ColorComponent.primary("Current Value: ") + Component.text(item.value.toString()),
+            ColorComponent.primary("Description: ") + Component.text(item.description),
+            ColorComponent.secondary("View All Configurations").underlined().italic()
+                .showTextOnHover(Component.text("Click to view all configurations."))
+                .runCommandOnClick("/gateway config help")
         )
     }
 
@@ -123,13 +91,12 @@ object ConfigMonitoringRunner : KoinComponent {
     }
 
     fun sendConfigurationStatus(sender: CommandSender): Boolean {
+        val configStatus = if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
+
         sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text("Config Status:", config.primaryColor()),
-                Component.text(
-                    if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
-                )
+            joinSpace(
+                ColorComponent.primary("Config Status:"),
+                Component.text(configStatus)
             )
         )
 

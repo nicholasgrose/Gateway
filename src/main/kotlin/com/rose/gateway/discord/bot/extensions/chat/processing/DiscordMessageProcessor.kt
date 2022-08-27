@@ -1,20 +1,21 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.config.extensions.secondaryColor
-import com.rose.gateway.config.extensions.tertiaryColor
-import com.rose.gateway.minecraft.component.ComponentBuilder
+import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.atMember
+import com.rose.gateway.minecraft.component.italic
+import com.rose.gateway.minecraft.component.join
+import com.rose.gateway.minecraft.component.member
+import com.rose.gateway.minecraft.component.openUrlOnClick
+import com.rose.gateway.minecraft.component.showTextOnHover
+import com.rose.gateway.minecraft.component.underlined
 import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.JoinConfiguration
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.event.HoverEvent
-import net.kyori.adventure.text.format.TextDecoration
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -33,8 +34,7 @@ object DiscordMessageProcessor : KoinComponent {
      * @return The text after processing.
      */
     suspend fun createMessage(event: MessageCreateEvent): Component {
-        return Component.join(
-            JoinConfiguration.noSeparators(),
+        return join(
             generateNameBlock(event),
             generateMessagePrefixBlock(event),
             generateMessageBlock(event),
@@ -48,11 +48,10 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to convert into a name block.
      * @return The name block.
      */
-    private fun generateNameBlock(event: MessageCreateEvent): ComponentLike {
-        return Component.join(
-            JoinConfiguration.noSeparators(),
+    private fun generateNameBlock(event: MessageCreateEvent): Component {
+        return join(
             Component.text("<"),
-            ComponentBuilder.discordMemberComponent(event.member!!),
+            member(event.member!!),
             Component.text("> ")
         )
     }
@@ -63,18 +62,13 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to use as a source of data for the prefix.
      * @return The resultant prefix block.
      */
-    private suspend fun generateMessagePrefixBlock(event: MessageCreateEvent): ComponentLike {
+    private suspend fun generateMessagePrefixBlock(event: MessageCreateEvent): Component {
         val referenceComponent = componentForReferencedMessage(event) ?: return Component.empty()
 
-        return Component.join(
-            JoinConfiguration.noSeparators(),
-            Component.text("(Replying to ")
-                .color(config.primaryColor())
-                .decorate(TextDecoration.ITALIC),
+        return join(
+            ColorComponent.primary("(Replying to ").italic(),
             referenceComponent,
-            Component.text(") ")
-                .color(config.primaryColor())
-                .decorate(TextDecoration.ITALIC)
+            ColorComponent.primary(") ").italic()
         )
     }
 
@@ -84,7 +78,7 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to source the referenced message from.
      * @return The referenced message as a [Component] or null if none exists.
      */
-    private suspend fun componentForReferencedMessage(event: MessageCreateEvent): ComponentLike? {
+    private suspend fun componentForReferencedMessage(event: MessageCreateEvent): Component? {
         val referencedMessage = event.message.referencedMessage ?: return null
 
         return replyReferenceComponent(referencedMessage, event)
@@ -100,8 +94,7 @@ object DiscordMessageProcessor : KoinComponent {
     private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {
         val member = referencedMessageAuthor(referencedMessage, event) ?: return null
 
-        return ComponentBuilder.atDiscordMemberComponent(member, config.secondaryColor())
-            .decorate(TextDecoration.ITALIC)
+        return atMember(member, config.secondaryColor()).italic()
     }
 
     /**
@@ -133,11 +126,8 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event ot pull data from.
      * @return The message for Minecraft.
      */
-    private suspend fun generateMessageBlock(event: MessageCreateEvent): ComponentLike {
-        return Component.join(
-            JoinConfiguration.noSeparators(),
-            textProcessor.parseText(event.message.content, event)
-        )
+    private suspend fun generateMessageBlock(event: MessageCreateEvent): Component {
+        return join(textProcessor.parseText(event.message.content, event))
     }
 
     /**
@@ -146,33 +136,19 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to pull data from.
      * @return The message's suffix.
      */
-    private fun generateMessageSuffixBlock(event: MessageCreateEvent): ComponentLike {
+    private fun generateMessageSuffixBlock(event: MessageCreateEvent): Component {
         if (event.message.attachments.isEmpty()) return Component.empty()
 
-        return Component.text(" (Attachments: ")
-            .decorate(TextDecoration.ITALIC)
-            .color(config.primaryColor())
-            .append(
-                Component.join(
-                    JoinConfiguration.separator(
-                        Component.text(", ")
-                            .decorate(TextDecoration.ITALIC)
-                            .color(config.primaryColor())
-                    ),
-                    event.message.attachments.mapIndexed { index, attachment ->
-                        Component.text("Attachment$index")
-                            .decorate(TextDecoration.UNDERLINED)
-                            .decorate(TextDecoration.ITALIC)
-                            .color(config.tertiaryColor())
-                            .hoverEvent(HoverEvent.showText(Component.text("Open attachment link")))
-                            .clickEvent(ClickEvent.openUrl(attachment.url))
-                    }
-                )
-            )
-            .append(
-                Component.text(")")
-                    .decorate(TextDecoration.ITALIC)
-                    .color(config.primaryColor())
-            )
+        return join(
+            ColorComponent.primary(" (Attachments: ").italic(),
+            Component.join(
+                JoinConfiguration.separator(ColorComponent.primary(", ").italic()),
+                event.message.attachments.mapIndexed { index, attachment ->
+                    ColorComponent.tertiary("Attachment$index").italic().underlined()
+                        .showTextOnHover(Component.text("Open attachment link")).openUrlOnClick(attachment.url)
+                }
+            ),
+            ColorComponent.primary(")").italic()
+        )
     }
 }

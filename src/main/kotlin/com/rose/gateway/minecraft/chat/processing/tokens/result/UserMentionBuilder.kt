@@ -4,7 +4,7 @@ import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.DiscordBotConstants.MEMBER_QUERY_MAX
-import com.rose.gateway.minecraft.component.ComponentBuilder
+import com.rose.gateway.minecraft.component.atMember
 import dev.kord.common.annotation.KordExperimental
 import kotlinx.coroutines.flow.firstOrNull
 import org.koin.core.component.KoinComponent
@@ -24,7 +24,7 @@ class UserMentionBuilder : KoinComponent {
             val discordText = "<@!${firstMember.id}>"
 
             return TokenProcessingResult(
-                ComponentBuilder.atDiscordMemberComponent(firstMember, config.primaryColor()),
+                atMember(firstMember, config.primaryColor()),
                 discordText
             )
         }
