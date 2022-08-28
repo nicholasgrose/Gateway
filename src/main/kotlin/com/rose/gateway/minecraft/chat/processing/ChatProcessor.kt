@@ -15,7 +15,7 @@ import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 
-class MinecraftMessageProcessor {
+object ChatProcessor {
     private val textProcessor = TextProcessor(
         listOf(
             UserMentionTokenProcessor(),

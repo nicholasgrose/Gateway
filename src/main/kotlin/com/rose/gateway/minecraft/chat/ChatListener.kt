@@ -5,7 +5,7 @@ import com.rose.gateway.config.extensions.chatExtensionEnabled
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.discord.text.discordBoldSafe
-import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
+import com.rose.gateway.minecraft.chat.processing.ChatProcessor
 import io.papermc.paper.event.player.AsyncChatEvent
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
@@ -14,18 +14,14 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
-import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.server.ServerCommandEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ChatListener : Listener, KoinComponent {
     val config: PluginConfig by inject()
     val bot: DiscordBot by inject()
-
-    private val minecraftMessageProcessor = MinecraftMessageProcessor()
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
@@ -34,7 +30,7 @@ class ChatListener : Listener, KoinComponent {
         val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
 
         runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText, event) ?: return@runBlocking
+            val message = ChatProcessor.convertToDiscordMessage(messageText, event) ?: return@runBlocking
             bot.bot?.send(GameChatEvent(message))
         }
     }
@@ -79,34 +75,6 @@ class ChatListener : Listener, KoinComponent {
                     content = plainTextMessage
                 }
             )
-        }
-    }
-
-    @EventHandler
-    fun onServerCommand(event: ServerCommandEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val messageText = DisplayCommandProcessor.processServerCommand(event.command)
-
-        if (messageText.isEmpty()) return
-
-        runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            bot.bot?.send(GameChatEvent(message))
-        }
-    }
-
-    @EventHandler
-    fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val messageText = DisplayCommandProcessor.processPlayerCommand(event.message, event.player.name)
-
-        if (messageText.isEmpty()) return
-
-        runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            bot.bot?.send(GameChatEvent(message))
         }
     }
 
