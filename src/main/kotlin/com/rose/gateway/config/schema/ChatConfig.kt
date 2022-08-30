@@ -1,14 +1,10 @@
 package com.rose.gateway.config.schema
 
-import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.chatExtensionEnabled
 import com.rose.gateway.config.markers.CommonExtensionConfig
 import com.rose.gateway.discord.bot.extensions.chat.ChatExtension
 import com.rose.gateway.shared.serialization.SurrogateBasedSerializer
 import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Config options for the "chat extension".
@@ -20,23 +16,7 @@ import org.koin.core.component.inject
 @Serializable(with = ChatConfigSerializer::class)
 class ChatConfig(
     enabled: Boolean
-) : CommonExtensionConfig(enabled, ChatExtension.extensionName()) {
-    companion object : KoinComponent {
-        val config: PluginConfig by inject()
-
-        /**
-         * Runs some code if the chat extension is enabled.
-         *
-         * @param code The code block to execute.
-         * @receiver This function.
-         */
-        fun ifEnabled(code: () -> Unit) {
-            if (config.chatExtensionEnabled()) {
-                code()
-            }
-        }
-    }
-}
+) : CommonExtensionConfig(enabled, ChatExtension.extensionName())
 
 /**
  * Surrogate for serialization of [ChatConfig].

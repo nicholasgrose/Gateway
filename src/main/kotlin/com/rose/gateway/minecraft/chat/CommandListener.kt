@@ -1,6 +1,7 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.config.schema.ChatConfig
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.chatExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.minecraft.chat.processing.ChatProcessor
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
@@ -13,11 +14,12 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class CommandListener : Listener, KoinComponent {
+    private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     @EventHandler
     fun onServerCommand(event: ServerCommandEvent) {
-        ChatConfig.ifEnabled {
+        if (config.chatExtensionEnabled()) {
             chatEventForCommand {
                 CommandTextExtractor.processServerCommand(event.command)
             }
@@ -26,7 +28,7 @@ class CommandListener : Listener, KoinComponent {
 
     @EventHandler
     fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
-        ChatConfig.ifEnabled {
+        if (config.chatExtensionEnabled()) {
             chatEventForCommand {
                 CommandTextExtractor.processPlayerCommand(event.message, event.player.name)
             }
