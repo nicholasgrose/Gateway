@@ -12,10 +12,20 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Listener that posts major player actions in Discord.
+ *
+ * @constructor Create an action listener.
+ */
 class ActionListener : Listener, KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
+    /**
+     * Posts a player's death in Discord.
+     *
+     * @param event The player death event.
+     */
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
@@ -29,6 +39,11 @@ class ActionListener : Listener, KoinComponent {
         }
     }
 
+    /**
+     * Posts a player's advancement in Discord.
+     *
+     * @param event The player advancement completion event.
+     */
     @EventHandler
     fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {

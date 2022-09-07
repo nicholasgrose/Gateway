@@ -12,7 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Listener for connection-related Minecraft events that posts them to Discord.
+ * Listener that sends connection-related Minecraft events in Discord.
  *
  * @constructor Create connection listener.
  */

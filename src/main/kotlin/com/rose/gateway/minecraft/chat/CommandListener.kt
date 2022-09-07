@@ -11,31 +11,47 @@ import org.bukkit.event.server.ServerCommandEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Listener that posts Minecraft command events that must be displayed in Discord.
+ *
+ * @constructor Create a command listener.
+ */
 class CommandListener : Listener, KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
+    /**
+     * Posts a server command to Discord, if necessary.
+     *
+     * @param event The server command event.
+     */
     @EventHandler
     fun onServerCommand(event: ServerCommandEvent) {
-        pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
-            chatEventForCommand {
-                discordTextForServerCommand(event.command)
-            }
+        postCommandInDiscord {
+            discordTextForServerCommand(event.command)
         }
     }
 
+    /**
+     * Posts a player command to Discord, if necessary.
+     *
+     * @param event The player-command-preprocess event.
+     */
     @EventHandler
     fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
-        pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
-            chatEventForCommand {
-                discordTextForPlayerCommand(event.message, event.player.name)
-            }
+        postCommandInDiscord {
+            discordTextForPlayerCommand(event.message, event.player.name)
         }
     }
 
-    private fun chatEventForCommand(messageTextProvider: () -> String?) {
+    /**
+     * Posts a player command to Discord, if necessary.
+     *
+     * @param discordTextProvider Provider for the Discord text.
+     */
+    private fun postCommandInDiscord(discordTextProvider: () -> String?) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
-            val messageText = messageTextProvider() ?: return@launchIfChatExtensionEnabled
+            val messageText = discordTextProvider() ?: return@launchIfChatExtensionEnabled
             val discordMessage =
                 ChatProcessor.convertToDiscordMessage(messageText) ?: return@launchIfChatExtensionEnabled
 
