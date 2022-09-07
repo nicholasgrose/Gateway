@@ -16,6 +16,7 @@ import kotlin.coroutines.CoroutineContext
  */
 class PluginCoroutineScope : CoroutineScope {
     override val coroutineContext: CoroutineContext
+        // The supervisor job means that a failing job will not cause the plugin to fail.
         get() = SupervisorJob() + Dispatchers.Default
 
     /**

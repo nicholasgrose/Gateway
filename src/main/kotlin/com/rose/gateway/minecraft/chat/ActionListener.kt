@@ -1,11 +1,9 @@
 package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.chatExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.discord.text.discordBoldSafe
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
-import kotlinx.coroutines.launch
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,30 +18,26 @@ class ActionListener : Listener, KoinComponent {
 
     @EventHandler
     fun onDeath(event: PlayerDeathEvent) {
-        if (config.chatExtensionEnabled()) {
-            pluginCoroutineScope.launch {
-                val deathMessage = event.deathMessage() ?: return@launch
-                val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
-                    .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
+        pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
+            val deathMessage = event.deathMessage() ?: return@launchIfChatExtensionEnabled
+            val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
+                .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
-                GameChatEvent.trigger {
-                    content = plainTextMessage
-                }
+            GameChatEvent.trigger {
+                content = plainTextMessage
             }
         }
     }
 
     @EventHandler
     fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (!config.chatExtensionEnabled()) {
-            pluginCoroutineScope.launch {
-                val advancementMessage = event.message() ?: return@launch
-                val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
-                    .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
+        pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
+            val advancementMessage = event.message() ?: return@launchIfChatExtensionEnabled
+            val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
+                .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
-                GameChatEvent.trigger {
-                    content = advancementText
-                }
+            GameChatEvent.trigger {
+                content = advancementText
             }
         }
     }
