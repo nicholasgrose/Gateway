@@ -5,6 +5,7 @@ import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.minecraft.chat.processing.discordMessage
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import io.papermc.paper.event.player.AsyncChatEvent
+import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -33,11 +34,13 @@ class ChatListener : Listener, KoinComponent {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
-        pluginCoroutineScope.launchIfChatExtensionEnabled(event.isAsynchronous, config) {
+        runBlocking {
             val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
-            val message = discordMessage(messageText, event) ?: return@launchIfChatExtensionEnabled
+            val message = discordMessage(messageText, event) ?: return@runBlocking
 
-            GameChatEvent.trigger(message)
+            pluginCoroutineScope.launchIfChatExtensionEnabled(event.isAsynchronous, config) {
+                GameChatEvent.trigger(message)
+            }
         }
     }
 }
