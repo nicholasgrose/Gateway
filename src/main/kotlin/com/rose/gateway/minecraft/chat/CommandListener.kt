@@ -2,7 +2,7 @@ package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
-import com.rose.gateway.minecraft.chat.processing.ChatProcessor
+import com.rose.gateway.minecraft.chat.processing.discordMessage
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -52,8 +52,7 @@ class CommandListener : Listener, KoinComponent {
     private fun postCommandInDiscord(discordTextProvider: () -> String?) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
             val messageText = discordTextProvider() ?: return@launchIfChatExtensionEnabled
-            val discordMessage =
-                ChatProcessor.convertToDiscordMessage(messageText) ?: return@launchIfChatExtensionEnabled
+            val discordMessage = discordMessage(messageText) ?: return@launchIfChatExtensionEnabled
 
             GameChatEvent.trigger(discordMessage)
         }
