@@ -7,6 +7,11 @@ import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
+/**
+ * Defines and processes a piece of plaintext.
+ *
+ * @constructor Create a text token processor.
+ */
 class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     override fun tokenType(): LixyTokenType {
         return ChatComponent.TEXT

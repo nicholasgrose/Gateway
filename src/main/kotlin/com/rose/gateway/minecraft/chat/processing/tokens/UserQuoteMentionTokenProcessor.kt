@@ -1,18 +1,21 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
+import com.rose.gateway.minecraft.chat.processing.tokens.result.MentionResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.minecraft.chat.processing.tokens.result.UserMentionBuilder
 import com.rose.gateway.shared.parsing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
+/**
+ * Defines and processes a user quote-mention.
+ *
+ * @constructor Create a role quote-mention token processor.
+ */
 class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val USER_QUOTE_MENTION_START_INDEX = 2
     }
-
-    private val mentionBuilder = UserMentionBuilder()
 
     override fun tokenType(): LixyTokenType {
         return ChatComponent.USER_QUOTE_MENTION
@@ -27,6 +30,6 @@ class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Uni
         val tokenString = token.string
         val nameString = tokenString.substring(USER_QUOTE_MENTION_START_INDEX until tokenString.length)
 
-        return mentionBuilder.createUserMention(nameString)
+        return MentionResult.userMention(nameString)
     }
 }
