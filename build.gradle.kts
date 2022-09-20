@@ -8,7 +8,7 @@ plugins {
     // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "1.0.6"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // https://detekt.dev/
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
 }
