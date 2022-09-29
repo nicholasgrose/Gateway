@@ -8,9 +8,9 @@ import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
 /**
- * Token processor that defines a text token and its processing.
+ * Token processor that defines a text token and its processing
  *
- * @constructor Create a text token processor.
+ * @constructor Create a text token processor
  */
 class TextTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
     override fun tokenType(): LixyTokenType = DiscordChatComponent.TEXT

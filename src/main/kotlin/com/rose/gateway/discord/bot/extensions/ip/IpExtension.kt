@@ -11,9 +11,9 @@ import com.rose.gateway.minecraft.logging.Logger
 import org.koin.core.component.inject
 
 /**
- * A Discord bot extension providing Discord commands regarding the server IP.
+ * A Discord bot extension providing Discord commands regarding the server IP
  *
- * @constructor Creates an "IP extension".
+ * @constructor Creates an "IP extension"
  */
 class IpExtension : Extension() {
     companion object : ExtensionToggle {

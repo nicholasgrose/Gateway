@@ -8,9 +8,9 @@ import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
 /**
- * Defines and processes a role mention.
+ * Defines and processes a role mention
  *
- * @constructor Create a role mention token processor.
+ * @constructor Create a role mention token processor
  */
 class RoleMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {

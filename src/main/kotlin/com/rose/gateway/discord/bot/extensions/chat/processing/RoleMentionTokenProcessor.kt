@@ -13,9 +13,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Token processor that defines the role mention token and its processing.
+ * Token processor that defines the role mention token and its processing
  *
- * @constructor Create a role mention token processor.
+ * @constructor Create a role mention token processor
  */
 class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
     private val config: PluginConfig by inject()

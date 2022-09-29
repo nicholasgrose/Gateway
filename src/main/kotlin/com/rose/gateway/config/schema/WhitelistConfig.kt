@@ -7,11 +7,11 @@ import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
 
 /**
- * Config options for the "whitelist extension".
+ * Config options for the "whitelist extension"
  *
- * @constructor Creates a "whitelist config" with the provided data.
+ * @constructor Creates a "whitelist config" with the provided data
  *
- * @param enabled Whether the extension is enabled.
+ * @param enabled Whether the extension is enabled
  */
 @Serializable(with = WhitelistConfigSerializer::class)
 class WhitelistConfig(
@@ -19,10 +19,10 @@ class WhitelistConfig(
 ) : CommonExtensionConfig(enabled, WhitelistExtension.extensionName())
 
 /**
- * Surrogate for serialization of [WhitelistConfig].
+ * Surrogate for serialization of [WhitelistConfig]
  *
- * @property enabled Whether the extension is enabled.
- * @constructor Create a "whitelist config" surrogate with the provided data.
+ * @property enabled Whether the extension is enabled
+ * @constructor Create a "whitelist config" surrogate with the provided data
  *
  * @see WhitelistConfig
  * @see WhitelistConfigSerializer
@@ -37,7 +37,7 @@ data class WhitelistConfigSurrogate(val enabled: Boolean) {
 }
 
 /**
- * Serializer for [WhitelistConfig].
+ * Serializer for [WhitelistConfig]
  *
  * @see WhitelistConfig
  * @see WhitelistConfigSurrogate

@@ -11,9 +11,9 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.intellij.lang.annotations.Language
 
 /**
- * Token processor that defines a URL token and its processing.
+ * Token processor that defines a URL token and its processing
  *
- * @constructor Create a URL token processor.
+ * @constructor Create a URL token processor
  */
 class UrlTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
     override fun tokenType(): LixyTokenType = DiscordChatComponent.URL

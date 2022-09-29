@@ -3,8 +3,8 @@ package com.rose.gateway.shared.collections.trie
 import com.rose.gateway.shared.collections.builders.dequeOf
 
 /**
- * A tree-based data structure in which each node in the tree represents a prefix string.
- * It can thus be used to store and find strings which match some prefix.
+ * A tree-based data structure in which each node in the tree represents a prefix string
+ * It can thus be used to store and find strings which match some prefix
  *
  * @constructor Creates an empty Trie
  */
@@ -14,11 +14,11 @@ class Trie : MutableSet<String> {
     override var size = 0
 
     /**
-     * Determines whether an index is the final index in a string.
+     * Determines whether an index is the final index in a string
      *
-     * @param value The string to check the last index of.
-     * @param index The index that might be the final index of the string.
-     * @return Whether the given index is the last index of the string.
+     * @param value The string to check the last index of
+     * @param index The index that might be the final index of the string
+     * @return Whether the given index is the last index of the string
      */
     private fun isLastIndexOfString(value: String, index: Int): Boolean {
         return index == value.length - 1
@@ -26,12 +26,12 @@ class Trie : MutableSet<String> {
 
     /**
      * Finds an existing node by following the provided string starting at the current index
-     * or creates it if it does not yet exist.
+     * or creates it if it does not yet exist
      *
-     * @param trieNode The node to check the children of.
-     * @param stringToInsert The string being inserted into the Trie.
-     * @param currentCharacterIndex The current index of the string being inserted.
-     * @return The matching node or a newly created node that does match.
+     * @param trieNode The node to check the children of
+     * @param stringToInsert The string being inserted into the Trie
+     * @param currentCharacterIndex The current index of the string being inserted
+     * @return The matching node or a newly created node that does match
      */
     private fun getOrCreateChildNode(trieNode: TrieNode, stringToInsert: String, currentCharacterIndex: Int): TrieNode {
         val currentCharacter = stringToInsert[currentCharacterIndex]
@@ -48,10 +48,10 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Searches for a prefix string, giving all results if no match was found.
+     * Searches for a prefix string, giving all results if no match was found
      *
-     * @param prefix The prefix string to search for.
-     * @return The matching strings or all strings.
+     * @param prefix The prefix string to search for
+     * @return The matching strings or all strings
      */
     fun searchOrGetAll(prefix: String): List<String> {
         val searchResult = search(prefix)
@@ -59,10 +59,10 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Searches for all strings with the given string as a prefix.
+     * Searches for all strings with the given string as a prefix
      *
-     * @param prefix The prefix string to search for.
-     * @return All matching strings.
+     * @param prefix The prefix string to search for
+     * @return All matching strings
      */
     private fun search(prefix: String): List<String> {
         val startNode = followSearchString(prefix) ?: return listOf()
@@ -70,10 +70,10 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Gives the node at the end of a path, as defined by the prefix string, through the tree.
+     * Gives the node at the end of a path, as defined by the prefix string, through the tree
      *
-     * @param prefix The prefix string to follow through the tree.
-     * @return The node at the end of the defined path or null, if no such path can be followed.
+     * @param prefix The prefix string to follow through the tree
+     * @return The node at the end of the defined path or null, if no such path can be followed
      */
     private fun followSearchString(prefix: String): TrieNode? {
         var currentNode = rootNode
@@ -87,10 +87,10 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Conducts a depth first search for all full strings beneath a particular [TrieNode].
+     * Conducts a depth first search for all full strings beneath a particular [TrieNode]
      *
-     * @param startNode The node to start the search from.
-     * @return All complete strings in the trie beneath the provided node.
+     * @param startNode The node to start the search from
+     * @return All complete strings in the trie beneath the provided node
      */
     private fun depthFirstSearch(startNode: TrieNode): MutableList<String> {
         val results = mutableListOf<String>()
@@ -156,9 +156,9 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Gets all the strings in the trie.
+     * Gets all the strings in the trie
      *
-     * @return A list of all strings in the Trie.
+     * @return A list of all strings in the Trie
      */
     private fun getAll(): MutableList<String> {
         return depthFirstSearch(rootNode)
@@ -177,9 +177,9 @@ class Trie : MutableSet<String> {
 
     /**
      * Prunes a non-terminal trie node
-     * by removing itself and all its non-terminal parents for which it is the only leaf.
+     * by removing itself and all its non-terminal parents for which it is the only leaf
      *
-     * @param node The node to prune.
+     * @param node The node to prune
      */
     private fun pruneTrieNode(node: TrieNode) {
         if (node.parent != null && !node.isTerminalNode && node.children.isEmpty()) {

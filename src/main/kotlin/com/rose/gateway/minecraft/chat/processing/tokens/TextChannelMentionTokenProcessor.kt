@@ -13,9 +13,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Defines and processes a text channel mention.
+ * Defines and processes a text channel mention
  *
- * @constructor Create a text channel mention token processor.
+ * @constructor Create a text channel mention token processor
  */
 class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit>, KoinComponent {
     companion object {

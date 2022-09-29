@@ -12,9 +12,9 @@ import com.rose.gateway.minecraft.server.Console
 import org.koin.core.component.inject
 
 /**
- * A Discord bot extension that handles the cross-chat functionality in Discord.
+ * A Discord bot extension that handles the cross-chat functionality in Discord
  *
- * @constructor Create a "chat extension".
+ * @constructor Create a "chat extension"
  */
 class ChatExtension : Extension() {
     companion object : ExtensionToggle {

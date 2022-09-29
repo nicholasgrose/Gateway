@@ -20,7 +20,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Provides functions for processing a Discord message and converting it to a Minecraft text [Component].
+ * Provides functions for processing a Discord message and converting it to a Minecraft text [Component]
  *
  * @see Component
  */
@@ -28,10 +28,10 @@ object DiscordMessageProcessor : KoinComponent {
     private val config: PluginConfig by inject()
 
     /**
-     * Creates a Minecraft text [Component] from a message creation event.
+     * Creates a Minecraft text [Component] from a message creation event
      *
-     * @param event The event to convert to a [Component].
-     * @return The text after processing.
+     * @param event The event to convert to a [Component]
+     * @return The text after processing
      */
     suspend fun createMessage(event: MessageCreateEvent): Component {
         return join(
@@ -43,10 +43,10 @@ object DiscordMessageProcessor : KoinComponent {
     }
 
     /**
-     * Creates the name block to show in Minecraft.
+     * Creates the name block to show in Minecraft
      *
-     * @param event The event to convert into a name block.
-     * @return The name block.
+     * @param event The event to convert into a name block
+     * @return The name block
      */
     private fun generateNameBlock(event: MessageCreateEvent): Component {
         return join(
@@ -57,10 +57,10 @@ object DiscordMessageProcessor : KoinComponent {
     }
 
     /**
-     * Creates a prefix to the main Minecraft message.
+     * Creates a prefix to the main Minecraft message
      *
-     * @param event The event to use as a source of data for the prefix.
-     * @return The resultant prefix block.
+     * @param event The event to use as a source of data for the prefix
+     * @return The resultant prefix block
      */
     private suspend fun generateMessagePrefixBlock(event: MessageCreateEvent): Component {
         val referenceComponent = componentForReferencedMessage(event) ?: return Component.empty()
@@ -73,10 +73,10 @@ object DiscordMessageProcessor : KoinComponent {
     }
 
     /**
-     * Creates a [Component] representing a referenced message.
+     * Creates a [Component] representing a referenced message
      *
-     * @param event The event to source the referenced message from.
-     * @return The referenced message as a [Component] or null if none exists.
+     * @param event The event to source the referenced message from
+     * @return The referenced message as a [Component] or null if none exists
      */
     private suspend fun componentForReferencedMessage(event: MessageCreateEvent): Component? {
         val referencedMessage = event.message.referencedMessage ?: return null
@@ -85,11 +85,11 @@ object DiscordMessageProcessor : KoinComponent {
     }
 
     /**
-     * Creates a [Component] for the author referenced by a referenced message.
+     * Creates a [Component] for the author referenced by a referenced message
      *
-     * @param referencedMessage The message being referenced.
-     * @param event The event that must be used for additional data.
-     * @return The author referenced by the message, if any.
+     * @param referencedMessage The message being referenced
+     * @param event The event that must be used for additional data
+     * @return The author referenced by the message, if any
      */
     private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {
         val member = referencedMessageAuthor(referencedMessage, event) ?: return null
@@ -98,11 +98,11 @@ object DiscordMessageProcessor : KoinComponent {
     }
 
     /**
-     * Determines which member of a Discord guild wrote a referenced message.
+     * Determines which member of a Discord guild wrote a referenced message
      *
-     * @param referencedMessage The message being referenced.
-     * @param event The event to source data from.
-     * @return The member that sent the referenced message.
+     * @param referencedMessage The message being referenced
+     * @param event The event to source data from
+     * @return The member that sent the referenced message
      */
     private suspend fun referencedMessageAuthor(referencedMessage: Message, event: MessageCreateEvent): Member? {
         val referencedAuthor = referencedMessage.author?.id ?: return null
@@ -121,20 +121,20 @@ object DiscordMessageProcessor : KoinComponent {
     )
 
     /**
-     * Generates a [Component] containing the main message block for Minecraft.
+     * Generates a [Component] containing the main message block for Minecraft
      *
-     * @param event The event ot pull data from.
-     * @return The message for Minecraft.
+     * @param event The event ot pull data from
+     * @return The message for Minecraft
      */
     private suspend fun generateMessageBlock(event: MessageCreateEvent): Component {
         return join(textProcessor.parseText(event.message.content, event))
     }
 
     /**
-     * Generates the suffix [Component] for Minecraft.
+     * Generates the suffix [Component] for Minecraft
      *
-     * @param event The event to pull data from.
-     * @return The message's suffix.
+     * @param event The event to pull data from
+     * @return The message's suffix
      */
     private fun generateMessageSuffixBlock(event: MessageCreateEvent): Component {
         if (event.message.attachments.isEmpty()) return Component.empty()

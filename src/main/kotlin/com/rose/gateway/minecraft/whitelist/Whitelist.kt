@@ -7,17 +7,17 @@ import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 
 /**
- * Provides functions that modify the Minecraft whitelist.
+ * Provides functions that modify the Minecraft whitelist
  */
 object Whitelist {
     val players: Set<OfflinePlayer>
         get() = Bukkit.getWhitelistedPlayers()
 
     /**
-     * Adds a player to the whitelist.
+     * Adds a player to the whitelist
      *
-     * @param username The player to add.
-     * @return How the whitelist was modified.
+     * @param username The player to add
+     * @return How the whitelist was modified
      */
     fun addPlayer(username: String): WhitelistState {
         val player = offlinePlayer(username)
@@ -36,10 +36,10 @@ object Whitelist {
     }
 
     /**
-     * Remove a player from the whitelist.
+     * Remove a player from the whitelist
      *
-     * @param username The player to remove.
-     * @return How the whitelist was modified.
+     * @param username The player to remove
+     * @return How the whitelist was modified
      */
     fun removePlayer(username: String): WhitelistState {
         val player = offlinePlayer(username)
@@ -59,10 +59,10 @@ object Whitelist {
     }
 
     /**
-     * Gets an [OfflinePlayer] for the requested user.
+     * Gets an [OfflinePlayer] for the requested user
      *
-     * @param username The user to get the data of.
-     * @return The [OfflinePlayer] for the username given or null if exists.
+     * @param username The user to get the data of
+     * @return The [OfflinePlayer] for the username given or null if exists
      */
     private fun offlinePlayer(username: String): OfflinePlayer? {
         val uuid = Bukkit.getPlayerUniqueId(username) ?: return null

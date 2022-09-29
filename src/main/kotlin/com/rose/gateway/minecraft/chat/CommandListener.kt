@@ -12,18 +12,18 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Listener that posts Minecraft command events that must be displayed in Discord.
+ * Listener that posts Minecraft command events that must be displayed in Discord
  *
- * @constructor Create a command listener.
+ * @constructor Create a command listener
  */
 class CommandListener : Listener, KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     /**
-     * Posts a server command to Discord, if necessary.
+     * Posts a server command to Discord, if necessary
      *
-     * @param event The server command event.
+     * @param event The server command event
      */
     @EventHandler
     fun onServerCommand(event: ServerCommandEvent) {
@@ -33,9 +33,9 @@ class CommandListener : Listener, KoinComponent {
     }
 
     /**
-     * Posts a player command to Discord, if necessary.
+     * Posts a player command to Discord, if necessary
      *
-     * @param event The player-command-preprocess event.
+     * @param event The player-command-preprocess event
      */
     @EventHandler
     fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
@@ -45,9 +45,9 @@ class CommandListener : Listener, KoinComponent {
     }
 
     /**
-     * Posts a player command to Discord, if necessary.
+     * Posts a player command to Discord, if necessary
      *
-     * @param discordTextProvider Provider for the Discord text.
+     * @param discordTextProvider Provider for the Discord text
      */
     private fun postCommandInDiscord(discordTextProvider: () -> String?) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {

@@ -7,12 +7,12 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Represents a config object for a Discord extension.
+ * Represents a config object for a Discord extension
  *
- * @property extensionName The name of the extension.
- * @constructor Creates a common extension config for the given extension.
+ * @property extensionName The name of the extension
+ * @constructor Creates a common extension config for the given extension
  *
- * @param enabled Whether the extension will start enabled.
+ * @param enabled Whether the extension will start enabled
  */
 open class CommonExtensionConfig(
     enabled: Boolean,
@@ -29,9 +29,9 @@ open class CommonExtensionConfig(
         }
 
     /**
-     * Modifies whether an extension is enabled in the bot or not.
+     * Modifies whether an extension is enabled in the bot or not
      *
-     * @param enabled The extensions new status.
+     * @param enabled The extensions new status
      */
     private fun modifyExtensionLoadedStatus(enabled: Boolean) {
         runBlocking {

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 /**
- * Provides info about the server.
+ * Provides info about the server
  */
 object ServerInfo {
     val onlinePlayers: Collection<Player>

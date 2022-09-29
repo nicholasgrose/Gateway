@@ -7,11 +7,11 @@ import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
 
 /**
- * Config options for the "chat extension".
+ * Config options for the "chat extension"
  *
- * @constructor Creates a "chat config" with the provided data.
+ * @constructor Creates a "chat config" with the provided data
  *
- * @param enabled Whether the extension is enabled.
+ * @param enabled Whether the extension is enabled
  */
 @Serializable(with = ChatConfigSerializer::class)
 class ChatConfig(
@@ -19,10 +19,10 @@ class ChatConfig(
 ) : CommonExtensionConfig(enabled, ChatExtension.extensionName())
 
 /**
- * Surrogate for serialization of [ChatConfig].
+ * Surrogate for serialization of [ChatConfig]
  *
- * @property enabled Whether the extension is enabled.
- * @constructor Create a "chat config" surrogate with the provided data.
+ * @property enabled Whether the extension is enabled
+ * @constructor Create a "chat config" surrogate with the provided data
  *
  * @see ChatConfig
  * @see ChatConfigSerializer
@@ -37,7 +37,7 @@ data class ChatConfigSurrogate(val enabled: Boolean) {
 }
 
 /**
- * Serializer for [ChatConfig].
+ * Serializer for [ChatConfig]
  *
  * @see ChatConfig
  * @see ChatConfigSurrogate

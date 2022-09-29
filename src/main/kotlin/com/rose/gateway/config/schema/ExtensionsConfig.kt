@@ -5,14 +5,14 @@ import com.rose.gateway.config.markers.ConfigObject
 import kotlinx.serialization.Serializable
 
 /**
- * Config for the Discord bot's extensions.
+ * Config for the Discord bot's extensions
  *
- * @property about Config for the about extension.
- * @property chat Config for the chat extension.
- * @property ip Config for the IP extension.
- * @property list Config for the list extension.
- * @property whitelist Config for the whitelist extension.
- * @constructor Create an extension config.
+ * @property about Config for the about extension
+ * @property chat Config for the chat extension
+ * @property ip Config for the IP extension
+ * @property list Config for the list extension
+ * @property whitelist Config for the whitelist extension
+ * @constructor Create an extension config
  */
 @Serializable
 data class ExtensionsConfig(

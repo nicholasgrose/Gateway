@@ -13,9 +13,9 @@ import com.rose.gateway.minecraft.whitelist.WhitelistState
 import org.koin.core.component.inject
 
 /**
- * A Discord bot extension providing Discord commands to modify the whitelist.
+ * A Discord bot extension providing Discord commands to modify the whitelist
  *
- * @constructor Create a "whitelist extension".
+ * @constructor Create a "whitelist extension"
  */
 class WhitelistExtension : Extension() {
     companion object : ExtensionToggle {

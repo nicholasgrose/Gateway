@@ -13,9 +13,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Defines and processes a voice channel mention.
+ * Defines and processes a voice channel mention
  *
- * @constructor Create a voice channel mention token processor.
+ * @constructor Create a voice channel mention token processor
  */
 class VoiceChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit>, KoinComponent {
     companion object {

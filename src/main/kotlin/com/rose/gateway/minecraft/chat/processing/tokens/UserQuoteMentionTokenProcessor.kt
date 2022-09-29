@@ -8,9 +8,9 @@ import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
 /**
- * Defines and processes a user quote-mention.
+ * Defines and processes a user quote-mention
  *
- * @constructor Create a role quote-mention token processor.
+ * @constructor Create a role quote-mention token processor
  */
 class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {

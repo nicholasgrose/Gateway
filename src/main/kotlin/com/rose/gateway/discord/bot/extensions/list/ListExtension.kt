@@ -11,9 +11,9 @@ import com.rose.gateway.minecraft.server.ServerInfo
 import org.koin.core.component.inject
 
 /**
- * A Discord bot extension providing Discord commands for listing players.
+ * A Discord bot extension providing Discord commands for listing players
  *
- * @constructor Create a "list extension".
+ * @constructor Create a "list extension"
  */
 class ListExtension : Extension() {
     companion object : ExtensionToggle {

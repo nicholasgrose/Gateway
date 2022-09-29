@@ -12,17 +12,17 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Handler for events that update the Discord bot's user count.
+ * Handler for events that update the Discord bot's user count
  *
- * @constructor Create a user count listener.
+ * @constructor Create a user count listener
  */
 class UserCount : Listener, KoinComponent {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     /**
-     * Updates the count when a player has joined the server.
+     * Updates the count when a player has joined the server
      *
-     * @param event The player-join event.
+     * @param event The player-join event
      */
     @EventHandler
     @Suppress("UNUSED_PARAMETER")
@@ -33,9 +33,9 @@ class UserCount : Listener, KoinComponent {
     }
 
     /**
-     * Updates the count when a player has quit the server.
+     * Updates the count when a player has quit the server
      *
-     * @param event The player-quit event.
+     * @param event The player-quit event
      */
     @EventHandler
     @Suppress("UNUSED_PARAMETER")
@@ -46,9 +46,9 @@ class UserCount : Listener, KoinComponent {
     }
 
     /**
-     * Updates the count when a player's connection has closed on the server.
+     * Updates the count when a player's connection has closed on the server
      *
-     * @param event The "player connection close" event.
+     * @param event The "player connection close" event
      */
     @EventHandler
     @Suppress("UNUSED_PARAMETER")

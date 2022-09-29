@@ -5,12 +5,12 @@ import com.rose.gateway.config.markers.ConfigObject
 import kotlinx.serialization.Serializable
 
 /**
- * Config options for Minecraft.
+ * Config options for Minecraft
  *
- * @property primaryColor The color used for labels and Discord mentions in-game.
- * @property secondaryColor The color used for differentiated text elements and names of Discord users in-game.
- * @property tertiaryColor The color used for labelling config paths.
- * @property warningColor The color used for marking problems and config items that can be null.
+ * @property primaryColor The color used for labels and Discord mentions in-game
+ * @property secondaryColor The color used for differentiated text elements and names of Discord users in-game
+ * @property tertiaryColor The color used for labelling config paths
+ * @property warningColor The color used for marking problems and config items that can be null
  * @constructor Create empty Minecraft config
  */
 @Serializable

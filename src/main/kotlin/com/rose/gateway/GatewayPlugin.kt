@@ -13,9 +13,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * The base class and entry point for the Gateway plugin. Also provides the scope for parallelized plugin operations.
+ * The base class and entry point for the Gateway plugin. Also provides the scope for parallelized plugin operations
  *
- * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server.
+ * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server
  */
 class GatewayPlugin : JavaPlugin(), KoinComponent {
     init {

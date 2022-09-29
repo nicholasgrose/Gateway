@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Provides event checks for individual Discord messages.
+ * Provides event checks for individual Discord messages
  *
  * @see Check
  */
@@ -17,7 +17,7 @@ object MessageCheck : KoinComponent {
     private val bot: DiscordBot by inject()
 
     /**
-     * Check that checks that the event is in a valid bot channel.
+     * Check that checks that the event is in a valid bot channel
      */
     val isValidBotChannel: Check<*> = {
         val channelBehaviour = channelFor(event)
@@ -28,7 +28,7 @@ object MessageCheck : KoinComponent {
     }
 
     /**
-     * Check that checks that the message was not sent by the bot, itself.
+     * Check that checks that the message was not sent by the bot, itself
      */
     val notSelf: Check<*> = {
         val kordClient = getKoin().get<Kord>()

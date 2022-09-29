@@ -7,11 +7,11 @@ import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
 
 /**
- * Config options for the "list extension".
+ * Config options for the "list extension"
  *
- * @constructor Creates a "list config" with the provided data.
+ * @constructor Creates a "list config" with the provided data
  *
- * @param enabled Whether the extension is enabled.
+ * @param enabled Whether the extension is enabled
  */
 @Serializable(with = ListConfigSerializer::class)
 class ListConfig(
@@ -19,10 +19,10 @@ class ListConfig(
 ) : CommonExtensionConfig(enabled, ListExtension.extensionName())
 
 /**
- * Surrogate for serialization of [ListConfig].
+ * Surrogate for serialization of [ListConfig]
  *
- * @property enabled Whether the extension is enabled.
- * @constructor Create a "list config" surrogate with the provided data.
+ * @property enabled Whether the extension is enabled
+ * @constructor Create a "list config" surrogate with the provided data
  *
  * @see ListConfig
  * @see ListConfigSerializer
@@ -37,7 +37,7 @@ data class ListConfigSurrogate(val enabled: Boolean) {
 }
 
 /**
- * Serializer for [ListConfig].
+ * Serializer for [ListConfig]
  *
  * @see ListConfig
  * @see ListConfigSurrogate

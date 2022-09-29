@@ -13,9 +13,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Token processor that defines the channel mention token and its processing.
+ * Token processor that defines the channel mention token and its processing
  *
- * @constructor Create a channel mention token processor.
+ * @constructor Create a channel mention token processor
  */
 class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
     private val config: PluginConfig by inject()

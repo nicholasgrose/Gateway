@@ -28,11 +28,11 @@ private val textProcessor = TextProcessor(
 )
 
 /**
- * Creates a Discord message for some chat message using data from its event.
+ * Creates a Discord message for some chat message using data from its event
  *
- * @param message The message to create the Discord message from.
- * @param event The event to pull the player from.
- * @return The Discord message or null, if it could not be parsed.
+ * @param message The message to create the Discord message from
+ * @param event The event to pull the player from
+ * @return The Discord message or null, if it could not be parsed
  */
 suspend fun discordMessage(
     message: String,
@@ -48,10 +48,10 @@ suspend fun discordMessage(
 }
 
 /**
- * Creates a Discord message for some chat message.
+ * Creates a Discord message for some chat message
  *
- * @param message The message to create the Discord message from.
- * @return The Discord message or null, if it could not be parsed.
+ * @param message The message to create the Discord message from
+ * @return The Discord message or null, if it could not be parsed
  */
 suspend fun discordMessage(message: String): (MessageCreateBuilder.() -> Unit)? {
     return discordMessageWithContent(message) { result ->
@@ -60,12 +60,12 @@ suspend fun discordMessage(message: String): (MessageCreateBuilder.() -> Unit)? 
 }
 
 /**
- * Parses the message and then creates a Discord message containing the content derived from the result.
+ * Parses the message and then creates a Discord message containing the content derived from the result
  *
- * @param message The message to parse.
- * @param contentProvider A function that formats the content using the successful parse result.
- * @receiver None.
- * @return The discord message with the given content or null, if parsing failed.
+ * @param message The message to parse
+ * @param contentProvider A function that formats the content using the successful parse result
+ * @receiver None
+ * @return The discord message with the given content or null, if parsing failed
  */
 suspend fun discordMessageWithContent(
     message: String,
@@ -81,11 +81,11 @@ suspend fun discordMessageWithContent(
 }
 
 /**
- * Processes a message into a [MessageProcessingResult].
- * The result has data about success state as well as the processed message in its different forms.
+ * Processes a message into a [MessageProcessingResult]
+ * The result has data about success state as well as the processed message in its different forms
  *
- * @param message The message to process.
- * @return The result of processing the message.
+ * @param message The message to process
+ * @return The result of processing the message
  */
 private suspend fun processMessageText(message: String): MessageProcessingResult {
     val messageTextParts = textProcessor.parseText(message, Unit)

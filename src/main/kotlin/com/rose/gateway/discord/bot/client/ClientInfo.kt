@@ -8,7 +8,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Provides info about the bot's Kord client.
+ * Provides info about the bot's Kord client
  *
  * @constructor Create empty Client info
  */
@@ -16,11 +16,11 @@ object ClientInfo : KoinComponent {
     private val bot: DiscordBot by inject()
 
     /**
-     * Determines whether the bot has the correct permissions for a channel.
+     * Determines whether the bot has the correct permissions for a channel
      *
-     * @param channel The channel to check the permissions for.
-     * @param permissions The permissions to check for the existence of.
-     * @return Whether the permissions exist for the given channel.
+     * @param channel The channel to check the permissions for
+     * @param permissions The permissions to check for the existence of
+     * @return Whether the permissions exist for the given channel
      */
     suspend fun hasChannelPermissions(channel: GuildChannel, permissions: Permissions): Boolean {
         val channelPermissions = permissionsForChannel(channel)
@@ -28,10 +28,10 @@ object ClientInfo : KoinComponent {
     }
 
     /**
-     * Gets all the permissions the bot has for a particular channel.
+     * Gets all the permissions the bot has for a particular channel
      *
-     * @param channel The channel to check the permissions for.
-     * @return The permissions the bot has in the given channel.
+     * @param channel The channel to check the permissions for
+     * @return The permissions the bot has in the given channel
      */
     private suspend fun permissionsForChannel(channel: GuildChannel): Permissions {
         return channel.permissionsForMember(bot.kordClient()!!.selfId)

@@ -3,9 +3,9 @@ package com.rose.gateway.config.markers
 import kotlin.reflect.KProperty
 
 /**
- * Filters a collection of KProperties by whether they are marked as [ConfigItem]s.
+ * Filters a collection of KProperties by whether they are marked as [ConfigItem]s
  *
- * @return Those elements which are config items.
+ * @return Those elements which are config items
  *
  * @see KProperty
  * @see ConfigItem
@@ -15,9 +15,9 @@ fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
 }
 
 /**
- * Determines whether the [KProperty] has the [ConfigItem] annotation.
+ * Determines whether the [KProperty] has the [ConfigItem] annotation
  *
- * @return Whether the property is a config item.
+ * @return Whether the property is a config item
  *
  * @see KProperty
  * @see ConfigItem

@@ -5,11 +5,11 @@ import com.rose.gateway.config.markers.ConfigObject
 import kotlinx.serialization.Serializable
 
 /**
- * The top level data class for the plugin's config.
+ * The top level data class for the plugin's config
  *
- * @property bot Config options for the Discord bot.
- * @property minecraft Config options for Minecraft.
- * @constructor Creates a new config.
+ * @property bot Config options for the Discord bot
+ * @property minecraft Config options for Minecraft
+ * @constructor Creates a new config
  */
 @Serializable
 data class Config(

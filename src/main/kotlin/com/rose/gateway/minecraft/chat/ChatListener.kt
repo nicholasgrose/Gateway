@@ -16,7 +16,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Listener that posts Minecraft chat messages in Discord.
+ * Listener that posts Minecraft chat messages in Discord
  *
  * @constructor Create empty Chat listener
  */
@@ -25,14 +25,14 @@ class ChatListener : Listener, KoinComponent {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     /**
-     * Posts a game chat to Discord.
+     * Posts a game chat to Discord
      *
-     * [AsyncChatEvent] is used because that allows guaranteeing processing does not occur in the server's main thread.
+     * [AsyncChatEvent] is used because that allows guaranteeing processing does not occur in the server's main thread
      *
-     * To maintain compatibility with other chat plugins, Gateway uses [EventPriority.LOWEST] so that it goes first.
-     * This means that it will always be overwritten by other plugins' formatting until a better solution is found.
+     * To maintain compatibility with other chat plugins, Gateway uses [EventPriority.LOWEST] so that it goes first
+     * This means that it will always be overwritten by other plugins' formatting until a better solution is found
      *
-     * @param event The async chat event.
+     * @param event The async chat event
      */
     @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {

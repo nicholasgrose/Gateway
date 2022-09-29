@@ -11,9 +11,9 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.intellij.lang.annotations.Language
 
 /**
- * Defines and processes a URL.
+ * Defines and processes a URL
  *
- * @constructor Create a URL token processor.
+ * @constructor Create a URL token processor
  */
 class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     override fun tokenType(): LixyTokenType {

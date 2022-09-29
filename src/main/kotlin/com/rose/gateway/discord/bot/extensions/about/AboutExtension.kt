@@ -11,9 +11,9 @@ import com.rose.gateway.minecraft.logging.Logger
 import org.koin.core.component.inject
 
 /**
- * A Discord bot extension that provides Discord commands regarding the plugin.
+ * A Discord bot extension that provides Discord commands regarding the plugin
  *
- * @constructor Create an "about extension".
+ * @constructor Create an "about extension"
  */
 class AboutExtension : Extension() {
     companion object : ExtensionToggle {

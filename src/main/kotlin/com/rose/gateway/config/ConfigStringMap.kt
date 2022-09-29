@@ -14,9 +14,9 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.typeOf
 
 /**
- * A map of strings to their respective config [Item]s.
+ * A map of strings to their respective config [Item]s
  *
- * @constructor Creates a config string map.
+ * @constructor Creates a config string map
  */
 class ConfigStringMap : KoinComponent {
     val itemMap = mutableMapOf<String, Item<*>>()
@@ -26,10 +26,10 @@ class ConfigStringMap : KoinComponent {
     }
 
     /**
-     * Fills in the item map with all properties marked as [ConfigItem]s.
+     * Fills in the item map with all properties marked as [ConfigItem]s
      *
-     * @param config The config class to pull items from.
-     * @param prefix The string path up to this config class.
+     * @param config The config class to pull items from
+     * @param prefix The string path up to this config class
      */
     private fun fillInItemMap(config: KClass<*>, prefix: String? = null) {
         for (property in config.memberProperties) {
@@ -42,11 +42,11 @@ class ConfigStringMap : KoinComponent {
     }
 
     /**
-     * Adds an item for the provided property to the item map.
+     * Adds an item for the provided property to the item map
      *
-     * @param property The property to make an item for in the map.
-     * @param prefix The string prefix, if any, to put in front of this property's path.
-     * @param configAnnotation The config annotation attached to this property.
+     * @param property The property to make an item for in the map
+     * @param prefix The string prefix, if any, to put in front of this property's path
+     * @param configAnnotation The config annotation attached to this property
      */
     private fun addPropertyToMap(property: KProperty1<out Any, *>, prefix: String?, configAnnotation: ConfigItem) {
         val propertyString = if (prefix == null) property.name else "$prefix.${property.name}"
@@ -63,19 +63,19 @@ class ConfigStringMap : KoinComponent {
     }
 
     /**
-     * Gets an item from the item map whose path matches the given string.
+     * Gets an item from the item map whose path matches the given string
      *
-     * @param configString The config path to pull from the map.
-     * @return The matched item or null, if none matched.
+     * @param configString The config path to pull from the map
+     * @return The matched item or null, if none matched
      */
     fun fromString(configString: String): Item<*>? {
         return itemMap[configString]
     }
 
     /**
-     * All config strings.
+     * All config strings
      *
-     * @return A list of all config strings in the item map.
+     * @return A list of all config strings in the item map
      */
     fun allStrings(): List<String> = itemMap.keys.toList()
 }

@@ -9,9 +9,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * The Discord context in which the bot operates.
+ * The Discord context in which the bot operates
  *
- * @constructor Creates an empty bot context.
+ * @constructor Creates an empty bot context
  */
 class BotContext : KoinComponent {
     private val bot: DiscordBot by inject()
@@ -21,7 +21,7 @@ class BotContext : KoinComponent {
     val botGuilds = mutableSetOf<Guild>()
 
     /**
-     * Fills the valid bot channel set and the valid bot guild set.
+     * Fills the valid bot channel set and the valid bot guild set
      */
     suspend fun fillBotChannels() {
         val validBotChannels = config.botChannels()

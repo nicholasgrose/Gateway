@@ -7,10 +7,10 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * An event representing that a game chat message was created.
+ * An event representing that a game chat message was created
  *
- * @property message The message to print in Discord.
- * @constructor Creates a game chat event with the given message.
+ * @property message The message to print in Discord
+ * @constructor Creates a game chat event with the given message
  */
 class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent {
     companion object : KoinComponent {

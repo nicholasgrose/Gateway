@@ -5,14 +5,14 @@ import guru.zoroark.lixy.lixy
 import guru.zoroark.lixy.matchers.matches
 
 /**
- * A processor that can takes text, parses it, and maps the result into the [ResultType].
+ * A processor that can takes text, parses it, and maps the result into the [ResultType]
  *
- * @param ResultType The type that each parsed token is mapped into.
- * @param AdditionalDataType The additional data that is provided when a token is mapped.
+ * @param ResultType The type that each parsed token is mapped into
+ * @param AdditionalDataType The additional data that is provided when a token is mapped
  * (e.g. Unit, Int, DataClass, etc.)
- * @constructor Creates a text processor defined by the provided [TokenProcessor]s.
+ * @constructor Creates a text processor defined by the provided [TokenProcessor]s
  *
- * @param processors The list of [TokenProcessor]s to use for defining and processing tokens.
+ * @param processors The list of [TokenProcessor]s to use for defining and processing tokens
  *
  * @see TokenProcessor
  */
@@ -28,11 +28,11 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
     }
 
     /**
-     * Breaks a string of text into a list of tokens to be mapped through their respective [TokenProcessor].
+     * Breaks a string of text into a list of tokens to be mapped through their respective [TokenProcessor]
      *
-     * @param text The text to parse and process.
-     * @param additionalData The additional data to be used for token processing.
-     * @return The parsed and processed text.
+     * @param text The text to parse and process
+     * @param additionalData The additional data to be used for token processing
+     * @return The parsed and processed text
      *
      * @see TokenProcessor
      * @see processorFor
@@ -44,10 +44,10 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
     }
 
     /**
-     * Finds the [TokenProcessor] that handles a [LixyToken]'s type.
+     * Finds the [TokenProcessor] that handles a [LixyToken]'s type
      *
-     * @param token The token to find the processor for.
-     * @return The processor that can handle the token's type.
+     * @param token The token to find the processor for
+     * @return The processor that can handle the token's type
      *
      * @see LixyToken
      * @see guru.zoroark.lixy.LixyTokenType

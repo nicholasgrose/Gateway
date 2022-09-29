@@ -3,7 +3,7 @@ package com.rose.gateway.shared.reflection
 import kotlin.reflect.KType
 
 /**
- * Represents the type with a simplified name.
+ * Represents the type with a simplified name
  */
 val KType.simpleName: String
     get() {

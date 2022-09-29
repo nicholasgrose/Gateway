@@ -13,15 +13,15 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * The config for the Discord bot.
+ * The config for the Discord bot
  *
- * @property token The token for the Discord bot.
- * @property botChannels The channels in which the Discord bot should operate.
- * @property extensions The config for the Discord bot's extensions.
- * @constructor Creates a bot config with the given data.
+ * @property token The token for the Discord bot
+ * @property botChannels The channels in which the Discord bot should operate
+ * @property extensions The config for the Discord bot's extensions
+ * @constructor Creates a bot config with the given data
  *
- * @param token The token to use initially.
- * @param botChannels The bot channels to use initially.
+ * @param token The token to use initially
+ * @param botChannels The bot channels to use initially
  */
 @Serializable(with = BotConfigSerializer::class)
 class BotConfig(
@@ -52,12 +52,12 @@ class BotConfig(
 }
 
 /**
- * Surrogate for serialization of [BotConfig].
+ * Surrogate for serialization of [BotConfig]
  *
- * @property token The token for the Discord bot.
- * @property botChannels The channels in which the Discord bot should operate.
- * @property extensions The config for the Discord bot's extensions.
- * @constructor Create a bot config surrogate.
+ * @property token The token for the Discord bot
+ * @property botChannels The channels in which the Discord bot should operate
+ * @property extensions The config for the Discord bot's extensions
+ * @constructor Create a bot config surrogate
  *
  * @see BotConfig
  * @see BotConfigSerializer
@@ -84,7 +84,7 @@ data class BotConfigSurrogate(
 }
 
 /**
- * The serializer for [BotConfig].
+ * The serializer for [BotConfig]
  *
  * @see BotConfig
  * @see BotConfigSurrogate

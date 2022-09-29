@@ -13,18 +13,18 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Provides functions that build [TokenProcessingResult]s for mentions.
+ * Provides functions that build [TokenProcessingResult]s for mentions
  */
 object MentionResult : KoinComponent {
     private val bot: DiscordBot by inject()
     private val config: PluginConfig by inject()
 
     /**
-     * Creates a [TokenProcessingResult] representing a mention in Discord.
+     * Creates a [TokenProcessingResult] representing a mention in Discord
      *
-     * @param minecraftText The text as it will appear in Minecraft.
-     * @param discordText The text as it will appear in Discord.
-     * @return The [TokenProcessingResult] for the mention.
+     * @param minecraftText The text as it will appear in Minecraft
+     * @param discordText The text as it will appear in Discord
+     * @return The [TokenProcessingResult] for the mention
      */
     fun mention(minecraftText: String, discordText: String): TokenProcessingResult {
         return TokenProcessingResult(
@@ -34,10 +34,10 @@ object MentionResult : KoinComponent {
     }
 
     /**
-     * Creates a [TokenProcessingResult] representing a role mention in Discord.
+     * Creates a [TokenProcessingResult] representing a role mention in Discord
      *
-     * @param nameString The name of the role to mention.
-     * @return The [TokenProcessingResult] for the role mention.
+     * @param nameString The name of the role to mention
+     * @return The [TokenProcessingResult] for the role mention
      */
     suspend fun role(nameString: String): TokenProcessingResult {
         for (guild in bot.context.botGuilds) {
@@ -53,10 +53,10 @@ object MentionResult : KoinComponent {
     }
 
     /**
-     * Creates a [TokenProcessingResult] representing a user mention in Discord.
+     * Creates a [TokenProcessingResult] representing a user mention in Discord
      *
-     * @param nameString The name of the user to mention.
-     * @return The [TokenProcessingResult] for the user mention.
+     * @param nameString The name of the user to mention
+     * @return The [TokenProcessingResult] for the user mention
      */
     @OptIn(KordExperimental::class)
     suspend fun userMention(nameString: String): TokenProcessingResult {

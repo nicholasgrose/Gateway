@@ -12,18 +12,18 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 /**
- * Listener that sends connection-related Minecraft events in Discord.
+ * Listener that sends connection-related Minecraft events in Discord
  *
- * @constructor Create connection listener.
+ * @constructor Create connection listener
  */
 class ConnectionListener : Listener, KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     /**
-     * Posts a player-join message to Discord.
+     * Posts a player-join message to Discord
      *
-     * @param event The player-join event.
+     * @param event The player-join event
      */
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -37,9 +37,9 @@ class ConnectionListener : Listener, KoinComponent {
     }
 
     /**
-     * Posts a player-leave message to Discord.
+     * Posts a player-leave message to Discord
      *
-     * @param event The player-quit event.
+     * @param event The player-quit event
      */
     @EventHandler
     fun onLeave(event: PlayerQuitEvent) {

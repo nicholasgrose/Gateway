@@ -17,9 +17,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 /**
- * Class that provides methods for interfacing with the Gateway config file.
+ * Class that provides methods for interfacing with the Gateway config file
  *
- * @constructor Creates a gateway config file.
+ * @constructor Creates a gateway config file
  */
 class GatewayConfigFile : KoinComponent {
     companion object {
@@ -40,9 +40,9 @@ class GatewayConfigFile : KoinComponent {
     }
 
     /**
-     * Loads the gateway config file, creating it if it is missing.
+     * Loads the gateway config file, creating it if it is missing
      *
-     * @return The loaded Gateway config object.
+     * @return The loaded Gateway config object
      */
     suspend fun safelyLoadConfig(): Config {
         ensureConfigurationFileExists()
@@ -57,17 +57,17 @@ class GatewayConfigFile : KoinComponent {
     }
 
     /**
-     * Asserts that a value is not null, raising an error with a message saying the default config file is missing.
+     * Asserts that a value is not null, raising an error with a message saying the default config file is missing
      *
-     * @param T The type to guarantee the value is.
-     * @return The non-nullable type.
+     * @param T The type to guarantee the value is
+     * @return The non-nullable type
      */
     private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T {
         return this.notNull("default config resource does not exist to be loaded")
     }
 
     /**
-     * Ensures that a configuration file exists to be loaded.
+     * Ensures that a configuration file exists to be loaded
      */
     private suspend fun ensureConfigurationFileExists() {
         Logger.info("Checking configuration file existence...")
@@ -82,8 +82,8 @@ class GatewayConfigFile : KoinComponent {
     }
 
     /**
-     * Creates a new configuration file at the config path.
-     * The new file is a copy of the bundled default config file.
+     * Creates a new configuration file at the config path
+     * The new file is a copy of the bundled default config file
      */
     private suspend fun createConfigurationFile() {
         withContext(Dispatchers.IO) {
@@ -98,11 +98,11 @@ class GatewayConfigFile : KoinComponent {
     }
 
     /**
-     * Loads the config from the provided path.
-     * This path may reference a bundled jar resource file.
+     * Loads the config from the provided path
+     * This path may reference a bundled jar resource file
      *
-     * @param path The path to load the config from.
-     * @return The loaded config or null, if it can't be loaded.
+     * @param path The path to load the config from
+     * @return The loaded config or null, if it can't be loaded
      */
     private fun loadConfig(path: String): Config? {
         Logger.info("Loading configuration...")
@@ -128,9 +128,9 @@ class GatewayConfigFile : KoinComponent {
     }
 
     /**
-     * Saves the provided config object to the Gateway config file.
+     * Saves the provided config object to the Gateway config file
      *
-     * @param config The config to save.
+     * @param config The config to save
      */
     suspend fun saveConfig(config: Config) {
         val configYaml = Yaml.default.encodeToString(config)

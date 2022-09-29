@@ -7,11 +7,11 @@ import com.rose.gateway.shared.serialization.SurrogateConverter
 import kotlinx.serialization.Serializable
 
 /**
- * Config options for the "about extension".
+ * Config options for the "about extension"
  *
- * @constructor Creates an "about config" with the provided data.
+ * @constructor Creates an "about config" with the provided data
  *
- * @param enabled Whether the extension is enabled.
+ * @param enabled Whether the extension is enabled
  */
 @Serializable(with = AboutConfigSerializer::class)
 class AboutConfig(
@@ -19,10 +19,10 @@ class AboutConfig(
 ) : CommonExtensionConfig(enabled, AboutExtension.extensionName())
 
 /**
- * Surrogate for serialization of [AboutConfig].
+ * Surrogate for serialization of [AboutConfig]
  *
- * @property enabled Whether the extension is enabled.
- * @constructor Create an "about config" surrogate with the provided data.
+ * @property enabled Whether the extension is enabled
+ * @constructor Create an "about config" surrogate with the provided data
  *
  * @see AboutConfig
  * @see AboutConfigSerializer
@@ -37,7 +37,7 @@ data class AboutConfigSurrogate(val enabled: Boolean) {
 }
 
 /**
- * Serializer for [AboutConfig].
+ * Serializer for [AboutConfig]
  *
  * @see AboutConfig
  * @see AboutConfigSurrogate

@@ -12,13 +12,13 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.typeOf
 
 /**
- * A single item of the config.
+ * A single item of the config
  *
- * @param ValueType The type of the value contained in this config item.
- * @property property The property of the config class that this item references.
- * @property path The path of this item in the config file represented as a dot-delimited string.
- * @property description The description of this item.
- * @constructor Create an item with the provided data.
+ * @param ValueType The type of the value contained in this config item
+ * @property property The property of the config class that this item references
+ * @property path The path of this item in the config file represented as a dot-delimited string
+ * @property description The description of this item
+ * @constructor Create an item with the provided data
  */
 data class Item<ValueType>(
     val property: KMutableProperty<ValueType>,
@@ -33,9 +33,9 @@ data class Item<ValueType>(
         set(value) = property.setter.call(containingObject(), value)
 
     /**
-     * Finds the [ConfigObject] that contains this item's property.
+     * Finds the [ConfigObject] that contains this item's property
      *
-     * @return The object found.
+     * @return The object found
      */
     private fun containingObject(): ConfigObject {
         return containingObject(pluginConfig.config)
@@ -43,10 +43,10 @@ data class Item<ValueType>(
     }
 
     /**
-     * Finds the [ConfigObject] that contains this item's property using a depth-first search.
+     * Finds the [ConfigObject] that contains this item's property using a depth-first search
      *
-     * @param source The object to search.
-     * @return The object found, if any.
+     * @param source The object to search
+     * @return The object found, if any
      */
     private fun containingObject(source: ConfigObject): ConfigObject? {
         val configProperties = source::class.memberProperties.filterConfigItems()
