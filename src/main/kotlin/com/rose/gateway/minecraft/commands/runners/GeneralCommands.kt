@@ -3,7 +3,16 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
 
+/**
+ * General plugin commands
+ */
 object GeneralCommands {
+    /**
+     * Sends the sender help for sending messages to Discord
+     *
+     * @param context A command context without arguments
+     * @return Whether the command succeeded
+     */
     fun discordHelp(context: CommandContext<NoArguments>): Boolean {
         context.sender.sendMessage(
             """

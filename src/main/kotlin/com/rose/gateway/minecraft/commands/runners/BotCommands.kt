@@ -15,11 +15,20 @@ import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Commands that affect the Discord bot
+ */
 object BotCommands : KoinComponent {
     private val bot: DiscordBot by inject()
     private val config: PluginConfig by inject()
     private val pluginScope: PluginCoroutineScope by inject()
 
+    /**
+     * Restarts the discord bot
+     *
+     * @param context A command context without arguments
+     * @return Whether the command succeeded
+     */
     fun restartBot(context: CommandContext<NoArguments>): Boolean {
         sendAndLogMessage(context.sender, "Restarting the Discord bot...")
 
@@ -36,11 +45,23 @@ object BotCommands : KoinComponent {
         return true
     }
 
+    /**
+     * Sends a sender a message abd logs it in the server logs
+     *
+     * @param sender The sender to send the message to
+     * @param message The message to send and log
+     */
     private fun sendAndLogMessage(sender: CommandSender, message: String) {
         Logger.info(message)
         sender.sendMessage(message)
     }
 
+    /**
+     * Sends the sender information about the bot's status
+     *
+     * @param context A command context without arguments
+     * @return Whether the command succeeded
+     */
     fun botStatus(context: CommandContext<NoArguments>): Boolean {
         val status = bot.botStatus
         context.sender.sendMessage(
