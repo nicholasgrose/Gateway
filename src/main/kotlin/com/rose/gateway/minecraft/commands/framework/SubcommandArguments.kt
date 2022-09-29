@@ -60,6 +60,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         description = "All of the args to be passed to subcommands."
         usageGenerator = emptyUsageGenerator()
         completer = ::remainingArgsCompleter
+        requireNonEmpty = false
     }
 
     @Suppress("unused")

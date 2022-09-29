@@ -48,7 +48,7 @@ class ListArgBuilder<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> :
     }
 
     lateinit var element: RunnerArg<T, A, R>
-    var requireNonEmpty = false
+    var requireNonEmpty = true
 
     override fun checkValidity() {
         if (!::element.isInitialized) error("no type given for list argument")

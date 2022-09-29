@@ -12,28 +12,28 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Generic arguments for a config item and its value.
+ * Generic arguments for a config item and its value
  *
- * @param T The type of the config item.
- * @param A The type of arguments this class is.
- * @param R The type of the parser for the config value, [T].
- * @constructor Create config args for the given config type and its parser.
+ * @param ConfigValueType The type of the config item
+ * @param ConfigArgsType The type of arguments this class is
+ * @param ConfigValueParserType The type of the parser for the config value, [ConfigValueType]
+ * @constructor Create config args for the given config type and its parser
  *
- * @param configType The type of the config item.
- * @param valueArg The parser for the config value.
+ * @param configType The type of the config item
+ * @param valueArg The parser for the config value
  *
- * @property item The config item referenced.
- * @property value The config item's value.
+ * @property item The config item referenced
+ * @property value The config item's value
  */
 abstract class ConfigArgs<
-    T : Any,
-    A : ConfigArgs<T, A, R>,
-    R : RunnerArg<T, A, R>
+    ConfigValueType : Any,
+    ConfigArgsType : ConfigArgs<ConfigValueType, ConfigArgsType, ConfigValueParserType>,
+    ConfigValueParserType : RunnerArg<ConfigValueType, ConfigArgsType, ConfigValueParserType>
     >(
     configType: KType,
-    valueArg: A.() -> R
-) : RunnerArguments<A>() {
-    val item by typedConfigItem<T, A> {
+    valueArg: ConfigArgsType.() -> ConfigValueParserType
+) : RunnerArguments<ConfigArgsType>() {
+    val item by typedConfigItem<ConfigValueType, ConfigArgsType> {
         name = "CONFIG_ITEM"
         description = "The item to modify."
         type = configType
@@ -41,13 +41,13 @@ abstract class ConfigArgs<
     }
 
     @Suppress("UNCHECKED_CAST", "LeakingThis")
-    val value by (this as A).valueArg()
+    val value by (this as ConfigArgsType).valueArg()
 }
 
 /**
- * Config boolean args
+ * Config args for boolean values
  *
- * @constructor Create empty Config boolean args
+ * @constructor Create config boolean args
  */
 class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanArg<ConfigBooleanArgs>>(
     typeOf<Boolean>(),
@@ -60,9 +60,9 @@ class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanArg<Conf
 )
 
 /**
- * Config string args
+ * Config args for string values
  *
- * @constructor Create empty Config string args
+ * @constructor Create config string args
  */
 class ConfigStringArgs : ConfigArgs<String, ConfigStringArgs, StringArg<ConfigStringArgs>>(
     typeOf<String>(),

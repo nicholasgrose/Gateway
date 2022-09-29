@@ -10,18 +10,37 @@ import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+/**
+ * Arguments for a configuration that is a list of some values and some values for it
+ *
+ * @param ListElementType Type for the elements in the list for the config
+ * @param ListArgsType The type of the args this is
+ * @param ListElementParserType The type of the parser that will get the individual list elements
+ * @constructor Creates a config
+ *
+ * @param resultType The type of the list to associate with the args
+ * @param valueArg The parser for the list arguments
+ */
 open class ConfigListArgs<
-    T : Any,
-    A : ConfigListArgs<T, A, R>,
-    R : RunnerArg<T, A, R>
+    ListElementType : Any,
+    ListArgsType : ConfigListArgs<ListElementType, ListArgsType, ListElementParserType>,
+    ListElementParserType : RunnerArg<ListElementType, ListArgsType, ListElementParserType>
     >(
     resultType: KType,
-    valueArg: A.() -> ListArg<T, A, R>
-) : ConfigArgs<List<T>, A, ListArg<T, A, R>>(
+    valueArg: ListArgsType.() -> ListArg<ListElementType, ListArgsType, ListElementParserType>
+) : ConfigArgs<List<ListElementType>, ListArgsType, ListArg<ListElementType, ListArgsType, ListElementParserType>>(
     resultType,
     valueArg
 )
 
+/**
+ * Config args for a list of strings
+ *
+ * @constructor Creates a string list config args
+ *
+ * @param stringCompleter The completer to use for each string
+ * @param stringValidator The validator to use for each string
+ */
 class StringListConfigArgs(
     stringCompleter: (
         TabCompletionContext<StringListConfigArgs>
@@ -34,7 +53,6 @@ class StringListConfigArgs(
             list {
                 name = "VALUES"
                 description = "Values to add."
-                requireNonEmpty = true
                 element = stringArg {
                     name = "VALUE"
                     description = "String to add."
@@ -45,6 +63,11 @@ class StringListConfigArgs(
         }
     )
 
+/**
+ * Creates a string list config args for adding strings
+ *
+ * @return The constructed config args
+ */
 fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     { listOf() },
     {
@@ -54,6 +77,11 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     }
 )
 
+/**
+ * Creates a string list config args for removing strings
+ *
+ * @return The constructed config args
+ */
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
         val currentValues = it.arguments.item?.value ?: listOf()
