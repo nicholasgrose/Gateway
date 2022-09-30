@@ -8,7 +8,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
  */
 object GeneralCommands {
     /**
-     * Sends the sender help for sending messages to Discord
+     * Command that sends the sender help for sending messages to Discord
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded

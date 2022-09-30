@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender
  */
 object ConfigCommands {
     /**
-     * Sets the value of a config item
+     * Command that sets the value of a config item
      *
      * @param ConfigValueType The type of the config value to modify
      * @param ArgsType The type of the config args in the command context
@@ -63,7 +63,7 @@ object ConfigCommands {
     }
 
     /**
-     * Adds value to a config list item
+     * Command that adds value to a config list item
      *
      * @param ConfigValueType The type of the config item
      * @param ListArgsType The type of the list args in the command context
@@ -122,7 +122,7 @@ object ConfigCommands {
     }
 
     /**
-     * Removes values from a config list item
+     * Command that removes values from a config list item
      *
      * @param ConfigValueType The type of the config item
      * @param ListArgsType The type of the list args in the command context

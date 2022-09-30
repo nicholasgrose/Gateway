@@ -24,7 +24,7 @@ object BotCommands : KoinComponent {
     private val pluginScope: PluginCoroutineScope by inject()
 
     /**
-     * Restarts the discord bot
+     * Command that restarts the discord bot
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
@@ -57,7 +57,7 @@ object BotCommands : KoinComponent {
     }
 
     /**
-     * Sends the sender information about the bot's status
+     * Command that sends the command sender information about the bot's status
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
