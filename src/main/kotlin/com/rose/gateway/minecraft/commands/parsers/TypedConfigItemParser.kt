@@ -11,14 +11,31 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType
 
+/**
+ * Adds a typed config item argument to these args
+ *
+ * @param A The type of the [CommandArgs] this parser is a part of
+ * @param body The arg body
+ * @receiver The builder for the parser
+ * @return The built parser
+ */
 fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
-    body: GenericConfigItemParserBuilder<T, A>.() -> Unit
-): GenericConfigItemParser<T, A> =
-    genericParser(::GenericConfigItemParserBuilder, body)
+    body: TypedConfigItemParserBuilder<T, A>.() -> Unit
+): TypedConfigItemParser<T, A> =
+    genericParser(::TypedConfigItemParserBuilder, body)
 
-class GenericConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: GenericConfigItemParserBuilder<T, A>) :
-    ArgParser<Item<T>, A, GenericConfigItemParser<T, A>>(builder), KoinComponent {
-    val config: PluginConfig by inject()
+/**
+ * Parser for a typed config item argument
+ *
+ * @param T The type of the config item's value
+ * @param A The type of the args this parser is used by
+ * @constructor Creates a typed config item parser
+ *
+ * @param builder The builder that defines this parser
+ */
+class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: TypedConfigItemParserBuilder<T, A>) :
+    ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder), KoinComponent {
+    private val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
 
@@ -43,15 +60,24 @@ class GenericConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: GenericC
     }
 }
 
-class GenericConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
-    ParserBuilder<Item<T>, A, GenericConfigItemParser<T, A>>() {
+/**
+ * Builder for a [TypedConfigItemParser]
+ *
+ * @param T The type of the config item's value
+ * @param A The args the parser will be a part of
+ * @constructor Creates a typed config item parser builder
+ *
+ * @property type The KType for the config item
+ */
+class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
+    ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>() {
     lateinit var type: KType
 
     override fun checkValidity() {
         if (!::type.isInitialized) error("No type give for item arg.")
     }
 
-    override fun build(): GenericConfigItemParser<T, A> {
-        return GenericConfigItemParser(this)
+    override fun build(): TypedConfigItemParser<T, A> {
+        return TypedConfigItemParser(this)
     }
 }

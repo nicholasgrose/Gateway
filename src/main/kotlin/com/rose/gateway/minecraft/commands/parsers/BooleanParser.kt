@@ -22,7 +22,7 @@ fun <A : CommandArgs<A>> CommandArgs<A>.boolean(
 /**
  * Parser for a boolean argument
  *
- * @param A The type of the arguments this parser is used by
+ * @param A The type of the args this parser is used by
  * @constructor Creates a boolean parser
  *
  * @param builder The builder that defines this parser
