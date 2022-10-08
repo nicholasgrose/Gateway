@@ -1,13 +1,13 @@
 package com.rose.gateway.minecraft.commands.arguments
 
 import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
-import com.rose.gateway.minecraft.commands.converters.BooleanArg
-import com.rose.gateway.minecraft.commands.converters.StringArg
-import com.rose.gateway.minecraft.commands.converters.boolean
-import com.rose.gateway.minecraft.commands.converters.string
-import com.rose.gateway.minecraft.commands.converters.typedConfigItem
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.parsers.BooleanParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
+import com.rose.gateway.minecraft.commands.parsers.boolean
+import com.rose.gateway.minecraft.commands.parsers.string
+import com.rose.gateway.minecraft.commands.parsers.typedConfigItem
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -28,11 +28,11 @@ import kotlin.reflect.typeOf
 abstract class ConfigArgs<
     ConfigValueType : Any,
     ConfigArgsType : ConfigArgs<ConfigValueType, ConfigArgsType, ConfigValueParserType>,
-    ConfigValueParserType : RunnerArg<ConfigValueType, ConfigArgsType, ConfigValueParserType>
+    ConfigValueParserType : ArgParser<ConfigValueType, ConfigArgsType, ConfigValueParserType>
     >(
     configType: KType,
     valueArg: ConfigArgsType.() -> ConfigValueParserType
-) : RunnerArguments<ConfigArgsType>() {
+) : CommandArgs<ConfigArgsType>() {
     val item by typedConfigItem<ConfigValueType, ConfigArgsType> {
         name = "CONFIG_ITEM"
         description = "The item to modify."
@@ -49,7 +49,7 @@ abstract class ConfigArgs<
  *
  * @constructor Create config boolean args
  */
-class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanArg<ConfigBooleanArgs>>(
+class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanParser<ConfigBooleanArgs>>(
     typeOf<Boolean>(),
     {
         boolean {
@@ -64,7 +64,7 @@ class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanArg<Conf
  *
  * @constructor Create config string args
  */
-class ConfigStringArgs : ConfigArgs<String, ConfigStringArgs, StringArg<ConfigStringArgs>>(
+class ConfigStringArgs : ConfigArgs<String, ConfigStringArgs, StringParser<ConfigStringArgs>>(
     typeOf<String>(),
     {
         string {

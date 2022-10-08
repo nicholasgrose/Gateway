@@ -5,7 +5,7 @@ import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun restartBot(context: CommandContext<NoArguments>): Boolean {
+    fun restartBot(context: CommandContext<NoArgs>): Boolean {
         sendAndLogMessage(context.sender, "Restarting the Discord bot...")
 
         pluginScope.launch {
@@ -62,7 +62,7 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun botStatus(context: CommandContext<NoArguments>): Boolean {
+    fun botStatus(context: CommandContext<NoArgs>): Boolean {
         val status = bot.botStatus
         context.sender.sendMessage(
             Component.join(

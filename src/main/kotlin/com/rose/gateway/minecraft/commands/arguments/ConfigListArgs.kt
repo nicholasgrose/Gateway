@@ -1,12 +1,12 @@
 package com.rose.gateway.minecraft.commands.arguments
 
-import com.rose.gateway.minecraft.commands.converters.ListArg
-import com.rose.gateway.minecraft.commands.converters.StringArg
-import com.rose.gateway.minecraft.commands.converters.list
-import com.rose.gateway.minecraft.commands.converters.stringArg
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
+import com.rose.gateway.minecraft.commands.parsers.ListParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
+import com.rose.gateway.minecraft.commands.parsers.list
+import com.rose.gateway.minecraft.commands.parsers.stringParser
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -24,11 +24,11 @@ import kotlin.reflect.typeOf
 open class ConfigListArgs<
     ListElementType : Any,
     ListArgsType : ConfigListArgs<ListElementType, ListArgsType, ListElementParserType>,
-    ListElementParserType : RunnerArg<ListElementType, ListArgsType, ListElementParserType>
+    ListElementParserType : ArgParser<ListElementType, ListArgsType, ListElementParserType>
     >(
     resultType: KType,
-    valueArg: ListArgsType.() -> ListArg<ListElementType, ListArgsType, ListElementParserType>
-) : ConfigArgs<List<ListElementType>, ListArgsType, ListArg<ListElementType, ListArgsType, ListElementParserType>>(
+    valueArg: ListArgsType.() -> ListParser<ListElementType, ListArgsType, ListElementParserType>
+) : ConfigArgs<List<ListElementType>, ListArgsType, ListParser<ListElementType, ListArgsType, ListElementParserType>>(
     resultType,
     valueArg
 )
@@ -47,13 +47,13 @@ class StringListConfigArgs(
     ) -> List<String>,
     stringValidator: (ParseResult<String, StringListConfigArgs>) -> Boolean
 ) :
-    ConfigListArgs<String, StringListConfigArgs, StringArg<StringListConfigArgs>>(
+    ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
         {
             list {
                 name = "VALUES"
                 description = "Values to add."
-                element = stringArg {
+                element = stringParser {
                     name = "VALUE"
                     description = "String to add."
                     completer = stringCompleter

@@ -5,7 +5,7 @@ import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.component.ColorComponent
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.item
@@ -69,7 +69,7 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context without any arguments
      * @return Whether the command succeeded
      */
-    fun reloadConfig(context: CommandContext<NoArguments>): Boolean {
+    fun reloadConfig(context: CommandContext<NoArgs>): Boolean {
         context.sender.sendMessage("Loading configuration...")
 
         pluginCoroutineScope.launch {
@@ -91,7 +91,7 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context without any arguments
      * @return Whether the command succeeded
      */
-    fun saveConfig(context: CommandContext<NoArguments>): Boolean {
+    fun saveConfig(context: CommandContext<NoArgs>): Boolean {
         pluginCoroutineScope.launch {
             config.saveConfig()
             context.sender.sendMessage("Saved current configuration.")
@@ -126,7 +126,7 @@ object ConfigMonitoringRunner : KoinComponent {
      * @return Whether the command succeeded
      */
     fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
-        val item = context.arguments.item ?: return false
+        val item = context.args.item ?: return false
 
         context.sender.sendMessage(itemHelpMessage(item))
 

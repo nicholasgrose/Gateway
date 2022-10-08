@@ -1,9 +1,9 @@
 package com.rose.gateway.minecraft.commands.framework.data
 
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import org.bukkit.command.CommandSender
 
-data class CommandExecutor<A : RunnerArguments<A>>(
+data class CommandExecutor<A : CommandArgs<A>>(
     val executor: ((CommandContext<A>) -> Boolean),
     val arguments: () -> A
 ) {
@@ -23,7 +23,7 @@ data class CommandExecutor<A : RunnerArguments<A>>(
                     sender = sender,
                     command = command,
                     label = label,
-                    arguments = args
+                    args = args
                 )
             )
         } else null

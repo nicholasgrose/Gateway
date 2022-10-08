@@ -2,10 +2,11 @@ package com.rose.gateway.minecraft.commands.framework.runner
 
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
-open class RunnerArguments<A : RunnerArguments<A>> {
+open class CommandArgs<A : CommandArgs<A>> {
     var rawArguments: List<String> = listOf()
-    val parsers: MutableList<RunnerArg<*, A, *>> = mutableListOf()
-    var finalParseResult: ParseResult<MutableMap<RunnerArg<*, A, *>, ParseResult<*, A>>, A> = fillFinalParseResults()
+    val parsers: MutableList<ArgParser<*, A, *>> = mutableListOf()
+    var finalParseResult: ParseResult<MutableMap<ArgParser<*, A, *>, ParseResult<*, A>>, A> =
+        fillFinalParseResults()
 
     fun forArguments(rawArgs: List<String>) {
         rawArguments = rawArgs
@@ -13,10 +14,10 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         finalParseResult = fillFinalParseResults()
     }
 
-    private fun fillFinalParseResults(): ParseResult<MutableMap<RunnerArg<*, A, *>, ParseResult<*, A>>, A> {
+    private fun fillFinalParseResults(): ParseResult<MutableMap<ArgParser<*, A, *>, ParseResult<*, A>>, A> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
-        val resultMap = mutableMapOf<RunnerArg<*, A, *>, ParseResult<*, A>>()
+        val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult<*, A>>()
         finalParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
 
         for (parser in parsers) {
@@ -109,5 +110,5 @@ open class RunnerArguments<A : RunnerArguments<A>> {
         }
     }
 
-    fun wasSuccessful(arg: RunnerArg<*, A, *>): Boolean = finalParseResult.result?.containsKey(arg) ?: false
+    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = finalParseResult.result?.containsKey(arg) ?: false
 }

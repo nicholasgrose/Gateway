@@ -1,20 +1,20 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.converters.ProcessorArg
-import com.rose.gateway.minecraft.commands.converters.StringArg
-import com.rose.gateway.minecraft.commands.converters.failedParseResult
-import com.rose.gateway.minecraft.commands.converters.list
-import com.rose.gateway.minecraft.commands.converters.processor
-import com.rose.gateway.minecraft.commands.converters.string
-import com.rose.gateway.minecraft.commands.converters.stringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
 import com.rose.gateway.minecraft.commands.framework.runner.emptyUsageGenerator
+import com.rose.gateway.minecraft.commands.parsers.ProcessorParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
+import com.rose.gateway.minecraft.commands.parsers.failedParseResult
+import com.rose.gateway.minecraft.commands.parsers.list
+import com.rose.gateway.minecraft.commands.parsers.processor
+import com.rose.gateway.minecraft.commands.parsers.string
+import com.rose.gateway.minecraft.commands.parsers.stringParser
 
-class SubcommandArguments(private val children: Map<String, Command>) : RunnerArguments<SubcommandArguments>() {
+class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<SubcommandArgs>() {
     private val validator = Regex(subcommandRegex())
 
     private fun subcommandRegex(): String {
@@ -22,9 +22,9 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     companion object {
-        fun forChildCommands(children: Map<String, Command>): () -> SubcommandArguments {
+        fun forChildCommands(children: Map<String, Command>): () -> SubcommandArgs {
             return {
-                SubcommandArguments(children)
+                SubcommandArgs(children)
             }
         }
     }
@@ -52,7 +52,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         usageGenerator = emptyUsageGenerator()
     }
     val remainingArgs by list {
-        element = stringArg {
+        element = stringParser {
             name = "Remaining Arg"
             description = "One of the args remaining."
         }
@@ -73,7 +73,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
         completeAfterSatisfied = true
     }
 
-    private fun subcommandCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
+    private fun subcommandCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
         val command = context.arguments.rawArguments.first()
         val definition = context.commandDefinition
 
@@ -81,7 +81,7 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     private fun subcommandValidator(
-        result: ParseResult<String, SubcommandArguments>
+        result: ParseResult<String, SubcommandArgs>
     ): Boolean {
         result.result ?: return false
 
@@ -89,13 +89,13 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun subcommandUsageGenerator(args: SubcommandArguments, arg: StringArg<SubcommandArguments>): List<String> {
+    private fun subcommandUsageGenerator(args: SubcommandArgs, arg: StringParser<SubcommandArgs>): List<String> {
         val subcommand = args.subcommandName
 
         return if (subcommand == null) children.keys.toList() else listOf(subcommand)
     }
 
-    private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArguments>): List<String> {
+    private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
         val args = context.arguments
         val subcommand = args.subcommand
         val remainingRawArgs = args.remainingArgs ?: return listOf()
@@ -110,8 +110,8 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 
     private fun nextCommandProcessor(
-        context: ParseContext<SubcommandArguments>
-    ): ParseResult<Unit, SubcommandArguments> {
+        context: ParseContext<SubcommandArgs>
+    ): ParseResult<Unit, SubcommandArgs> {
         val args = context.arguments
         val remainingArgs = args.remainingArgs ?: return failedParseResult(context)
         val subcommand = args.subcommand
@@ -129,8 +129,8 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
 
     @Suppress("UNUSED_PARAMETER")
     private fun nextCommandUsageGenerator(
-        args: SubcommandArguments,
-        arg: ProcessorArg<Unit, SubcommandArguments>
+        args: SubcommandArgs,
+        arg: ProcessorParser<Unit, SubcommandArgs>
     ): List<String> {
         val remainingRawArgs = args.remainingArgs ?: return listOf()
         val subcommand = args.subcommand
@@ -145,8 +145,8 @@ class SubcommandArguments(private val children: Map<String, Command>) : RunnerAr
     }
 }
 
-fun subcommandRunner(context: CommandContext<SubcommandArguments>): Boolean {
-    val args = context.arguments
+fun subcommandRunner(context: CommandContext<SubcommandArgs>): Boolean {
+    val args = context.args
     val childCommand = args.subcommand
     val remainingArguments = args.remainingArgs?.toTypedArray()
 

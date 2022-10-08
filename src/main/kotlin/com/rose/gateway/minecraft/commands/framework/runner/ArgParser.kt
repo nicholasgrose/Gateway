@@ -3,8 +3,12 @@ package com.rose.gateway.minecraft.commands.framework.runner
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import kotlin.reflect.KProperty
 
-abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(
-    private val builder: ArgBuilder<T, A, R>,
+abstract class ArgParser<
+    T,
+    A : CommandArgs<A>,
+    P : ArgParser<T, A, P>
+    >(
+    private val builder: ParserBuilder<T, A, P>,
     private val completesAfterSatisfied: Boolean = false
 ) {
     fun name(): String = builder.name
@@ -18,7 +22,7 @@ abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as R)
+    fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as P)
     abstract fun parseValue(context: ParseContext<A>): ParseResult<T, A>
 
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {
@@ -36,6 +40,6 @@ abstract class RunnerArg<T, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    operator fun getValue(thisRef: RunnerArguments<A>, property: KProperty<*>): T? =
+    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? =
         thisRef.finalParseResult.result?.get(this)?.result as T?
 }

@@ -3,7 +3,7 @@ package com.rose.gateway.minecraft.commands.completers
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType
@@ -23,7 +23,7 @@ object ConfigCompleter : KoinComponent {
      * @param A The argument type for the function's completion context
      * @return The completer for config strings
      */
-    fun <A : RunnerArguments<A>> configStrings(): (TabCompletionContext<A>) -> List<String> =
+    fun <A : CommandArgs<A>> configStrings(): (TabCompletionContext<A>) -> List<String> =
         { configStringMap.allStrings() }
 
     /**
@@ -33,7 +33,7 @@ object ConfigCompleter : KoinComponent {
      * @param type The type for the config item
      * @return The completer for config items of the given type
      */
-    fun <A : RunnerArguments<A>> configItemsWithType(type: KType): (TabCompletionContext<A>) -> List<String> {
+    fun <A : CommandArgs<A>> configItemsWithType(type: KType): (TabCompletionContext<A>) -> List<String> {
         val items = config.allItems()
         val matchedItems = items.filter {
             val itemType = it.type

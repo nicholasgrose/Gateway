@@ -1,19 +1,19 @@
-package com.rose.gateway.minecraft.commands.converters
+package com.rose.gateway.minecraft.commands.parsers
 
-import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
-fun <A : RunnerArguments<A>> stringArg(body: StringArgBuilder<A>.() -> Unit): StringArg<A> =
-    genericArgBuilder(::StringArgBuilder, body)
+fun <A : CommandArgs<A>> stringParser(body: StringParserBuilder<A>.() -> Unit): StringParser<A> =
+    genericParserBuilder(::StringParserBuilder, body)
 
-fun <A : RunnerArguments<A>> RunnerArguments<A>.string(body: StringArgBuilder<A>.() -> Unit): StringArg<A> =
-    genericParser(::StringArgBuilder, body)
+fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -> Unit): StringParser<A> =
+    genericParser(::StringParserBuilder, body)
 
-class StringArg<A : RunnerArguments<A>>(val builder: StringArgBuilder<A>) :
-    RunnerArg<String, A, StringArg<A>>(builder) {
+class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
+    ArgParser<String, A, StringParser<A>>(builder) {
     override fun typeName(): String = "String"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
@@ -50,12 +50,12 @@ class StringArg<A : RunnerArguments<A>>(val builder: StringArgBuilder<A>) :
     }
 }
 
-class StringArgBuilder<A : RunnerArguments<A>> : ArgBuilder<String, A, StringArg<A>>() {
+class StringParserBuilder<A : CommandArgs<A>> : ParserBuilder<String, A, StringParser<A>>() {
     var hungry = false
 
     override fun checkValidity() = Unit
 
-    override fun build(): StringArg<A> {
-        return StringArg(this)
+    override fun build(): StringParser<A> {
+        return StringParser(this)
     }
 }

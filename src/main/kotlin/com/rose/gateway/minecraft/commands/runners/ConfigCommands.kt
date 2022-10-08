@@ -3,9 +3,9 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.config.Item
 import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
-import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.component.ColorComponent
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.joinSpace
@@ -28,10 +28,10 @@ object ConfigCommands {
     fun <
         ConfigValueType,
         ArgsType : ConfigArgs<ConfigValueType, ArgsType, ValueParserType>,
-        ValueParserType : RunnerArg<ConfigValueType, ArgsType, ValueParserType>> setConfig(
+        ValueParserType : ArgParser<ConfigValueType, ArgsType, ValueParserType>> setConfig(
         context: CommandContext<ArgsType>
     ): Boolean {
-        val args = context.arguments
+        val args = context.args
         val item = args.item
         val value = args.value
 
@@ -74,11 +74,11 @@ object ConfigCommands {
     fun <
         ConfigValueType,
         ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
-        ValueParserType : StringArg<ListArgsType>> addConfiguration(
+        ValueParserType : StringParser<ListArgsType>> addConfiguration(
         context: CommandContext<ListArgsType>
     ): Boolean {
-        val configItem = context.arguments.item
-        val values = context.arguments.value
+        val configItem = context.args.item
+        val values = context.args.value
 
         if (configItem == null || values == null) return true
 
@@ -133,11 +133,11 @@ object ConfigCommands {
     fun <
         ConfigValueType,
         ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
-        ValueParserType : StringArg<ListArgsType>> removeConfiguration(
+        ValueParserType : StringParser<ListArgsType>> removeConfiguration(
         context: CommandContext<ListArgsType>
     ): Boolean {
-        val configItem = context.arguments.item
-        val values = context.arguments.value
+        val configItem = context.args.item
+        val values = context.args.value
 
         if (configItem == null || values == null) return true
 

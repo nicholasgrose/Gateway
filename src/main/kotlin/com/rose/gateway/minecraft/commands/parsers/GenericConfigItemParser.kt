@@ -1,28 +1,28 @@
-package com.rose.gateway.minecraft.commands.converters
+package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType
 
-fun <T : Any, A : RunnerArguments<A>> RunnerArguments<A>.typedConfigItem(
-    body: GenericConfigItemArgBuilder<T, A>.() -> Unit
-): GenericConfigItemArg<T, A> =
-    genericParser(::GenericConfigItemArgBuilder, body)
+fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
+    body: GenericConfigItemParserBuilder<T, A>.() -> Unit
+): GenericConfigItemParser<T, A> =
+    genericParser(::GenericConfigItemParserBuilder, body)
 
-class GenericConfigItemArg<T : Any, A : RunnerArguments<A>>(val builder: GenericConfigItemArgBuilder<T, A>) :
-    RunnerArg<Item<T>, A, GenericConfigItemArg<T, A>>(builder), KoinComponent {
+class GenericConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: GenericConfigItemParserBuilder<T, A>) :
+    ArgParser<Item<T>, A, GenericConfigItemParser<T, A>>(builder), KoinComponent {
     val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser = stringArg<A> {
+    private val internalStringParser = stringParser<A> {
         name = "CONFIG_INTERNAL"
         description = "Parses the string for the item."
     }
@@ -43,15 +43,15 @@ class GenericConfigItemArg<T : Any, A : RunnerArguments<A>>(val builder: Generic
     }
 }
 
-class GenericConfigItemArgBuilder<T : Any, A : RunnerArguments<A>> :
-    ArgBuilder<Item<T>, A, GenericConfigItemArg<T, A>>() {
+class GenericConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
+    ParserBuilder<Item<T>, A, GenericConfigItemParser<T, A>>() {
     lateinit var type: KType
 
     override fun checkValidity() {
         if (!::type.isInitialized) error("No type give for item arg.")
     }
 
-    override fun build(): GenericConfigItemArg<T, A> {
-        return GenericConfigItemArg(this)
+    override fun build(): GenericConfigItemParser<T, A> {
+        return GenericConfigItemParser(this)
     }
 }

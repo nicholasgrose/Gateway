@@ -1,18 +1,18 @@
-package com.rose.gateway.minecraft.commands.converters
+package com.rose.gateway.minecraft.commands.parsers
 
-import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
-fun <T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> RunnerArguments<A>.list(
-    body: ListArgBuilder<T, A, R>.() -> Unit
-): ListArg<T, A, R> =
-    genericParser(::ListArgBuilder, body)
+fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
+    body: ListParserBuilder<T, A, R>.() -> Unit
+): ListParser<T, A, R> =
+    genericParser(::ListParserBuilder, body)
 
-class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val builder: ListArgBuilder<T, A, R>) :
-    RunnerArg<List<T>, A, ListArg<T, A, R>>(
+class ListParser<T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>>(val builder: ListParserBuilder<T, A, R>) :
+    ArgParser<List<T>, A, ListParser<T, A, R>>(
         builder,
         completesAfterSatisfied = true
     ) {
@@ -39,22 +39,22 @@ class ListArg<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>>(val build
     }
 }
 
-class ListArgBuilder<T : Any, A : RunnerArguments<A>, R : RunnerArg<T, A, R>> :
-    ArgBuilder<List<T>, A, ListArg<T, A, R>>() {
+class ListParserBuilder<T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> :
+    ParserBuilder<List<T>, A, ListParser<T, A, R>>() {
     init {
         completer = {
             element.completions(it)
         }
     }
 
-    lateinit var element: RunnerArg<T, A, R>
+    lateinit var element: ArgParser<T, A, R>
     var requireNonEmpty = true
 
     override fun checkValidity() {
         if (!::element.isInitialized) error("no type given for list argument")
     }
 
-    override fun build(): ListArg<T, A, R> {
-        return ListArg(this)
+    override fun build(): ListParser<T, A, R> {
+        return ListParser(this)
     }
 }

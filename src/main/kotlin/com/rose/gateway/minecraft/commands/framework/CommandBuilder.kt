@@ -3,16 +3,16 @@ package com.rose.gateway.minecraft.commands.framework
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
-import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.shared.collections.builders.trieOf
 
 class CommandBuilder(private val name: String) {
     companion object {
-        private fun subcommandExecutor(children: Map<String, Command>): CommandExecutor<SubcommandArguments> =
+        private fun subcommandExecutor(children: Map<String, Command>): CommandExecutor<SubcommandArgs> =
             CommandExecutor(
                 ::subcommandRunner,
-                SubcommandArguments.forChildCommands(children)
+                SubcommandArgs.forChildCommands(children)
             )
 
         fun build(builder: CommandBuilder): Command {
@@ -45,9 +45,9 @@ class CommandBuilder(private val name: String) {
         children.add(build(newCommandBuilder))
     }
 
-    fun runner(commandFunction: (CommandContext<NoArguments>) -> Boolean) = runner(::NoArguments, commandFunction)
+    fun runner(commandFunction: (CommandContext<NoArgs>) -> Boolean) = runner(::NoArgs, commandFunction)
 
-    fun <A : RunnerArguments<A>> runner(
+    fun <A : CommandArgs<A>> runner(
         arguments: () -> A,
         commandFunction: (CommandContext<A>) -> Boolean
     ) {

@@ -1,25 +1,27 @@
-package com.rose.gateway.minecraft.commands.converters
+package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.minecraft.commands.framework.runner.ArgBuilder
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
+import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-fun <A : RunnerArguments<A>> RunnerArguments<A>.configItem(body: ConfigItemArgBuilder<A>.() -> Unit): ConfigItemArg<A> =
-    genericParser(::ConfigItemArgBuilder, body)
+fun <A : CommandArgs<A>> CommandArgs<A>.configItem(
+    body: ConfigItemParserBuilder<A>.() -> Unit
+): ConfigItemParser<A> =
+    genericParser(::ConfigItemParserBuilder, body)
 
-class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
-    RunnerArg<Item<*>, A, ConfigItemArg<A>>(builder), KoinComponent {
+class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) :
+    ArgParser<Item<*>, A, ConfigItemParser<A>>(builder), KoinComponent {
     val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser = stringArg<A> {
+    private val internalStringParser = stringParser<A> {
         name = "CONFIG_INTERNAL"
         description = "Parses the string for the item."
     }
@@ -40,10 +42,10 @@ class ConfigItemArg<A : RunnerArguments<A>>(builder: ConfigItemArgBuilder<A>) :
     }
 }
 
-class ConfigItemArgBuilder<A : RunnerArguments<A>> : ArgBuilder<Item<*>, A, ConfigItemArg<A>>() {
+class ConfigItemParserBuilder<A : CommandArgs<A>> : ParserBuilder<Item<*>, A, ConfigItemParser<A>>() {
     override fun checkValidity() = Unit
 
-    override fun build(): ConfigItemArg<A> {
-        return ConfigItemArg(this)
+    override fun build(): ConfigItemParser<A> {
+        return ConfigItemParser(this)
     }
 }

@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
+import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 
 /**
  * General plugin commands
@@ -13,7 +13,7 @@ object GeneralCommands {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun discordHelp(context: CommandContext<NoArguments>): Boolean {
+    fun discordHelp(context: CommandContext<NoArgs>): Boolean {
         context.sender.sendMessage(
             """
             You can mention in Discord in the following ways:
