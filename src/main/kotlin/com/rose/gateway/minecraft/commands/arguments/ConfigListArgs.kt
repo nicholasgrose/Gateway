@@ -84,8 +84,8 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
  */
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
-        val currentValues = it.arguments.item?.value ?: listOf()
-        val itemsSlatedForRemoval = it.arguments.value
+        val currentValues = it.args.item?.value ?: listOf()
+        val itemsSlatedForRemoval = it.args.value
 
         if (itemsSlatedForRemoval == null) {
             currentValues

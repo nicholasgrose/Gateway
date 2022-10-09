@@ -16,7 +16,7 @@ abstract class ArgParser<
     fun completions(context: TabCompletionContext<A>): List<String> {
         return when {
             completesAfterSatisfied -> builder.completer(context)
-            context.arguments.wasSuccessful(this) -> listOf()
+            context.args.wasSuccessful(this) -> listOf()
             else -> builder.completer(context)
         }
     }

@@ -74,8 +74,8 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
     }
 
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
-        val command = context.arguments.rawArguments.first()
-        val definition = context.commandDefinition
+        val command = context.args.rawArguments.first()
+        val definition = context.definition
 
         return definition.subcommandNames.searchOrGetAll(command)
     }
@@ -96,7 +96,7 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
     }
 
     private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
-        val args = context.arguments
+        val args = context.args
         val subcommand = args.subcommand
         val remainingRawArgs = args.remainingArgs ?: return listOf()
 
