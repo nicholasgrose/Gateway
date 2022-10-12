@@ -11,7 +11,7 @@ abstract class ParserBuilder<
     lateinit var description: String
     var completesAfterSatisfied = false
     var completer: (TabCompletionContext<A>) -> List<String> = { listOf() }
-    var validator: (ParseResult<T, A>) -> Boolean = { true }
+    var validator: (ParseResult.Success<T, A>) -> Boolean = { true }
     var usageGenerator: (A, P) -> List<String> = { _, arg -> listOf("[$name=${arg.typeName()}]") }
 
     abstract fun checkValidity()

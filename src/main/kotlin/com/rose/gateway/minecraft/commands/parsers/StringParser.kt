@@ -45,32 +45,41 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
         var currentIndex = context.currentIndex
         val result = args.rawArguments.getOrNull(currentIndex)
 
-        return if (builder.hungry && result != null) {
-            val results = mutableListOf<String>()
-            var currentArg: String = result
+        return when {
+            builder.hungry && result != null -> {
+                val results = mutableListOf<String>()
+                var currentArg: String = result
 
-            do {
-                results.add(currentArg)
-                currentIndex++
-                currentArg = args.rawArguments.getOrNull(currentIndex) ?: break
-            } while (true)
+                do {
+                    results.add(currentArg)
+                    currentIndex++
+                    currentArg = args.rawArguments.getOrNull(currentIndex) ?: break
+                } while (true)
 
-            ParseResult(
-                succeeded = true,
-                context = ParseContext(
+                ParseResult.Success(
+                    results.joinToString(" "),
+                    ParseContext(
+                        arguments = args,
+                        currentIndex = currentIndex + results.size
+                    )
+                )
+            }
+
+            result != null -> ParseResult.Success(
+                result,
+                ParseContext(
                     arguments = args,
-                    currentIndex = currentIndex + results.size
-                ),
-                result = results.joinToString(" ")
+                    currentIndex = currentIndex + 1
+                )
             )
-        } else ParseResult(
-            succeeded = result != null,
-            context = ParseContext(
-                arguments = args,
-                currentIndex = currentIndex + 1
-            ),
-            result = result
-        )
+
+            else -> ParseResult.Failure(
+                ParseContext(
+                    arguments = args,
+                    currentIndex = currentIndex + 1
+                )
+            )
+        }
     }
 }
 

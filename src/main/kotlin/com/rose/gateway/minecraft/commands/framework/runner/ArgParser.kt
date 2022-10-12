@@ -73,15 +73,9 @@ abstract class ArgParser<
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {
         val parseResult = parseValue(context)
 
-        return if (parseResult.succeeded) {
-            val isValid = builder.validator(parseResult)
-
-            ParseResult(
-                succeeded = isValid,
-                result = parseResult.result,
-                context = parseResult.context
-            )
-        } else parseResult
+        return if (parseResult is ParseResult.Success && builder.validator(parseResult)) {
+            ParseResult.Success(parseResult.result, parseResult.context)
+        } else ParseResult.Failure(parseResult.context)
     }
 
     /**
@@ -91,7 +85,11 @@ abstract class ArgParser<
      * @param property The property that this delegate is store in
      * @return The value that this parser has in the args or null if none was found
      */
-    @Suppress("UNCHECKED_CAST")
-    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? =
-        thisRef.finalParseResult.result?.get(this)?.result as T?
+    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? {
+        val result = thisRef.finalParseResult
+
+        @Suppress("UNCHECKED_CAST")
+        return if (result is ParseResult.Success) result.result as T
+        else null
+    }
 }

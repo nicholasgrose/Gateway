@@ -36,20 +36,19 @@ class ListParser<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>>(val builde
     override fun typeName(): String = "List<${parser.typeName()}>"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<List<T>, A> {
-        val results = mutableListOf<ParseResult<T, A>>()
+        val results = mutableListOf<ParseResult.Success<T, A>>()
         var currentResult = parser.parseValidValue(context)
 
-        while (currentResult.succeeded) {
+        while (currentResult is ParseResult.Success) {
             results.add(currentResult)
 
             currentResult = parser.parseValidValue(currentResult.context)
         }
 
-        return if (builder.requireNonEmpty && results.isEmpty()) failedParseResult(context)
-        else ParseResult(
-            succeeded = results.all { it.succeeded },
-            result = results.map { it.result!! },
-            context = results.lastOrNull()?.context ?: context
+        return if (builder.requireNonEmpty && results.isEmpty()) ParseResult.Failure(context)
+        else ParseResult.Success(
+            results.map { it.result },
+            results.lastOrNull()?.context ?: context
         )
     }
 }

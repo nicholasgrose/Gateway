@@ -18,39 +18,35 @@ open class CommandArgs<A : CommandArgs<A>> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
         val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult<*, A>>()
-        finalParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
+        finalParseResult = ParseResult.Success(resultMap, currentContext)
 
         for (parser in parsers) {
             val result = parser.parseValidValue(currentContext)
 
             currentContext = result.context
 
-            if (result.succeeded) {
+            if (result is ParseResult.Success) {
                 resultMap[parser] = result
 
-                finalParseResult = ParseResult(succeeded = true, result = resultMap, context = currentContext)
+                finalParseResult = ParseResult.Success(resultMap, currentContext)
             } else {
-                return ParseResult(
-                    succeeded = false,
-                    result = resultMap,
-                    context = currentContext
-                )
+                return ParseResult.Failure(currentContext)
             }
         }
 
-        return ParseResult(
-            succeeded = true,
-            result = resultMap,
-            context = currentContext
-        )
+        return ParseResult.Success(resultMap, currentContext)
     }
 
     private fun lastSuccessfulResult(): ParseResult<*, A>? {
-        val lastSuccessfulArg = parsers.lastOrNull {
-            finalParseResult.result?.containsKey(it) ?: false
-        } ?: return null
+        val finalResult = finalParseResult
 
-        return finalParseResult.result?.get(lastSuccessfulArg)
+        return if (finalResult is ParseResult.Success) {
+            val lastSuccessfulArg = parsers.lastOrNull {
+                finalResult.result.containsKey(it)
+            } ?: return null
+
+            finalResult.result[lastSuccessfulArg]
+        } else null
     }
 
     fun valid(): Boolean {
@@ -58,7 +54,12 @@ open class CommandArgs<A : CommandArgs<A>> {
             return false
         }
 
-        return parsers.all { finalParseResult.result?.get(it)?.succeeded ?: false }
+        return parsers.all {
+            val finalResult = finalParseResult
+
+            if (finalResult is ParseResult.Success) finalResult.result[it] is ParseResult.Success
+            else false
+        }
     }
 
     private fun hasUnusedArgs(): Boolean = remainingArgs() > 0
@@ -110,5 +111,10 @@ open class CommandArgs<A : CommandArgs<A>> {
         }
     }
 
-    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = finalParseResult.result?.containsKey(arg) ?: false
+    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean {
+        val finalResult = finalParseResult
+
+        return if (finalResult is ParseResult.Success) finalResult.result.containsKey(arg)
+        else false
+    }
 }

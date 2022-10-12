@@ -38,13 +38,13 @@ class BooleanParser<A : CommandArgs<A>>(builder: BooleanParserBuilder<A>) :
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Boolean, A> {
         val stringResult = internalParser.parseValidValue(context)
-        val result = stringResult.result?.toBooleanStrictOrNull()
 
-        return ParseResult(
-            succeeded = result != null,
-            context = stringResult.context,
-            result = result
-        )
+        return if (stringResult is ParseResult.Success) {
+            val result = stringResult.result.toBooleanStrictOrNull()
+
+            if (result != null) ParseResult.Success(result, stringResult.context)
+            else ParseResult.Failure(stringResult.context)
+        } else ParseResult.Failure(stringResult.context)
     }
 }
 

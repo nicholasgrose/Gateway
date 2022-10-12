@@ -45,16 +45,13 @@ class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) 
     override fun parseValue(context: ParseContext<A>): ParseResult<Item<*>, A> {
         val stringResult = internalStringParser.parseValue(context)
 
-        return if (stringResult.succeeded && stringResult.result != null) {
+        return if (stringResult is ParseResult.Success) {
             val nextString = stringResult.result
             val matchedConfig = config[nextString]
 
-            ParseResult(
-                succeeded = matchedConfig != null,
-                result = matchedConfig,
-                context = stringResult.context
-            )
-        } else failedParseResult(stringResult.context)
+            if (matchedConfig != null) ParseResult.Success(matchedConfig, stringResult.context)
+            else ParseResult.Failure(stringResult.context)
+        } else ParseResult.Failure(stringResult.context)
     }
 }
 

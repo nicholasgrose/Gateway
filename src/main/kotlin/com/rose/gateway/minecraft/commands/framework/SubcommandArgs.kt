@@ -8,7 +8,6 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.emptyUsageGenerator
 import com.rose.gateway.minecraft.commands.parsers.ProcessorParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
-import com.rose.gateway.minecraft.commands.parsers.failedParseResult
 import com.rose.gateway.minecraft.commands.parsers.list
 import com.rose.gateway.minecraft.commands.parsers.processor
 import com.rose.gateway.minecraft.commands.parsers.string
@@ -43,11 +42,8 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
             val name = it.arguments.subcommandName
             val command = children[name]
 
-            ParseResult(
-                succeeded = command != null,
-                result = command,
-                context = it
-            )
+            if (command != null) ParseResult.Success(command, it)
+            else ParseResult.Failure(it)
         }
         usageGenerator = emptyUsageGenerator()
     }
@@ -83,7 +79,7 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
     private fun subcommandValidator(
         result: ParseResult<String, SubcommandArgs>
     ): Boolean {
-        result.result ?: return false
+        if (result !is ParseResult.Success) return false
 
         return validator.matches(result.result)
     }
@@ -113,18 +109,15 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         context: ParseContext<SubcommandArgs>
     ): ParseResult<Unit, SubcommandArgs> {
         val args = context.arguments
-        val remainingArgs = args.remainingArgs ?: return failedParseResult(context)
+        val remainingArgs = args.remainingArgs ?: return ParseResult.Failure(context)
         val subcommand = args.subcommand
 
         val succeeded = subcommand?.definition?.executors?.any {
             it.arguments(remainingArgs.toTypedArray()).valid()
         } ?: false
 
-        return ParseResult(
-            succeeded = succeeded,
-            result = Unit,
-            context = context
-        )
+        return if (succeeded) ParseResult.Success(Unit, context)
+        else ParseResult.Failure(context)
     }
 
     @Suppress("UNUSED_PARAMETER")

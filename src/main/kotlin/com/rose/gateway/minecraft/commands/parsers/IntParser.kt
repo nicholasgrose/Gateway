@@ -36,13 +36,13 @@ class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) :
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Int, A> {
         val stringResult = internalParser.parseValidValue(context)
-        val result = stringResult.result?.toInt()
 
-        return ParseResult(
-            succeeded = result != null,
-            context = stringResult.context,
-            result = result
-        )
+        return if (stringResult is ParseResult.Success) {
+            val result = stringResult.result.toIntOrNull()
+
+            if (result != null) ParseResult.Success(result, stringResult.context)
+            else ParseResult.Failure(stringResult.context)
+        } else ParseResult.Failure(stringResult.context)
     }
 }
 

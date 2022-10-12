@@ -45,7 +45,7 @@ class StringListConfigArgs(
     stringCompleter: (
         TabCompletionContext<StringListConfigArgs>
     ) -> List<String>,
-    stringValidator: (ParseResult<String, StringListConfigArgs>) -> Boolean
+    stringValidator: (ParseResult.Success<String, StringListConfigArgs>) -> Boolean
 ) :
     ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
