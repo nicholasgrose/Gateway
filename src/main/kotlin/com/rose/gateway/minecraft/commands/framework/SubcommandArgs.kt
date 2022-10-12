@@ -70,7 +70,7 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         processor = ::nextCommandProcessor
         usageGenerator = ::nextCommandUsageGenerator
         completer = ::remainingArgsCompleter
-        completeAfterSatisfied = true
+        completesAfterSatisfied = true
     }
 
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {

@@ -29,10 +29,7 @@ fun <T, A : CommandArgs<A>> CommandArgs<A>.processor(
  * @param builder The builder that defines this parser
  */
 class ProcessorParser<T, A : CommandArgs<A>>(val builder: ProcessorParserBuilder<T, A>) :
-    ArgParser<T, A, ProcessorParser<T, A>>(
-        builder,
-        completesAfterSatisfied = builder.completeAfterSatisfied
-    ) {
+    ArgParser<T, A, ProcessorParser<T, A>>(builder) {
     override fun typeName(): String = "CustomProcessor"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<T, A> {
@@ -48,11 +45,13 @@ class ProcessorParser<T, A : CommandArgs<A>>(val builder: ProcessorParserBuilder
  * @constructor Creates a processor parser builder
  *
  * @property processor The processor to use when parsing this argument
- * @property completeAfterSatisfied Whether completions should continue to be provided after parsing is successful
  */
 class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, ProcessorParser<T, A>>() {
+    init {
+        completesAfterSatisfied = false
+    }
+
     lateinit var processor: (ParseContext<A>) -> ParseResult<T, A>
-    var completeAfterSatisfied = false
 
     override fun checkValidity() {
         if (!::processor.isInitialized) error("no processor given to processor argument")

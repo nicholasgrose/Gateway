@@ -30,10 +30,7 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  * @param builder The builder that defines this parser
  */
 class ListParser<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>>(val builder: ListParserBuilder<T, A, P>) :
-    ArgParser<List<T>, A, ListParser<T, A, P>>(
-        builder,
-        completesAfterSatisfied = true
-    ) {
+    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
@@ -74,6 +71,7 @@ class ListParserBuilder<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>> :
         completer = {
             element.completions(it)
         }
+        completesAfterSatisfied = true
     }
 
     lateinit var element: ArgParser<T, A, P>
