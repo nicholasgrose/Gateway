@@ -10,35 +10,35 @@ import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
  *
  * @property rawArguments The raw, unparsed command arguments that came in
  * @property parsers The parsers that parse the raw arguments for these arguments
- * @property finalParseResult The result of parsing the raw arguments with all stored parsers
+ * @property parserResults The result of parsing the raw arguments with all stored parsers
  */
 open class CommandArgs<A : CommandArgs<A>> {
     var rawArguments: List<String> = listOf()
     val parsers: MutableList<ArgParser<*, A, *>> = mutableListOf()
-    var finalParseResult: ParseResult<MutableMap<ArgParser<*, A, *>, ParseResult<*, A>>, A> =
+    var parserResults: MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> =
         fillFinalParseResults()
 
     /**
-     * Fills in this argument's [finalParseResult] for a set of raw arguments
+     * Fills in this argument's [parserResults] for a set of raw arguments
      *
      * @param rawArgs The raw arguments to parse for the final result
      */
     fun forArguments(rawArgs: List<String>) {
         rawArguments = rawArgs
-        finalParseResult = fillFinalParseResults()
+        parserResults = fillFinalParseResults()
     }
 
     /**
-     * This constructs the [finalParseResult] by running all parsers on the [rawArguments].
-     * It fills [finalParseResult] with intermediate values each time a parser succeeds.
+     * This constructs the [parserResults] by running all parsers on the [rawArguments].
+     * It fills [parserResults] with intermediate values each time a parser succeeds.
      *
      * @return The final result of running all parsers
      */
-    private fun fillFinalParseResults(): ParseResult<MutableMap<ArgParser<*, A, *>, ParseResult<*, A>>, A> {
+    private fun fillFinalParseResults(): MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
         val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult<*, A>>()
-        finalParseResult = ParseResult.Success(resultMap, currentContext)
+        parserResults = resultMap
 
         for (parser in parsers) {
             val result = parser.parseValidValue(currentContext)
@@ -47,14 +47,13 @@ open class CommandArgs<A : CommandArgs<A>> {
 
             if (result is ParseResult.Success) {
                 resultMap[parser] = result
-
-                finalParseResult = ParseResult.Success(resultMap, currentContext)
+                parserResults = resultMap
             } else {
-                return ParseResult.Failure(currentContext)
+                return resultMap
             }
         }
 
-        return ParseResult.Success(resultMap, currentContext)
+        return resultMap
     }
 
     /**
@@ -63,15 +62,11 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return The most recently successful parse result or null if none could be found
      */
     private fun lastSuccessfulResult(): ParseResult<*, A>? {
-        val finalResult = finalParseResult
+        val finalResult = parserResults
 
-        return if (finalResult is ParseResult.Success) {
-            val lastSuccessfulArg = parsers.lastOrNull {
-                finalResult.result.containsKey(it)
-            } ?: return null
+        val lastSuccessfulArg = parsers.lastOrNull { wasSuccessful(it) } ?: return null
 
-            finalResult.result[lastSuccessfulArg]
-        } else null
+        return finalResult[lastSuccessfulArg]
     }
 
     /**
@@ -85,12 +80,7 @@ open class CommandArgs<A : CommandArgs<A>> {
             return false
         }
 
-        return parsers.all {
-            val finalResult = finalParseResult
-
-            if (finalResult is ParseResult.Success) finalResult.result[it] is ParseResult.Success
-            else false
-        }
+        return parsers.all { wasSuccessful(it) }
     }
 
     /**
@@ -174,10 +164,5 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @param arg The arg to check the parse status of
      * @return Whether a parsed value exists for the arg
      */
-    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean {
-        val finalResult = finalParseResult
-
-        return if (finalResult is ParseResult.Success) finalResult.result.containsKey(arg)
-        else false
-    }
+    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
 }
