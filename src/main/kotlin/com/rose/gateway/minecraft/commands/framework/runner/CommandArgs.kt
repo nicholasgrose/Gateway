@@ -10,7 +10,7 @@ import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
  *
  * @property rawArguments The raw, unparsed command arguments that came in
  * @property parsers The parsers that parse the raw arguments for these arguments
- * @property parserResults The result of parsing the raw arguments with all stored parsers
+ * @property parserResults The results from parsing the raw arguments with all stored parsers
  */
 open class CommandArgs<A : CommandArgs<A>> {
     var rawArguments: List<String> = listOf()
