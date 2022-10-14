@@ -86,10 +86,16 @@ abstract class ArgParser<
      * @return The value that this parser has in the args or null if none was found
      */
     operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? {
-        val result = thisRef.finalParseResult
+        val finalResult = thisRef.finalParseResult
 
-        @Suppress("UNCHECKED_CAST")
-        return if (result is ParseResult.Success) result.result as T
-        else null
+        return if (finalResult is ParseResult.Success) {
+            val parseResult = finalResult.result[this]
+
+            @Suppress("UNCHECKED_CAST")
+            when (parseResult) {
+                is ParseResult.Success -> parseResult.result as T
+                else -> null
+            }
+        } else null
     }
 }
