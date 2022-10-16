@@ -1,6 +1,6 @@
-package com.rose.gateway.minecraft.commands.framework
+package com.rose.gateway.minecraft.commands.framework.subcommand
 
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.Command
 import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
@@ -135,22 +135,5 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
 
             subcommandDocs ?: listOf()
         }
-    }
-}
-
-fun subcommandRunner(context: CommandContext<SubcommandArgs>): Boolean {
-    val args = context.args
-    val childCommand = args.subcommand
-    val remainingArguments = args.remainingArgs?.toTypedArray()
-
-    return if (childCommand == null || remainingArguments == null) false
-    else {
-        childCommand.onCommand(
-            sender = context.sender,
-            command = context.command,
-            label = context.label,
-            args = remainingArguments
-        )
-        true
     }
 }

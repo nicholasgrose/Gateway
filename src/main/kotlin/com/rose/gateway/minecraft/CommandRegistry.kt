@@ -6,7 +6,8 @@ import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
 import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.removeStringListConfigArgs
-import com.rose.gateway.minecraft.commands.framework.MinecraftCommandsBuilder.Companion.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.subcommand.subcommand
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigMonitoringRunner
