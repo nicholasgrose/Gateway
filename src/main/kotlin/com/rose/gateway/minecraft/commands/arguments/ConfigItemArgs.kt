@@ -1,17 +1,18 @@
 package com.rose.gateway.minecraft.commands.arguments
 
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.minecraft.commands.converters.configItem
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArguments
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.parsers.configItem
 
-class ConfigItemArgs : KoinComponent, RunnerArguments<ConfigItemArgs>() {
-    private val stringMap: ConfigurationStringMap by inject()
-
+/**
+ * Arguments for an untyped, individual config item
+ *
+ * @constructor Create config item args
+ */
+class ConfigItemArgs : CommandArgs<ConfigItemArgs>() {
     val item by configItem {
         name = "Config"
         description = "The config to use."
-        completer = { stringMap.allStrings() }
+        completer = ConfigCompleter.configStrings()
     }
 }

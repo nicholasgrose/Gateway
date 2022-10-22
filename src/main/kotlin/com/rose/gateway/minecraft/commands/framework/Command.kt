@@ -7,6 +7,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * A Minecraft command
+ *
+ * @property definition The definition of this command
+ * @constructor Create a command
+ */
 class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExecutor, TabCompleter {
     override fun onCommand(
         sender: CommandSender,
@@ -59,13 +65,13 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
     }
 
     /**
-     * Determines which executors are considered the most successful.
+     * Determines which executors are considered the most successful
      *
-     * Success is defined as either being successful or having the most arguments successfully parsed.
-     * The returned executors are in the same order they were defined.
+     * Success is defined as either being successful or having the most arguments successfully parsed
+     * The returned executors are in the same order they were defined
      *
-     * @param rawArgs The incoming arguments to be parsed.
-     * @return List of executors in order of definition.
+     * @param rawArgs The incoming arguments to be parsed
+     * @return List of executors in order of definition
      */
     private fun determineMostSuccessfulExecutors(rawArgs: Array<String>): List<CommandExecutor<*>> {
         val mostSuccessfulExecutors = mutableListOf<CommandExecutor<*>>()
@@ -99,6 +105,11 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
         return mostSuccessfulExecutors
     }
 
+    /**
+     * Registers this command with the provided plugin
+     *
+     * @param plugin The plugin to register this command with
+     */
     fun registerCommand(plugin: JavaPlugin) {
         plugin.getCommand(definition.name)!!.setExecutor(this)
     }

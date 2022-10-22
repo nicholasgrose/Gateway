@@ -1,129 +1,48 @@
 package com.rose.gateway.minecraft.chat
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.bot.extensions.chat.GameChatEvent
-import com.rose.gateway.configuration.PluginConfiguration
-import com.rose.gateway.minecraft.chat.processing.MinecraftMessageProcessor
-import com.rose.gateway.shared.configurations.chatExtensionEnabled
-import com.rose.gateway.shared.discord.discordBoldSafe
+import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.chatExtensionEnabled
+import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
+import com.rose.gateway.minecraft.chat.processing.discordMessage
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import com.rose.gateway.shared.concurrency.runBlockingIf
 import io.papermc.paper.event.player.AsyncChatEvent
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.PlayerDeathEvent
-import org.bukkit.event.player.PlayerAdvancementDoneEvent
-import org.bukkit.event.player.PlayerCommandPreprocessEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.server.ServerCommandEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Listener that posts Minecraft chat messages in Discord
+ *
+ * @constructor Create empty Chat listener
+ */
 class ChatListener : Listener, KoinComponent {
-    val config: PluginConfiguration by inject()
-    val bot: DiscordBot by inject()
+    private val config: PluginConfig by inject()
+    private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
-    private val minecraftMessageProcessor = MinecraftMessageProcessor()
-
+    /**
+     * Posts a game chat to Discord
+     *
+     * [AsyncChatEvent] is used because that allows guaranteeing processing does not occur in the server's main thread
+     *
+     * To maintain compatibility with other chat plugins, Gateway uses [EventPriority.LOWEST] so that it goes first
+     * This means that it will always be overwritten by other plugins' formatting until a better solution is found
+     *
+     * @param event The async chat event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     fun onChat(event: AsyncChatEvent) {
-        if (!(config.chatExtensionEnabled() && event.isAsynchronous)) return
+        runBlockingIf(config.chatExtensionEnabled() && event.isAsynchronous) {
+            val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
+            val message = discordMessage(messageText, event) ?: return@runBlockingIf
 
-        val messageText = PlainTextComponentSerializer.plainText().serialize(event.message())
-
-        runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText, event) ?: return@runBlocking
-            bot.bot?.send(GameChatEvent(message))
-        }
-    }
-
-    @EventHandler
-    fun onJoin(event: PlayerJoinEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        runBlocking {
-            bot.bot?.send(
-                GameChatEvent {
-                    content = "**${event.player.name}** joined the game"
-                }
-            )
-        }
-    }
-
-    @EventHandler
-    fun onLeave(event: PlayerQuitEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        runBlocking {
-            bot.bot?.send(
-                GameChatEvent {
-                    content = "**${event.player.name}** left the game"
-                }
-            )
-        }
-    }
-
-    @EventHandler
-    fun onDeath(event: PlayerDeathEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val deathMessage = event.deathMessage() ?: return
-        val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
-            .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
-
-        runBlocking {
-            bot.bot?.send(
-                GameChatEvent {
-                    content = plainTextMessage
-                }
-            )
-        }
-    }
-
-    @EventHandler
-    fun onServerCommand(event: ServerCommandEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val messageText = DisplayCommandProcessor.processServerCommand(event.command)
-
-        if (messageText.isEmpty()) return
-
-        runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            bot.bot?.send(GameChatEvent(message))
-        }
-    }
-
-    @EventHandler
-    fun onPlayerCommand(event: PlayerCommandPreprocessEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val messageText = DisplayCommandProcessor.processPlayerCommand(event.message, event.player.name)
-
-        if (messageText.isEmpty()) return
-
-        runBlocking {
-            val message = minecraftMessageProcessor.convertToDiscordMessage(messageText) ?: return@runBlocking
-            bot.bot?.send(GameChatEvent(message))
-        }
-    }
-
-    @EventHandler
-    fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
-        if (!config.chatExtensionEnabled()) return
-
-        val advancementMessage = event.message() ?: return
-        val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
-            .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
-
-        runBlocking {
-            bot.bot?.send(
-                GameChatEvent {
-                    content = advancementText
-                }
-            )
+            pluginCoroutineScope.launch {
+                GameChatEvent.trigger(message)
+            }
         }
     }
 }

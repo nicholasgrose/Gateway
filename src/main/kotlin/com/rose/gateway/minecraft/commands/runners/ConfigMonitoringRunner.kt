@@ -1,147 +1,158 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.ConfigStringMap
+import com.rose.gateway.config.Item
+import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArguments
-import com.rose.gateway.shared.configurations.primaryColor
-import com.rose.gateway.shared.configurations.secondaryColor
-import com.rose.gateway.shared.configurations.tertiaryColor
-import com.rose.gateway.shared.configurations.warningColor
-import kotlinx.coroutines.runBlocking
+import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
+import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.italic
+import com.rose.gateway.minecraft.component.item
+import com.rose.gateway.minecraft.component.join
+import com.rose.gateway.minecraft.component.joinNewLine
+import com.rose.gateway.minecraft.component.joinSpace
+import com.rose.gateway.minecraft.component.plus
+import com.rose.gateway.minecraft.component.runCommandOnClick
+import com.rose.gateway.minecraft.component.showTextOnHover
+import com.rose.gateway.minecraft.component.underlined
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import com.rose.gateway.shared.reflection.simpleName
+import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.JoinConfiguration
-import net.kyori.adventure.text.event.ClickEvent
-import net.kyori.adventure.text.event.HoverEvent
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Commands for monitoring the plugin config
+ */
 object ConfigMonitoringRunner : KoinComponent {
-    private val config: PluginConfiguration by inject()
-    private val configStringMap: ConfigurationStringMap by inject()
-    private val bot: DiscordBot by inject()
+    private val config: PluginConfig by inject()
+    private val configStringMap: ConfigStringMap by inject()
+    private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
+    /**
+     * Command that sends the command sender a help message for all configurations
+     *
+     * @param sender The sender to receive the help message
+     * @return Whether the command succeeded
+     */
     fun sendAllConfigurationHelp(sender: CommandSender): Boolean {
         sendConfigListHelp(sender, configStringMap.allStrings())
 
         return true
     }
 
+    /**
+     * Sends a command sender help for a list of config strings
+     *
+     * @param sender The sender to receive the help message
+     * @param items The list of config strings to send help for
+     */
     private fun sendConfigListHelp(sender: CommandSender, items: List<String>) {
         val configs = items.map { config ->
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("* "),
-                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                    .hoverEvent(
-                        HoverEvent.showText(
-                            Component.join(
-                                JoinConfiguration.noSeparators(),
-                                Component.text("Get help for "),
-                                Component.text(config, this.config.tertiaryColor(), TextDecoration.ITALIC)
-                            )
-                        )
-                    )
-                    .clickEvent(ClickEvent.runCommand("/gateway config help $config"))
-            )
+            Component.text("* ") + item(config)
         }
 
         sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.newline()),
-                Component.text("Available Configurations: ", config.primaryColor()),
-                Component.join(JoinConfiguration.separator(Component.newline()), configs)
+            joinNewLine(
+                ColorComponent.primary("Available Configurations: "),
+                joinNewLine(configs)
             )
         )
     }
 
-    private fun createIndividualSpecHelpMessage(item: Item<*>): Component {
-        return Component.join(
-            JoinConfiguration.separator(Component.newline()),
-            Component.text("Configuration Help:", config.primaryColor()),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Name: ", config.primaryColor()),
-                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC)
-            ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Type: ", config.primaryColor()),
-                Component.text(item.typeName()),
-                Component.text(if (item.type().isMarkedNullable) "?" else "", config.warningColor())
-            ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Current Value: ", config.primaryColor()),
-                Component.text(item.get().toString())
-            ),
-            Component.join(
-                JoinConfiguration.noSeparators(),
-                Component.text("Description: ", config.primaryColor()),
-                Component.text(item.description)
-            ),
-            Component.text(
-                "View All Configurations",
-                config.secondaryColor(),
-                TextDecoration.UNDERLINED,
-                TextDecoration.ITALIC
-            )
-                .hoverEvent(HoverEvent.showText(Component.text("Click to view all configurations.")))
-                .clickEvent(ClickEvent.runCommand("/gateway config help"))
-        )
-    }
-
-    fun reloadConfig(context: CommandContext<NoArguments>): Boolean {
+    /**
+     * Command that reloads the plugin config from disk
+     *
+     * @param context The command context without any arguments
+     * @return Whether the command succeeded
+     */
+    fun reloadConfig(context: CommandContext<NoArgs>): Boolean {
         context.sender.sendMessage("Loading configuration...")
 
-        val loadSuccessful = runBlocking {
-            config.reloadConfiguration()
-        }
+        pluginCoroutineScope.launch {
+            val loadSuccessful = config.reloadConfig()
 
-        if (loadSuccessful) {
-            runBlocking {
-                bot.rebuild()
+            if (loadSuccessful) {
+                context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
+            } else {
+                context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
             }
-
-            context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
-        } else {
-            context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
         }
 
         return true
     }
 
-    fun saveConfig(context: CommandContext<NoArguments>): Boolean {
-        config.saveConfiguration()
-        context.sender.sendMessage("Saved current configuration.")
+    /**
+     * Command that saves the current plugin configuration to disk
+     *
+     * @param context The command context without any arguments
+     * @return Whether the command succeeded
+     */
+    fun saveConfig(context: CommandContext<NoArgs>): Boolean {
+        pluginCoroutineScope.launch {
+            config.saveConfig()
+            context.sender.sendMessage("Saved current configuration.")
+        }
 
         return true
     }
 
+    /**
+     * Command that sends the command sender the current status of the plugin configuration
+     *
+     * @param sender The sender to receive the message
+     * @return Whether the command succeeded
+     */
     fun sendConfigurationStatus(sender: CommandSender): Boolean {
+        val configStatus = if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
+
         sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text("Config Status:", config.primaryColor()),
-                Component.text(
-                    if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
-                )
+            joinSpace(
+                ColorComponent.primary("Config Status:"),
+                Component.text(configStatus)
             )
         )
 
         return true
     }
 
+    /**
+     * Sends help for a config item to the sender of a command
+     *
+     * @param context The command context with the config item to send help for
+     * @return Whether the command succeeded
+     */
     fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
-        val item = context.arguments.item ?: return false
+        val item = context.args.item ?: return false
 
-        context.sender.sendMessage(createIndividualSpecHelpMessage(item))
+        context.sender.sendMessage(itemHelpMessage(item))
 
         return true
+    }
+
+    /**
+     * Creates a help message for a config item
+     *
+     * @param item The item to create the help message for
+     * @return The created help message
+     */
+    private fun itemHelpMessage(item: Item<*>): Component {
+        return joinNewLine(
+            ColorComponent.primary("Configuration Help:"),
+            ColorComponent.primary("Name: ") + ColorComponent.tertiary(item.path).italic(),
+            join(
+                ColorComponent.primary("Type: "),
+                Component.text(item.type.simpleName),
+                ColorComponent.warning(if (item.type.isMarkedNullable) "?" else "")
+            ),
+            ColorComponent.primary("Current Value: ") + Component.text(item.value.toString()),
+            ColorComponent.primary("Description: ") + Component.text(item.description),
+            ColorComponent.secondary("View All Configurations").underlined().italic()
+                .showTextOnHover(Component.text("Click to view all configurations."))
+                .runCommandOnClick("/gateway config help")
+        )
     }
 }

@@ -1,76 +1,84 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.configuration.Item
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.config.Item
 import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
-import com.rose.gateway.minecraft.commands.converters.StringArg
 import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.runner.RunnerArg
-import com.rose.gateway.shared.configurations.secondaryColor
-import com.rose.gateway.shared.configurations.tertiaryColor
+import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
+import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.italic
+import com.rose.gateway.minecraft.component.joinSpace
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.JoinConfiguration
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-object ConfigCommands : KoinComponent {
-    private val config: PluginConfiguration by inject()
-
-    fun <T, A : ConfigArgs<T, A, R>, R : RunnerArg<T, A, R>> setConfig(context: CommandContext<A>): Boolean {
-        val args = context.arguments
+/**
+ * Commands to modify the plugin config
+ */
+object ConfigCommands {
+    /**
+     * Command that sets the value of a config item
+     *
+     * @param ConfigValueType The type of the config value to modify
+     * @param ArgsType The type of the config args in the command context
+     * @param ValueParserType The type of the parser for the config value
+     * @param context The command context with the config args
+     * @return Whether the command succeeded
+     */
+    fun <
+        ConfigValueType,
+        ArgsType : ConfigArgs<ConfigValueType, ArgsType, ValueParserType>,
+        ValueParserType : ArgParser<ConfigValueType, ArgsType, ValueParserType>> setConfig(
+        context: CommandContext<ArgsType>
+    ): Boolean {
+        val args = context.args
         val item = args.item
         val value = args.value
 
         if (item == null || value == null) return false
 
-        item.set(value)
+        item.value = value
         sendConfirmation(context.sender, item, value)
 
         return true
     }
 
+    /**
+     * Sends confirmation of setting a config's value to the sender
+     *
+     * @param T The type of the config item
+     * @param sender The sender to receive the confirmation
+     * @param item The config item that was set
+     * @param value The config value that was set
+     */
     private fun <T> sendConfirmation(sender: CommandSender, item: Item<T>, value: T) {
         sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
+            joinSpace(
+                ColorComponent.tertiary(item.path).italic(),
                 Component.text("set to"),
-                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
+                ColorComponent.secondary(value.toString()).italic(),
                 Component.text("successfully!")
             )
         )
     }
 
-    private fun <T> sendAddConfirmation(sender: CommandSender, item: Item<T>, value: T) {
-        sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
-                Component.text("added to"),
-                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
-                Component.text("successfully!")
-            )
-        )
-    }
-
-    private fun <T> sendRemoveConfirmation(sender: CommandSender, item: Item<T>, value: T) {
-        sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text(value.toString(), config.secondaryColor(), TextDecoration.ITALIC),
-                Component.text("removed from"),
-                Component.text(item.path, config.tertiaryColor(), TextDecoration.ITALIC),
-                Component.text("successfully!")
-            )
-        )
-    }
-
-    fun <T : Any, A : ConfigListArgs<T, A, R>, R : StringArg<A>> addConfiguration(context: CommandContext<A>): Boolean {
-        val configItem = context.arguments.item
-        val values = context.arguments.value
+    /**
+     * Command that adds value to a config list item
+     *
+     * @param ConfigValueType The type of the config item
+     * @param ListArgsType The type of the list args in the command context
+     * @param ValueParserType The type of the parser for the config values
+     * @param context The command context with the config list args
+     * @return Whether the command succeeded
+     */
+    fun <
+        ConfigValueType,
+        ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
+        ValueParserType : StringParser<ListArgsType>> addConfiguration(
+        context: CommandContext<ListArgsType>
+    ): Boolean {
+        val configItem = context.args.item
+        val values = context.args.value
 
         if (configItem == null || values == null) return true
 
@@ -80,18 +88,56 @@ object ConfigCommands : KoinComponent {
         return true
     }
 
+    /**
+     * Adds values to a config item
+     *
+     * @param T The type of the config item
+     * @param item The config item to add values to
+     * @param additionalValues The values to add
+     */
     private fun <T> addToConfiguration(item: Item<List<T>>, additionalValues: List<T>) {
-        val currentValues = item.get()
+        val currentValues = item.value
         val newValues = currentValues + additionalValues
 
-        item.set(newValues)
+        item.value = newValues
     }
 
-    fun <T : Any, A : ConfigListArgs<T, A, R>, R : StringArg<A>> removeConfiguration(
-        context: CommandContext<A>
+    /**
+     * Sends confirmation of having added values to a list config
+     *
+     * @param T The type of the config item
+     * @param sender The sender to receive the confirmation
+     * @param item The config item that was added to
+     * @param values The values that were added
+     */
+    private fun <T> sendAddConfirmation(sender: CommandSender, item: Item<T>, values: T) {
+        sender.sendMessage(
+            joinSpace(
+                ColorComponent.secondary(values.toString()).italic(),
+                Component.text("added to"),
+                ColorComponent.tertiary(item.path).italic(),
+                Component.text("successfully!")
+            )
+        )
+    }
+
+    /**
+     * Command that removes values from a config list item
+     *
+     * @param ConfigValueType The type of the config item
+     * @param ListArgsType The type of the list args in the command context
+     * @param ValueParserType The type of the parser for the config values
+     * @param context The command context with the config list args
+     * @return Whether the command succeeded
+     */
+    fun <
+        ConfigValueType,
+        ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
+        ValueParserType : StringParser<ListArgsType>> removeConfiguration(
+        context: CommandContext<ListArgsType>
     ): Boolean {
-        val configItem = context.arguments.item
-        val values = context.arguments.value
+        val configItem = context.args.item
+        val values = context.args.value
 
         if (configItem == null || values == null) return true
 
@@ -101,10 +147,36 @@ object ConfigCommands : KoinComponent {
         return true
     }
 
+    /**
+     * Removes values from a config item
+     *
+     * @param T The type of the config item
+     * @param item The config item to remove values from
+     * @param valuesToBeRemoved The values to remove
+     */
     private fun <T> removeFromConfiguration(item: Item<List<T>>, valuesToBeRemoved: List<T>) {
-        val currentValues = item.get()
+        val currentValues = item.value
         val newValues = currentValues - valuesToBeRemoved.toSet()
 
-        item.set(newValues)
+        item.value = newValues
+    }
+
+    /**
+     * Sends confirmation of having removed values from a list config
+     *
+     * @param T The type of the config item
+     * @param sender The sender to receive the confirmation
+     * @param item The config item that was removed from
+     * @param values The values that were removed
+     */
+    private fun <T> sendRemoveConfirmation(sender: CommandSender, item: Item<T>, values: T) {
+        sender.sendMessage(
+            joinSpace(
+                ColorComponent.secondary(values.toString()).italic(),
+                Component.text("removed from"),
+                ColorComponent.tertiary(item.path).italic(),
+                Component.text("successfully!")
+            )
+        )
     }
 }

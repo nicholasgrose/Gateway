@@ -1,14 +1,14 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.20"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "1.0.6"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // https://detekt.dev/
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
 }
@@ -51,22 +51,20 @@ repositories {
 }
 
 dependencies {
-    compileOnly(
-        group = "io.papermc.paper",
-        name = "paper-api",
-        version = "$minecraftVersion-$paperApiRevision-SNAPSHOT"
-    )
-    implementation(group = "com.sksamuel.hoplite", name = "hoplite-core", version = hopliteVersion)
-    implementation(group = "com.sksamuel.hoplite", name = "hoplite-yaml", version = hopliteVersion)
-    implementation(group = "com.charleskorn.kaml", name = "kaml", version = kamlVersion)
-    implementation(group = "io.ktor", name = "ktor-client-core", version = ktorVersion)
-    implementation(group = "io.ktor", name = "ktor-client-cio", version = ktorVersion)
-    implementation(
-        group = "com.kotlindiscord.kord.extensions",
-        name = "kord-extensions",
-        version = kordexVersion
-    )
-    implementation(group = "guru.zoroark.lixy", name = "lixy", version = lixyVersion)
+    // Paper plugin development API.
+    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperApiRevision-SNAPSHOT")
+    // Config library that provides nice parsing error descriptions.
+    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
+    // Library that supports loading and (more importantly) saving to YAML files.
+    implementation("com.charleskorn.kaml:kaml:$kamlVersion")
+    // HTTP client library.
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+    // Library for Discord bots.
+    implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
+    // Lexer library that supports regex.
+    implementation("guru.zoroark.lixy:lixy:$lixyVersion")
 }
 
 ktlint {

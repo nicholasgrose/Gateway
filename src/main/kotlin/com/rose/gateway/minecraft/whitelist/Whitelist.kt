@@ -6,9 +6,21 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 
+/**
+ * Provides functions that modify the Minecraft whitelist
+ */
 object Whitelist {
-    fun addToWhitelist(username: String): WhitelistState {
-        val player = getOfflinePlayer(username)
+    val players: Set<OfflinePlayer>
+        get() = Bukkit.getWhitelistedPlayers()
+
+    /**
+     * Adds a player to the whitelist
+     *
+     * @param username The player to add
+     * @return How the whitelist was modified
+     */
+    fun addPlayer(username: String): WhitelistState {
+        val player = offlinePlayer(username)
 
         return when {
             player == null -> WhitelistState.STATE_INVALID
@@ -17,13 +29,20 @@ object Whitelist {
                 Scheduler.runTask {
                     Console.runCommand("whitelist add $username")
                 }
+
                 WhitelistState.STATE_MODIFIED
             }
         }
     }
 
-    fun removeFromWhitelist(username: String): WhitelistState {
-        val player = getOfflinePlayer(username)
+    /**
+     * Remove a player from the whitelist
+     *
+     * @param username The player to remove
+     * @return How the whitelist was modified
+     */
+    fun removePlayer(username: String): WhitelistState {
+        val player = offlinePlayer(username)
 
         return when {
             player == null -> WhitelistState.STATE_INVALID
@@ -33,18 +52,21 @@ object Whitelist {
                     player.player?.kick(Component.text("Removed from whitelist."))
                     Console.runCommand("whitelist remove $username")
                 }
+
                 WhitelistState.STATE_MODIFIED
             }
         }
     }
 
-    fun whitelistedPlayersAsString(): String {
-        val whitelistedPlayers = Bukkit.getWhitelistedPlayers()
-        return whitelistedPlayers.map { it.name }.joinToString(separator = ", ")
-    }
-
-    private fun getOfflinePlayer(username: String): OfflinePlayer? {
+    /**
+     * Gets an [OfflinePlayer] for the requested user
+     *
+     * @param username The user to get the data of
+     * @return The [OfflinePlayer] for the username given or null if exists
+     */
+    private fun offlinePlayer(username: String): OfflinePlayer? {
         val uuid = Bukkit.getPlayerUniqueId(username) ?: return null
+
         return Bukkit.getOfflinePlayer(uuid)
     }
 }

@@ -1,58 +1,48 @@
 package com.rose.gateway
 
-import com.rose.gateway.bot.DiscordBot
-import com.rose.gateway.configuration.ConfigurationStringMap
-import com.rose.gateway.configuration.PluginConfiguration
+import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import com.rose.gateway.minecraft.logging.Logger
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import com.rose.gateway.shared.koin.initializeKoin
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.context.startKoin
-import org.koin.dsl.module
 
+/**
+ * The base class and entry point for the Gateway plugin. Also provides the scope for parallelized plugin operations
+ *
+ * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server
+ */
 class GatewayPlugin : JavaPlugin(), KoinComponent {
     init {
-        startKoin {
-            modules(
-                module {
-                    single { this@GatewayPlugin }
-                    single { PluginConfiguration() }
-                    single { ConfigurationStringMap() }
-                    single { DiscordBot() }
-                    single { HttpClient(CIO) }
-                }
-            )
-        }
+        initializeKoin(this)
     }
-
-    val bot: DiscordBot by inject()
 
     val startTime = Clock.System.now()
     val loader = classLoader
 
-    override fun onEnable() {
-        Logger.info("Starting Gateway!")
+    private val bot: DiscordBot by inject()
+    private val coroutineScope: PluginCoroutineScope by inject()
 
+    override fun onEnable() {
         runBlocking {
             bot.start()
         }
 
-        EventListeners.registerListeners(server)
+        EventListeners.registerListeners()
         CommandRegistry.registerCommands()
 
         Logger.info("Gateway started!")
     }
 
     override fun onDisable() {
-        Logger.info("Stopping Gateway!")
-
         runBlocking {
-            bot.stop()
+            bot.close()
+            coroutineScope.cancelAndJoinContext()
         }
 
         Logger.info("Gateway stopped!")

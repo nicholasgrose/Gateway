@@ -1,18 +1,21 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
+import com.rose.gateway.minecraft.chat.processing.tokens.result.MentionResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
-import com.rose.gateway.minecraft.chat.processing.tokens.result.UserMentionBuilder
-import com.rose.gateway.shared.processing.TokenProcessor
+import com.rose.gateway.shared.parsing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
 import org.intellij.lang.annotations.Language
 
+/**
+ * Defines and processes a user mention
+ *
+ * @constructor Create a user mention token processor
+ */
 class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
         const val USER_MENTION_START_INDEX = 1
     }
-
-    private val mentionBuilder = UserMentionBuilder()
 
     override fun tokenType(): LixyTokenType {
         return ChatComponent.USER_MENTION
@@ -26,6 +29,6 @@ class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val nameString = token.string.substring(USER_MENTION_START_INDEX)
 
-        return mentionBuilder.createUserMention(nameString)
+        return MentionResult.userMention(nameString)
     }
 }

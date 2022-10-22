@@ -1,28 +1,36 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import org.bukkit.plugin.java.JavaPlugin
+/**
+ * The builder for [MinecraftCommands]
+ *
+ * @constructor Create a minecraft commands builder
+ *
+ * @property commands The set of commands for the minecraft commands
+ */
+class MinecraftCommandsBuilder {
+    val commands = mutableSetOf<Command>()
 
-class MinecraftCommandsBuilder(val plugin: JavaPlugin) {
-    companion object {
-        fun minecraftCommands(
-            plugin: JavaPlugin,
-            initializer: MinecraftCommandsBuilder.() -> Unit
-        ): MinecraftCommands {
-            val builder = MinecraftCommandsBuilder(plugin)
-
-            builder.apply(initializer)
-
-            return MinecraftCommands(plugin, builder.commands)
-        }
-    }
-
-    private val commands = mutableListOf<Command>()
-
+    /**
+     * Add a new Minecraft command
+     *
+     * @param name The name of the command to add
+     * @param initializer Configurations for this command
+     * @receiver The command builder
+     */
     fun command(name: String, initializer: CommandBuilder.() -> Unit) {
         val builder = CommandBuilder(name)
 
         builder.apply(initializer)
 
-        commands.add(CommandBuilder.build(builder))
+        commands.add(builder.build())
+    }
+
+    /**
+     * Build the command group for this builder
+     *
+     * @return The created command group
+     */
+    fun build(): MinecraftCommands {
+        return MinecraftCommands(this)
     }
 }
