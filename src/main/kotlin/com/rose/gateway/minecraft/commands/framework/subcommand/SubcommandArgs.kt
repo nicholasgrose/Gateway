@@ -13,14 +13,20 @@ import com.rose.gateway.minecraft.commands.parsers.processor
 import com.rose.gateway.minecraft.commands.parsers.string
 import com.rose.gateway.minecraft.commands.parsers.stringParser
 
+/**
+ * The arguments for a subcommand
+ *
+ * @property children The possible child subcommands
+ * @constructor Create subcommand args
+ */
 class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<SubcommandArgs>() {
-    private val validator = Regex(subcommandRegex())
-
-    private fun subcommandRegex(): String {
-        return children.keys.joinToString("|", "^(", ")$")
-    }
-
     companion object {
+        /**
+         * Creates subcommand args constructor for a set of child commands
+         *
+         * @param children The children to create the subcommand args for
+         * @return The subcommand args constructor
+         */
         fun forChildCommands(children: Map<String, Command>): () -> SubcommandArgs {
             return {
                 SubcommandArgs(children)
@@ -69,21 +75,36 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         completesAfterSatisfied = true
     }
 
+    /**
+     * Tab completer for a subcommand name
+     *
+     * @param context The context around this tab completion
+     * @return The possible completions for the input
+     */
+    @Suppress("UNUSED_PARAMETER")
     private fun subcommandCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
-        val command = context.args.rawArguments.first()
-        val definition = context.definition
-
-        return definition.subcommandNames.searchOrGetAll(command)
+        return children.keys.toList()
     }
 
+    /**
+     * Validates that the name is a valid child command
+     *
+     * @param result The result of parsing
+     * @return Whether this subcommand has a valid name
+     */
     private fun subcommandValidator(
-        result: ParseResult<String, SubcommandArgs>
+        result: ParseResult.Success<String, SubcommandArgs>
     ): Boolean {
-        if (result !is ParseResult.Success) return false
-
-        return validator.matches(result.result)
+        return children.containsKey(result.result)
     }
 
+    /**
+     * Generates the possible usages for the subcommand's name
+     *
+     * @param args The args at the time of generating usage
+     * @param arg The arg that the usages are being generated for
+     * @return The possible usages for this argument
+     */
     @Suppress("UNUSED_PARAMETER")
     private fun subcommandUsageGenerator(args: SubcommandArgs, arg: StringParser<SubcommandArgs>): List<String> {
         val subcommand = args.subcommandName
@@ -91,6 +112,12 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         return if (subcommand == null) children.keys.toList() else listOf(subcommand)
     }
 
+    /**
+     * Gives completions for the remaining arguments of a subcommand
+     *
+     * @param context The context at the moment of tab completion
+     * @return The possible tab completions
+     */
     private fun remainingArgsCompleter(context: TabCompletionContext<SubcommandArgs>): List<String> {
         val args = context.args
         val subcommand = args.subcommand
@@ -105,6 +132,12 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         ) ?: listOf()
     }
 
+    /**
+     * Next command processor
+     *
+     * @param context
+     * @return
+     */
     private fun nextCommandProcessor(
         context: ParseContext<SubcommandArgs>
     ): ParseResult<Unit, SubcommandArgs> {
@@ -120,6 +153,13 @@ class SubcommandArgs(private val children: Map<String, Command>) : CommandArgs<S
         else ParseResult.Failure(context)
     }
 
+    /**
+     * Generates usages for the subcommand that would execute next
+     *
+     * @param args The args at the moment of generating these usages
+     * @param arg The arg to generate the usages for
+     * @return The possible usages for the next command
+     */
     @Suppress("UNUSED_PARAMETER")
     private fun nextCommandUsageGenerator(
         args: SubcommandArgs,
