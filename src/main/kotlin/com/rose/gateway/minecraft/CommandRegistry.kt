@@ -25,10 +25,10 @@ object CommandRegistry : KoinComponent {
      * Registers all Minecraft commands
      */
     fun registerCommands() {
-        commands.registerCommands()
+        commands.registerCommands(plugin)
     }
 
-    private val commands = minecraftCommands(plugin) {
+    private val commands = minecraftCommands {
         command("discord-help") {
             runner { context ->
                 GeneralCommands.discordHelp(context)
