@@ -48,23 +48,12 @@ class Trie : MutableSet<String> {
     }
 
     /**
-     * Searches for a prefix string, giving all results if no match was found
-     *
-     * @param prefix The prefix string to search for
-     * @return The matching strings or all strings
-     */
-    fun searchOrGetAll(prefix: String): List<String> {
-        val searchResult = search(prefix)
-        return searchResult.ifEmpty { getAll() }
-    }
-
-    /**
      * Searches for all strings with the given string as a prefix
      *
      * @param prefix The prefix string to search for
      * @return All matching strings
      */
-    private fun search(prefix: String): List<String> {
+    fun search(prefix: String): List<String> {
         val startNode = followSearchString(prefix) ?: return listOf()
         return depthFirstSearch(startNode)
     }

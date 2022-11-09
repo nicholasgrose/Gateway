@@ -23,9 +23,12 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @param rawArgs The raw arguments to parse for the final result
      */
-    fun forArguments(rawArgs: List<String>) {
+    fun parseArguments(rawArgs: List<String>): A {
         rawArguments = rawArgs
         parserResults = fillFinalParseResults()
+
+        @Suppress("UNCHECKED_CAST")
+        return this as A
     }
 
     /**
@@ -88,18 +91,18 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @return Whether there are any unused args
      */
-    private fun hasUnusedArgs(): Boolean = remainingArgs() > 0
+    private fun hasUnusedArgs(): Boolean = remainingArgCount() > 0
 
     /**
      * How many raw args are not used by any parsers
      *
      * @return The number of unused args remaining
      */
-    private fun remainingArgs(): Int {
-        val lastIndex = lastSuccessfulResult()?.context?.currentIndex ?: 0
+    private fun remainingArgCount(): Int = rawArguments.size - lastIndex()
 
-        return rawArguments.size - lastIndex
-    }
+    fun remainingArgs(): List<String> = rawArguments.subList(lastIndex(), rawArguments.size)
+
+    private fun lastIndex(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
 
     /**
      * Determines the number of raw arguments that have been parsed
@@ -114,9 +117,8 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return All possible usages for these args
      */
     fun usages(): List<String> {
-        val parserUsages = parsers.map {
-            @Suppress("UNCHECKED_CAST")
-            it.generateUsages(this as A)
+        val parserUsages = parsers.map { parser ->
+            parser.generateUsages()
         }
         var allUsages = listOf<String>()
 
@@ -142,18 +144,12 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return All completions this arg has in the given context
      */
     fun completions(context: TabCompletionContext<A>): List<String> {
-        val nextArg = if (hasUnusedArgs()) {
-            parsers.firstOrNull {
-                !(wasSuccessful(it))
-            } ?: parsers.lastOrNull()
-        } else {
-            parsers.lastOrNull {
-                wasSuccessful(it)
-            } ?: parsers.firstOrNull()
-        }
+        val nextArg = parsers.firstOrNull {
+            !(wasSuccessful(it))
+        } ?: parsers.lastOrNull()
 
         return when {
-            remainingArgs() > 1 -> listOf()
+            remainingArgCount() > 1 -> listOf()
             else -> nextArg?.completions(context) ?: listOf()
         }
     }

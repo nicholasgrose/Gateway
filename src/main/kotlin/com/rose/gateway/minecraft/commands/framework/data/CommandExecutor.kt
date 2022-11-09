@@ -1,46 +1,35 @@
 package com.rose.gateway.minecraft.commands.framework.data
 
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import org.bukkit.command.CommandSender
+import com.rose.gateway.shared.collections.builders.trieOf
 
 /**
  * An executor for a command
  *
  * @param A The type of the args that will be used for execution
  * @property executor The action that this executor defines
- * @property arguments A constructor for the arguments used by this executor
+ * @property args A constructor for the arguments used by this executor
  * @constructor Create a command executor
  */
 data class CommandExecutor<A : CommandArgs<A>>(
     val executor: ((CommandContext<A>) -> Boolean),
-    val arguments: () -> A
+    val args: () -> A
 ) {
     /**
-     * Tries to execute this executor
+     * Attempts to execute the executor in a particular context
      *
-     * @param definition The command definition to execute for
-     * @param sender The sender of this execution from Bukkit
-     * @param command The command for this execution from Bukkit
-     * @param label The label for this execution from Bukkit
-     * @param rawArguments The raw arguments passed into this execution
-     * @return Whether the executor succeeded or null if it never executed
+     * @param context The context to execute in
+     * @return Whether execution succeeded or null if it never executed
      */
-    fun tryExecute(
-        definition: CommandDefinition,
-        sender: CommandSender,
-        command: org.bukkit.command.Command,
-        label: String,
-        rawArguments: Array<String>
-    ): Boolean? {
-        val args = arguments(rawArguments)
+    fun tryExecute(context: CommandContext<*>): Boolean? {
+        val args = filledArgs(context.args.rawArguments)
 
         return if (args.valid()) {
             executor(
                 CommandContext(
-                    definition = definition,
-                    sender = sender,
-                    command = command,
-                    label = label,
+                    sender = context.sender,
+                    bukkitCommand = context.bukkitCommand,
+                    label = context.label,
                     args = args
                 )
             )
@@ -53,41 +42,27 @@ data class CommandExecutor<A : CommandArgs<A>>(
      * @param rawArguments The arguments that will be parsed
      * @return The constructed arguments
      */
-    fun arguments(rawArguments: Array<String>): A {
-        val args = arguments()
-
-        args.forArguments(rawArguments.toList())
-
-        return args
-    }
+    fun filledArgs(rawArguments: List<String>): A = args().parseArguments(rawArguments)
 
     /**
-     * Determines what completions exist for this executor
+     * Provides a list of possible completions for a particular context
      *
-     * @param sender The sender of this completion request
-     * @param command The command being completed from Bukkit
-     * @param alias The alias for the command being completed from Bukkit
-     * @param commandDefinition The definition of the command being completed
-     * @param rawArguments The raw arguments that already exist
-     * @return A list of all possible completions
+     * @param context The context in which completions are provided
+     * @return The possible completions for tab
      */
-    fun completions(
-        sender: CommandSender,
-        command: org.bukkit.command.Command,
-        alias: String,
-        commandDefinition: CommandDefinition,
-        rawArguments: Array<String>
-    ): List<String> {
-        val args = arguments(rawArguments)
-
-        return args.completions(
+    fun completions(context: TabCompletionContext<*>): List<String> {
+        val args = filledArgs(context.args.rawArguments)
+        val remainingArgs = args.remainingArgs().joinToString(" ")
+        val completions = args.completions(
             TabCompletionContext(
-                sender = sender,
-                command = command,
-                alias = alias,
-                args = args,
-                definition = commandDefinition
+                sender = context.sender,
+                bukkitCommand = context.bukkitCommand,
+                command = context.command,
+                alias = context.alias,
+                args = args
             )
         )
+
+        return trieOf(completions).search(remainingArgs)
     }
 }

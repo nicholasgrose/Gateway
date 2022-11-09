@@ -23,7 +23,7 @@ abstract class ParserBuilder<T, A : CommandArgs<A>, P : ArgParser<T, A, P>> {
     var completesAfterSatisfied = false
     var completer: (TabCompletionContext<A>) -> List<String> = { listOf() }
     var validator: (ParseResult.Success<T, A>) -> Boolean = { true }
-    var usageGenerator: (A, P) -> List<String> = { _, arg -> listOf("[$name=${arg.typeName()}]") }
+    var usageGenerator: (P) -> List<String> = { arg -> listOf("[$name=${arg.typeName()}]") }
 
     /**
      * Determines that this parser builder has valid settings

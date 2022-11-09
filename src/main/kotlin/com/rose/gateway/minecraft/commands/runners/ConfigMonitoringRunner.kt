@@ -126,7 +126,7 @@ object ConfigMonitoringRunner : KoinComponent {
      * @return Whether the command succeeded
      */
     fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
-        val item = context.args.item ?: return false
+        val item = context.args.item
 
         context.sender.sendMessage(itemHelpMessage(item))
 

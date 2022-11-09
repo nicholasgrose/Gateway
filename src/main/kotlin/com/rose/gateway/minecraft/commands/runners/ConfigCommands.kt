@@ -33,9 +33,7 @@ object ConfigCommands {
     ): Boolean {
         val args = context.args
         val item = args.item
-        val value = args.value
-
-        if (item == null || value == null) return false
+        val value = args.value ?: return false
 
         item.value = value
         sendConfirmation(context.sender, item, value)
@@ -79,8 +77,6 @@ object ConfigCommands {
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
-
-        if (configItem == null || values == null) return true
 
         addToConfiguration(configItem, values)
         sendAddConfirmation(context.sender, configItem, values)
@@ -138,8 +134,6 @@ object ConfigCommands {
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
-
-        if (configItem == null || values == null) return true
 
         removeFromConfiguration(configItem, values)
         sendRemoveConfirmation(context.sender, configItem, values)

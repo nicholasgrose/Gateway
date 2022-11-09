@@ -8,7 +8,7 @@ package com.rose.gateway.minecraft.commands.framework
  * @property commands The set of commands for the minecraft commands
  */
 class MinecraftCommandsBuilder {
-    val commands = mutableSetOf<Command>()
+    val commands = mutableSetOf<MinecraftCommand>()
 
     /**
      * Add a new Minecraft command
@@ -22,7 +22,7 @@ class MinecraftCommandsBuilder {
 
         builder.apply(initializer)
 
-        commands.add(builder.build())
+        commands.add(MinecraftCommand(builder.build()))
     }
 
     /**

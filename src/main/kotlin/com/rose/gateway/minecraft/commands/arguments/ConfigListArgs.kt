@@ -53,6 +53,7 @@ class StringListConfigArgs(
             list {
                 name = "VALUES"
                 description = "Values to add."
+                requireNonEmpty = false
                 element = stringParser {
                     name = "VALUE"
                     description = "String to add."
@@ -71,9 +72,9 @@ class StringListConfigArgs(
 fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     { listOf() },
     {
-        val item = it.context.arguments.item
+        val item = it.context.args.item
 
-        item?.value?.contains(it.result)?.not() ?: false
+        item.value.contains(it.result).not()
     }
 )
 
@@ -84,16 +85,14 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
  */
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     {
-        val currentValues = it.args.item?.value ?: listOf()
+        val currentValues = it.args.item.value
         val itemsSlatedForRemoval = it.args.value
 
-        if (itemsSlatedForRemoval == null) {
-            currentValues
-        } else currentValues - itemsSlatedForRemoval.toSet()
+        currentValues - itemsSlatedForRemoval.toSet()
     },
     {
-        val item = it.context.arguments.item
+        val item = it.context.args.item
 
-        item?.value?.contains(it.result) ?: false
+        item.value.contains(it.result)
     }
 )

@@ -5,19 +5,15 @@ import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
-import com.rose.gateway.minecraft.commands.framework.subcommand.subcommandExecutor
-import com.rose.gateway.shared.collections.builders.trieOf
 
 /**
- * A builder that configures and constructs a [Command]
+ * A builder that configures and constructs a [MinecraftCommand]
  *
  * @property name The name of the command to build
  * @constructor Create an empty command builder
  */
-class CommandBuilder(private val name: String) {
-    var parent: CommandBuilder? = null
-    val children = mutableListOf<Command>()
-    private val executors = mutableListOf<CommandExecutor<*>>()
+class CommandBuilder(val name: String) {
+    val executors = mutableListOf<CommandExecutor<*>>()
 
     /**
      * Build the command from this command builder
@@ -25,17 +21,10 @@ class CommandBuilder(private val name: String) {
      * @return The command that was built
      */
     fun build(): Command {
-        val subcommandMap = children.associateBy { child -> child.definition.name }
-        val subcommandNames = trieOf(subcommandMap.keys)
-        if (subcommandMap.isNotEmpty()) executors.add(subcommandExecutor(subcommandMap))
-
         return Command(
             CommandDefinition(
                 name = name,
-                baseCommand = generateBuilderDocumentation(),
-                executors = executors,
-                subcommands = subcommandMap,
-                subcommandNames = subcommandNames
+                executors = executors
             )
         )
     }
@@ -64,22 +53,5 @@ class CommandBuilder(private val name: String) {
         val executor = CommandExecutor(commandFunction, arguments)
 
         executors.add(executor)
-    }
-
-    /**
-     * Generate usage documentation for this builder
-     *
-     * @return The generated documentation
-     */
-    private fun generateBuilderDocumentation(): String {
-        var topParent = this
-        var nextParent = topParent.parent
-
-        while (nextParent != null) {
-            topParent = nextParent
-            nextParent = topParent.parent
-        }
-
-        return "/${topParent.name}"
     }
 }

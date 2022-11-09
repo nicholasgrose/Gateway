@@ -10,10 +10,8 @@ import com.rose.gateway.minecraft.commands.framework.CommandBuilder
  * @receiver This command builder
  */
 fun CommandBuilder.subcommand(name: String, initializer: CommandBuilder.() -> Unit) {
-    val newCommandBuilder = CommandBuilder(name)
+    val subcommandBuilder = CommandBuilder(name)
+    subcommandBuilder.apply(initializer)
 
-    newCommandBuilder.apply(initializer)
-    newCommandBuilder.parent = this
-
-    children.add(newCommandBuilder.build())
+    executors.add(subcommandExecutor(subcommandBuilder.build()))
 }

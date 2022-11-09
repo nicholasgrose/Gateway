@@ -1,67 +1,42 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.data.CommandContext
 import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
-import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
-import com.rose.gateway.shared.collections.builders.trieOf
-import org.bukkit.command.CommandSender
-import org.bukkit.command.TabCompleter
-import org.bukkit.plugin.java.JavaPlugin
+import com.rose.gateway.minecraft.commands.framework.data.CommandResult
+import com.rose.gateway.minecraft.commands.framework.data.ExecutorArgsPair
+import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
 
-/**
- * A Minecraft command
- *
- * @property definition The definition of this command
- * @constructor Create a command
- */
-class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExecutor, TabCompleter {
-    override fun onCommand(
-        sender: CommandSender,
-        command: org.bukkit.command.Command,
-        label: String,
-        args: Array<String>
-    ): Boolean {
-        val mostSuccessfulExecutors = determineMostSuccessfulExecutors(args)
-        val chosenExecutor = mostSuccessfulExecutors.firstOrNull()
+class Command(val definition: CommandDefinition) {
+    fun parseAndExecute(context: CommandContext<*>): CommandResult {
+        val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
 
-        val succeeded = if (chosenExecutor == null) {
-            false
-        } else {
-            chosenExecutor.tryExecute(
-                definition = definition,
-                sender = sender,
-                command = command,
-                label = label,
-                rawArguments = args
-            ) ?: false
-        }
-
-        if (!succeeded) sender.sendMessage(
-            "Usage:\n" +
-                definition.executors.joinToString("\n") {
-                    it.arguments(args).usages()
-                        .joinToString("\n") { usage -> "${definition.baseCommand} $usage" }
-                }
-        )
-
-        return true
+        return execute(context, mostSuccessfulExecutors)
     }
 
-    override fun onTabComplete(
-        sender: CommandSender,
-        command: org.bukkit.command.Command,
-        alias: String,
-        args: Array<String>
-    ): List<String> {
-        val mostSuccessfulExecutors = determineMostSuccessfulExecutors(args)
+    fun execute(context: CommandContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandResult {
+        val chosenPair = executorArgsPairs.firstOrNull()
 
-        val tabCompletions = trieOf(
-            mostSuccessfulExecutors
-                .map {
-                    it.completions(sender, command, alias, definition, args)
-                }.flatten()
-        )
+        val succeeded = if (chosenPair == null) {
+            false
+        } else {
+            chosenPair.executor.tryExecute(context) ?: false
+        }
 
-        return tabCompletions.searchOrGetAll(args.last()).sorted()
+        return CommandResult(succeeded, executorArgsPairs)
+    }
+
+    fun parseAndComplete(context: TabCompletionContext<*>): List<String> {
+        val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
+
+        return complete(context, mostSuccessfulExecutors)
+    }
+
+    fun complete(context: TabCompletionContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
+        val tabCompletions = executorArgsPairs.map {
+            it.executor.completions(context)
+        }.flatten()
+
+        return tabCompletions
     }
 
     /**
@@ -73,13 +48,14 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
      * @param rawArgs The incoming arguments to be parsed
      * @return List of executors in order of definition
      */
-    private fun determineMostSuccessfulExecutors(rawArgs: Array<String>): List<CommandExecutor<*>> {
-        val mostSuccessfulExecutors = mutableListOf<CommandExecutor<*>>()
+    fun mostSuccessfulExecutors(rawArgs: List<String>): List<ExecutorArgsPair<*>> {
+        val mostSuccessfulExecutors = mutableListOf<ExecutorArgsPair<*>>()
         var successThreshold = 0
         var executorsMustBeSuccessful = false
 
         for (executor in definition.executors) {
-            val argResult = executor.arguments(rawArgs)
+            val executorArgsPair = ExecutorArgsPair.forExecutor(executor, rawArgs)
+            val argResult = executorArgsPair.args
             val argsParsed = argResult.argsParsed()
 
             when {
@@ -89,28 +65,19 @@ class Command(val definition: CommandDefinition) : org.bukkit.command.CommandExe
                         executorsMustBeSuccessful = true
                     }
 
-                    mostSuccessfulExecutors.add(executor)
+                    mostSuccessfulExecutors.add(executorArgsPair)
                 }
 
                 executorsMustBeSuccessful && !argResult.valid() -> continue
-                argsParsed == successThreshold -> mostSuccessfulExecutors.add(executor)
+                argsParsed == successThreshold -> mostSuccessfulExecutors.add(executorArgsPair)
                 argsParsed > successThreshold -> {
                     successThreshold = argsParsed
                     mostSuccessfulExecutors.clear()
-                    mostSuccessfulExecutors.add(executor)
+                    mostSuccessfulExecutors.add(executorArgsPair)
                 }
             }
         }
 
         return mostSuccessfulExecutors
-    }
-
-    /**
-     * Registers this command with the provided plugin
-     *
-     * @param plugin The plugin to register this command with
-     */
-    fun registerCommand(plugin: JavaPlugin) {
-        plugin.getCommand(definition.name)!!.setExecutor(this)
     }
 }

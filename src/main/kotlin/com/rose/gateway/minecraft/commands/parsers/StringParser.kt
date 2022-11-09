@@ -41,7 +41,7 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
     override fun typeName(): String = "String"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
-        val args = context.arguments
+        val args = context.args
         var currentIndex = context.currentIndex
         val result = args.rawArguments.getOrNull(currentIndex)
 
@@ -59,7 +59,7 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
                 ParseResult.Success(
                     results.joinToString(" "),
                     ParseContext(
-                        arguments = args,
+                        args = args,
                         currentIndex = currentIndex + results.size
                     )
                 )
@@ -68,14 +68,14 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
             result != null -> ParseResult.Success(
                 result,
                 ParseContext(
-                    arguments = args,
+                    args = args,
                     currentIndex = currentIndex + 1
                 )
             )
 
             else -> ParseResult.Failure(
                 ParseContext(
-                    arguments = args,
+                    args = args,
                     currentIndex = currentIndex + 1
                 )
             )

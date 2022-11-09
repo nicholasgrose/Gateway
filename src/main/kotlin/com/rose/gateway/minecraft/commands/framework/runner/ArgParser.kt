@@ -50,11 +50,10 @@ abstract class ArgParser<
     /**
      * Generates usages for this argument
      *
-     * @param args The args to generate the usages for
      * @return All possible usages for this argument
      */
     @Suppress("UNCHECKED_CAST")
-    fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as P)
+    fun generateUsages(): List<String> = builder.usageGenerator(this as P)
 
     /**
      * Parses the value given the existing context
@@ -85,13 +84,13 @@ abstract class ArgParser<
      * @param property The property that this delegate is store in
      * @return The value that this parser has in the args or null if none was found
      */
-    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? {
+    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T {
         val parseResult = thisRef.parserResults[this]
 
         @Suppress("UNCHECKED_CAST")
         return when (parseResult) {
             is ParseResult.Success -> parseResult.result as T
-            else -> null
+            else -> error("Attempted to use command argument that failed parsing")
         }
     }
 }
