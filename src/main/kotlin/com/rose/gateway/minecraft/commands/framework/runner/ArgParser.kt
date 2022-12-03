@@ -41,19 +41,21 @@ abstract class ArgParser<
      */
     fun completions(context: TabCompletionContext<A>): List<String> {
         return when {
-            builder.completesAfterSatisfied -> builder.completer(context)
+            builder.completesAfterSatisfied -> builder.completer(self(), context)
             context.args.wasSuccessful(this) -> listOf()
-            else -> builder.completer(context)
+            else -> builder.completer(self(), context)
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun self(): P = this as P
 
     /**
      * Generates usages for this argument
      *
      * @return All possible usages for this argument
      */
-    @Suppress("UNCHECKED_CAST")
-    fun generateUsages(): List<String> = builder.usageGenerator(this as P)
+    fun generateUsages(): List<String> = builder.usageGenerator(self())
 
     /**
      * Parses the value given the existing context
@@ -72,7 +74,7 @@ abstract class ArgParser<
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {
         val parseResult = parseValue(context)
 
-        return if (parseResult is ParseResult.Success && builder.validator(parseResult)) {
+        return if (parseResult is ParseResult.Success && builder.validator(self(), parseResult)) {
             ParseResult.Success(parseResult.result, parseResult.context)
         } else ParseResult.Failure(parseResult.context)
     }

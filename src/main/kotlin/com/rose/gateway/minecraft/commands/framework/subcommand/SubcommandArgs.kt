@@ -25,7 +25,7 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         description = "The subcommand to run."
         completer = { listOf(command.definition.name) }
         validator = { it.result == command.definition.name }
-        usageGenerator = { _ -> listOf(command.definition.name) }
+        usageGenerator = { listOf(command.definition.name) }
     }
 
     val remainingArgs by list {
@@ -62,7 +62,7 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
             else ParseResult.Failure(context)
         }
 
-        usageGenerator = { _ ->
+        usageGenerator = {
             val subcommandDocs = if (wasSuccessful(subcommandParser)) {
                 rankedExecutors.flatMap {
                     it.args.usages()
