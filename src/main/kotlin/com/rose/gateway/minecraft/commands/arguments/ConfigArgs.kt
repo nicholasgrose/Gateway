@@ -3,7 +3,11 @@ package com.rose.gateway.minecraft.commands.arguments
 import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.parsers.*
+import com.rose.gateway.minecraft.commands.parsers.BooleanParser
+import com.rose.gateway.minecraft.commands.parsers.StringParser
+import com.rose.gateway.minecraft.commands.parsers.boolean
+import com.rose.gateway.minecraft.commands.parsers.string
+import com.rose.gateway.minecraft.commands.parsers.typedConfigItem
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -22,10 +26,10 @@ import kotlin.reflect.typeOf
  * @property value The config item's value
  */
 abstract class ConfigArgs<
-        T : Any,
-        A : ConfigArgs<T, A, P>,
-        P : ArgParser<T, A, P>
-        >(
+    T : Any,
+    A : ConfigArgs<T, A, P>,
+    P : ArgParser<T, A, P>
+    >(
     configType: KType,
     valueArg: A.() -> P
 ) : CommandArgs<A>() {

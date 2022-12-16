@@ -6,7 +6,7 @@ plugins {
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.0.0"
+    id("xyz.jpenilla.run-paper") version "2.0.1"
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // https://detekt.dev/
@@ -71,6 +71,10 @@ ktlint {
     version.set(ktlintVersion)
 }
 
+detekt {
+    config = files("config/detekt/detekt.yml")
+}
+
 tasks {
     compileKotlin {
         kotlinOptions {
@@ -108,6 +112,10 @@ tasks {
         val minecraftVersion: String by project
 
         this.minecraftVersion(minecraftVersion)
+    }
+
+    detekt.configure {
+        mustRunAfter(ktlintFormat)
     }
 
     create("runChecks") {
