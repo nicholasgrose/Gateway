@@ -4,7 +4,7 @@ import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
@@ -29,16 +29,19 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun restartBot(context: CommandContext<NoArgs>): Boolean {
-        sendAndLogMessage(context.sender, "Restarting the Discord bot...")
+    fun restartBot(context: CommandExecuteContext<NoArgs>): Boolean {
+        sendAndLogMessage(context.bukkit.sender, "Restarting the Discord bot...")
 
         pluginScope.launch {
             bot.restart()
 
             if (bot.botStatus == BotStatus.RUNNING) {
-                sendAndLogMessage(context.sender, "Discord bot restarted.")
+                sendAndLogMessage(context.bukkit.sender, "Discord bot restarted.")
             } else {
-                sendAndLogMessage(context.sender, "Discord bot failed to restart. Check bot status for more info.")
+                sendAndLogMessage(
+                    context.bukkit.sender,
+                    "Discord bot failed to restart. Check bot status for more info."
+                )
             }
         }
 
@@ -62,9 +65,9 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun botStatus(context: CommandContext<NoArgs>): Boolean {
+    fun botStatus(context: CommandExecuteContext<NoArgs>): Boolean {
         val status = bot.botStatus
-        context.sender.sendMessage(
+        context.bukkit.sender.sendMessage(
             Component.join(
                 JoinConfiguration.separator(Component.text(" ")),
                 Component.text("Bot Status:", config.primaryColor()),

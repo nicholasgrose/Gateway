@@ -38,7 +38,7 @@ object CommandRegistry : KoinComponent {
         command("discord-whisper") {
             runner { context ->
                 // TODO
-                context.sender.sendMessage("Not yet implemented.")
+                context.bukkit.sender.sendMessage("Not yet implemented.")
                 true
             }
         }
@@ -46,7 +46,7 @@ object CommandRegistry : KoinComponent {
         command("discord") {
             runner { context ->
                 // TODO
-                context.sender.sendMessage("Not yet implemented.")
+                context.bukkit.sender.sendMessage("Not yet implemented.")
                 true
             }
         }
@@ -91,7 +91,7 @@ object CommandRegistry : KoinComponent {
                     }
 
                     runner { context ->
-                        ConfigMonitoringRunner.sendAllConfigurationHelp(context.sender)
+                        ConfigMonitoringRunner.sendAllConfigurationHelp(context.bukkit.sender)
                     }
                 }
 
@@ -109,7 +109,7 @@ object CommandRegistry : KoinComponent {
 
                 subcommand("status") {
                     runner { context ->
-                        ConfigMonitoringRunner.sendConfigurationStatus(context.sender)
+                        ConfigMonitoringRunner.sendConfigurationStatus(context.bukkit.sender)
                     }
                 }
             }

@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 
 /**
  * A set of arguments for a command
@@ -143,7 +143,7 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @param context The context to complete these args within
      * @return All completions this arg has in the given context
      */
-    fun completions(context: TabCompletionContext<A>): List<String> {
+    fun completions(context: TabCompleteContext<A>): List<String> {
         val nextArg = parsers.firstOrNull {
             !(wasSuccessful(it))
         } ?: parsers.lastOrNull()

@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework.data
+package com.rose.gateway.minecraft.commands.framework.data.executor
 
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 

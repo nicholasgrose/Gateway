@@ -1,4 +1,6 @@
-package com.rose.gateway.minecraft.commands.framework.data
+package com.rose.gateway.minecraft.commands.framework.data.definition
+
+import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecutor
 
 /**
  * Definition of a command

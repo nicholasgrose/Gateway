@@ -3,7 +3,7 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.config.Item
 import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.component.ColorComponent
@@ -29,14 +29,14 @@ object ConfigCommands {
         ConfigValueType,
         ArgsType : ConfigArgs<ConfigValueType, ArgsType, ValueParserType>,
         ValueParserType : ArgParser<ConfigValueType, ArgsType, ValueParserType>> setConfig(
-        context: CommandContext<ArgsType>
+        context: CommandExecuteContext<ArgsType>
     ): Boolean {
         val args = context.args
         val item = args.item
         val value = args.value ?: return false
 
         item.value = value
-        sendConfirmation(context.sender, item, value)
+        sendConfirmation(context.bukkit.sender, item, value)
 
         return true
     }
@@ -73,13 +73,13 @@ object ConfigCommands {
         ConfigValueType,
         ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
         ValueParserType : StringParser<ListArgsType>> addConfiguration(
-        context: CommandContext<ListArgsType>
+        context: CommandExecuteContext<ListArgsType>
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
 
         addToConfiguration(configItem, values)
-        sendAddConfirmation(context.sender, configItem, values)
+        sendAddConfirmation(context.bukkit.sender, configItem, values)
 
         return true
     }
@@ -130,13 +130,13 @@ object ConfigCommands {
         ConfigValueType,
         ListArgsType : ConfigListArgs<ConfigValueType, ListArgsType, ValueParserType>,
         ValueParserType : StringParser<ListArgsType>> removeConfiguration(
-        context: CommandContext<ListArgsType>
+        context: CommandExecuteContext<ListArgsType>
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
 
         removeFromConfiguration(configItem, values)
-        sendRemoveConfirmation(context.sender, configItem, values)
+        sendRemoveConfirmation(context.bukkit.sender, configItem, values)
 
         return true
     }

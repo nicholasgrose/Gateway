@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.arguments
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.parsers.ListParser
@@ -43,7 +43,7 @@ open class ConfigListArgs<
  */
 class StringListConfigArgs(
     stringCompleter: StringParser<StringListConfigArgs>.(
-        TabCompletionContext<StringListConfigArgs>
+        TabCompleteContext<StringListConfigArgs>
     ) -> List<String>,
     stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean
 ) :
@@ -97,7 +97,7 @@ fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
 )
 
 private fun StringParser<StringListConfigArgs>.existingValues(
-    context: TabCompletionContext<StringListConfigArgs>
+    context: TabCompleteContext<StringListConfigArgs>
 ): List<String> {
     return if (context.args.wasSuccessful(this)) context.args.value
     else listOf()

@@ -2,7 +2,7 @@ package com.rose.gateway.minecraft.commands.completers
 
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import org.koin.core.component.KoinComponent
@@ -24,12 +24,12 @@ object ConfigCompleter : KoinComponent {
      * @param A The argument type for the function's completion context
      * @return The completer for config strings
      */
-    fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configStrings(): P.(TabCompletionContext<A>) -> List<String> =
+    fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configStrings(): P.(TabCompleteContext<A>) -> List<String> =
         { configStringMap.allStrings() }
 
     fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configItemsWithType(
         type: KType
-    ): P.(TabCompletionContext<A>) -> List<String> {
+    ): P.(TabCompleteContext<A>) -> List<String> {
         val items = config.allItems()
         val matchedItems = items.filter {
             val itemType = it.type

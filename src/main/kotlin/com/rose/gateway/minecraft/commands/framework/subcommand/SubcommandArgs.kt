@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.subcommand
 
 import com.rose.gateway.minecraft.commands.framework.Command
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.emptyArgs
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
@@ -75,11 +75,9 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         completer = { context ->
             if (remainingArgs.isEmpty()) listOf()
             else command.complete(
-                TabCompletionContext(
-                    sender = context.sender,
-                    bukkitCommand = context.bukkitCommand,
+                TabCompleteContext(
+                    bukkit = context.bukkit,
                     command = command,
-                    alias = context.alias,
                     args = emptyArgs(remainingArgs)
                 ),
                 rankedExecutors

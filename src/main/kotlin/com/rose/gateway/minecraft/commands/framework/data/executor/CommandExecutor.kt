@@ -1,5 +1,7 @@
-package com.rose.gateway.minecraft.commands.framework.data
+package com.rose.gateway.minecraft.commands.framework.data.executor
 
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.shared.collections.builders.trieOf
 
@@ -12,7 +14,7 @@ import com.rose.gateway.shared.collections.builders.trieOf
  * @constructor Create a command executor
  */
 data class CommandExecutor<A : CommandArgs<A>>(
-    val executor: ((CommandContext<A>) -> Boolean),
+    val executor: ((CommandExecuteContext<A>) -> Boolean),
     val args: () -> A
 ) {
     /**
@@ -21,15 +23,14 @@ data class CommandExecutor<A : CommandArgs<A>>(
      * @param context The context to execute in
      * @return Whether execution succeeded or null if it never executed
      */
-    fun tryExecute(context: CommandContext<*>): Boolean? {
+    fun tryExecute(context: CommandExecuteContext<*>): Boolean? {
         val args = filledArgs(context.args.rawArguments)
 
         return if (args.valid()) {
             executor(
-                CommandContext(
-                    sender = context.sender,
-                    bukkitCommand = context.bukkitCommand,
-                    label = context.label,
+                CommandExecuteContext(
+                    bukkit = context.bukkit,
+                    command = context.command,
                     args = args
                 )
             )
@@ -50,15 +51,13 @@ data class CommandExecutor<A : CommandArgs<A>>(
      * @param context The context in which completions are provided
      * @return The possible completions for tab
      */
-    fun completions(context: TabCompletionContext<*>): List<String> {
+    fun completions(context: TabCompleteContext<*>): List<String> {
         val args = filledArgs(context.args.rawArguments)
         val remainingArgs = args.remainingArgs().joinToString(" ")
         val completions = args.completions(
-            TabCompletionContext(
-                sender = context.sender,
-                bukkitCommand = context.bukkitCommand,
+            TabCompleteContext(
+                bukkit = context.bukkit,
                 command = context.command,
-                alias = context.alias,
                 args = args
             )
         )

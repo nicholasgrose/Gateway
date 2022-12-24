@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import kotlin.reflect.KProperty
 
 /**
@@ -39,7 +39,7 @@ abstract class ArgParser<
      * @param context The context of this tab completion
      * @return A list of possible tab completions
      */
-    fun completions(context: TabCompletionContext<A>): List<String> {
+    fun completions(context: TabCompleteContext<A>): List<String> {
         return when {
             builder.completesAfterSatisfied -> builder.completer(self(), context)
             context.args.wasSuccessful(this) -> listOf()

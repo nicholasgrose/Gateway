@@ -1,8 +1,9 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.data.ExecutorArgsPair
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.BukkitContext
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
+import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
@@ -16,10 +17,14 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
     ): Boolean {
         val argList = args.toList()
         val commandResult = command.parseAndExecute(
-            CommandContext(
-                sender = sender,
-                bukkitCommand = bukkitCommand,
-                label = label,
+            CommandExecuteContext(
+                bukkit = BukkitContext.CommandExecute(
+                    sender = sender,
+                    command = bukkitCommand,
+                    label = label,
+                    args = args
+                ),
+                command = command,
                 args = emptyArgs(argList)
             )
         )
@@ -48,11 +53,14 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         val argList = args.toList()
 
         return command.parseAndComplete(
-            TabCompletionContext(
-                sender = sender,
-                bukkitCommand = bukkitCommand,
+            TabCompleteContext(
+                bukkit = BukkitContext.TabComplete(
+                    sender = sender,
+                    command = bukkitCommand,
+                    alias = alias,
+                    args = args
+                ),
                 command = command,
-                alias = alias,
                 args = emptyArgs(argList)
             )
         )

@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
-import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.definition.CommandDefinition
+import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecutor
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 
@@ -35,7 +35,7 @@ class CommandBuilder(val name: String) {
      * @param commandFunction The function to execute when this command is executed with this runner's arguments
      * @receiver The constructed command
      */
-    fun runner(commandFunction: (CommandContext<NoArgs>) -> Boolean) = runner(::NoArgs, commandFunction)
+    fun runner(commandFunction: (CommandExecuteContext<NoArgs>) -> Boolean) = runner(::NoArgs, commandFunction)
 
     /**
      * Add a runner this command for a set of arguments
@@ -48,7 +48,7 @@ class CommandBuilder(val name: String) {
      */
     fun <A : CommandArgs<A>> runner(
         arguments: () -> A,
-        commandFunction: (CommandContext<A>) -> Boolean
+        commandFunction: (CommandExecuteContext<A>) -> Boolean
     ) {
         val executor = CommandExecutor(commandFunction, arguments)
 

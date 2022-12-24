@@ -1,19 +1,19 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.data.CommandDefinition
-import com.rose.gateway.minecraft.commands.framework.data.CommandResult
-import com.rose.gateway.minecraft.commands.framework.data.ExecutorArgsPair
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
+import com.rose.gateway.minecraft.commands.framework.data.definition.CommandDefinition
+import com.rose.gateway.minecraft.commands.framework.data.definition.CommandExecuteResult
+import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
 
 class Command(val definition: CommandDefinition) {
-    fun parseAndExecute(context: CommandContext<*>): CommandResult {
+    fun parseAndExecute(context: CommandExecuteContext<*>): CommandExecuteResult {
         val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
 
         return execute(context, mostSuccessfulExecutors)
     }
 
-    fun execute(context: CommandContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandResult {
+    fun execute(context: CommandExecuteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandExecuteResult {
         val chosenPair = executorArgsPairs.firstOrNull()
 
         val succeeded = if (chosenPair == null) {
@@ -22,16 +22,16 @@ class Command(val definition: CommandDefinition) {
             chosenPair.executor.tryExecute(context) ?: false
         }
 
-        return CommandResult(succeeded, executorArgsPairs)
+        return CommandExecuteResult(succeeded, executorArgsPairs)
     }
 
-    fun parseAndComplete(context: TabCompletionContext<*>): List<String> {
+    fun parseAndComplete(context: TabCompleteContext<*>): List<String> {
         val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
 
         return complete(context, mostSuccessfulExecutors)
     }
 
-    fun complete(context: TabCompletionContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
+    fun complete(context: TabCompleteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
         val tabCompletions = executorArgsPairs.map {
             it.executor.completions(context)
         }.flatten()
