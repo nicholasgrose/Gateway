@@ -12,11 +12,11 @@ import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteCon
  * @property parsers The parsers that parse the raw arguments for these arguments
  * @property parserResults The results from parsing the raw arguments with all stored parsers
  */
+@Suppress("TooManyFunctions")
 open class CommandArgs<A : CommandArgs<A>> {
     var rawArguments: List<String> = listOf()
     val parsers: MutableList<ArgParser<*, A, *>> = mutableListOf()
-    var parserResults: MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> =
-        fillFinalParseResults()
+    var parserResults: Map<ArgParser<*, A, *>, ParseResult.Success<*, A>> = mapOf()
 
     /**
      * Fills in this argument's [parserResults] for a set of raw arguments
@@ -25,7 +25,7 @@ open class CommandArgs<A : CommandArgs<A>> {
      */
     fun parseArguments(rawArgs: List<String>): A {
         rawArguments = rawArgs
-        parserResults = fillFinalParseResults()
+        fillFinalParseResults()
 
         @Suppress("UNCHECKED_CAST")
         return this as A
@@ -37,10 +37,10 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @return The final result of running all parsers
      */
-    private fun fillFinalParseResults(): MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> {
+    private fun fillFinalParseResults() {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
-        val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult<*, A>>()
+        val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult.Success<*, A>>()
         parserResults = resultMap
 
         for (parser in parsers) {
@@ -52,11 +52,12 @@ open class CommandArgs<A : CommandArgs<A>> {
                 resultMap[parser] = result
                 parserResults = resultMap
             } else {
-                return resultMap
+                parserResults = resultMap
+                return
             }
         }
 
-        return resultMap
+        parserResults = resultMap
     }
 
     /**

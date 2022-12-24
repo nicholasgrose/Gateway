@@ -42,8 +42,8 @@ class Command(val definition: CommandDefinition) {
     /**
      * Determines which executors are considered the most successful
      *
-     * Success is defined as either being successful or having the most arguments successfully parsed
-     * The returned executors are in the same order they were defined
+     * Success is defined as either being successful or having the most arguments successfully parsed.
+     * The returned executors are in the same order they were defined.
      *
      * @param rawArgs The incoming arguments to be parsed
      * @return List of executors in order of definition
