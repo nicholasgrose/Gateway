@@ -1,4 +1,6 @@
-package com.rose.gateway.minecraft.commands.framework.runner
+package com.rose.gateway.minecraft.commands.framework.data.parser
+
+import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 
 /**
  * The context surrounding parsing a value
