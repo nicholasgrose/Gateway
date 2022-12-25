@@ -16,8 +16,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  */
 fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
     body: ListParserBuilder<T, A, R>.() -> Unit
-): ListParser<T, A, R> =
-    genericParser(::ListParserBuilder, body)
+): ListParser<T, A, R> = genericParser(::ListParserBuilder, body)
 
 /**
  * Parser for a list argument
@@ -29,8 +28,9 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  *
  * @param builder The builder that defines this parser
  */
-class ListParser<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>>(val builder: ListParserBuilder<T, A, P>) :
-    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) {
+class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
+    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) where
+T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"

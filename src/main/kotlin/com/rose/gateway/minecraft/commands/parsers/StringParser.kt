@@ -36,7 +36,7 @@ fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -
  *
  * @param builder The builder that defines this parser
  */
-class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
+class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder<A>) :
     ArgParser<String, A, StringParser<A>>(builder) {
     override fun typeName(): String = "String"
 

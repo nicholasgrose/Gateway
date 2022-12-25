@@ -13,12 +13,8 @@ import kotlin.reflect.KProperty
  * @property builder A [ParserBuilder] for this arg parser
  * @constructor Create an arg parser
  */
-abstract class ArgParser<
-    T,
-    A : CommandArgs<A>,
-    P : ArgParser<T, A, P>
-    >(
-    private val builder: ParserBuilder<T, A, P>
+abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
+    open val builder: ParserBuilder<T, A, P>
 ) {
     /**
      * Gives the name of this parser

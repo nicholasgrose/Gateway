@@ -102,9 +102,17 @@ open class CommandArgs<A : CommandArgs<A>> {
      */
     private fun remainingArgCount(): Int = rawArguments.size - lastIndex()
 
-    fun remainingArgs(): List<String> = rawArguments.subList(lastIndex(), rawArguments.size)
-
     private fun lastIndex(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
+
+    /**
+     * Determines whether a particular arg was successfully parsed
+     *
+     * @param arg The arg to check the parse status of
+     * @return Whether a parsed value exists for the arg
+     */
+    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
+
+    fun remainingArgs(): List<String> = rawArguments.subList(lastIndex(), rawArguments.size)
 
     /**
      * Determines the number of raw arguments that have been parsed
@@ -152,15 +160,14 @@ open class CommandArgs<A : CommandArgs<A>> {
 
         return when {
             remainingArgCount() > 1 -> listOf()
-            else -> nextArg?.completions(context) ?: listOf()
+            else -> nextArg?.completions(
+                TabCompleteContext(
+                    bukkit = context.bukkit,
+                    command = context.command,
+                    args = context.args,
+                    completingParser = nextArg
+                )
+            ) ?: listOf()
         }
     }
-
-    /**
-     * Determines whether a particular arg was successfully parsed
-     *
-     * @param arg The arg to check the parse status of
-     * @return Whether a parsed value exists for the arg
-     */
-    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
 }

@@ -3,6 +3,7 @@ package com.rose.gateway.minecraft.commands.framework.data.executor
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.parsers.UnitParser
 import com.rose.gateway.shared.collections.builders.trieOf
 
 /**
@@ -58,7 +59,8 @@ data class CommandExecutor<A : CommandArgs<A>>(
             TabCompleteContext(
                 bukkit = context.bukkit,
                 command = context.command,
-                args = args
+                args = args,
+                completingParser = UnitParser.parser()
             )
         )
 

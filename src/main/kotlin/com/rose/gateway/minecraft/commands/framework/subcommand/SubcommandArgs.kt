@@ -6,6 +6,7 @@ import com.rose.gateway.minecraft.commands.framework.emptyArgs
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.emptyUsageGenerator
+import com.rose.gateway.minecraft.commands.parsers.UnitParser
 import com.rose.gateway.minecraft.commands.parsers.list
 import com.rose.gateway.minecraft.commands.parsers.processor
 import com.rose.gateway.minecraft.commands.parsers.string
@@ -78,7 +79,8 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
                 TabCompleteContext(
                     bukkit = context.bukkit,
                     command = command,
-                    args = emptyArgs(remainingArgs)
+                    args = emptyArgs(remainingArgs),
+                    completingParser = UnitParser.parser()
                 ),
                 rankedExecutors
             )

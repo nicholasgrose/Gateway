@@ -4,6 +4,7 @@ import com.rose.gateway.minecraft.commands.framework.data.context.BukkitContext
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
+import com.rose.gateway.minecraft.commands.parsers.UnitParser
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
@@ -61,7 +62,8 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     args = args
                 ),
                 command = command,
-                args = emptyArgs(argList)
+                args = emptyArgs(argList),
+                completingParser = UnitParser.parser()
             )
         )
     }

@@ -99,6 +99,6 @@ fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
 private fun StringParser<StringListConfigArgs>.existingValues(
     context: TabCompleteContext<StringListConfigArgs>
 ): List<String> {
-    return if (context.args.wasSuccessful(this)) context.args.value
+    return if (context.args.wasSuccessful(context.completingParser)) context.args.value
     else listOf()
 }

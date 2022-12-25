@@ -24,7 +24,8 @@ object ConfigCompleter : KoinComponent {
      * @param A The argument type for the function's completion context
      * @return The completer for config strings
      */
-    fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configStrings(): P.(TabCompleteContext<A>) -> List<String> =
+    fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>>
+    configStrings(): P.(TabCompleteContext<A>) -> List<String> =
         { configStringMap.allStrings() }
 
     fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configItemsWithType(

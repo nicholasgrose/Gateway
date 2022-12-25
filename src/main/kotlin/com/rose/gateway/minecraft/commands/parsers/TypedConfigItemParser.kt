@@ -21,8 +21,7 @@ import kotlin.reflect.KType
  */
 fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
     body: TypedConfigItemParserBuilder<T, A>.() -> Unit
-): TypedConfigItemParser<T, A> =
-    genericParser(::TypedConfigItemParserBuilder, body)
+): TypedConfigItemParser<T, A> = genericParser(::TypedConfigItemParserBuilder, body)
 
 /**
  * Parser for a typed config item argument
@@ -33,7 +32,7 @@ fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
  *
  * @param builder The builder that defines this parser
  */
-class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: TypedConfigItemParserBuilder<T, A>) :
+class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: TypedConfigItemParserBuilder<T, A>) :
     ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder), KoinComponent {
     private val config: PluginConfig by inject()
 
