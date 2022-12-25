@@ -60,7 +60,7 @@ data class CommandExecutor<A : CommandArgs<A>>(
                 bukkit = context.bukkit,
                 command = context.command,
                 args = args,
-                completingParser = UnitParser.parser()
+                completingParser = UnitParser()
             )
         )
 

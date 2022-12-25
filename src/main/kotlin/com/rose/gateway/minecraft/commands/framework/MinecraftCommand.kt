@@ -37,11 +37,9 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
 
     private fun sendUsages(sender: CommandSender, rankedExecutors: List<ExecutorArgsPair<*>>) {
         sender.sendMessage(
-            "Usage:\n" +
-                rankedExecutors.joinToString("\n") {
-                    it.args.usages()
-                        .joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-                }
+            "Usage:\n" + rankedExecutors.joinToString("\n") {
+                it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+            }
         )
     }
 
@@ -63,7 +61,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                 ),
                 command = command,
                 args = emptyArgs(argList),
-                completingParser = UnitParser.parser()
+                completingParser = UnitParser()
             )
         )
     }

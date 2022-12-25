@@ -80,7 +80,7 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
                     bukkit = context.bukkit,
                     command = command,
                     args = emptyArgs(remainingArgs),
-                    completingParser = UnitParser.parser()
+                    completingParser = UnitParser()
                 ),
                 rankedExecutors
             )
