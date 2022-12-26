@@ -14,7 +14,7 @@ import org.intellij.lang.annotations.Language
  */
 class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
-        const val USER_QUOTE_MENTION_START_INDEX = 2
+        private const val USER_QUOTE_MENTION_START_INDEX = 2
     }
 
     override fun tokenType(): LixyTokenType {

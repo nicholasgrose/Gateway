@@ -26,6 +26,7 @@ class IpConfig(
  * Surrogate for serialization of [IpConfig]
  *
  * @property enabled Whether the extension is enabled
+ * @property displayIp The IP to display to users requesting the IP
  * @constructor Create an "IP config" surrogate with the provided data
  *
  * @see IpConfig

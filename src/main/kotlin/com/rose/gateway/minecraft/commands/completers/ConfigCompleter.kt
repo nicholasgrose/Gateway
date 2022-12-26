@@ -28,6 +28,15 @@ object ConfigCompleter : KoinComponent {
     configStrings(): P.(TabCompleteContext<A>) -> List<String> =
         { configStringMap.allStrings() }
 
+    /**
+     * Gives a completer for the config items of a particular type
+     *
+     * @param T The type of the parser's value
+     * @param A The type of the args the parser parses is for
+     * @param P The type of the parser the completer is for
+     * @param type The type of the config item to complete for
+     * @return A completer for config items of a particular type
+     */
     fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configItemsWithType(
         type: KType
     ): P.(TabCompleteContext<A>) -> List<String> {

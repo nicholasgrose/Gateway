@@ -10,6 +10,9 @@ import com.rose.gateway.minecraft.commands.parsers.configItem
  * @constructor Create config item args
  */
 class ConfigItemArgs : CommandArgs<ConfigItemArgs>() {
+    /**
+     * The config item specified
+     */
     val item by configItem {
         name = "Config"
         description = "The config to use."

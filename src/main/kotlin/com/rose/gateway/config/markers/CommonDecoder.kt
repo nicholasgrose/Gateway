@@ -18,7 +18,10 @@ import kotlin.reflect.KType
  */
 open class CommonDecoder : NullHandlingDecoder<Any> {
     companion object {
-        val DECODER = DataClassDecoder()
+        /**
+         * The data class decoder this decoder uses internally
+         */
+        private val DECODER = DataClassDecoder()
     }
 
     override fun safeDecode(node: Node, type: KType, context: DecoderContext): ConfigResult<Any> {

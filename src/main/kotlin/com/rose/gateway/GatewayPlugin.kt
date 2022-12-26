@@ -22,7 +22,14 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
         initializeKoin(this)
     }
 
+    /**
+     * The time that the plugin started
+     */
     val startTime = Clock.System.now()
+
+    /**
+     * The classloader for this plugin
+     */
     val loader = classLoader
 
     private val bot: DiscordBot by inject()

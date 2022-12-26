@@ -19,6 +19,9 @@ import kotlin.reflect.typeOf
  * @constructor Creates a config string map
  */
 class ConfigStringMap : KoinComponent {
+    /**
+     * The map of config name strings to their respective items
+     */
     val itemMap = mutableMapOf<String, Item<*>>()
 
     init {

@@ -33,6 +33,9 @@ abstract class ConfigArgs<
     configType: KType,
     valueArg: A.() -> P
 ) : CommandArgs<A>() {
+    /**
+     * The config item of the given type that was specified
+     */
     val item by typedConfigItem<T, A> {
         name = "CONFIG_ITEM"
         description = "The item to modify."
@@ -40,6 +43,9 @@ abstract class ConfigArgs<
         completer = ConfigCompleter.configItemsWithType(configType)
     }
 
+    /**
+     * The value specified for the config item
+     */
     @Suppress("UNCHECKED_CAST", "LeakingThis")
     val value by (this as A).valueArg()
 }

@@ -17,7 +17,14 @@ class BotContext : KoinComponent {
     private val bot: DiscordBot by inject()
     private val config: PluginConfig by inject()
 
+    /**
+     * The text channels the bot operates in
+     */
     val botChannels = mutableSetOf<TextChannel>()
+
+    /**
+     * The guilds the bot operates in
+     */
     val botGuilds = mutableSetOf<Guild>()
 
     /**
@@ -31,10 +38,10 @@ class BotContext : KoinComponent {
 
         bot.kordClient()?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
-                if (
-                    ClientInfo.hasChannelPermissions(channel, DiscordBotConstants.REQUIRED_PERMISSIONS) &&
-                    channel is TextChannel &&
-                    channel.name in validBotChannels
+                if (ClientInfo.hasChannelPermissions(
+                        channel,
+                        DiscordBotConstants.REQUIRED_PERMISSIONS
+                    ) && channel is TextChannel && channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)
                     // The guilds are only added if they have valid channels for message sending.

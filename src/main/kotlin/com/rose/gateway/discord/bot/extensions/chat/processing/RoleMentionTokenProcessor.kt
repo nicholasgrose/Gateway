@@ -21,7 +21,7 @@ class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     private val config: PluginConfig by inject()
 
     companion object {
-        const val SNOWFLAKE_START_INDEX = 3
+        private const val SNOWFLAKE_START_INDEX = 3
     }
 
     override fun tokenType(): LixyTokenType = DiscordChatComponent.ROLE_MENTION

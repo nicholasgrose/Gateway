@@ -16,11 +16,13 @@ import org.koin.core.component.inject
  */
 open class CommonExtensionConfig(
     enabled: Boolean,
-    @Transient
-    val extensionName: String = "None"
+    @Transient val extensionName: String = "None"
 ) : KoinComponent, ConfigObject {
-    val bot: DiscordBot by inject()
+    private val bot: DiscordBot by inject()
 
+    /**
+     * Whether the extension is enabled
+     */
     @ConfigItem("Whether the extension is enabled.")
     var enabled = enabled
         set(value) {

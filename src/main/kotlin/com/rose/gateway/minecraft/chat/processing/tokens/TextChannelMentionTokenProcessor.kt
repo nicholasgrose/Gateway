@@ -19,7 +19,7 @@ import org.koin.core.component.inject
  */
 class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit>, KoinComponent {
     companion object {
-        const val TEXT_CHANNEL_MENTION_START_INDEX = 3
+        private const val TEXT_CHANNEL_MENTION_START_INDEX = 3
     }
 
     private val bot: DiscordBot by inject()

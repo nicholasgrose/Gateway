@@ -14,7 +14,7 @@ import org.intellij.lang.annotations.Language
  */
 class RoleQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     companion object {
-        const val ROLE_QUOTE_MENTION_START_INDEX = 4
+        private const val ROLE_QUOTE_MENTION_START_INDEX = 4
     }
 
     override fun tokenType(): LixyTokenType {
