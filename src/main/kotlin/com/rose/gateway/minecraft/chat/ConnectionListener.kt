@@ -1,7 +1,6 @@
 package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.chatExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import org.bukkit.event.EventHandler
@@ -28,10 +27,8 @@ class ConnectionListener : Listener, KoinComponent {
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
-            if (!config.chatExtensionEnabled()) {
-                GameChatEvent.trigger {
-                    content = "**${event.player.name}** joined the game"
-                }
+            GameChatEvent.trigger {
+                content = "**${event.player.name}** joined the game"
             }
         }
     }
