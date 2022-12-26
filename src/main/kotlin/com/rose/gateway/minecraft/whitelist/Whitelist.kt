@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.whitelist
 
+import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.server.Console
 import com.rose.gateway.minecraft.server.Scheduler
-import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 
@@ -57,7 +57,7 @@ object Whitelist {
                     // Preventing an op from being kicked
                     // because the whitelist always allows ops when they join the game
                     if (!player.isOp) {
-                        player.player?.kick(Component.text("Removed from whitelist."))
+                        player.player?.kick("Removed from whitelist.".component())
                     }
                 }
 

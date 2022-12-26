@@ -9,9 +9,7 @@ import net.kyori.adventure.text.JoinConfiguration
  * @param secondComponent The [Component] to append to the first
  * @return The first [Component] with the second appended
  */
-operator fun Component.plus(secondComponent: Component): Component {
-    return this.append(secondComponent)
-}
+operator fun Component.plus(secondComponent: Component): Component = join(this, secondComponent)
 
 /**
  * Joins multiple [Component]s into one without separators
@@ -19,9 +17,20 @@ operator fun Component.plus(secondComponent: Component): Component {
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(vararg components: Component): Component = Component.join(
+fun join(vararg components: Component): Component = join(
     JoinConfiguration.noSeparators(),
-    *components
+    components.toList()
+)
+
+/**
+ * Joins multiple [Component]s into one with given separators
+ *
+ * @param components The [Component]s to combine
+ * @return The new, joined [Component]
+ */
+fun join(joinConfig: JoinConfiguration, components: Collection<Component>): Component = Component.join(
+    joinConfig,
+    components
 )
 
 /**
@@ -30,20 +39,20 @@ fun join(vararg components: Component): Component = Component.join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(components: Collection<Component>): Component = Component.join(
+fun join(components: Collection<Component>): Component = join(
     JoinConfiguration.noSeparators(),
     components
 )
 
 /**
- * Joins multiple [Component]s into one with new lines as separators
+ * Joins multiple [Component]s into one without separators
  *
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinNewLine(vararg components: Component): Component = Component.join(
-    JoinConfiguration.newlines(),
-    *components
+fun join(joinConfig: JoinConfiguration, vararg components: Component): Component = join(
+    joinConfig,
+    components.asList()
 )
 
 /**
@@ -52,7 +61,18 @@ fun joinNewLine(vararg components: Component): Component = Component.join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinNewLine(components: Collection<Component>): Component = Component.join(
+fun joinNewLine(vararg components: Component): Component = join(
+    JoinConfiguration.newlines(),
+    components.asList()
+)
+
+/**
+ * Joins multiple [Component]s into one with new lines as separators
+ *
+ * @param components The [Component]s to combine
+ * @return The new, joined [Component]
+ */
+fun joinNewLine(components: Collection<Component>): Component = join(
     JoinConfiguration.newlines(),
     components
 )
@@ -63,7 +83,7 @@ fun joinNewLine(components: Collection<Component>): Component = Component.join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinSpace(vararg components: Component): Component = Component.join(
-    JoinConfiguration.separator(Component.text(" ")),
-    *components
+fun joinSpace(vararg components: Component): Component = join(
+    JoinConfiguration.separator(" ".component()),
+    components.asList()
 )

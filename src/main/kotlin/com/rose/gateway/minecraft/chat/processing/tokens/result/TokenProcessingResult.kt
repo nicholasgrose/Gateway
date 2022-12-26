@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens.result
 
-import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.warningComponent
 import net.kyori.adventure.text.Component
 
 /**
@@ -23,7 +23,7 @@ data class TokenProcessingResult(
          */
         fun error(text: String): TokenProcessingResult {
             return TokenProcessingResult(
-                ColorComponent.warning(text),
+                text.warningComponent(),
                 text
             )
         }

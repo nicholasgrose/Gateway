@@ -6,16 +6,20 @@ import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
-import com.rose.gateway.minecraft.component.ColorComponent
+import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.item
 import com.rose.gateway.minecraft.component.join
 import com.rose.gateway.minecraft.component.joinNewLine
 import com.rose.gateway.minecraft.component.joinSpace
 import com.rose.gateway.minecraft.component.plus
+import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.minecraft.component.runCommandOnClick
+import com.rose.gateway.minecraft.component.secondaryComponent
 import com.rose.gateway.minecraft.component.showTextOnHover
+import com.rose.gateway.minecraft.component.tertiaryComponent
 import com.rose.gateway.minecraft.component.underlined
+import com.rose.gateway.minecraft.component.warningComponent
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.reflection.simpleName
 import kotlinx.coroutines.launch
@@ -52,12 +56,12 @@ object ConfigMonitoringRunner : KoinComponent {
      */
     private fun sendConfigListHelp(sender: CommandSender, items: List<String>) {
         val configs = items.map { config ->
-            Component.text("* ") + item(config)
+            "* ".component() + item(config)
         }
 
         sender.sendMessage(
             joinNewLine(
-                ColorComponent.primary("Available Configurations: "),
+                "Available Configurations: ".primaryComponent(),
                 joinNewLine(configs)
             )
         )
@@ -111,8 +115,8 @@ object ConfigMonitoringRunner : KoinComponent {
 
         sender.sendMessage(
             joinSpace(
-                ColorComponent.primary("Config Status:"),
-                Component.text(configStatus)
+                "Config Status:".primaryComponent(),
+                configStatus.component()
             )
         )
 
@@ -141,17 +145,17 @@ object ConfigMonitoringRunner : KoinComponent {
      */
     private fun itemHelpMessage(item: Item<*>): Component {
         return joinNewLine(
-            ColorComponent.primary("Configuration Help:"),
-            ColorComponent.primary("Name: ") + ColorComponent.tertiary(item.path).italic(),
+            "Configuration Help:".primaryComponent(),
+            "Name: ".primaryComponent() + item.path.tertiaryComponent().italic(),
             join(
-                ColorComponent.primary("Type: "),
-                Component.text(item.type.simpleName),
-                ColorComponent.warning(if (item.type.isMarkedNullable) "?" else "")
+                "Type: ".primaryComponent(),
+                item.type.simpleName.component(),
+                (if (item.type.isMarkedNullable) "?" else "").warningComponent()
             ),
-            ColorComponent.primary("Current Value: ") + Component.text(item.value.toString()),
-            ColorComponent.primary("Description: ") + Component.text(item.description),
-            ColorComponent.secondary("View All Configurations").underlined().italic()
-                .showTextOnHover(Component.text("Click to view all configurations."))
+            "Current Value: ".primaryComponent() + item.value.toString().component(),
+            "Description: ".primaryComponent() + item.description.component(),
+            "View All Configurations".secondaryComponent().underlined().italic()
+                .showTextOnHover("Click to view all configurations.".component())
                 .runCommandOnClick("/gateway config help")
         )
     }

@@ -12,7 +12,7 @@ import net.kyori.adventure.text.format.TextColor
  * @return The at [Component]
  */
 fun atMember(user: Member, userColor: TextColor): Component {
-    return ColorComponent.primary("@") + member(user).color(userColor)
+    return "@".primaryComponent() + member(user).color(userColor)
 }
 
 /**
@@ -22,6 +22,6 @@ fun atMember(user: Member, userColor: TextColor): Component {
  * @return The member [Component]
  */
 fun member(user: Member): Component {
-    return ColorComponent.secondary(user.displayName)
-        .showTextOnHover(Component.text("Username: ") + ColorComponent.primary(user.username).italic())
+    return user.displayName.secondaryComponent()
+        .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())
 }

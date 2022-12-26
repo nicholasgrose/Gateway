@@ -4,8 +4,8 @@ import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.DiscordBotConstants
-import com.rose.gateway.minecraft.component.ColorComponent
 import com.rose.gateway.minecraft.component.atMember
+import com.rose.gateway.minecraft.component.primaryComponent
 import dev.kord.common.annotation.KordExperimental
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toSet
@@ -28,7 +28,7 @@ object MentionResult : KoinComponent {
      */
     fun mention(minecraftText: String, discordText: String): TokenProcessingResult {
         return TokenProcessingResult(
-            ColorComponent.primary(minecraftText),
+            minecraftText.primaryComponent(),
             discordText
         )
     }
