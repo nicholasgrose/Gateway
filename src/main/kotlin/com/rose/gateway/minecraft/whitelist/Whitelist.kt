@@ -54,6 +54,8 @@ object Whitelist {
                 Scheduler.runTask {
                     Console.runCommand("whitelist remove $username")
 
+                    // Preventing an op from being kicked
+                    // because the whitelist always allows ops when they join the game
                     if (!player.isOp) {
                         player.player?.kick(Component.text("Removed from whitelist."))
                     }
