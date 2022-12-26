@@ -40,8 +40,8 @@ jobs:
             # https://github.com/marketplace/actions/checkout
             -   uses: actions/checkout@v3
 
-            # https://github.com/marketplace/actions/ktlint-check
-            -   uses: ScaCap/ktlint_version@1.4
+            # https://github.com/marketplace/actions/run-ktlint-with-reviewdog
+            -   uses: ScaCap/action-ktlint@1.4
                 with:
                     ktlint_version: '0.45.2'
                     fail_on_error: true
