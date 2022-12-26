@@ -43,7 +43,9 @@ jobs:
             # https://github.com/marketplace/actions/run-ktlint-with-reviewdog
             -   uses: ScaCap/action-ktlint@1.4
                 with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
                     ktlint_version: '0.45.2'
+                    reporter: github-pr-review
                     fail_on_error: true
 
     detekt:
@@ -60,3 +62,4 @@ jobs:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     detekt_config: config/detekt/detekt.yml
                     detekt_build_upon_default_config: true
+                    reporter: github-pr-review
