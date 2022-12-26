@@ -24,7 +24,7 @@ object DiscordCommands {
     private val VOICE_CHANNEL_HELP_MESSAGE = "Mention a Discord voice channel".component()
 
     /**
-     * Command that sends the sender help for sending messages to Discord
+     * Sends the sender help for chat messages in Discord
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
