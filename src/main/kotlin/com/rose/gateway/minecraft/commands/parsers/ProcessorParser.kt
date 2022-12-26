@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.parsers
 
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
@@ -16,8 +16,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  */
 fun <T, A : CommandArgs<A>> CommandArgs<A>.processor(
     body: ProcessorParserBuilder<T, A>.() -> Unit
-): ProcessorParser<T, A> =
-    genericParser(::ProcessorParserBuilder, body)
+): ProcessorParser<T, A> = genericParser(::ProcessorParserBuilder, body)
 
 /**
  * Parser for a custom-processed argument
@@ -28,7 +27,7 @@ fun <T, A : CommandArgs<A>> CommandArgs<A>.processor(
  *
  * @param builder The builder that defines this parser
  */
-class ProcessorParser<T, A : CommandArgs<A>>(val builder: ProcessorParserBuilder<T, A>) :
+class ProcessorParser<T, A : CommandArgs<A>>(override val builder: ProcessorParserBuilder<T, A>) :
     ArgParser<T, A, ProcessorParser<T, A>>(builder) {
     override fun typeName(): String = "CustomProcessor"
 
@@ -43,14 +42,15 @@ class ProcessorParser<T, A : CommandArgs<A>>(val builder: ProcessorParserBuilder
  * @param T The type of the processor's result
  * @param A The args the parser will be a part of
  * @constructor Creates a processor parser builder
- *
- * @property processor The processor to use when parsing this argument
  */
 class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, ProcessorParser<T, A>>() {
     init {
         completesAfterSatisfied = false
     }
 
+    /**
+     * The function to use when parsing this argument
+     */
     lateinit var processor: (ParseContext<A>) -> ParseResult<T, A>
 
     override fun checkValidity() {

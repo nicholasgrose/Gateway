@@ -22,7 +22,7 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     private val config: PluginConfig by inject()
 
     companion object {
-        const val SNOWFLAKE_START_INDEX = 2
+        private const val SNOWFLAKE_START_INDEX = 2
     }
 
     override fun tokenType(): LixyTokenType = DiscordChatComponent.USER_MENTION

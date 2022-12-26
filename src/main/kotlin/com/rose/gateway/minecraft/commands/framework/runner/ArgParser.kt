@@ -1,6 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import kotlin.reflect.KProperty
 
 /**
@@ -12,12 +13,8 @@ import kotlin.reflect.KProperty
  * @property builder A [ParserBuilder] for this arg parser
  * @constructor Create an arg parser
  */
-abstract class ArgParser<
-    T,
-    A : CommandArgs<A>,
-    P : ArgParser<T, A, P>
-    >(
-    private val builder: ParserBuilder<T, A, P>
+abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
+    open val builder: ParserBuilder<T, A, P>
 ) {
     /**
      * Gives the name of this parser
@@ -39,22 +36,23 @@ abstract class ArgParser<
      * @param context The context of this tab completion
      * @return A list of possible tab completions
      */
-    fun completions(context: TabCompletionContext<A>): List<String> {
+    fun completions(context: TabCompleteContext<A>): List<String> {
         return when {
-            builder.completesAfterSatisfied -> builder.completer(context)
+            builder.completesAfterSatisfied -> builder.completer(self(), context)
             context.args.wasSuccessful(this) -> listOf()
-            else -> builder.completer(context)
+            else -> builder.completer(self(), context)
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun self(): P = this as P
 
     /**
      * Generates usages for this argument
      *
-     * @param args The args to generate the usages for
      * @return All possible usages for this argument
      */
-    @Suppress("UNCHECKED_CAST")
-    fun generateUsages(args: A): List<String> = builder.usageGenerator(args, this as P)
+    fun generateUsages(): List<String> = builder.usageGenerator(self())
 
     /**
      * Parses the value given the existing context
@@ -73,7 +71,7 @@ abstract class ArgParser<
     fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {
         val parseResult = parseValue(context)
 
-        return if (parseResult is ParseResult.Success && builder.validator(parseResult)) {
+        return if (parseResult is ParseResult.Success && builder.validator(self(), parseResult)) {
             ParseResult.Success(parseResult.result, parseResult.context)
         } else ParseResult.Failure(parseResult.context)
     }
@@ -85,13 +83,13 @@ abstract class ArgParser<
      * @param property The property that this delegate is store in
      * @return The value that this parser has in the args or null if none was found
      */
-    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T? {
+    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T {
         val parseResult = thisRef.parserResults[this]
 
         @Suppress("UNCHECKED_CAST")
         return when (parseResult) {
             is ParseResult.Success -> parseResult.result as T
-            else -> null
+            else -> error("Attempted to use command argument that failed parsing")
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.parsers
 
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
@@ -16,8 +16,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  */
 fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
     body: ListParserBuilder<T, A, R>.() -> Unit
-): ListParser<T, A, R> =
-    genericParser(::ListParserBuilder, body)
+): ListParser<T, A, R> = genericParser(::ListParserBuilder, body)
 
 /**
  * Parser for a list argument
@@ -29,8 +28,9 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  *
  * @param builder The builder that defines this parser
  */
-class ListParser<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>>(val builder: ListParserBuilder<T, A, P>) :
-    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) {
+class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
+    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) where
+T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
@@ -60,9 +60,6 @@ class ListParser<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>>(val builde
  * @param A The args the parser will be a part of
  * @param P The type of the parser for list elements
  * @constructor Creates a list parser builder
- *
- * @property element The parser to be used for each list element
- * @property requireNonEmpty Whether the parsed list is valid when empty
  */
 class ListParserBuilder<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>> :
     ParserBuilder<List<T>, A, ListParser<T, A, P>>() {
@@ -73,7 +70,14 @@ class ListParserBuilder<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>> :
         completesAfterSatisfied = true
     }
 
+    /**
+     * The parser to be used for each list element
+     */
     lateinit var element: ArgParser<T, A, P>
+
+    /**
+     * Whether the parsed list is valid when empty
+     */
     var requireNonEmpty = true
 
     override fun checkValidity() {

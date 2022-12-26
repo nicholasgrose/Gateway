@@ -32,6 +32,9 @@ class BotConfig(
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
     private val bot: DiscordBot by inject()
 
+    /**
+     * The Discord bot's bot token
+     */
     @ConfigItem(
         "The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/."
     )
@@ -43,6 +46,9 @@ class BotConfig(
             }
         }
 
+    /**
+     * The names of the DiscordChannels the bot will read and post to
+     */
     @ConfigItem("The names of the channels in which the bot should respond to commands and post/accept chat messages.")
     var botChannels = botChannels
         set(value) {

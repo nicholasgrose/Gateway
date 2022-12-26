@@ -26,8 +26,19 @@ class DiscordBot : KoinComponent {
     private val plugin: GatewayPlugin by inject()
     private val pluginScope: PluginCoroutineScope by inject()
 
+    /**
+     * The bot's context
+     */
     val context = BotContext()
+
+    /**
+     * The bot's status
+     */
     var botStatus = BotStatus.NOT_STARTED
+
+    /**
+     * The current instance of the bot
+     */
     var bot = runBlocking {
         safelyBuildBot()
     }

@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.arguments
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.parsers.ListParser
@@ -42,10 +42,10 @@ open class ConfigListArgs<
  * @param stringValidator The validator to use for each string
  */
 class StringListConfigArgs(
-    stringCompleter: (
-        TabCompletionContext<StringListConfigArgs>
+    stringCompleter: StringParser<StringListConfigArgs>.(
+        TabCompleteContext<StringListConfigArgs>
     ) -> List<String>,
-    stringValidator: (ParseResult.Success<String, StringListConfigArgs>) -> Boolean
+    stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean
 ) :
     ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
@@ -71,9 +71,9 @@ class StringListConfigArgs(
 fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
     { listOf() },
     {
-        val item = it.context.arguments.item
+        val item = it.context.args.item
 
-        item?.value?.contains(it.result)?.not() ?: false
+        item.value.contains(it.result).not()
     }
 )
 
@@ -83,17 +83,22 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
  * @return The constructed config args
  */
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    {
-        val currentValues = it.args.item?.value ?: listOf()
-        val itemsSlatedForRemoval = it.args.value
+    { context ->
+        val currentValues = context.args.item.value
+        val itemsSlatedForRemoval = existingValues(context)
 
-        if (itemsSlatedForRemoval == null) {
-            currentValues
-        } else currentValues - itemsSlatedForRemoval.toSet()
+        currentValues - itemsSlatedForRemoval.toSet()
     },
-    {
-        val item = it.context.arguments.item
+    { parseResult ->
+        val item = parseResult.context.args.item
 
-        item?.value?.contains(it.result) ?: false
+        item.value.contains(parseResult.result)
     }
 )
+
+private fun StringParser<StringListConfigArgs>.existingValues(
+    context: TabCompleteContext<StringListConfigArgs>
+): List<String> {
+    return if (context.args.wasSuccessful(context.completingParser)) context.args.value
+    else listOf()
+}

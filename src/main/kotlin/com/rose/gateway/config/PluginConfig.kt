@@ -20,6 +20,10 @@ class PluginConfig : KoinComponent {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     private val configFile = GatewayConfigFile()
+
+    /**
+     * The instance of the config the plugin is using
+     */
     var config: Config = runBlocking {
         configFile.safelyLoadConfig()
     }

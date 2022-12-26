@@ -4,11 +4,12 @@ package com.rose.gateway.minecraft.commands.framework
  * The builder for [MinecraftCommands]
  *
  * @constructor Create a minecraft commands builder
- *
- * @property commands The set of commands for the minecraft commands
  */
 class MinecraftCommandsBuilder {
-    val commands = mutableSetOf<Command>()
+    /**
+     * The set of commands for the minecraft commands
+     */
+    val commands = mutableSetOf<MinecraftCommand>()
 
     /**
      * Add a new Minecraft command
@@ -22,7 +23,7 @@ class MinecraftCommandsBuilder {
 
         builder.apply(initializer)
 
-        commands.add(builder.build())
+        commands.add(MinecraftCommand(builder.build()))
     }
 
     /**

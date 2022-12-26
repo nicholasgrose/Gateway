@@ -4,7 +4,7 @@ import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.component.ColorComponent
 import com.rose.gateway.minecraft.component.italic
@@ -69,16 +69,16 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context without any arguments
      * @return Whether the command succeeded
      */
-    fun reloadConfig(context: CommandContext<NoArgs>): Boolean {
-        context.sender.sendMessage("Loading configuration...")
+    fun reloadConfig(context: CommandExecuteContext<NoArgs>): Boolean {
+        context.bukkit.sender.sendMessage("Loading configuration...")
 
         pluginCoroutineScope.launch {
             val loadSuccessful = config.reloadConfig()
 
             if (loadSuccessful) {
-                context.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
+                context.bukkit.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
             } else {
-                context.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
+                context.bukkit.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
             }
         }
 
@@ -91,10 +91,10 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context without any arguments
      * @return Whether the command succeeded
      */
-    fun saveConfig(context: CommandContext<NoArgs>): Boolean {
+    fun saveConfig(context: CommandExecuteContext<NoArgs>): Boolean {
         pluginCoroutineScope.launch {
             config.saveConfig()
-            context.sender.sendMessage("Saved current configuration.")
+            context.bukkit.sender.sendMessage("Saved current configuration.")
         }
 
         return true
@@ -125,10 +125,10 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context with the config item to send help for
      * @return Whether the command succeeded
      */
-    fun sendConfigurationHelp(context: CommandContext<ConfigItemArgs>): Boolean {
-        val item = context.args.item ?: return false
+    fun sendConfigurationHelp(context: CommandExecuteContext<ConfigItemArgs>): Boolean {
+        val item = context.args.item
 
-        context.sender.sendMessage(itemHelpMessage(item))
+        context.bukkit.sender.sendMessage(itemHelpMessage(item))
 
         return true
     }

@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.parsers
 
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
@@ -36,12 +36,12 @@ fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -
  *
  * @param builder The builder that defines this parser
  */
-class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
+class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder<A>) :
     ArgParser<String, A, StringParser<A>>(builder) {
     override fun typeName(): String = "String"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
-        val args = context.arguments
+        val args = context.args
         var currentIndex = context.currentIndex
         val result = args.rawArguments.getOrNull(currentIndex)
 
@@ -59,7 +59,7 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
                 ParseResult.Success(
                     results.joinToString(" "),
                     ParseContext(
-                        arguments = args,
+                        args = args,
                         currentIndex = currentIndex + results.size
                     )
                 )
@@ -68,14 +68,14 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
             result != null -> ParseResult.Success(
                 result,
                 ParseContext(
-                    arguments = args,
+                    args = args,
                     currentIndex = currentIndex + 1
                 )
             )
 
             else -> ParseResult.Failure(
                 ParseContext(
-                    arguments = args,
+                    args = args,
                     currentIndex = currentIndex + 1
                 )
             )
@@ -88,10 +88,11 @@ class StringParser<A : CommandArgs<A>>(val builder: StringParserBuilder<A>) :
  *
  * @param A The args the parser will be a part of
  * @constructor Creates a string parser builder
- *
- * @property hungry Whether additional arguments should be consumed as if they were part of one long string
  */
 class StringParserBuilder<A : CommandArgs<A>> : ParserBuilder<String, A, StringParser<A>>() {
+    /**
+     * Whether additional arguments should be consumed as if they were part of one long string
+     */
     var hungry = false
 
     override fun checkValidity() = Unit

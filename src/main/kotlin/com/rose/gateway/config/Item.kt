@@ -27,7 +27,14 @@ data class Item<ValueType>(
 ) : KoinComponent {
     private val pluginConfig: PluginConfig by inject()
 
+    /**
+     * The type of the value this item holds
+     */
     val type: KType = property.returnType
+
+    /**
+     * The value of this item
+     */
     var value: ValueType
         get() = property.getter.call(containingObject())
         set(value) = property.setter.call(containingObject(), value)

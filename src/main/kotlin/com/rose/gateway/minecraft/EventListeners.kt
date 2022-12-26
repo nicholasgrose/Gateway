@@ -13,8 +13,8 @@ import org.koin.core.component.inject
  * Provides functionality for adding minecraft event listeners
  */
 object EventListeners : KoinComponent {
-    val plugin: GatewayPlugin by inject()
-    val server = plugin.server
+    private val plugin: GatewayPlugin by inject()
+    private val server = plugin.server
 
     /**
      * Registers minecraft event listeners. Should only be called once

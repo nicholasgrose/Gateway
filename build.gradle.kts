@@ -1,16 +1,16 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.7.21"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.21"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "7.1.2"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "1.0.6"
+    id("xyz.jpenilla.run-paper") version "2.0.1"
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
 }
 
 val version: String by project
@@ -71,6 +71,11 @@ ktlint {
     version.set(ktlintVersion)
 }
 
+detekt {
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+}
+
 tasks {
     compileKotlin {
         kotlinOptions {
@@ -108,6 +113,10 @@ tasks {
         val minecraftVersion: String by project
 
         this.minecraftVersion(minecraftVersion)
+    }
+
+    detekt.configure {
+        mustRunAfter(ktlintFormat)
     }
 
     create("runChecks") {

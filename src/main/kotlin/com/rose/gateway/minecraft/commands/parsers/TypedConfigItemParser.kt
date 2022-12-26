@@ -2,9 +2,9 @@ package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseContext
 import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 import org.koin.core.component.KoinComponent
@@ -21,8 +21,7 @@ import kotlin.reflect.KType
  */
 fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
     body: TypedConfigItemParserBuilder<T, A>.() -> Unit
-): TypedConfigItemParser<T, A> =
-    genericParser(::TypedConfigItemParserBuilder, body)
+): TypedConfigItemParser<T, A> = genericParser(::TypedConfigItemParserBuilder, body)
 
 /**
  * Parser for a typed config item argument
@@ -33,7 +32,7 @@ fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
  *
  * @param builder The builder that defines this parser
  */
-class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: TypedConfigItemParserBuilder<T, A>) :
+class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: TypedConfigItemParserBuilder<T, A>) :
     ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder), KoinComponent {
     private val config: PluginConfig by inject()
 
@@ -63,11 +62,12 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(val builder: TypedConfi
  * @param T The type of the config item's value
  * @param A The args the parser will be a part of
  * @constructor Creates a typed config item parser builder
- *
- * @property type The KType for the config item
  */
 class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
     ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>() {
+    /**
+     * The KType for the config item
+     */
     lateinit var type: KType
 
     override fun checkValidity() {

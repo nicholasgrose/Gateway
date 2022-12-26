@@ -23,9 +23,9 @@ import java.nio.file.Path
  */
 class GatewayConfigFile : KoinComponent {
     companion object {
-        const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
-        const val DEFAULT_CONFIG_FILE_RESOURCE_PATH = "/$DEFAULT_CONFIG_FILE_RESOURCE_NAME"
-        const val CONFIG_FILE_NAME = "config.yaml"
+        private const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
+        private const val DEFAULT_CONFIG_FILE_RESOURCE_PATH = "/$DEFAULT_CONFIG_FILE_RESOURCE_NAME"
+        private const val CONFIG_FILE_NAME = "config.yaml"
     }
 
     private val plugin: GatewayPlugin by inject()
@@ -33,6 +33,9 @@ class GatewayConfigFile : KoinComponent {
     private val pluginDirPath = plugin.dataFolder.path.replace("\\", "/")
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
 
+    /**
+     * The default configuration that is used as an internal fallback
+     */
     val defaultConfig = run {
         Logger.info("Loading fallback config...")
 

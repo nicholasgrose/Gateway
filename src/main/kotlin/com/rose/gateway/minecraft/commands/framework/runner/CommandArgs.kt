@@ -1,31 +1,42 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
+import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 
 /**
  * A set of arguments for a command
  *
  * @param A The type of these arguments
  * @constructor Create empty command arguments
- *
- * @property rawArguments The raw, unparsed command arguments that came in
- * @property parsers The parsers that parse the raw arguments for these arguments
- * @property parserResults The results from parsing the raw arguments with all stored parsers
  */
+@Suppress("TooManyFunctions")
 open class CommandArgs<A : CommandArgs<A>> {
+    /**
+     * The raw, unparsed command arguments that came in
+     */
     var rawArguments: List<String> = listOf()
+
+    /**
+     * The parsers that parse the raw arguments for these arguments
+     */
     val parsers: MutableList<ArgParser<*, A, *>> = mutableListOf()
-    var parserResults: MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> =
-        fillFinalParseResults()
+
+    /**
+     * The results from parsing the raw arguments with all stored parsers
+     */
+    var parserResults: Map<ArgParser<*, A, *>, ParseResult.Success<*, A>> = mapOf()
 
     /**
      * Fills in this argument's [parserResults] for a set of raw arguments
      *
      * @param rawArgs The raw arguments to parse for the final result
      */
-    fun forArguments(rawArgs: List<String>) {
+    fun parseArguments(rawArgs: List<String>): A {
         rawArguments = rawArgs
-        parserResults = fillFinalParseResults()
+        fillFinalParseResults()
+
+        @Suppress("UNCHECKED_CAST")
+        return this as A
     }
 
     /**
@@ -34,10 +45,10 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @return The final result of running all parsers
      */
-    private fun fillFinalParseResults(): MutableMap<ArgParser<*, A, *>, ParseResult<*, A>> {
+    private fun fillFinalParseResults() {
         @Suppress("UNCHECKED_CAST")
         var currentContext = ParseContext(this as A, 0)
-        val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult<*, A>>()
+        val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult.Success<*, A>>()
         parserResults = resultMap
 
         for (parser in parsers) {
@@ -49,11 +60,12 @@ open class CommandArgs<A : CommandArgs<A>> {
                 resultMap[parser] = result
                 parserResults = resultMap
             } else {
-                return resultMap
+                parserResults = resultMap
+                return
             }
         }
 
-        return resultMap
+        parserResults = resultMap
     }
 
     /**
@@ -88,18 +100,31 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @return Whether there are any unused args
      */
-    private fun hasUnusedArgs(): Boolean = remainingArgs() > 0
+    private fun hasUnusedArgs(): Boolean = remainingArgCount() > 0
 
     /**
      * How many raw args are not used by any parsers
      *
      * @return The number of unused args remaining
      */
-    private fun remainingArgs(): Int {
-        val lastIndex = lastSuccessfulResult()?.context?.currentIndex ?: 0
+    private fun remainingArgCount(): Int = rawArguments.size - lastIndex()
 
-        return rawArguments.size - lastIndex
-    }
+    private fun lastIndex(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
+
+    /**
+     * Determines whether a particular arg was successfully parsed
+     *
+     * @param arg The arg to check the parse status of
+     * @return Whether a parsed value exists for the arg
+     */
+    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
+
+    /**
+     * Gives the remaining arguments that haven't been consumed in parsing
+     *
+     * @return The list of remaining arguments
+     */
+    fun remainingArgs(): List<String> = rawArguments.subList(lastIndex(), rawArguments.size)
 
     /**
      * Determines the number of raw arguments that have been parsed
@@ -114,9 +139,8 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return All possible usages for these args
      */
     fun usages(): List<String> {
-        val parserUsages = parsers.map {
-            @Suppress("UNCHECKED_CAST")
-            it.generateUsages(this as A)
+        val parserUsages = parsers.map { parser ->
+            parser.generateUsages()
         }
         var allUsages = listOf<String>()
 
@@ -141,28 +165,21 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @param context The context to complete these args within
      * @return All completions this arg has in the given context
      */
-    fun completions(context: TabCompletionContext<A>): List<String> {
-        val nextArg = if (hasUnusedArgs()) {
-            parsers.firstOrNull {
-                !(wasSuccessful(it))
-            } ?: parsers.lastOrNull()
-        } else {
-            parsers.lastOrNull {
-                wasSuccessful(it)
-            } ?: parsers.firstOrNull()
-        }
+    fun completions(context: TabCompleteContext<A>): List<String> {
+        val nextArg = parsers.firstOrNull {
+            !(wasSuccessful(it))
+        } ?: parsers.lastOrNull()
 
         return when {
-            remainingArgs() > 1 -> listOf()
-            else -> nextArg?.completions(context) ?: listOf()
+            remainingArgCount() > 1 -> listOf()
+            else -> nextArg?.completions(
+                TabCompleteContext(
+                    bukkit = context.bukkit,
+                    command = context.command,
+                    args = context.args,
+                    completingParser = nextArg
+                )
+            ) ?: listOf()
         }
     }
-
-    /**
-     * Determines whether a particular arg was successfully parsed
-     *
-     * @param arg The arg to check the parse status of
-     * @return Whether a parsed value exists for the arg
-     */
-    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
 }

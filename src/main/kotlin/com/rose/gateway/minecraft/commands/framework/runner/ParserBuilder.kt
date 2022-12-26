@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
-import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
+import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 
 /**
  * A builder for a single arg parser
@@ -9,21 +9,37 @@ import com.rose.gateway.minecraft.commands.framework.data.TabCompletionContext
  * @param A The type of the args the parser is used for
  * @param P The type of the parser this builds
  * @constructor Create a parser builder with default settings
- *
- * @property name The name of the parser
- * @property description A description of the parser
- * @property completesAfterSatisfied Whether the parser should continue to provide tab completions when successful
- * @property completer A function that is called to determine valid tab completions for the parser
- * @property validator A function that is called to validate a successfully parsed value
- * @property usageGenerator A function that generates documentation for how the parser's arg is used
  */
 abstract class ParserBuilder<T, A : CommandArgs<A>, P : ArgParser<T, A, P>> {
+    /**
+     * The name of the parser
+     */
     lateinit var name: String
+
+    /**
+     * A description of the argument
+     */
     lateinit var description: String
+
+    /**
+     * Whether the parser should continue to provide tab completions when successful
+     */
     var completesAfterSatisfied = false
-    var completer: (TabCompletionContext<A>) -> List<String> = { listOf() }
-    var validator: (ParseResult.Success<T, A>) -> Boolean = { true }
-    var usageGenerator: (A, P) -> List<String> = { _, arg -> listOf("[$name=${arg.typeName()}]") }
+
+    /**
+     * A function that is called to determine valid tab completions for the parser
+     */
+    var completer: P.(TabCompleteContext<A>) -> List<String> = { listOf() }
+
+    /**
+     * A function that is called to validate a successfully parsed value
+     */
+    var validator: P.(ParseResult.Success<T, A>) -> Boolean = { true }
+
+    /**
+     * A function that generates documentation for how the parser's arg is used
+     */
+    var usageGenerator: P.() -> List<String> = { listOf("[$name=${typeName()}]") }
 
     /**
      * Determines that this parser builder has valid settings

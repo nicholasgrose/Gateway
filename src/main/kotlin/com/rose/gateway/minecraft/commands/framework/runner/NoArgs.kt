@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.framework.runner
 
 /**
- * An empty set of arguments
+ * A set of arguments that has no parsers defined
  *
- * @constructor Create no args
+ * @constructor Create a set of no args
  */
 class NoArgs : CommandArgs<NoArgs>()

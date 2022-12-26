@@ -1,20 +1,20 @@
 package com.rose.gateway.minecraft.commands.framework.subcommand
 
 import com.rose.gateway.minecraft.commands.framework.Command
-import com.rose.gateway.minecraft.commands.framework.data.CommandContext
-import com.rose.gateway.minecraft.commands.framework.data.CommandExecutor
+import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecutor
+import com.rose.gateway.minecraft.commands.framework.emptyArgs
 
 /**
- * Creates a subcommand executor for the children of a command
+ * Builds a subcommand executor for a command
  *
- * @param children The children to create a subcommand executor for
- * @return The created subcommand executor
+ * @param command The command to wrap into a subcommand
+ * @return The executor for the subcommand
  */
-fun subcommandExecutor(children: Map<String, Command>): CommandExecutor<SubcommandArgs> =
-    CommandExecutor(
-        ::subcommandRunner,
-        SubcommandArgs.forChildCommands(children)
-    )
+fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> = CommandExecutor(
+    ::subcommandRunner,
+    SubcommandArgs.forCommand(command)
+)
 
 /**
  * The runner for subcommands
@@ -22,19 +22,17 @@ fun subcommandExecutor(children: Map<String, Command>): CommandExecutor<Subcomma
  * @param context The command context in which this runner executes
  * @return Whether this runner successfully executed
  */
-fun subcommandRunner(context: CommandContext<SubcommandArgs>): Boolean {
+fun subcommandRunner(context: CommandExecuteContext<SubcommandArgs>): Boolean {
     val args = context.args
-    val childCommand = args.subcommand
-    val remainingArguments = args.remainingArgs?.toTypedArray()
-
-    return if (childCommand == null || remainingArguments == null) false
-    else {
-        childCommand.onCommand(
-            sender = context.sender,
+    val remainingArguments = args.remainingArgs
+    val commandResult = context.args.command.execute(
+        CommandExecuteContext(
+            bukkit = context.bukkit,
             command = context.command,
-            label = context.label,
-            args = remainingArguments
-        )
-        true
-    }
+            args = emptyArgs(remainingArguments)
+        ),
+        args.rankedExecutors
+    )
+
+    return commandResult.succeeded
 }
