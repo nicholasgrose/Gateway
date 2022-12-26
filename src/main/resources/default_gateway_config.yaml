@@ -25,6 +25,10 @@ bot:
         list:
             # Whether the extension is enabled.
             enabled: true
+        # Configurations for the tps extension, which allows the querying of server TPS data
+        tps:
+            # Whether the extension is enabled.
+            enabled: true
         # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
         whitelist:
             # Whether the extension is enabled.

@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
  * @property chat Config for the chat extension
  * @property ip Config for the IP extension
  * @property list Config for the list extension
+ * @property tps Config for the TPS extension
  * @property whitelist Config for the whitelist extension
  * @constructor Create an extension config
  */
@@ -20,5 +21,6 @@ data class ExtensionsConfig(
     @ConfigItem val chat: ChatConfig,
     @ConfigItem val ip: IpConfig,
     @ConfigItem val list: ListConfig,
+    @ConfigItem val tps: TpsConfig,
     @ConfigItem val whitelist: WhitelistConfig
 ) : ConfigObject

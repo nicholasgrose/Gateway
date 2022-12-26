@@ -66,6 +66,15 @@ fun PluginConfig.listExtensionEnabled(): Boolean {
 }
 
 /**
+ * Gives whether the TPS extension is enabled from the plugin config
+ *
+ * @return Whether the extension is enabled
+ */
+fun PluginConfig.tpsExtensionEnabled(): Boolean {
+    return config.bot.extensions.tps.enabled
+}
+
+/**
  * Gives whether the whitelist extension is enabled from the plugin config
  *
  * @return Whether the extension is enabled
