@@ -37,7 +37,7 @@ class WhitelistExtension : Extension() {
 
             ephemeralSubCommand(::WhitelistArguments) {
                 name = "add"
-                description = "Adds a player to the whitelist."
+                description = "Adds a player to the whitelist"
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
@@ -56,7 +56,7 @@ class WhitelistExtension : Extension() {
 
             ephemeralSubCommand(::WhitelistArguments) {
                 name = "remove"
-                description = "Removes a player from the whitelist."
+                description = "Removes a player from the whitelist"
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
@@ -75,7 +75,7 @@ class WhitelistExtension : Extension() {
 
             ephemeralSubCommand {
                 name = "list"
-                description = "Lists all currently whitelisted players."
+                description = "Lists all currently whitelisted players"
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} requested list of whitelisted players!")

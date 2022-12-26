@@ -31,7 +31,7 @@ class IpExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "ip"
-            description = "Displays the server IP."
+            description = "Displays the server IP"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested server IP!")

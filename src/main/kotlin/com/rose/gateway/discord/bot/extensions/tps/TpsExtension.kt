@@ -31,7 +31,7 @@ class TpsExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "tps"
-            description = "Queries the server for its current TPS."
+            description = "Queries the server for its current TPS"
 
             action {
                 val tps = ServerInfo.tps

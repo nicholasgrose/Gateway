@@ -33,28 +33,27 @@ class AboutExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "version"
-            description = "Gives the current version of the Gateway plugin."
+            description = "Gives the current version of the Gateway plugin"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
 
                 respond {
                     content = "I am currently version ${plugin.description.version}." +
-                        "All versions are available at https://github.com/nicholasgrose/Gateway/."
+                        " All versions are available at https://github.com/nicholasgrose/Gateway/releases."
                 }
             }
         }
 
         ephemeralSlashCommand {
             name = "blockgod"
-            description = "Summon the block god for a moment."
+            description = "Summon the block god for but a moment"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
 
                 respond {
-                    @Suppress("HttpUrlsUsage")
-                    content = "http://www.scpwiki.com/church-of-the-broken-god-hub"
+                    content = "https://scp-wiki.wikidot.com/church-of-the-broken-god-hub"
                 }
             }
         }

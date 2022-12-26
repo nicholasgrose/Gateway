@@ -31,7 +31,7 @@ class ListExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "list"
-            description = "Lists all online players."
+            description = "Lists all online players"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
