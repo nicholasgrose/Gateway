@@ -49,11 +49,14 @@ object Whitelist {
 
         return when {
             player == null -> WhitelistState.STATE_INVALID
-            player.isWhitelisted -> WhitelistState.STATE_SUSTAINED
+            !player.isWhitelisted -> WhitelistState.STATE_SUSTAINED
             else -> {
                 Scheduler.runTask {
-                    player.player?.kick(Component.text("Removed from whitelist."))
                     Console.runCommand("whitelist remove $username")
+
+                    if (!player.isOp) {
+                        player.player?.kick(Component.text("Removed from whitelist."))
+                    }
                 }
 
                 WhitelistState.STATE_MODIFIED
