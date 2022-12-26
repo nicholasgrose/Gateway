@@ -29,25 +29,11 @@ object CommandRegistry : KoinComponent {
     }
 
     private val commands = minecraftCommands {
-        command("discord-help") {
-            runner { context ->
-                GeneralCommands.discordHelp(context)
-            }
-        }
-
-        command("discord-whisper") {
-            runner { context ->
-                // TODO
-                context.bukkit.sender.sendMessage("Not yet implemented.")
-                true
-            }
-        }
-
         command("discord") {
-            runner { context ->
-                // TODO
-                context.bukkit.sender.sendMessage("Not yet implemented.")
-                true
+            subcommand("help") {
+                runner { context ->
+                    GeneralCommands.discordHelp(context)
+                }
             }
         }
 
