@@ -41,10 +41,10 @@ jobs:
             -   uses: actions/checkout@v3
 
             # https://github.com/marketplace/actions/ktlint-check
-            - uses: ScaCap/ktlint_version@1.4
-              with:
-                  ktlint_version: '0.48.0'
-                  fail_on_error: true
+            -   uses: ScaCap/ktlint_version@1.4
+                with:
+                    ktlint_version: '0.48.0'
+                    fail_on_error: true
 
     detekt:
         runs-on: ubuntu-latest
