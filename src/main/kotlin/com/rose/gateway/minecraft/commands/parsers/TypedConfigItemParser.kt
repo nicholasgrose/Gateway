@@ -62,11 +62,12 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: T
  * @param T The type of the config item's value
  * @param A The args the parser will be a part of
  * @constructor Creates a typed config item parser builder
- *
- * @property type The KType for the config item
  */
 class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
     ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>() {
+    /**
+     * The KType for the config item
+     */
     lateinit var type: KType
 
     override fun checkValidity() {

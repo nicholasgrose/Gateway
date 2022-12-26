@@ -42,14 +42,15 @@ class ProcessorParser<T, A : CommandArgs<A>>(override val builder: ProcessorPars
  * @param T The type of the processor's result
  * @param A The args the parser will be a part of
  * @constructor Creates a processor parser builder
- *
- * @property processor The processor to use when parsing this argument
  */
 class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, ProcessorParser<T, A>>() {
     init {
         completesAfterSatisfied = false
     }
 
+    /**
+     * The function to use when parsing this argument
+     */
     lateinit var processor: (ParseContext<A>) -> ParseResult<T, A>
 
     override fun checkValidity() {

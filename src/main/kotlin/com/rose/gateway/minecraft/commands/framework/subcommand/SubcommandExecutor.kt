@@ -5,6 +5,12 @@ import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecute
 import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecutor
 import com.rose.gateway.minecraft.commands.framework.emptyArgs
 
+/**
+ * Builds a subcommand executor for a command
+ *
+ * @param command The command to wrap into a subcommand
+ * @return The executor for the subcommand
+ */
 fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> = CommandExecutor(
     ::subcommandRunner,
     SubcommandArgs.forCommand(command)

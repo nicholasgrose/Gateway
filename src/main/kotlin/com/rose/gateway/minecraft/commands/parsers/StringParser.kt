@@ -88,10 +88,11 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
  *
  * @param A The args the parser will be a part of
  * @constructor Creates a string parser builder
- *
- * @property hungry Whether additional arguments should be consumed as if they were part of one long string
  */
 class StringParserBuilder<A : CommandArgs<A>> : ParserBuilder<String, A, StringParser<A>>() {
+    /**
+     * Whether additional arguments should be consumed as if they were part of one long string
+     */
     var hungry = false
 
     override fun checkValidity() = Unit

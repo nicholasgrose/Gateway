@@ -6,13 +6,32 @@ import com.rose.gateway.minecraft.commands.framework.data.definition.CommandDefi
 import com.rose.gateway.minecraft.commands.framework.data.definition.CommandExecuteResult
 import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
 
+/**
+ * A command that can execute and provide completions
+ *
+ * @property definition This command's definition
+ * @constructor Create a command
+ */
 class Command(val definition: CommandDefinition) {
+    /**
+     * Parses the arguments of a context and then executes on the result
+     *
+     * @param context The context to execute in
+     * @return The result of execution
+     */
     fun parseAndExecute(context: CommandExecuteContext<*>): CommandExecuteResult {
         val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
 
         return execute(context, mostSuccessfulExecutors)
     }
 
+    /**
+     * Executes in a context given the ranked executors
+     *
+     * @param context The context to execute in
+     * @param executorArgsPairs The ranked executors with their parsed args
+     * @return The result of execution
+     */
     fun execute(context: CommandExecuteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandExecuteResult {
         val chosenPair = executorArgsPairs.firstOrNull()
 
@@ -25,12 +44,25 @@ class Command(val definition: CommandDefinition) {
         return CommandExecuteResult(succeeded, executorArgsPairs)
     }
 
+    /**
+     * Parses the arguments of a context and then completes for the result
+     *
+     * @param context The context to complete for
+     * @return Possible completions for the context
+     */
     fun parseAndComplete(context: TabCompleteContext<*>): List<String> {
         val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
 
         return complete(context, mostSuccessfulExecutors)
     }
 
+    /**
+     * Completes for a context given the ranked executors
+     *
+     * @param context The context to complete for
+     * @param executorArgsPairs The ranked executors with their parsed args
+     * @return Possible completions for the context
+     */
     fun complete(context: TabCompleteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
         val tabCompletions = executorArgsPairs.map {
             it.executor.completions(context)

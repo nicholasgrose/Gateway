@@ -9,6 +9,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * A Minecraft command for Bukkit
+ *
+ * @property command The framework command to use for execution
+ * @constructor Create a Minecraft command
+ */
 class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecutor, TabCompleter {
     override fun onCommand(
         sender: CommandSender,
@@ -35,6 +41,12 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         return true
     }
 
+    /**
+     * Sends all the valid command usages to the command sender
+     *
+     * @param sender The sender of the command to receive usages
+     * @param rankedExecutors The most successful executors
+     */
     private fun sendUsages(sender: CommandSender, rankedExecutors: List<ExecutorArgsPair<*>>) {
         sender.sendMessage(
             "Usage:\n" + rankedExecutors.joinToString("\n") {

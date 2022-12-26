@@ -10,6 +10,9 @@ import org.bukkit.OfflinePlayer
  * Provides functions that modify the Minecraft whitelist
  */
 object Whitelist {
+    /**
+     * The set of all players in the whitelist
+     */
     val players: Set<OfflinePlayer>
         get() = Bukkit.getWhitelistedPlayers()
 

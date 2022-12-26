@@ -12,8 +12,20 @@ import com.rose.gateway.minecraft.commands.parsers.processor
 import com.rose.gateway.minecraft.commands.parsers.string
 import com.rose.gateway.minecraft.commands.parsers.stringParser
 
+/**
+ * The arguments for a subcommand
+ *
+ * @property command The command this subcommand executes
+ * @constructor Create empty subcommand args for a command
+ */
 class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
     companion object {
+        /**
+         * Gives a constructor for [SubcommandArgs] that use a specific command
+         *
+         * @param command The command the subcommand executes
+         * @return A constructor a the command's [SubcommandArgs]
+         */
         fun forCommand(command: Command): () -> SubcommandArgs {
             return {
                 SubcommandArgs(command)
@@ -29,6 +41,9 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         usageGenerator = { listOf(command.definition.name) }
     }
 
+    /**
+     * The args remaining for the command to use
+     */
     val remainingArgs by list {
         element = stringParser {
             name = "Remaining Arg"
@@ -40,6 +55,11 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         requireNonEmpty = false
     }
 
+    /**
+     * The executors of the command ranked by relevance
+     *
+     * @see Command.mostSuccessfulExecutors
+     */
     val rankedExecutors by processor {
         name = "Ranked Executors"
         description = "A list of command executors paired with their parsed arguments and ranked by relevance"
@@ -51,6 +71,9 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         completesAfterSatisfied = true
     }
 
+    /**
+     * Value that is only available if any of the executors succeeded
+     */
     @Suppress("unused", "RemoveExplicitTypeArguments")
     val executorsValid by processor<Unit, SubcommandArgs> {
         name = "Executors Validation"

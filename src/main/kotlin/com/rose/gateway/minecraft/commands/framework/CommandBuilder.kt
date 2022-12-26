@@ -13,6 +13,9 @@ import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
  * @constructor Create an empty command builder
  */
 class CommandBuilder(val name: String) {
+    /**
+     * The executors for this command
+     */
     val executors = mutableListOf<CommandExecutor<*>>()
 
     /**

@@ -8,15 +8,22 @@ import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
  *
  * @param A The type of these arguments
  * @constructor Create empty command arguments
- *
- * @property rawArguments The raw, unparsed command arguments that came in
- * @property parsers The parsers that parse the raw arguments for these arguments
- * @property parserResults The results from parsing the raw arguments with all stored parsers
  */
 @Suppress("TooManyFunctions")
 open class CommandArgs<A : CommandArgs<A>> {
+    /**
+     * The raw, unparsed command arguments that came in
+     */
     var rawArguments: List<String> = listOf()
+
+    /**
+     * The parsers that parse the raw arguments for these arguments
+     */
     val parsers: MutableList<ArgParser<*, A, *>> = mutableListOf()
+
+    /**
+     * The results from parsing the raw arguments with all stored parsers
+     */
     var parserResults: Map<ArgParser<*, A, *>, ParseResult.Success<*, A>> = mapOf()
 
     /**
@@ -112,6 +119,11 @@ open class CommandArgs<A : CommandArgs<A>> {
      */
     fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
 
+    /**
+     * Gives the remaining arguments that haven't been consumed in parsing
+     *
+     * @return The list of remaining arguments
+     */
     fun remainingArgs(): List<String> = rawArguments.subList(lastIndex(), rawArguments.size)
 
     /**
