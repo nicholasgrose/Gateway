@@ -6,7 +6,9 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.tpsExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
+import com.rose.gateway.minecraft.server.ServerInfo
 import org.koin.core.component.inject
+import kotlin.math.roundToInt
 
 /**
  * Extension that provides ways to query server TPS data
@@ -32,8 +34,15 @@ class TpsExtension : Extension() {
             description = "Queries the server for its current TPS."
 
             action {
+                val tps = ServerInfo.tps
+
                 respond {
-                    content = "Current TPS: UNKNOWN ticks/sec"
+                    content = """
+                        TPS (ticks/sec):
+                        **1m:** ${tps.oneMinute.roundToInt()} t/s
+                        **5m:** ${tps.fiveMinute.roundToInt()} t/s
+                        **15m:** ${tps.fifteenMinute.roundToInt()} t/s
+                    """.trimIndent()
                 }
             }
         }

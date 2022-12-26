@@ -18,4 +18,32 @@ object ServerInfo {
      */
     val playerCount: Int
         get() = onlinePlayers.size
+
+    /**
+     * A snapshot of the server's TPS
+     *
+     * @property oneMinute The TPS over the past minute
+     * @property fiveMinute The TPS over the past five minutes
+     * @property fifteenMinute The TPS over the past fifteen minutes
+     * @constructor Create a TPS snapshot
+     */
+    public data class TPS(
+        val oneMinute: Double,
+        val fiveMinute: Double,
+        val fifteenMinute: Double
+    )
+
+    /**
+     * The server's current TPS
+     */
+    val tps: TPS
+        get() {
+            val bukkitTps = Bukkit.getTPS()
+
+            return TPS(
+                bukkitTps[0],
+                bukkitTps[1],
+                bukkitTps[2]
+            )
+        }
 }
