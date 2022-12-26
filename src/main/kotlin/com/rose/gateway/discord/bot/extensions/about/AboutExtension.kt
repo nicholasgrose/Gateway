@@ -6,8 +6,11 @@ import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.aboutExtensionEnabled
+import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
+import dev.kord.common.Color
+import dev.kord.rest.builder.message.create.embed
 import org.koin.core.component.inject
 
 /**
@@ -39,8 +42,11 @@ class AboutExtension : Extension() {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
 
                 respond {
-                    content = "I am currently version ${plugin.description.version}." +
-                        " All versions are available at https://github.com/nicholasgrose/Gateway/releases."
+                    embed {
+                        title = plugin.description.version
+                        description = "All versions are available at https://github.com/nicholasgrose/Gateway/releases."
+                        color = Color(config.primaryColor().value())
+                    }
                 }
             }
         }
@@ -53,7 +59,12 @@ class AboutExtension : Extension() {
                 Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
 
                 respond {
-                    content = "https://scp-wiki.wikidot.com/church-of-the-broken-god-hub"
+                    embed {
+                        title = "Witness the Glory"
+                        description = "The Block God must be experienced."
+                        url = "https://scp-wiki.wikidot.com/church-of-the-broken-god-hub"
+                        color = Color(config.primaryColor().value())
+                    }
                 }
             }
         }
