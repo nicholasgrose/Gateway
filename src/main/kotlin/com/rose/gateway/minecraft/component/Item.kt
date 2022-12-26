@@ -9,7 +9,7 @@ import net.kyori.adventure.text.Component
  * @return The config item [Component]
  */
 fun item(itemName: String): Component {
-    return ColorComponent.tertiary(itemName).italic().showTextOnHover(
-        Component.text("Get help for ") + ColorComponent.tertiary(itemName).italic()
+    return itemName.tertiaryComponent().italic().showTextOnHover(
+        "Get help for ".component() + itemName.tertiaryComponent().italic()
     ).runCommandOnClick("/gateway config help $itemName")
 }

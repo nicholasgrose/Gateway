@@ -1,16 +1,16 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
+import com.rose.gateway.minecraft.component.component
+import com.rose.gateway.minecraft.component.joinSpace
+import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import kotlinx.coroutines.launch
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.JoinConfiguration
 import org.bukkit.command.CommandSender
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -68,11 +68,10 @@ object BotCommands : KoinComponent {
     fun botStatus(context: CommandExecuteContext<NoArgs>): Boolean {
         val status = bot.botStatus
         context.bukkit.sender.sendMessage(
-            Component.join(
-                JoinConfiguration.separator(Component.text(" ")),
-                Component.text("Bot Status:", config.primaryColor()),
-                Component.text(status.status),
-                Component.text(if (status.reason.isEmpty()) "" else "(${status.reason})")
+            joinSpace(
+                "Bot Status:".primaryComponent(),
+                status.status.component(),
+                (if (status.reason.isEmpty()) "" else "(${status.reason})").component()
             )
         )
 

@@ -1,7 +1,8 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.minecraft.component.component
+import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
@@ -28,8 +29,8 @@ class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEven
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(2 until token.string.length - 1)
         val id = Snowflake(snowflakeString)
-        val channel = additionalData.getGuild()!!.getChannelOrNull(id) ?: return Component.text(token.string)
+        val channel = additionalData.getGuild()!!.getChannelOrNull(id) ?: return token.string.component()
 
-        return Component.text("#${channel.name}", config.primaryColor())
+        return "#${channel.name}".primaryComponent()
     }
 }

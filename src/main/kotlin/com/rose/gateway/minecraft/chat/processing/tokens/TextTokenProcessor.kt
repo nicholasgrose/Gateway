@@ -1,10 +1,10 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
+import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.shared.parsing.TokenProcessor
 import guru.zoroark.lixy.LixyToken
 import guru.zoroark.lixy.LixyTokenType
-import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
 /**
@@ -25,6 +25,6 @@ class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val text = token.string
 
-        return TokenProcessingResult(Component.text(text), text)
+        return TokenProcessingResult(text.component(), text)
     }
 }

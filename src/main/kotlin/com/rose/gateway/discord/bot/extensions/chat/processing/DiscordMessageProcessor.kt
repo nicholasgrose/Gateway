@@ -2,13 +2,15 @@ package com.rose.gateway.discord.bot.extensions.chat.processing
 
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.extensions.secondaryColor
-import com.rose.gateway.minecraft.component.ColorComponent
 import com.rose.gateway.minecraft.component.atMember
+import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.join
 import com.rose.gateway.minecraft.component.member
 import com.rose.gateway.minecraft.component.openUrlOnClick
+import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.minecraft.component.showTextOnHover
+import com.rose.gateway.minecraft.component.tertiaryComponent
 import com.rose.gateway.minecraft.component.underlined
 import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
@@ -50,9 +52,9 @@ object DiscordMessageProcessor : KoinComponent {
      */
     private fun generateNameBlock(event: MessageCreateEvent): Component {
         return join(
-            Component.text("<"),
+            "<".component(),
             member(event.member!!),
-            Component.text("> ")
+            "> ".component()
         )
     }
 
@@ -66,9 +68,9 @@ object DiscordMessageProcessor : KoinComponent {
         val referenceComponent = componentForReferencedMessage(event) ?: return Component.empty()
 
         return join(
-            ColorComponent.primary("(Replying to ").italic(),
+            "(Replying to ".primaryComponent().italic(),
             referenceComponent,
-            ColorComponent.primary(") ").italic()
+            ") ".primaryComponent().italic()
         )
     }
 
@@ -140,15 +142,15 @@ object DiscordMessageProcessor : KoinComponent {
         if (event.message.attachments.isEmpty()) return Component.empty()
 
         return join(
-            ColorComponent.primary(" (Attachments: ").italic(),
-            Component.join(
-                JoinConfiguration.separator(ColorComponent.primary(", ").italic()),
+            " (Attachments: ".primaryComponent().italic(),
+            join(
+                JoinConfiguration.separator(", ".primaryComponent().italic()),
                 event.message.attachments.mapIndexed { index, attachment ->
-                    ColorComponent.tertiary("Attachment$index").italic().underlined()
-                        .showTextOnHover(Component.text("Open attachment link")).openUrlOnClick(attachment.url)
+                    "Attachment$index".tertiaryComponent().italic().underlined()
+                        .showTextOnHover("Open attachment link".component()).openUrlOnClick(attachment.url)
                 }
             ),
-            ColorComponent.primary(")").italic()
+            ")".primaryComponent().italic()
         )
     }
 }

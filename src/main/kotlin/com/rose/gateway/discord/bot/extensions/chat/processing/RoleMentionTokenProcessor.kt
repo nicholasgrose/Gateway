@@ -1,7 +1,8 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.minecraft.component.component
+import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
@@ -32,8 +33,8 @@ class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)
         val id = Snowflake(snowflakeString)
-        val role = additionalData.getGuild()!!.getRoleOrNull(id) ?: return Component.text(token.string)
+        val role = additionalData.getGuild()!!.getRoleOrNull(id) ?: return token.string.component()
 
-        return Component.text("@${role.name}", config.primaryColor())
+        return "@${role.name}".primaryComponent()
     }
 }
