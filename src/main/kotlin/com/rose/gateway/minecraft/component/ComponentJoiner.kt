@@ -9,9 +9,7 @@ import net.kyori.adventure.text.JoinConfiguration
  * @param secondComponent The [Component] to append to the first
  * @return The first [Component] with the second appended
  */
-operator fun Component.plus(secondComponent: Component): Component {
-    return this.append(secondComponent)
-}
+operator fun Component.plus(secondComponent: Component): Component = join(this, secondComponent)
 
 /**
  * Joins multiple [Component]s into one without separators

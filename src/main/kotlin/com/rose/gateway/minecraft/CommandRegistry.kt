@@ -11,7 +11,7 @@ import com.rose.gateway.minecraft.commands.framework.subcommand.subcommand
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigMonitoringRunner
-import com.rose.gateway.minecraft.commands.runners.GeneralCommands
+import com.rose.gateway.minecraft.commands.runners.DiscordCommands
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -32,7 +32,7 @@ object CommandRegistry : KoinComponent {
         command("discord") {
             subcommand("help") {
                 runner { context ->
-                    GeneralCommands.discordHelp(context)
+                    DiscordCommands.help(context)
                 }
             }
         }
