@@ -16,13 +16,13 @@ import io.papermc.paper.event.player.AsyncChatEvent
 
 private val textProcessor = TextProcessor(
     listOf(
-        UserMentionTokenProcessor(),
-        UserQuoteMentionTokenProcessor(),
-        RoleMentionTokenProcessor(),
-        RoleQuoteMentionTokenProcessor(),
-        TextChannelMentionTokenProcessor(),
-        VoiceChannelMentionTokenProcessor(),
         UrlTokenProcessor(),
+        VoiceChannelMentionTokenProcessor(),
+        TextChannelMentionTokenProcessor(),
+        RoleQuoteMentionTokenProcessor(),
+        RoleMentionTokenProcessor(),
+        UserQuoteMentionTokenProcessor(),
+        UserMentionTokenProcessor(),
         TextTokenProcessor()
     )
 )
@@ -72,10 +72,11 @@ suspend fun discordMessageWithContent(
     contentProvider: (MessageProcessingResult) -> String
 ): (MessageCreateBuilder.() -> Unit)? {
     val result = processMessageText(message)
+    val discordContent = contentProvider(result)
 
     return if (result.successful) {
         {
-            content = contentProvider(result)
+            content = discordContent
         }
     } else null
 }

@@ -28,7 +28,7 @@ class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Uni
 
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val tokenString = token.string
-        val nameString = tokenString.substring(USER_QUOTE_MENTION_START_INDEX until tokenString.length)
+        val nameString = tokenString.substring(USER_QUOTE_MENTION_START_INDEX until tokenString.length - 1)
 
         return MentionResult.userMention(nameString)
     }

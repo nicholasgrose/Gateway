@@ -28,7 +28,7 @@ class RoleQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Uni
 
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
         val tokenString = token.string
-        val roleString = tokenString.substring(ROLE_QUOTE_MENTION_START_INDEX until tokenString.length)
+        val roleString = tokenString.substring(ROLE_QUOTE_MENTION_START_INDEX until tokenString.length - 1)
 
         return MentionResult.role(roleString)
     }
