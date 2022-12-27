@@ -4,9 +4,12 @@ import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.config.extensions.primaryColor
 import com.rose.gateway.config.extensions.tpsExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.server.ServerInfo
+import dev.kord.common.Color
+import dev.kord.rest.builder.message.create.embed
 import org.koin.core.component.inject
 import kotlin.math.roundToInt
 
@@ -37,12 +40,15 @@ class TpsExtension : Extension() {
                 val tps = ServerInfo.tps
 
                 respond {
-                    content = """
-                        TPS (ticks/sec):
-                        **1m:** ${tps.oneMinute.roundToInt()} t/s
-                        **5m:** ${tps.fiveMinute.roundToInt()} t/s
-                        **15m:** ${tps.fifteenMinute.roundToInt()} t/s
-                    """.trimIndent()
+                    embed {
+                        title = "TPS (ticks/sec)"
+                        description = """
+                            **1m:** ${tps.oneMinute.roundToInt()} t/s
+                            **5m:** ${tps.fiveMinute.roundToInt()} t/s
+                            **15m:** ${tps.fifteenMinute.roundToInt()} t/s
+                        """.trimIndent()
+                        color = Color(config.primaryColor().value())
+                    }
                 }
             }
         }
