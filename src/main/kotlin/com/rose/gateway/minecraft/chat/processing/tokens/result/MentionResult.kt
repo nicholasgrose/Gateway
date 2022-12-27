@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.chat.processing.tokens.result
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.config.access.primaryColor
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.DiscordBotConstants
 import com.rose.gateway.minecraft.component.atMember

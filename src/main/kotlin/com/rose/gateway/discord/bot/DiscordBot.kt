@@ -4,7 +4,7 @@ import com.kotlindiscord.kord.extensions.ExtensibleBot
 import com.kotlindiscord.kord.extensions.utils.loadModule
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.botToken
+import com.rose.gateway.config.access.botToken
 import com.rose.gateway.discord.bot.presence.BotPresence
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope

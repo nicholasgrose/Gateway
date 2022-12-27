@@ -4,8 +4,8 @@ import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.primaryColor
-import com.rose.gateway.config.extensions.tpsExtensionEnabled
+import com.rose.gateway.config.access.secondaryColor
+import com.rose.gateway.config.access.tpsExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.server.ServerInfo
 import dev.kord.common.Color
@@ -47,7 +47,7 @@ class TpsExtension : Extension() {
                             **5m:** ${tps.fiveMinute.roundToInt()} t/s
                             **15m:** ${tps.fifteenMinute.roundToInt()} t/s
                         """.trimIndent()
-                        color = Color(config.primaryColor().value())
+                        color = Color(config.secondaryColor().value())
                     }
                 }
             }

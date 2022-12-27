@@ -7,7 +7,7 @@ package com.rose.gateway.shared.collections
  * @param groupSize The size of the groups to create
  * @return The resultant element groups
  */
-fun <T : Any> Collection<T>.group(groupSize: Int): List<List<T>> {
+fun <T> Collection<T>.group(groupSize: Int): List<List<T>> {
     val groups = mutableListOf<MutableList<T>>()
 
     for ((index, element) in this.withIndex()) {

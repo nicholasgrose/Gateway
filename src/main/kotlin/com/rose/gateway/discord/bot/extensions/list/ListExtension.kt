@@ -2,17 +2,16 @@ package com.rose.gateway.discord.bot.extensions.list
 
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
-import com.kotlindiscord.kord.extensions.types.editingPaginator
-import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.listExtensionEnabled
-import com.rose.gateway.config.extensions.maxPlayersPerPage
-import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.config.access.listExtensionEnabled
+import com.rose.gateway.config.access.maxPlayersPerListPage
+import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
+import com.rose.gateway.discord.bot.message.groupAndPaginateItems
 import com.rose.gateway.discord.text.discordBoldSafe
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.minecraft.server.ServerInfo
-import com.rose.gateway.shared.collections.group
+import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.create.embed
 import org.koin.core.component.inject
@@ -43,45 +42,32 @@ class ListExtension : Extension() {
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
 
-                val maxPlayersPerPage = config.maxPlayersPerPage()
+                val maxPlayersPerPage = config.maxPlayersPerListPage()
                 val onlinePlayers = ServerInfo.onlinePlayers
-                val playerPages = onlinePlayers.group(maxPlayersPerPage)
+                val onlinePlayerCount = onlinePlayers.size
 
-                if (playerPages.isEmpty()) {
-                    respond {
-                        embed {
-                            title = "0 Online Players"
-                            description = "No players online."
-                            color = Color(config.primaryColor().value())
-                        }
+                groupAndPaginateItems(onlinePlayers, maxPlayersPerPage, {
+                    embed {
+                        title = "0 Online Players"
+                        description = "No players online."
+                        color = Color(config.secondaryColor().value())
                     }
+                }, { groupIndex, group ->
+                    page {
+                        title = plurality(
+                            onlinePlayerCount,
+                            "1 Online Player",
+                            "$onlinePlayerCount Player Online"
+                        )
+                        description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
+                            val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
 
-                    return@action
-                }
-
-                editingPaginator {
-                    for ((pageIndex, subset) in playerPages.withIndex()) {
-                        page {
-                            title = listTitle(onlinePlayers.size)
-                            description = subset.withIndex().joinToString("\n") { (playerIndex, player) ->
-                                val playerNumber = (pageIndex * maxPlayersPerPage) + playerIndex + 1
-
-                                "**$playerNumber.** ${player.name.discordBoldSafe()}"
-                            }
-                            color = Color(config.primaryColor().value())
+                            "**$playerNumber.** ${player.name.discordBoldSafe()}"
                         }
+                        color = Color(config.secondaryColor().value())
                     }
-                }.send()
+                })
             }
         }
     }
-
-    /**
-     * Generates the title for the player list with the correct plural
-     *
-     * @param playerCount The number of players online
-     * @return The list title
-     */
-    private fun listTitle(playerCount: Int): String =
-        if (playerCount == 1) "1 Online Player" else "$playerCount Online Players"
 }

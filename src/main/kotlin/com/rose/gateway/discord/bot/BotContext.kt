@@ -1,7 +1,7 @@
 package com.rose.gateway.discord.bot
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.botChannels
+import com.rose.gateway.config.access.botChannels
 import com.rose.gateway.discord.bot.client.ClientInfo
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel

@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.chat
 
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.chatExtensionEnabled
+import com.rose.gateway.config.access.chatExtensionEnabled
 import com.rose.gateway.discord.bot.extensions.chat.GameChatEvent
 import com.rose.gateway.minecraft.chat.processing.discordMessage
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope

@@ -35,6 +35,8 @@ bot:
         whitelist:
             # Whether the extension is enabled
             enabled: true
+            # The maximum number of player allowed per whitelist page
+            maxPlayersPerPage: 15
 
 # Settings for how the plugin functions on the Minecraft server
 minecraft:

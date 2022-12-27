@@ -5,8 +5,8 @@ import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.aboutExtensionEnabled
-import com.rose.gateway.config.extensions.primaryColor
+import com.rose.gateway.config.access.aboutExtensionEnabled
+import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
 import dev.kord.common.Color
@@ -45,7 +45,7 @@ class AboutExtension : Extension() {
                     embed {
                         title = plugin.description.version
                         description = "All versions are available at https://github.com/nicholasgrose/Gateway/releases."
-                        color = Color(config.primaryColor().value())
+                        color = Color(config.secondaryColor().value())
                     }
                 }
             }
@@ -60,10 +60,10 @@ class AboutExtension : Extension() {
 
                 respond {
                     embed {
-                        title = "Witness the Glory"
+                        title = "Witness The Glory"
                         description = "The Block God must be experienced."
                         url = "https://scp-wiki.wikidot.com/church-of-the-broken-god-hub"
-                        color = Color(config.primaryColor().value())
+                        color = Color(config.secondaryColor().value())
                     }
                 }
             }

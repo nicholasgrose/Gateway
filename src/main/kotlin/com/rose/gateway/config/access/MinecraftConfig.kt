@@ -1,4 +1,4 @@
-package com.rose.gateway.config.extensions
+package com.rose.gateway.config.access
 
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.color.asTextColor
