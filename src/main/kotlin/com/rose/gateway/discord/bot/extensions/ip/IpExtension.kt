@@ -4,10 +4,13 @@ import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.displayIp
-import com.rose.gateway.config.extensions.ipExtensionEnabled
+import com.rose.gateway.config.access.displayIp
+import com.rose.gateway.config.access.ipExtensionEnabled
+import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
+import dev.kord.common.Color
+import dev.kord.rest.builder.message.create.embed
 import org.koin.core.component.inject
 
 /**
@@ -31,13 +34,17 @@ class IpExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "ip"
-            description = "Displays the server IP."
+            description = "Displays the server IP"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested server IP!")
 
                 respond {
-                    content = "Current IP: ```${config.displayIp()}```"
+                    embed {
+                        title = "Current IP"
+                        description = "```${config.displayIp()}```"
+                        color = Color(config.secondaryColor().value())
+                    }
                 }
             }
         }

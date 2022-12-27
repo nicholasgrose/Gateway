@@ -2,6 +2,7 @@ package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.minecraft.commands.arguments.ConfigBooleanArgs
+import com.rose.gateway.minecraft.commands.arguments.ConfigIntArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
 import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
@@ -51,6 +52,10 @@ object CommandRegistry : KoinComponent {
             subcommand("config") {
                 subcommand("set") {
                     runner(::ConfigBooleanArgs) { context ->
+                        ConfigCommands.setConfig(context)
+                    }
+
+                    runner(::ConfigIntArgs) { context ->
                         ConfigCommands.setConfig(context)
                     }
 

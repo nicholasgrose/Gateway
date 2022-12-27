@@ -5,9 +5,12 @@ import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.aboutExtensionEnabled
+import com.rose.gateway.config.access.aboutExtensionEnabled
+import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
+import dev.kord.common.Color
+import dev.kord.rest.builder.message.create.embed
 import org.koin.core.component.inject
 
 /**
@@ -33,28 +36,35 @@ class AboutExtension : Extension() {
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "version"
-            description = "Gives the current version of the Gateway plugin."
+            description = "Gives the current version of the Gateway plugin"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
 
                 respond {
-                    content = "I am currently version ${plugin.description.version}." +
-                        "All versions are available at https://github.com/nicholasgrose/Gateway/."
+                    embed {
+                        title = plugin.description.version
+                        description = "All versions are available at https://github.com/nicholasgrose/Gateway/releases."
+                        color = Color(config.secondaryColor().value())
+                    }
                 }
             }
         }
 
         ephemeralSlashCommand {
             name = "blockgod"
-            description = "Summon the block god for a moment."
+            description = "Summon the block god for but a moment"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} used the super secret command!")
 
                 respond {
-                    @Suppress("HttpUrlsUsage")
-                    content = "http://www.scpwiki.com/church-of-the-broken-god-hub"
+                    embed {
+                        title = "Witness The Glory"
+                        description = "The Block God must be experienced."
+                        url = "https://scp-wiki.wikidot.com/church-of-the-broken-god-hub"
+                        color = Color(config.secondaryColor().value())
+                    }
                 }
             }
         }

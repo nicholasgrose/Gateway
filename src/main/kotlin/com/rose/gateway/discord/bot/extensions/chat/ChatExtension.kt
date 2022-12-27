@@ -3,7 +3,7 @@ package com.rose.gateway.discord.bot.extensions.chat
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.event
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.config.extensions.chatExtensionEnabled
+import com.rose.gateway.config.access.chatExtensionEnabled
 import com.rose.gateway.discord.bot.checks.MessageCheck
 import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.discord.bot.extensions.chat.processing.DiscordMessageProcessor
