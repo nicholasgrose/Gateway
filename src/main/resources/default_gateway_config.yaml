@@ -1,50 +1,48 @@
-# Settings for how the Discord bot functions.
+# Settings for how the Discord bot functions
 bot:
-    # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.
+    # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/
     token: PLACEHOLDER_BOT_TOKEN
-    # The names of the channels in which the bot should post/accept chat messages.
+    # The names of the channels in which the bot should post/accept chat messages
     botChannels:
         - speakers-of-the-gateway
-    # Configurations for the various bot extensions.
+    # Configurations for the various bot extensions
     extensions:
-        # Configurations for the about extension, which gives information about the plugin.
+        # Configurations for the about extension, which gives information about the plugin
         about:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
-        # Configurations for the chat extension, which gives Minecraft chat integration.
+        # Configurations for the chat extension, which gives Minecraft chat integration
         chat:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
-        # Configurations for the IP extension, which gives the IP command.
+        # Configurations for the IP extension, which gives the IP command
         ip:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
-            # The IP that will be displayed by the IP command.
+            # The IP that will be displayed by the IP command
             displayIp: 'localhost:25565'
-        # Configurations for the list extension, which gives information about online players.
+        # Configurations for the list extension, which gives information about online players
         list:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
+            # The maximum number of player allowed per list page
+            maxPlayersPerPage: 15
         # Configurations for the tps extension, which allows the querying of server TPS data
         tps:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
-        # Configurations for the whitelist extension, which gives commands that manipulate the whitelist.
+        # Configurations for the whitelist extension, which gives commands that manipulate the whitelist
         whitelist:
-            # Whether the extension is enabled.
+            # Whether the extension is enabled
             enabled: true
 
-# Settings for how the plugin functions on the Minecraft server.
+# Settings for how the plugin functions on the Minecraft server
 minecraft:
-
-    # Used for labels and Discord mentions in-game.
+    # Used for labels and Discord mentions in-game
     primaryColor: '#56EE5C'
-
-    # Used for differentiated text elements and names of Discord users in-game.
+    # Used for differentiated text elements and names of Discord users in-game
     secondaryColor: '#7289DA'
-
-    # Used for labelling configuration paths.
+    # Used for labelling configuration paths
     tertiaryColor: '#F526ED'
-
-    # Used for marking configurations that can be null.
+    # Used for marking configurations that can be null
     warningColor: '#EB4325'
