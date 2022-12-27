@@ -40,11 +40,11 @@ bot:
 
 # Settings for how the plugin functions on the Minecraft server
 minecraft:
-    # Used for labels and Discord mentions in-game
+    # Used to indicate success, color headers, and mark Discord mentions in-game
     primaryColor: '#56EE5C'
-    # Used for differentiated text elements and names of Discord users in-game
+    # Used to indicate information, differentiate text, and mark names of Discord users in-game
     secondaryColor: '#7289DA'
-    # Used for labelling configuration paths
+    # Used to indicate configuration paths and mark less important info
     tertiaryColor: '#F526ED'
-    # Used for marking configurations that can be null
+    # Used to indicate errors/warnings and mark configurations that can be null
     warningColor: '#EB4325'
