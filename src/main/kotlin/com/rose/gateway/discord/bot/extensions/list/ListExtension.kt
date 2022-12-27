@@ -44,12 +44,13 @@ class ListExtension : Extension() {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
 
                 val maxPlayersPerPage = config.maxPlayersPerPage()
-                val playerPages = ServerInfo.onlinePlayers.group(maxPlayersPerPage)
+                val onlinePlayers = ServerInfo.onlinePlayers
+                val playerPages = onlinePlayers.group(maxPlayersPerPage)
 
                 if (playerPages.isEmpty()) {
                     respond {
                         embed {
-                            title = "Online Players"
+                            title = "0 Online Players"
                             description = "No players online."
                             color = Color(config.primaryColor().value())
                         }
@@ -61,7 +62,7 @@ class ListExtension : Extension() {
                 editingPaginator {
                     for ((pageIndex, subset) in playerPages.withIndex()) {
                         page {
-                            title = "Online Players"
+                            title = listTitle(onlinePlayers.size)
                             description = subset.withIndex().joinToString("\n") { (playerIndex, player) ->
                                 val playerNumber = (pageIndex * maxPlayersPerPage) + playerIndex + 1
 
@@ -74,4 +75,13 @@ class ListExtension : Extension() {
             }
         }
     }
+
+    /**
+     * Generates the title for the player list with the correct plural
+     *
+     * @param playerCount The number of players online
+     * @return The list title
+     */
+    private fun listTitle(playerCount: Int): String =
+        if (playerCount == 1) "1 Online Player" else "$playerCount Online Players"
 }

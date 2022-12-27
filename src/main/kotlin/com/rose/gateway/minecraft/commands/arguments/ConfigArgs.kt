@@ -4,8 +4,10 @@ import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import com.rose.gateway.minecraft.commands.parsers.BooleanParser
+import com.rose.gateway.minecraft.commands.parsers.IntParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.commands.parsers.boolean
+import com.rose.gateway.minecraft.commands.parsers.int
 import com.rose.gateway.minecraft.commands.parsers.string
 import com.rose.gateway.minecraft.commands.parsers.typedConfigItem
 import kotlin.reflect.KType
@@ -61,6 +63,21 @@ class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanParser<C
         boolean {
             name = "VALUE"
             description = "Boolean to use the item with."
+        }
+    }
+)
+
+/**
+ * Config args for int values
+ *
+ * @constructor Create config boolean args
+ */
+class ConfigIntArgs : ConfigArgs<Int, ConfigIntArgs, IntParser<ConfigIntArgs>>(
+    typeOf<Int>(),
+    {
+        int {
+            name = "VALUE"
+            description = "Integer to use the item with."
         }
     }
 )

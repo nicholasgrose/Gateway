@@ -20,7 +20,7 @@ class ListConfig(
     /**
      * The maximum number of player allowed per list page
      */
-    @ConfigItem("The maximum number of player allowed per list page") val maxPlayersPerPage: Int
+    @ConfigItem("The maximum number of player allowed per list page") var maxPlayersPerPage: Int
 ) : CommonExtensionConfig(enabled, ListExtension.extensionName())
 
 /**
