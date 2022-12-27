@@ -59,8 +59,9 @@ dependencies {
     // Library that supports loading and (more importantly) saving to YAML files.
     implementation("com.charleskorn.kaml:kaml:$kamlVersion")
     // HTTP client library.
-    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+    // Disabled until I implement update checking.
+//    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+//    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
     // Library for Discord bots.
     implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
