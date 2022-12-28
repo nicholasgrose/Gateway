@@ -32,77 +32,53 @@ object CommandRegistry : KoinComponent {
     private val commands = minecraftCommands {
         command("discord") {
             subcommand("help") {
-                runner { context ->
-                    DiscordCommands.help(context)
-                }
+                runner(DiscordCommands::help)
             }
         }
 
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
-                    runner { context -> BotCommands.restartBot(context) }
+                    runner(BotCommands::restartBot)
                 }
 
                 subcommand("status") {
-                    runner { context -> BotCommands.botStatus(context) }
+                    runner(BotCommands::botStatus)
                 }
             }
 
             subcommand("config") {
                 subcommand("set") {
-                    runner(::ConfigBooleanArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
-
-                    runner(::ConfigIntArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
-
-                    runner(::ConfigStringArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
+                    runner(::ConfigBooleanArgs, ConfigCommands::setConfig)
+                    runner(::ConfigIntArgs, ConfigCommands::setConfig)
+                    runner(::ConfigStringArgs, ConfigCommands::setConfig)
                 }
+            }
 
-                subcommand("add") {
-                    runner(::addStringListConfigArgs) { context ->
-                        ConfigCommands.addConfiguration(context)
-                    }
-                }
+            subcommand("add") {
+                runner(::addStringListConfigArgs, ConfigCommands::addConfiguration)
+            }
 
-                subcommand("remove") {
-                    runner(::removeStringListConfigArgs) { context ->
-                        ConfigCommands.removeConfiguration(context)
-                    }
-                }
+            subcommand("remove") {
+                runner(::removeStringListConfigArgs, ConfigCommands::removeConfiguration)
+            }
 
-                subcommand("help") {
-                    runner(::ConfigItemArgs) { context ->
-                        ConfigMonitoringRunner.sendConfigurationHelp(context)
-                    }
+            subcommand("help") {
+                runner(::ConfigItemArgs, ConfigMonitoringRunner::sendConfigurationHelp)
 
-                    runner { context ->
-                        ConfigMonitoringRunner.sendAllConfigurationHelp(context.bukkit.sender)
-                    }
-                }
+                runner(ConfigMonitoringRunner::sendAllConfigurationHelp)
+            }
 
-                subcommand("reload") {
-                    runner { context ->
-                        ConfigMonitoringRunner.reloadConfig(context)
-                    }
-                }
+            subcommand("reload") {
+                runner(ConfigMonitoringRunner::reloadConfig)
+            }
 
-                subcommand("save") {
-                    runner { context ->
-                        ConfigMonitoringRunner.saveConfig(context)
-                    }
-                }
+            subcommand("save") {
+                runner(ConfigMonitoringRunner::saveConfig)
+            }
 
-                subcommand("status") {
-                    runner { context ->
-                        ConfigMonitoringRunner.sendConfigurationStatus(context.bukkit.sender)
-                    }
-                }
+            subcommand("status") {
+                runner(ConfigMonitoringRunner::sendConfigurationStatus)
             }
         }
     }
