@@ -54,7 +54,7 @@ object DiscordMessageProcessor : KoinComponent {
      * @return The name block
      */
     private suspend fun generateNameBlock(event: MessageCreateEvent): Component {
-        if(!(config.config.bot.extensions.chat.showRoleColor) || event.member!!.roles.toList().isEmpty()) {
+        if (!(config.config.bot.extensions.chat.showRoleColor) || event.member!!.roles.toList().isEmpty()) {
             return join(
                 "<".component(),
                 member(event.member!!),
