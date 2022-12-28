@@ -42,8 +42,8 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param sender The sender to receive the help message
      * @return Whether the command succeeded
      */
-    fun sendAllConfigurationHelp(sender: CommandSender): Boolean {
-        sendConfigListHelp(sender, configStringMap.allStrings())
+    fun sendAllConfigurationHelp(context: CommandExecuteContext<NoArgs>): Boolean {
+        sendConfigListHelp(context.bukkit.sender, configStringMap.allStrings())
 
         return true
     }
@@ -110,10 +110,10 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param sender The sender to receive the message
      * @return Whether the command succeeded
      */
-    fun sendConfigurationStatus(sender: CommandSender): Boolean {
+    fun sendConfigurationStatus(context: CommandExecuteContext<NoArgs>): Boolean {
         val configStatus = if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
 
-        sender.sendMessage(
+        context.bukkit.sender.sendMessage(
             joinSpace(
                 "Config Status:".primaryComponent(),
                 configStatus.component(),
