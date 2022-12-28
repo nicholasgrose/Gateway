@@ -15,7 +15,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = ChatConfigSerializer::class)
 class ChatConfig(
-    enabled: Boolean
+    enabled: Boolean,
+    val showRoleColor: Boolean
 ) : CommonExtensionConfig(enabled, ChatExtension.extensionName())
 
 /**
@@ -28,11 +29,11 @@ class ChatConfig(
  * @see ChatConfigSerializer
  */
 @Serializable
-data class ChatConfigSurrogate(val enabled: Boolean) {
+data class ChatConfigSurrogate(val enabled: Boolean, val showRoleColor: Boolean) {
     companion object : SurrogateConverter<ChatConfig, ChatConfigSurrogate> {
-        override fun fromBase(base: ChatConfig): ChatConfigSurrogate = ChatConfigSurrogate(base.enabled)
+        override fun fromBase(base: ChatConfig): ChatConfigSurrogate = ChatConfigSurrogate(base.enabled, base.showRoleColor)
 
-        override fun toBase(surrogate: ChatConfigSurrogate): ChatConfig = ChatConfig(surrogate.enabled)
+        override fun toBase(surrogate: ChatConfigSurrogate): ChatConfig = ChatConfig(surrogate.enabled, surrogate.showRoleColor)
     }
 }
 

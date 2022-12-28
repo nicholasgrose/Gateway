@@ -17,6 +17,7 @@ import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent
+import kotlinx.coroutines.flow.toList
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
 import net.kyori.adventure.text.format.TextColor
@@ -53,9 +54,19 @@ object DiscordMessageProcessor : KoinComponent {
      * @return The name block
      */
     private suspend fun generateNameBlock(event: MessageCreateEvent): Component {
+        if(!(config.config.bot.extensions.chat.showRoleColor) || event.member!!.roles.toList().isEmpty()) {
+            return join(
+                "<".component(),
+                member(event.member!!),
+                "> ".component()
+            )
+        }
+
+        val roleColor = event.member!!.getTopRole()?.color?.let { TextColor.color(it.rgb) }
+
         return join(
             "<".component(),
-            member(event.member!!).color(event.member!!.getTopRole()?.color?.let { TextColor.color(it.rgb) }),
+            member(event.member!!).color(roleColor),
             "> ".component()
         )
     }
