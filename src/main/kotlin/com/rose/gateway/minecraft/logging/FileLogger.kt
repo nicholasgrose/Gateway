@@ -10,14 +10,16 @@ import kotlin.reflect.jvm.jvmName
 
 object FileLogger : KoinComponent, Logger("File Logger", null) {
     val logger: Logger = Logger.getLogger(
-        FileLogger::class.jvmName
+        FileLogger::class.simpleName
     )
     val plugin: GatewayPlugin by inject()
     val handler: FileHandler
     init {
-        handler = FileHandler(plugin.dataFolder.path.plus("/Gateway_Log"))
+        handler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
         logger.addHandler(handler)
-        val formatter = SimpleFormatter()
+        val formatter = LogFormatter()
         handler.formatter = formatter
+        logger.useParentHandlers = false
     }
+
 }
