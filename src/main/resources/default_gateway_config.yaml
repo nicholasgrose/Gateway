@@ -15,6 +15,8 @@ bot:
         chat:
             # Whether the extension is enabled
             enabled: true
+            # Whether Discord role colors are shown in Minecraft chat
+            showRoleColor: true
         # Configurations for the IP extension, which gives the IP command
         ip:
             # Whether the extension is enabled
