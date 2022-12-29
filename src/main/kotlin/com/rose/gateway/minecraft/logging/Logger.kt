@@ -10,6 +10,7 @@ import org.koin.core.component.inject
 object Logger : KoinComponent {
     private val plugin: GatewayPlugin by inject()
     private val pluginLogger = plugin.logger
+    private val fileLogger = FileLogger
 
     /**
      * Logs a message with level "INFO"
@@ -18,6 +19,7 @@ object Logger : KoinComponent {
      */
     fun info(message: String) {
         pluginLogger.info(message)
+        FileLogger.logger.info(message)
     }
 
     /**
@@ -27,5 +29,6 @@ object Logger : KoinComponent {
      */
     fun warning(message: String) {
         pluginLogger.warning(message)
+        FileLogger.logger.warning(message)
     }
 }
