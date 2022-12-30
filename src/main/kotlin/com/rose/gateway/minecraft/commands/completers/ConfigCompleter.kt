@@ -2,9 +2,9 @@ package com.rose.gateway.minecraft.commands.completers
 
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType

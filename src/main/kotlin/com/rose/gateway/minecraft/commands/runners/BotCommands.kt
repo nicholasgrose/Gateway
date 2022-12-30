@@ -2,8 +2,8 @@ package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.joinSpace
 import com.rose.gateway.minecraft.component.primaryComponent

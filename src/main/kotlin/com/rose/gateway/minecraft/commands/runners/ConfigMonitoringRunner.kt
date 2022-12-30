@@ -4,8 +4,8 @@ import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.item

@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework.runner
+package com.rose.gateway.minecraft.commands.framework.args
 
 /**
  * A set of arguments that has no parsers defined

@@ -1,11 +1,11 @@
 package com.rose.gateway.minecraft.commands.framework.subcommand
 
 import com.rose.gateway.minecraft.commands.framework.Command
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.ParseResult
+import com.rose.gateway.minecraft.commands.framework.args.emptyUsageGenerator
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.emptyArgs
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.emptyUsageGenerator
 import com.rose.gateway.minecraft.commands.parsers.UnitParser
 import com.rose.gateway.minecraft.commands.parsers.list
 import com.rose.gateway.minecraft.commands.parsers.processor

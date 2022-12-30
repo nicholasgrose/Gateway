@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.arguments
 
 import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.parsers.configItem
 
 /**

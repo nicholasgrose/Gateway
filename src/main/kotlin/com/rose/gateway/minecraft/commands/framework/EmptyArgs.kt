@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 
 /**
  * Creates a [NoArgs] instance that contains only a set of raw arguments

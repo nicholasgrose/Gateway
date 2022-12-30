@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.parsers
 
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 
 /**
  * Constructs a parser and adds it to the args as an argument

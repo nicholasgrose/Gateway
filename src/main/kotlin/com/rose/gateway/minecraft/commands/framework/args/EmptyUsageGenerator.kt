@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework.runner
+package com.rose.gateway.minecraft.commands.framework.args
 
 /**
  * Provides a usage generator that returns no usages
