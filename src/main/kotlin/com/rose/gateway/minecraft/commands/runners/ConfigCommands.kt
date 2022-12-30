@@ -3,8 +3,8 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.config.Item
 import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic

@@ -1,10 +1,10 @@
 package com.rose.gateway.minecraft.commands.parsers
 
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.ParseResult
+import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
-import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
 
 /**
  * Adds an int argument to these args

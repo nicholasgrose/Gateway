@@ -8,6 +8,7 @@ import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
 import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
 import com.rose.gateway.minecraft.commands.arguments.removeStringListConfigArgs
 import com.rose.gateway.minecraft.commands.framework.minecraftCommands
+import com.rose.gateway.minecraft.commands.framework.nesting.args
 import com.rose.gateway.minecraft.commands.framework.subcommand.subcommand
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
@@ -48,37 +49,55 @@ object CommandRegistry : KoinComponent {
             }
 
             subcommand("config") {
-                subcommand("set") {
-                    runner(::ConfigBooleanArgs, ConfigCommands::setConfig)
-                    runner(::ConfigIntArgs, ConfigCommands::setConfig)
-                    runner(::ConfigStringArgs, ConfigCommands::setConfig)
+                subcommand("change") {
+                    args(::ConfigBooleanArgs) {
+                        subcommand("set") {
+                            runner(::ConfigBooleanArgs, ConfigCommands::setConfig)
+                        }
+                    }
+
+                    args(::ConfigIntArgs) {
+                        subcommand("set") {
+                            runner(::ConfigIntArgs, ConfigCommands::setConfig)
+                        }
+                    }
+
+                    args(::ConfigStringArgs) {
+                        subcommand("set") {
+                            runner(::ConfigStringArgs, ConfigCommands::setConfig)
+                        }
+                    }
+
+                    args(::addStringListConfigArgs) {
+                        subcommand("add") {
+                            runner(::addStringListConfigArgs, ConfigCommands::addConfiguration)
+                        }
+                    }
+
+                    args(::removeStringListConfigArgs) {
+                        subcommand("remove") {
+                            runner(::removeStringListConfigArgs, ConfigCommands::removeConfiguration)
+                        }
+                    }
                 }
-            }
 
-            subcommand("add") {
-                runner(::addStringListConfigArgs, ConfigCommands::addConfiguration)
-            }
+                subcommand("help") {
+                    runner(::ConfigItemArgs, ConfigMonitoringRunner::sendConfigurationHelp)
 
-            subcommand("remove") {
-                runner(::removeStringListConfigArgs, ConfigCommands::removeConfiguration)
-            }
+                    runner(ConfigMonitoringRunner::sendAllConfigurationHelp)
+                }
 
-            subcommand("help") {
-                runner(::ConfigItemArgs, ConfigMonitoringRunner::sendConfigurationHelp)
+                subcommand("reload") {
+                    runner(ConfigMonitoringRunner::reloadConfig)
+                }
 
-                runner(ConfigMonitoringRunner::sendAllConfigurationHelp)
-            }
+                subcommand("save") {
+                    runner(ConfigMonitoringRunner::saveConfig)
+                }
 
-            subcommand("reload") {
-                runner(ConfigMonitoringRunner::reloadConfig)
-            }
-
-            subcommand("save") {
-                runner(ConfigMonitoringRunner::saveConfig)
-            }
-
-            subcommand("status") {
-                runner(ConfigMonitoringRunner::sendConfigurationStatus)
+                subcommand("status") {
+                    runner(ConfigMonitoringRunner::sendConfigurationStatus)
+                }
             }
         }
     }

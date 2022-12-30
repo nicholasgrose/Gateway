@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.framework.data.context
 
 import com.rose.gateway.minecraft.commands.framework.Command
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 
 /**
  * The context of an action for a command

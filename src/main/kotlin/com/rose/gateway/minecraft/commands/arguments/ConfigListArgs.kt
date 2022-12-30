@@ -1,8 +1,8 @@
 package com.rose.gateway.minecraft.commands.arguments
 
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import com.rose.gateway.minecraft.commands.framework.runner.ArgParser
-import com.rose.gateway.minecraft.commands.framework.runner.ParseResult
 import com.rose.gateway.minecraft.commands.parsers.ListParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.commands.parsers.list

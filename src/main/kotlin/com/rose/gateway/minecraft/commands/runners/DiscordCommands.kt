@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.runners
 
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.joinNewLine
 import com.rose.gateway.minecraft.component.joinSpace

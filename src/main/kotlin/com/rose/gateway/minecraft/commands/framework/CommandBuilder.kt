@@ -1,10 +1,10 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.commands.framework.data.definition.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecutor
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
 
 /**
  * A builder that configures and constructs a [MinecraftCommand]

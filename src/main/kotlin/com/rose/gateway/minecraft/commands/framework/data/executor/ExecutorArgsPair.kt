@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework.data.executor
 
-import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 
 /**
  * An executor paired with an instance of its associated args class

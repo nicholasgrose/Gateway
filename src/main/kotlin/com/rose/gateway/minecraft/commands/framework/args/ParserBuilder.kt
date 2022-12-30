@@ -1,4 +1,4 @@
-package com.rose.gateway.minecraft.commands.framework.runner
+package com.rose.gateway.minecraft.commands.framework.args
 
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 
