@@ -19,7 +19,7 @@ object Logger : KoinComponent {
      */
     fun info(message: String) {
         pluginLogger.info(message)
-        FileLogger.logger.info(message)
+        fileLogger.logger.info(message)
     }
 
     /**
@@ -29,6 +29,6 @@ object Logger : KoinComponent {
      */
     fun warning(message: String) {
         pluginLogger.warning(message)
-        FileLogger.logger.warning(message)
+        fileLogger.logger.warning(message)
     }
 }

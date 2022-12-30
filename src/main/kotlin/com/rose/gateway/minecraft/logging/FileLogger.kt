@@ -5,15 +5,19 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.logging.FileHandler
 import java.util.logging.Logger
-import java.util.logging.SimpleFormatter
-import kotlin.reflect.jvm.jvmName
 
+/**
+ * Helper object that provides logging to file
+ */
 object FileLogger : KoinComponent, Logger("File Logger", null) {
+    /**
+     * @property logger this is the logger as a var
+     */
     val logger: Logger = Logger.getLogger(
         FileLogger::class.simpleName
     )
-    val plugin: GatewayPlugin by inject()
-    val handler: FileHandler
+    private val plugin: GatewayPlugin by inject()
+    private val handler: FileHandler
     init {
         handler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
         logger.addHandler(handler)
@@ -21,5 +25,4 @@ object FileLogger : KoinComponent, Logger("File Logger", null) {
         handler.formatter = formatter
         logger.useParentHandlers = false
     }
-
 }
