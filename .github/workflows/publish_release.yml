@@ -3,7 +3,6 @@ name: Publish Release
 on:
     push:
         branches:
-            - develop**
             - main
 
         paths:
