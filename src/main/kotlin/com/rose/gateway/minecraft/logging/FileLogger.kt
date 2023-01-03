@@ -9,15 +9,16 @@ import java.util.logging.Logger
 /**
  * Helper object that provides logging to file
  */
-object FileLogger : KoinComponent, Logger("File Logger", null) {
+object FileLogger : KoinComponent {
     /**
-     * @property logger this is the logger as a var
+     * this is the logger as a var
      */
     val logger: Logger = Logger.getLogger(
         FileLogger::class.simpleName
     )
     private val plugin: GatewayPlugin by inject()
     private val handler: FileHandler
+
     init {
         handler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
         logger.addHandler(handler)
