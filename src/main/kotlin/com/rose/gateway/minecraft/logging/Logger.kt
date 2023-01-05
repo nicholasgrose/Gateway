@@ -15,9 +15,8 @@ object Logger : KoinComponent {
 
     init {
         handler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
+        handler.formatter = LogFormatter()
         pluginLogger.addHandler(handler)
-        val formatter = LogFormatter()
-        handler.formatter = formatter
     }
 
     /**

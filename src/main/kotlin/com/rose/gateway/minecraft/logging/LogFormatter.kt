@@ -10,14 +10,16 @@ import java.util.logging.SimpleFormatter
  * This class determines the format of the FileLogger
  */
 class LogFormatter : SimpleFormatter() {
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, yyyy-MM-dd HH:mm:ss")
 
     override fun format(record: LogRecord): String? {
         val zdt = ZonedDateTime.ofInstant(
-            record.instant, ZoneId.systemDefault()
+            record.instant,
+            ZoneId.systemDefault()
         )
         val message = formatMessage(record)
+        val warningLevel = record.level.localizedName
 
-        return "${record.level.localizedName}: $message " +
-            "${zdt.format(DateTimeFormatter.ofPattern("EEE, yyyy-MM-dd HH:mm:ss"))} \n"
+        return "$warningLevel: $message ${zdt.format(dateTimeFormatter)}\n"
     }
 }
