@@ -1,6 +1,5 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.joinNewLine
@@ -29,7 +28,7 @@ object DiscordCommands {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun help(context: CommandExecuteContext<NoArgs>): Boolean {
+    fun help(context: CommandExecuteContext): Boolean {
         context.bukkit.sender.sendMessage(
             joinNewLine(
                 "Discord mentions:".primaryComponent(),

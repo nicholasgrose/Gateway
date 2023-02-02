@@ -3,6 +3,7 @@ package com.rose.gateway.minecraft.commands.arguments
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
+import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
 import com.rose.gateway.minecraft.commands.parsers.ListParser
 import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.commands.parsers.list
@@ -43,20 +44,23 @@ open class ConfigListArgs<
  */
 class StringListConfigArgs(
     stringCompleter: StringParser<StringListConfigArgs>.(
-        TabCompleteContext<StringListConfigArgs>
+        TabCompleteContext<StringListConfigArgs>,
+        ArgsReference<StringListConfigArgs>
     ) -> List<String>,
     stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean
 ) :
     ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
         {
+            val self = this
+
             list {
                 name = "VALUES"
                 description = "Values to add."
                 element = stringParser {
                     name = "VALUE"
                     description = "String to add."
-                    completer = stringCompleter
+                    completer = { stringCompleter(it, it.refFor(self)) }
                     validator = stringValidator
                 }
             }
@@ -69,11 +73,12 @@ class StringListConfigArgs(
  * @return The constructed config args
  */
 fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { listOf() },
-    {
-        val item = it.context.args.item
+    { _, _ -> listOf() },
+    { parseResult ->
+        val argsReference = parseResult.context.parserContext.args
+        val item = parseResult.context.argsFor(argsReference)
 
-        item.value.contains(it.result).not()
+        item.value.contains(parseResult.result).not()
     }
 )
 
@@ -83,22 +88,25 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
  * @return The constructed config args
  */
 fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { context ->
-        val currentValues = context.args.item.value
-        val itemsSlatedForRemoval = existingValues(context)
+    { context, ownRef ->
+        val args = context.argsFor(ownRef)
+        val currentValues = args.item.value
+        val itemsSlatedForRemoval = existingValues(context, args)
 
         currentValues - itemsSlatedForRemoval.toSet()
     },
     { parseResult ->
-        val item = parseResult.context.args.item
+        val argsReference = parseResult.context.parserContext.args
+        val item = parseResult.context.argsFor(argsReference)
 
         item.value.contains(parseResult.result)
     }
 )
 
 private fun StringParser<StringListConfigArgs>.existingValues(
-    context: TabCompleteContext<StringListConfigArgs>
+    context: TabCompleteContext<StringListConfigArgs>,
+    args: StringListConfigArgs
 ): List<String> {
-    return if (context.args.wasSuccessful(context.completingParser)) context.args.value
+    return if (args.wasSuccessful(context.parserContext.parser)) args.value
     else listOf()
 }

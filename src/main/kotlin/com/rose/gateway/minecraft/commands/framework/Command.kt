@@ -1,10 +1,14 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.FrameworkContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParserSpecificContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.data.definition.CommandDefinition
 import com.rose.gateway.minecraft.commands.framework.data.definition.CommandExecuteResult
 import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
+import com.rose.gateway.minecraft.commands.parsers.UnitParser
 
 /**
  * A command that can execute and provide completions
@@ -19,8 +23,8 @@ class Command(val definition: CommandDefinition) {
      * @param context The context to execute in
      * @return The result of execution
      */
-    fun parseAndExecute(context: CommandExecuteContext<*>): CommandExecuteResult {
-        val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
+    fun parseAndExecute(context: CommandExecuteContext): CommandExecuteResult {
+        val mostSuccessfulExecutors = mostSuccessfulExecutors(context)
 
         return execute(context, mostSuccessfulExecutors)
     }
@@ -32,7 +36,7 @@ class Command(val definition: CommandDefinition) {
      * @param executorArgsPairs The ranked executors with their parsed args
      * @return The result of execution
      */
-    fun execute(context: CommandExecuteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandExecuteResult {
+    fun execute(context: CommandExecuteContext, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandExecuteResult {
         val chosenPair = executorArgsPairs.firstOrNull()
 
         val succeeded = if (chosenPair == null) {
@@ -51,7 +55,7 @@ class Command(val definition: CommandDefinition) {
      * @return Possible completions for the context
      */
     fun parseAndComplete(context: TabCompleteContext<*>): List<String> {
-        val mostSuccessfulExecutors = mostSuccessfulExecutors(context.args.rawArguments)
+        val mostSuccessfulExecutors = mostSuccessfulExecutors(context)
 
         return complete(context, mostSuccessfulExecutors)
     }
@@ -64,11 +68,34 @@ class Command(val definition: CommandDefinition) {
      * @return Possible completions for the context
      */
     fun complete(context: TabCompleteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
-        val tabCompletions = executorArgsPairs.map {
-            it.executor.completions(context)
-        }.flatten()
+        val tabCompletions = executorArgsPairs.map { pairCompletions(it, context) }.flatten()
 
         return tabCompletions
+    }
+
+    /**
+     * Handles the computation of completions for an executor in a type-safe way
+     *
+     * @param A The type of the args in the pair
+     * @param pair The pair to complete for
+     * @param context The context the pair is completing within
+     * @return The computed completions
+     */
+    private fun <A : CommandArgs<A>> pairCompletions(
+        pair: ExecutorArgsPair<A>,
+        context: TabCompleteContext<*>
+    ): List<String> {
+        return pair.executor.completions(
+            TabCompleteContext(
+                context.command,
+                context.args,
+                context.bukkit,
+                ParserSpecificContext(
+                    pair.executor.argsRef,
+                    UnitParser()
+                )
+            )
+        )
     }
 
     /**
@@ -77,16 +104,16 @@ class Command(val definition: CommandDefinition) {
      * Success is defined as either being successful or having the most arguments successfully parsed.
      * The returned executors are in the same order they were defined.
      *
-     * @param rawArgs The incoming arguments to be parsed
+     * @param args The incoming arguments to be parsed
      * @return List of executors in order of definition
      */
-    fun mostSuccessfulExecutors(rawArgs: List<String>): List<ExecutorArgsPair<*>> {
+    fun mostSuccessfulExecutors(args: FrameworkContext<*>): List<ExecutorArgsPair<*>> {
         val mostSuccessfulExecutors = mutableListOf<ExecutorArgsPair<*>>()
         var successThreshold = 0
         var executorsMustBeSuccessful = false
 
         for (executor in definition.executors) {
-            val executorArgsPair = ExecutorArgsPair.forExecutor(executor, rawArgs)
+            val executorArgsPair = ExecutorArgsPair.forExecutor(executor, args)
             val argResult = executorArgsPair.args
             val argsParsed = argResult.argsParsed()
 

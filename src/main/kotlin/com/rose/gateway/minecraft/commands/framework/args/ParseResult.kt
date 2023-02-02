@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.commands.framework.args
 
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 
 /**
  * The result of parsing a value

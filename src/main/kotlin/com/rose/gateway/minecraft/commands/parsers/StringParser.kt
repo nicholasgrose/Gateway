@@ -4,7 +4,7 @@ import com.rose.gateway.minecraft.commands.framework.args.ArgParser
 import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 
 /**
  * Creates a string parser
@@ -43,7 +43,7 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
     override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
         val args = context.args
         var currentIndex = context.currentIndex
-        val result = args.rawArguments.getOrNull(currentIndex)
+        val result = args.raw.getOrNull(currentIndex)
 
         return when {
             builder.hungry && result != null -> {
@@ -53,13 +53,16 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                 do {
                     results.add(currentArg)
                     currentIndex++
-                    currentArg = args.rawArguments.getOrNull(currentIndex) ?: break
+                    currentArg = args.raw.getOrNull(currentIndex) ?: break
                 } while (true)
 
                 ParseResult.Success(
                     results.joinToString(" "),
                     ParseContext(
-                        args = args,
+                        context.command,
+                        args,
+                        context.bukkit,
+                        context.parserContext,
                         currentIndex = currentIndex + results.size
                     )
                 )
@@ -68,15 +71,21 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
             result != null -> ParseResult.Success(
                 result,
                 ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1
+                    context.command,
+                    args,
+                    context.bukkit,
+                    context.parserContext,
+                    currentIndex + 1
                 )
             )
 
             else -> ParseResult.Failure(
                 ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1
+                    context.command,
+                    args,
+                    context.bukkit,
+                    context.parserContext,
+                    currentIndex + 1
                 )
             )
         }

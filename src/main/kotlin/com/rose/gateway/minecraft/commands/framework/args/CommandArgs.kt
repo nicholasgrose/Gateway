@@ -1,7 +1,11 @@
 package com.rose.gateway.minecraft.commands.framework.args
 
+import com.rose.gateway.minecraft.commands.framework.data.context.FrameworkContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParserSpecificContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
+import com.rose.gateway.minecraft.commands.parsers.UnitParser
 
 /**
  * A set of arguments for a command
@@ -31,9 +35,20 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @param rawArgs The raw arguments to parse for the final result
      */
-    fun parseArguments(rawArgs: List<String>): A {
-        rawArguments = rawArgs
-        fillFinalParseResults()
+    fun parseArguments(argsRef: ArgsReference<A>, context: FrameworkContext<*>): A {
+        rawArguments = context.args.raw
+        fillFinalParseResults(
+            ParseContext(
+                context.command,
+                context.args,
+                context.bukkit,
+                ParserSpecificContext(
+                    argsRef,
+                    UnitParser()
+                ),
+                0
+            )
+        )
 
         @Suppress("UNCHECKED_CAST")
         return this as A
@@ -45,9 +60,9 @@ open class CommandArgs<A : CommandArgs<A>> {
      *
      * @return The final result of running all parsers
      */
-    private fun fillFinalParseResults() {
+    private fun fillFinalParseResults(context: ParseContext<A>) {
         @Suppress("UNCHECKED_CAST")
-        var currentContext = ParseContext(this as A, 0)
+        var currentContext = context
         val resultMap = mutableMapOf<ArgParser<*, A, *>, ParseResult.Success<*, A>>()
         parserResults = resultMap
 
@@ -85,10 +100,11 @@ open class CommandArgs<A : CommandArgs<A>> {
      * This determines whether these arguments are valid.
      * Validity is defined as all parsers having parsed successfully without leaving any arguments unused.
      *
+     * @param allowUnusedArgs Whether unused arguments should be considered a reason to fail
      * @return Whether these arguments are valid
      */
-    fun valid(): Boolean {
-        if (hasUnusedArgs()) {
+    fun valid(allowUnusedArgs: Boolean = false): Boolean {
+        if (!allowUnusedArgs && hasUnusedArgs()) {
             return false
         }
 
@@ -109,7 +125,12 @@ open class CommandArgs<A : CommandArgs<A>> {
      */
     private fun remainingArgCount(): Int = rawArguments.size - lastIndex()
 
-    private fun lastIndex(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
+    /**
+     * The index of the context of the furthest parsed result
+     *
+     * @return The next index or 0 if no parsing succeeded
+     */
+    fun lastIndex(): Int = lastSuccessfulResult()?.context?.currentIndex ?: 0
 
     /**
      * Determines whether a particular arg was successfully parsed
@@ -117,7 +138,7 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @param arg The arg to check the parse status of
      * @return Whether a parsed value exists for the arg
      */
-    fun wasSuccessful(arg: ArgParser<*, A, *>): Boolean = parserResults.containsKey(arg)
+    fun wasSuccessful(arg: ArgParser<*, *, *>): Boolean = parserResults.containsKey(arg)
 
     /**
      * Gives the remaining arguments that haven't been consumed in parsing
@@ -165,7 +186,7 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @param context The context to complete these args within
      * @return All completions this arg has in the given context
      */
-    fun completions(context: TabCompleteContext<A>): List<String> {
+    fun completions(argsRef: ArgsReference<A>, context: TabCompleteContext<A>): List<String> {
         val nextArg = parsers.firstOrNull {
             !(wasSuccessful(it))
         } ?: parsers.lastOrNull()
@@ -174,10 +195,13 @@ open class CommandArgs<A : CommandArgs<A>> {
             remainingArgCount() > 1 -> listOf()
             else -> nextArg?.completions(
                 TabCompleteContext(
-                    bukkit = context.bukkit,
-                    command = context.command,
-                    args = context.args,
-                    completingParser = nextArg
+                    context.command,
+                    context.args,
+                    context.bukkit,
+                    ParserSpecificContext(
+                        argsRef,
+                        nextArg
+                    )
                 )
             ) ?: listOf()
         }

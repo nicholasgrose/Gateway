@@ -4,7 +4,7 @@ import com.rose.gateway.minecraft.commands.framework.args.ArgParser
 import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 
 /**
  * Parser for a [Unit] type
@@ -18,7 +18,8 @@ class UnitParser<A> : ArgParser<Unit, A, UnitParser<A>>(UnitParserBuilder()) whe
 A : CommandArgs<A> {
     override fun typeName(): String = "Unit"
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Unit, A> = ParseResult.Success(Unit, context)
+    override fun parseValue(context: ParseContext<A>): ParseResult<Unit, A> =
+        ParseResult.Success(Unit, context)
 }
 
 /**

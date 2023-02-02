@@ -6,7 +6,7 @@ import com.rose.gateway.minecraft.commands.framework.args.ArgParser
 import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType

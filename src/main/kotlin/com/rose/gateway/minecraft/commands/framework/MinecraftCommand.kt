@@ -1,10 +1,14 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
+import com.rose.gateway.minecraft.commands.framework.data.context.ArgsContext
 import com.rose.gateway.minecraft.commands.framework.data.context.BukkitContext
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParserSpecificContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
 import com.rose.gateway.minecraft.commands.parsers.UnitParser
+import com.rose.gateway.shared.collections.bimap.bimapOf
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
@@ -32,7 +36,10 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     args = args
                 ),
                 command = command,
-                args = emptyArgs(argList)
+                args = ArgsContext(
+                    raw = argList,
+                    parsed = bimapOf()
+                )
             )
         )
 
@@ -65,15 +72,21 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
 
         return command.parseAndComplete(
             TabCompleteContext(
-                bukkit = BukkitContext.TabComplete(
+                command,
+                ArgsContext(
+                    argList,
+                    bimapOf()
+                ),
+                BukkitContext.TabComplete(
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
                     args = args
                 ),
-                command = command,
-                args = emptyArgs(argList),
-                completingParser = UnitParser()
+                ParserSpecificContext(
+                    NoArgs.ref,
+                    UnitParser()
+                )
             )
         )
     }
