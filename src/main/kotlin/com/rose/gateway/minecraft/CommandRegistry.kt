@@ -33,70 +33,109 @@ object CommandRegistry : KoinComponent {
     private val commands = minecraftCommands {
         command("discord") {
             subcommand("help") {
-                runner(DiscordCommands::help)
+                executes { context ->
+                    DiscordCommands.help(context)
+                }
             }
         }
 
         command("gateway") {
             subcommand("bot") {
                 subcommand("restart") {
-                    runner(BotCommands::restartBot)
+                    executes { context ->
+                        BotCommands.restartBot(context)
+                    }
                 }
 
                 subcommand("status") {
-                    runner(BotCommands::botStatus)
+                    executes { context ->
+                        BotCommands.botStatus(context)
+                    }
                 }
             }
 
             subcommand("config") {
                 subcommand("change") {
-                    args(::ConfigBooleanArgs) {
+                    args(::ConfigBooleanArgs) { configRef ->
                         subcommand("set") {
-                            runner(::ConfigBooleanArgs, ConfigCommands::setConfig)
+                            args(::ConfigBooleanArgs) { _ ->
+                                executes { context ->
+                                    ConfigCommands.setConfig(context, configRef)
+                                }
+                            }
                         }
                     }
 
-                    args(::ConfigIntArgs) {
+                    args(::ConfigIntArgs) { configRef ->
                         subcommand("set") {
-                            runner(::ConfigIntArgs, ConfigCommands::setConfig)
+                            args(::ConfigIntArgs) { _ ->
+                                executes { context ->
+                                    ConfigCommands.setConfig(context, configRef)
+                                }
+                            }
                         }
                     }
 
-                    args(::ConfigStringArgs) {
+                    args(::ConfigStringArgs) { configRef ->
                         subcommand("set") {
-                            runner(::ConfigStringArgs, ConfigCommands::setConfig)
+                            args(::ConfigStringArgs) { _ ->
+                                executes { context ->
+                                    ConfigCommands.setConfig(context, configRef)
+                                }
+                            }
                         }
                     }
 
-                    args(::addStringListConfigArgs) {
+                    args(::addStringListConfigArgs) { configRef ->
                         subcommand("add") {
-                            runner(::addStringListConfigArgs, ConfigCommands::addConfiguration)
+
+                            args(::addStringListConfigArgs) { _ ->
+                                executes { context ->
+                                    ConfigCommands.addConfiguration(context, configRef)
+                                }
+                            }
                         }
                     }
 
-                    args(::removeStringListConfigArgs) {
+                    args(::removeStringListConfigArgs) { configRef ->
                         subcommand("remove") {
-                            runner(::removeStringListConfigArgs, ConfigCommands::removeConfiguration)
+                            args(::addStringListConfigArgs) { _ ->
+                                executes { context ->
+                                    ConfigCommands.addConfiguration(context, configRef)
+                                }
+                            }
                         }
                     }
                 }
 
                 subcommand("help") {
-                    runner(::ConfigItemArgs, ConfigMonitoringRunner::sendConfigurationHelp)
+                    args(::ConfigItemArgs) { itemRef ->
+                        executes { context ->
+                            ConfigMonitoringRunner.sendConfigurationHelp(context, itemRef)
+                        }
+                    }
 
-                    runner(ConfigMonitoringRunner::sendAllConfigurationHelp)
+                    executes { context ->
+                        ConfigMonitoringRunner.sendAllConfigurationHelp(context)
+                    }
                 }
 
                 subcommand("reload") {
-                    runner(ConfigMonitoringRunner::reloadConfig)
+                    executes { context ->
+                        ConfigMonitoringRunner.reloadConfig(context)
+                    }
                 }
 
                 subcommand("save") {
-                    runner(ConfigMonitoringRunner::saveConfig)
+                    executes { context ->
+                        ConfigMonitoringRunner.saveConfig(context)
+                    }
                 }
 
                 subcommand("status") {
-                    runner(ConfigMonitoringRunner::sendConfigurationStatus)
+                    executes { context ->
+                        ConfigMonitoringRunner.sendConfigurationStatus(context)
+                    }
                 }
             }
         }

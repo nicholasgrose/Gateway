@@ -1,10 +1,14 @@
 package com.rose.gateway.minecraft.commands.framework
 
+import com.rose.gateway.minecraft.commands.framework.args.NoArgs
+import com.rose.gateway.minecraft.commands.framework.data.context.ArgsContext
 import com.rose.gateway.minecraft.commands.framework.data.context.BukkitContext
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
+import com.rose.gateway.minecraft.commands.framework.data.context.ParserSpecificContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
 import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
 import com.rose.gateway.minecraft.commands.parsers.UnitParser
+import com.rose.gateway.shared.collections.bimap.bimapOf
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
@@ -20,7 +24,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         label: String,
-        args: Array<String>,
+        args: Array<String>
     ): Boolean {
         val argList = args.toList()
         val commandResult = command.parseAndExecute(
@@ -29,11 +33,14 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     sender = sender,
                     command = bukkitCommand,
                     label = label,
-                    args = args,
+                    args = args
                 ),
                 command = command,
-                args = emptyArgs(argList),
-            ),
+                args = ArgsContext(
+                    raw = argList,
+                    parsed = bimapOf()
+                )
+            )
         )
 
         if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
@@ -51,7 +58,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender.sendMessage(
             "Usage:\n" + rankedExecutors.joinToString("\n") {
                 it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-            },
+            }
         )
     }
 
@@ -59,22 +66,28 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         alias: String,
-        args: Array<String>,
+        args: Array<String>
     ): List<String> {
         val argList = args.toList()
 
         return command.parseAndComplete(
             TabCompleteContext(
-                bukkit = BukkitContext.TabComplete(
+                command,
+                ArgsContext(
+                    argList,
+                    bimapOf()
+                ),
+                BukkitContext.TabComplete(
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
-                    args = args,
+                    args = args
                 ),
-                command = command,
-                args = emptyArgs(argList),
-                completingParser = UnitParser(),
-            ),
+                ParserSpecificContext(
+                    NoArgs.ref,
+                    UnitParser()
+                )
+            )
         )
     }
 

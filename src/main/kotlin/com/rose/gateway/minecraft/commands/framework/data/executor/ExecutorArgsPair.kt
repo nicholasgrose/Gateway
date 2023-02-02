@@ -1,6 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.data.executor
 
 import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
+import com.rose.gateway.minecraft.commands.framework.data.context.FrameworkContext
 
 /**
  * An executor paired with an instance of its associated args class
@@ -23,8 +24,11 @@ data class ExecutorArgsPair<A : CommandArgs<A>>(
          * @param rawArgs The raw arguments that are provided to the executor
          * @return The constructor executor-args pair
          */
-        fun <A : CommandArgs<A>> forExecutor(executor: CommandExecutor<A>, rawArgs: List<String>): ExecutorArgsPair<A> {
-            val args = executor.filledArgs(rawArgs)
+        fun <A : CommandArgs<A>> forExecutor(
+            executor: CommandExecutor<A>,
+            context: FrameworkContext<*>
+        ): ExecutorArgsPair<A> {
+            val args = executor.fillArgs(context)
 
             return ExecutorArgsPair(executor, args)
         }

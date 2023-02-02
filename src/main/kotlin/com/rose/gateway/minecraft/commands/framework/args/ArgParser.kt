@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.args
 
+import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
 import kotlin.reflect.KProperty
 
 /**
@@ -37,9 +37,11 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @return A list of possible tab completions
      */
     fun completions(context: TabCompleteContext<A>): List<String> {
+        val argsRef = context.parserContext.args
+
         return when {
             builder.completesAfterSatisfied -> builder.completer(self(), context)
-            context.args.wasSuccessful(this) -> listOf()
+            context.argsFor(argsRef).wasSuccessful(this) -> listOf()
             else -> builder.completer(self(), context)
         }
     }

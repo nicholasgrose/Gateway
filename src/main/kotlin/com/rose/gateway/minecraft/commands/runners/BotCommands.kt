@@ -2,7 +2,6 @@ package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
-import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.joinSpace
@@ -27,7 +26,7 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun restartBot(context: CommandExecuteContext<NoArgs>): Boolean {
+    fun restartBot(context: CommandExecuteContext): Boolean {
         sendAndLogMessage(context.bukkit.sender, "Restarting the Discord bot...")
 
         pluginScope.launch {
@@ -63,7 +62,7 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun botStatus(context: CommandExecuteContext<NoArgs>): Boolean {
+    fun botStatus(context: CommandExecuteContext): Boolean {
         val status = bot.botStatus
         context.bukkit.sender.sendMessage(
             joinSpace(
