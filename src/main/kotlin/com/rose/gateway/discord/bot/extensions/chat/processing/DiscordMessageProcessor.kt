@@ -1,5 +1,6 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
+import com.kotlindiscord.kord.extensions.utils.getTopRole
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.minecraft.component.atMember
@@ -16,8 +17,10 @@ import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent
+import kotlinx.coroutines.flow.toList
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration
+import net.kyori.adventure.text.format.TextColor
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -40,7 +43,7 @@ object DiscordMessageProcessor : KoinComponent {
             generateNameBlock(event),
             generateMessagePrefixBlock(event),
             generateMessageBlock(event),
-            generateMessageSuffixBlock(event)
+            generateMessageSuffixBlock(event),
         )
     }
 
@@ -50,11 +53,21 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to convert into a name block
      * @return The name block
      */
-    private fun generateNameBlock(event: MessageCreateEvent): Component {
+    private suspend fun generateNameBlock(event: MessageCreateEvent): Component {
+        if (!(config.config.bot.extensions.chat.showRoleColor) || event.member!!.roles.toList().isEmpty()) {
+            return join(
+                "<".component(),
+                member(event.member!!),
+                "> ".component(),
+            )
+        }
+
+        val roleColor = event.member!!.getTopRole()?.color?.let { TextColor.color(it.rgb) }
+
         return join(
             "<".component(),
-            member(event.member!!),
-            "> ".component()
+            member(event.member!!).color(roleColor),
+            "> ".component(),
         )
     }
 
@@ -70,7 +83,7 @@ object DiscordMessageProcessor : KoinComponent {
         return join(
             "(Replying to ".primaryComponent().italic(),
             referenceComponent,
-            ") ".primaryComponent().italic()
+            ") ".primaryComponent().italic(),
         )
     }
 
@@ -109,7 +122,7 @@ object DiscordMessageProcessor : KoinComponent {
     private suspend fun referencedMessageAuthor(referencedMessage: Message, event: MessageCreateEvent): Member? {
         val referencedAuthor = referencedMessage.author?.id ?: return null
 
-        return event.getGuild()?.getMemberOrNull(referencedAuthor)
+        return event.getGuildOrNull()?.getMemberOrNull(referencedAuthor)
     }
 
     private val textProcessor = TextProcessor(
@@ -118,8 +131,8 @@ object DiscordMessageProcessor : KoinComponent {
             UserMentionTokenProcessor(),
             RoleMentionTokenProcessor(),
             ChannelMentionTokenProcessor(),
-            TextTokenProcessor()
-        )
+            TextTokenProcessor(),
+        ),
     )
 
     /**
@@ -148,9 +161,9 @@ object DiscordMessageProcessor : KoinComponent {
                 event.message.attachments.mapIndexed { index, attachment ->
                     "Attachment$index".tertiaryComponent().italic().underlined()
                         .showTextOnHover("Open attachment link".component()).openUrlOnClick(attachment.url)
-                }
+                },
             ),
-            ")".primaryComponent().italic()
+            ")".primaryComponent().italic(),
         )
     }
 }

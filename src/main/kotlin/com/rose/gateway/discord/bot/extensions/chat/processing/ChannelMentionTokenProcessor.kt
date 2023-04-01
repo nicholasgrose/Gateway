@@ -29,7 +29,7 @@ class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEven
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(2 until token.string.length - 1)
         val id = Snowflake(snowflakeString)
-        val channel = additionalData.getGuild()!!.getChannelOrNull(id) ?: return token.string.component()
+        val channel = additionalData.getGuildOrNull()?.getChannelOrNull(id) ?: return token.string.component()
 
         return "#${channel.name}".primaryComponent()
     }
