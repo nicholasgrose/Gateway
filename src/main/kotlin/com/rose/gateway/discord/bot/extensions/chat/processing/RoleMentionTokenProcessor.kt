@@ -33,7 +33,7 @@ class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)
         val id = Snowflake(snowflakeString)
-        val role = additionalData.getGuild()!!.getRoleOrNull(id) ?: return token.string.component()
+        val role = additionalData.getGuildOrNull()?.getRoleOrNull(id) ?: return token.string.component()
 
         return "@${role.name}".primaryComponent()
     }

@@ -43,7 +43,7 @@ object DiscordMessageProcessor : KoinComponent {
             generateNameBlock(event),
             generateMessagePrefixBlock(event),
             generateMessageBlock(event),
-            generateMessageSuffixBlock(event)
+            generateMessageSuffixBlock(event),
         )
     }
 
@@ -58,7 +58,7 @@ object DiscordMessageProcessor : KoinComponent {
             return join(
                 "<".component(),
                 member(event.member!!),
-                "> ".component()
+                "> ".component(),
             )
         }
 
@@ -67,7 +67,7 @@ object DiscordMessageProcessor : KoinComponent {
         return join(
             "<".component(),
             member(event.member!!).color(roleColor),
-            "> ".component()
+            "> ".component(),
         )
     }
 
@@ -83,7 +83,7 @@ object DiscordMessageProcessor : KoinComponent {
         return join(
             "(Replying to ".primaryComponent().italic(),
             referenceComponent,
-            ") ".primaryComponent().italic()
+            ") ".primaryComponent().italic(),
         )
     }
 
@@ -122,7 +122,7 @@ object DiscordMessageProcessor : KoinComponent {
     private suspend fun referencedMessageAuthor(referencedMessage: Message, event: MessageCreateEvent): Member? {
         val referencedAuthor = referencedMessage.author?.id ?: return null
 
-        return event.getGuild()?.getMemberOrNull(referencedAuthor)
+        return event.getGuildOrNull()?.getMemberOrNull(referencedAuthor)
     }
 
     private val textProcessor = TextProcessor(
@@ -131,8 +131,8 @@ object DiscordMessageProcessor : KoinComponent {
             UserMentionTokenProcessor(),
             RoleMentionTokenProcessor(),
             ChannelMentionTokenProcessor(),
-            TextTokenProcessor()
-        )
+            TextTokenProcessor(),
+        ),
     )
 
     /**
@@ -161,9 +161,9 @@ object DiscordMessageProcessor : KoinComponent {
                 event.message.attachments.mapIndexed { index, attachment ->
                     "Attachment$index".tertiaryComponent().italic().underlined()
                         .showTextOnHover("Open attachment link".component()).openUrlOnClick(attachment.url)
-                }
+                },
             ),
-            ")".primaryComponent().italic()
+            ")".primaryComponent().italic(),
         )
     }
 }
