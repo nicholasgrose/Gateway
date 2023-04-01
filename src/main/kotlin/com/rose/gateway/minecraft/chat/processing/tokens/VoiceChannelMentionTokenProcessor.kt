@@ -30,7 +30,7 @@ class VoiceChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, 
 
     @Language("RegExp")
     override fun regexPattern(): String {
-        return "@V=[^\\s@]+"
+        return "@[vV]=[^\\s@]+"
     }
 
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {

@@ -23,7 +23,7 @@ class RoleQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Uni
 
     @Language("RegExp")
     override fun regexPattern(): String {
-        return "@R=\"((\\\\\")|[^\"])+\""
+        return "@[rR]=\"((\\\\\")|[^\"])+\""
     }
 
     override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
