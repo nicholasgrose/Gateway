@@ -43,7 +43,7 @@ class AboutExtension : Extension() {
 
                 respond {
                     embed {
-                        title = plugin.description.version
+                        title = plugin.pluginMeta.version
                         description = "All versions are available at https://github.com/nicholasgrose/Gateway/releases."
                         color = Color(config.secondaryColor().value())
                     }

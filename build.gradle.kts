@@ -1,14 +1,14 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.10"
     // https://github.com/johnrengelman/shadow
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "2.0.1"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     // https://detekt.dev/
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
 }
@@ -42,7 +42,7 @@ repositories {
     }
     maven {
         name = "Kotlin Discord"
-        url = uri("https://maven.kotlindiscord.com/repository/maven-public/")
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
     }
     maven {
         name = "Jitpack"
@@ -90,7 +90,7 @@ tasks {
     processResources {
         filesMatching("plugin.yml") {
             expand(
-                "version" to version
+                "version" to version,
             )
         }
     }

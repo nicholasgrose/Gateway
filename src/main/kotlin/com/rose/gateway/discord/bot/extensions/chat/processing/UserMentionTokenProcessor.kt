@@ -34,7 +34,7 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)
         val id = Snowflake(snowflakeString)
-        val member = additionalData.getGuild()!!.getMemberOrNull(id) ?: return token.string.component()
+        val member = additionalData.getGuildOrNull()?.getMemberOrNull(id) ?: return token.string.component()
 
         return atMember(member, config.primaryColor())
     }
