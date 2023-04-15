@@ -23,8 +23,8 @@ private val textProcessor = TextProcessor(
         RoleMentionTokenProcessor(),
         UserQuoteMentionTokenProcessor(),
         UserMentionTokenProcessor(),
-        TextTokenProcessor()
-    )
+        TextTokenProcessor(),
+    ),
 )
 
 /**
@@ -36,7 +36,7 @@ private val textProcessor = TextProcessor(
  */
 suspend fun discordMessage(
     message: String,
-    event: AsyncChatEvent
+    event: AsyncChatEvent,
 ): (MessageCreateBuilder.() -> Unit)? {
     return discordMessageWithContent(message) { result ->
         val playerName = event.player.name
@@ -69,7 +69,7 @@ suspend fun discordMessage(message: String): (MessageCreateBuilder.() -> Unit)? 
  */
 suspend fun discordMessageWithContent(
     message: String,
-    contentProvider: (MessageProcessingResult) -> String
+    contentProvider: (MessageProcessingResult) -> String,
 ): (MessageCreateBuilder.() -> Unit)? {
     val result = processMessageText(message)
     val discordContent = contentProvider(result)
@@ -78,7 +78,9 @@ suspend fun discordMessageWithContent(
         {
             content = discordContent
         }
-    } else null
+    } else {
+        null
+    }
 }
 
 /**
@@ -96,10 +98,10 @@ private suspend fun processMessageText(message: String): MessageProcessingResult
         join(
             messageTextParts.map {
                 it.minecraftMessage
-            }
+            },
         ),
         messageTextParts.joinToString(separator = "") { part ->
             part.discordMessage
-        }
+        },
     )
 }

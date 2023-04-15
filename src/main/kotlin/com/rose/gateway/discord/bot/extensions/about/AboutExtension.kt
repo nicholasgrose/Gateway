@@ -3,7 +3,6 @@ package com.rose.gateway.discord.bot.extensions.about
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.kotlindiscord.kord.extensions.types.respond
-import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.aboutExtensionEnabled
 import com.rose.gateway.config.access.secondaryColor
@@ -11,6 +10,7 @@ import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.logging.Logger
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.create.embed
+import org.bukkit.Bukkit
 import org.koin.core.component.inject
 
 /**
@@ -29,22 +29,20 @@ class AboutExtension : Extension() {
         override fun isEnabled(): Boolean = config.aboutExtensionEnabled()
     }
 
-    private val plugin: GatewayPlugin by inject()
-
     override val name = extensionName()
 
     override suspend fun setup() {
         ephemeralSlashCommand {
             name = "version"
-            description = "Gives the current version of the Gateway plugin"
+            description = "Gives the current version of the Minecraft server"
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
 
                 respond {
                     embed {
-                        title = plugin.description.version
-                        description = "All versions are available at https://github.com/nicholasgrose/Gateway/releases."
+                        title = "Minecraft Version"
+                        description = Bukkit.getMinecraftVersion()
                         color = Color(config.secondaryColor().value())
                     }
                 }
