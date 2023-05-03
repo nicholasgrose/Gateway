@@ -1,14 +1,14 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.21"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.21"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
     // https://detekt.dev/
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
 }
