@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.nio.file.Path
 
 /**
  * The Discord bot that the plugin runs
@@ -96,8 +97,12 @@ class DiscordBot : KoinComponent {
         }
         extensions {
             extensions.addAll(
-                DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() }
+                DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() },
             )
+        }
+        plugins {
+            pluginPaths.clear()
+            pluginPath(Path.of(plugin.dataFolder.path, "plugins"))
         }
     }
 
