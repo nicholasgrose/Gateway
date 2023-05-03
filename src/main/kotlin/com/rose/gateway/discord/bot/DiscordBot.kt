@@ -101,6 +101,8 @@ class DiscordBot : KoinComponent {
             )
         }
         plugins {
+            // The default path of "plugins/" is problematic on a Minecraft server, so we'll remove it and
+            // redirect the plugin search to "plugins/Gateway/plugins".
             pluginPaths.clear()
             pluginPath(Path.of(plugin.dataFolder.path, "plugins"))
         }
