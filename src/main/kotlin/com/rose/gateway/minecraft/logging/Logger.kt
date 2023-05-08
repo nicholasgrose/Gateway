@@ -36,4 +36,13 @@ object Logger : KoinComponent {
     fun warning(message: String) {
         pluginLogger.warning(message)
     }
+
+    /**
+     * Logs a message with level "ERROR"
+     *
+     * @param message The message to log
+     */
+    fun error(message: String) {
+        pluginLogger.severe(message)
+    }
 }
