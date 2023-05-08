@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.io.IOException
 import java.nio.file.Path
 
 /**
@@ -148,6 +149,7 @@ class DiscordBot : KoinComponent {
     /**
      * Launches the bot in a new parallel task
      */
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun launchConcurrentBot() {
         botJob = try {
             botStatus = BotStatus.RUNNING
@@ -157,11 +159,18 @@ class DiscordBot : KoinComponent {
 
                 botStatus = BotStatus.STOPPED
             }
-        } catch (error: KordInitializationException) {
-            val message = "An error occurred while running bot: ${error.message}"
+        } catch (error: Exception) {
+            val errorMessage = error.message
+            val newLine = System.lineSeparator()
 
-            botStatus = BotStatus.STOPPED because message
-            Logger.warning("Could not start Discord bot. Check status for info.")
+            val failureMessage = when (error) {
+                is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
+                is IOException -> "An IO exception occurred:$newLine$errorMessage"
+                else -> "Unknown error occurred:$newLine$errorMessage"
+            }
+
+            botStatus = BotStatus.STOPPED because failureMessage
+            Logger.error("Could not start Discord bot. Check status for info.")
 
             null
         }
