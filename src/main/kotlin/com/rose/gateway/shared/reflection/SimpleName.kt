@@ -9,8 +9,12 @@ val KType.simpleName: String
     get() {
         val type = this
         val simpleName = type.asClass()?.simpleName.toString()
-        val suffix = if (type.arguments.isEmpty()) "" else type.arguments.joinToString(", ", "<", ">") {
-            it.type?.asClass()?.simpleName.toString()
+        val suffix = if (type.arguments.isEmpty()) {
+            ""
+        } else {
+            type.arguments.joinToString(", ", "<", ">") {
+                it.type?.asClass()?.simpleName.toString()
+            }
         }
 
         return "$simpleName$suffix"

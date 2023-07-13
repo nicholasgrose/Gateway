@@ -15,7 +15,7 @@ class LogFormatter : SimpleFormatter() {
     override fun format(record: LogRecord): String? {
         val zdt = ZonedDateTime.ofInstant(
             record.instant,
-            ZoneId.systemDefault()
+            ZoneId.systemDefault(),
         )
         val message = formatMessage(record)
         val warningLevel = record.level.localizedName

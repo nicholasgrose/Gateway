@@ -15,7 +15,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @return The built parser
  */
 fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
-    body: ListParserBuilder<T, A, R>.() -> Unit
+    body: ListParserBuilder<T, A, R>.() -> Unit,
 ): ListParser<T, A, R> = genericParser(::ListParserBuilder, body)
 
 /**
@@ -30,7 +30,7 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  */
 class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
     ArgParser<List<T>, A, ListParser<T, A, P>>(builder) where
-T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
+      T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
@@ -45,11 +45,14 @@ T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
             currentResult = parser.parseValidValue(currentResult.context)
         }
 
-        return if (builder.requireNonEmpty && results.isEmpty()) ParseResult.Failure(context)
-        else ParseResult.Success(
-            results.map { it.result },
-            results.lastOrNull()?.context ?: context
-        )
+        return if (builder.requireNonEmpty && results.isEmpty()) {
+            ParseResult.Failure(context)
+        } else {
+            ParseResult.Success(
+                results.map { it.result },
+                results.lastOrNull()?.context ?: context,
+            )
+        }
     }
 }
 

@@ -25,7 +25,7 @@ fun initializeKoin(plugin: GatewayPlugin) {
                 single { DiscordBot() }
                 single { HttpClient(CIO) }
                 single { PluginCoroutineScope() }
-            }
+            },
         )
     }
 }

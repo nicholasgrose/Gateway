@@ -19,7 +19,7 @@ import org.koin.core.component.inject
  * @return The built parser
  */
 fun <A : CommandArgs<A>> CommandArgs<A>.configItem(
-    body: ConfigItemParserBuilder<A>.() -> Unit
+    body: ConfigItemParserBuilder<A>.() -> Unit,
 ): ConfigItemParser<A> =
     genericParser(::ConfigItemParserBuilder, body)
 
@@ -49,9 +49,14 @@ class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) 
             val nextString = stringResult.result
             val matchedConfig = config[nextString]
 
-            if (matchedConfig != null) ParseResult.Success(matchedConfig, stringResult.context)
-            else ParseResult.Failure(stringResult.context)
-        } else ParseResult.Failure(stringResult.context)
+            if (matchedConfig != null) {
+                ParseResult.Success(matchedConfig, stringResult.context)
+            } else {
+                ParseResult.Failure(stringResult.context)
+            }
+        } else {
+            ParseResult.Failure(stringResult.context)
+        }
     }
 }
 

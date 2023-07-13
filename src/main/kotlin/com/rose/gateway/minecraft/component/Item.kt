@@ -10,6 +10,6 @@ import net.kyori.adventure.text.Component
  */
 fun item(itemName: String): Component {
     return itemName.tertiaryComponent().italic().showTextOnHover(
-        "Get help for ".component() + itemName.tertiaryComponent().italic()
+        "Get help for ".component() + itemName.tertiaryComponent().italic(),
     ).runCommandOnClick("/gateway config help $itemName")
 }

@@ -19,7 +19,7 @@ operator fun Component.plus(secondComponent: Component): Component = join(this, 
  */
 fun join(vararg components: Component): Component = join(
     JoinConfiguration.noSeparators(),
-    components.toList()
+    components.toList(),
 )
 
 /**
@@ -30,7 +30,7 @@ fun join(vararg components: Component): Component = join(
  */
 fun join(joinConfig: JoinConfiguration, components: Collection<Component>): Component = Component.join(
     joinConfig,
-    components
+    components,
 )
 
 /**
@@ -41,7 +41,7 @@ fun join(joinConfig: JoinConfiguration, components: Collection<Component>): Comp
  */
 fun join(components: Collection<Component>): Component = join(
     JoinConfiguration.noSeparators(),
-    components
+    components,
 )
 
 /**
@@ -52,7 +52,7 @@ fun join(components: Collection<Component>): Component = join(
  */
 fun join(joinConfig: JoinConfiguration, vararg components: Component): Component = join(
     joinConfig,
-    components.asList()
+    components.asList(),
 )
 
 /**
@@ -63,7 +63,7 @@ fun join(joinConfig: JoinConfiguration, vararg components: Component): Component
  */
 fun joinNewLine(vararg components: Component): Component = join(
     JoinConfiguration.newlines(),
-    components.asList()
+    components.asList(),
 )
 
 /**
@@ -74,7 +74,7 @@ fun joinNewLine(vararg components: Component): Component = join(
  */
 fun joinNewLine(components: Collection<Component>): Component = join(
     JoinConfiguration.newlines(),
-    components
+    components,
 )
 
 /**
@@ -85,5 +85,5 @@ fun joinNewLine(components: Collection<Component>): Component = join(
  */
 fun joinSpace(vararg components: Component): Component = join(
     JoinConfiguration.separator(" ".component()),
-    components.asList()
+    components.asList(),
 )

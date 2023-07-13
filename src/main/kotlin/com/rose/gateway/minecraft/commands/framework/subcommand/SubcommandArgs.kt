@@ -82,8 +82,11 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         processor = { context ->
             val succeeded = rankedExecutors.any { it.args.valid() }
 
-            if (succeeded) ParseResult.Success(Unit, context)
-            else ParseResult.Failure(context)
+            if (succeeded) {
+                ParseResult.Success(Unit, context)
+            } else {
+                ParseResult.Failure(context)
+            }
         }
 
         usageGenerator = {
@@ -91,22 +94,27 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
                 rankedExecutors.flatMap {
                     it.args.usages()
                 }
-            } else listOf()
+            } else {
+                listOf()
+            }
 
             subcommandDocs
         }
 
         completer = { context ->
-            if (remainingArgs.isEmpty()) listOf()
-            else command.complete(
-                TabCompleteContext(
-                    bukkit = context.bukkit,
-                    command = command,
-                    args = emptyArgs(remainingArgs),
-                    completingParser = UnitParser()
-                ),
-                rankedExecutors
-            )
+            if (remainingArgs.isEmpty()) {
+                listOf()
+            } else {
+                command.complete(
+                    TabCompleteContext(
+                        bukkit = context.bukkit,
+                        command = command,
+                        args = emptyArgs(remainingArgs),
+                        completingParser = UnitParser(),
+                    ),
+                    rankedExecutors,
+                )
+            }
         }
     }
 }

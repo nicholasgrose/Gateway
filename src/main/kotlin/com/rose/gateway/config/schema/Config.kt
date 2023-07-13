@@ -14,5 +14,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Config(
     @ConfigItem val bot: BotConfig,
-    @ConfigItem val minecraft: MinecraftConfig
+    @ConfigItem val minecraft: MinecraftConfig,
 ) : ConfigObject

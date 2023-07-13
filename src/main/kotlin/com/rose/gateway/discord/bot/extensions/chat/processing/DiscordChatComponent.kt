@@ -43,5 +43,5 @@ enum class DiscordChatComponent : LixyTokenType {
      *
      * @constructor Create a text token
      */
-    TEXT
+    TEXT,
 }

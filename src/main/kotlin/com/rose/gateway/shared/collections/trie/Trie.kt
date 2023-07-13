@@ -197,7 +197,9 @@ class Trie : MutableSet<String> {
         for (element in contents) {
             val elementRemoved = if (!keepSet.contains(element)) {
                 remove(element)
-            } else false
+            } else {
+                false
+            }
             success = success || elementRemoved
         }
 

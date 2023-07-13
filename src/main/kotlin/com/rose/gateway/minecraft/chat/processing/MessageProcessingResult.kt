@@ -13,5 +13,5 @@ import net.kyori.adventure.text.Component
 data class MessageProcessingResult(
     val successful: Boolean,
     val minecraftMessage: Component,
-    val discordMessage: String
+    val discordMessage: String,
 )

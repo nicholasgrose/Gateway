@@ -25,7 +25,7 @@ suspend fun <T : Any> EphemeralSlashCommandContext<*, *>.groupAndPaginateItems(
     displayItems: Collection<T>,
     pageGroupSize: Int,
     noItemsResponseBuilder: FollowupMessageCreateBuilder.() -> Unit,
-    groupPageBuilder: PaginatorBuilder.(Int, List<T>) -> Unit
+    groupPageBuilder: PaginatorBuilder.(Int, List<T>) -> Unit,
 ) {
     if (displayItems.isEmpty()) {
         respond {

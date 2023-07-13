@@ -13,7 +13,7 @@ import com.rose.gateway.minecraft.commands.framework.emptyArgs
  */
 fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> = CommandExecutor(
     ::subcommandRunner,
-    SubcommandArgs.forCommand(command)
+    SubcommandArgs.forCommand(command),
 )
 
 /**
@@ -29,9 +29,9 @@ fun subcommandRunner(context: CommandExecuteContext<SubcommandArgs>): Boolean {
         CommandExecuteContext(
             bukkit = context.bukkit,
             command = context.command,
-            args = emptyArgs(remainingArguments)
+            args = emptyArgs(remainingArguments),
         ),
-        args.rankedExecutors
+        args.rankedExecutors,
     )
 
     return commandResult.succeeded

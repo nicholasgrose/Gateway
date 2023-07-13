@@ -56,7 +56,9 @@ class GatewayConfigFile : KoinComponent {
             Logger.warning("Fell back to default config.")
 
             defaultConfig
-        } else config
+        } else {
+            config
+        }
     }
 
     /**
