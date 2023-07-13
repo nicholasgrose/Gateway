@@ -36,16 +36,16 @@ object DiscordCommands {
                 joinSpace(
                     "@USER".secondaryComponent().showTextOnHover(USER_HELP_MESSAGE),
                     "or".component(),
-                    "@\"USER\"".secondaryComponent().showTextOnHover(USER_QUOTE_HELP_MESSAGE)
+                    "@\"USER\"".secondaryComponent().showTextOnHover(USER_QUOTE_HELP_MESSAGE),
                 ),
                 joinSpace(
                     "@R=ROLE".secondaryComponent().showTextOnHover(ROLE_HELP_MESSAGE),
                     "or".component(),
-                    "@R=\"ROLE\"".secondaryComponent().showTextOnHover(ROLE_QUOTE_HELP_MESSAGE)
+                    "@R=\"ROLE\"".secondaryComponent().showTextOnHover(ROLE_QUOTE_HELP_MESSAGE),
                 ),
                 "@C=TEXT_CHANNEL".secondaryComponent().showTextOnHover(TEXT_CHANNEL_HELP_MESSAGE),
-                "@V=VOICE_CHANNEL".secondaryComponent().showTextOnHover(VOICE_CHANNEL_HELP_MESSAGE)
-            )
+                "@V=VOICE_CHANNEL".secondaryComponent().showTextOnHover(VOICE_CHANNEL_HELP_MESSAGE),
+            ),
         )
 
         return true

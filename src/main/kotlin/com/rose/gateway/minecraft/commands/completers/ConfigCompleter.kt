@@ -38,7 +38,7 @@ object ConfigCompleter : KoinComponent {
      * @return A completer for config items of a particular type
      */
     fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> configItemsWithType(
-        type: KType
+        type: KType,
     ): P.(TabCompleteContext<A>) -> List<String> {
         val items = config.allItems()
         val matchedItems = items.filter {

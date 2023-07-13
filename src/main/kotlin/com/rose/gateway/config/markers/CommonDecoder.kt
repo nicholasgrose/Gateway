@@ -31,12 +31,15 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
     override fun supports(type: KType): Boolean {
         val classifier = type.classifier
 
-        return if (classifier is KClass<*>) (
-            !classifier.isData &&
-                !classifier.isSealed &&
-                !classifier.isInline() &&
-                classifier canBe ConfigObject::class
-            )
-        else false
+        return if (classifier is KClass<*>) {
+            (
+                !classifier.isData &&
+                    !classifier.isSealed &&
+                    !classifier.isInline() &&
+                    classifier canBe ConfigObject::class
+                )
+        } else {
+            false
+        }
     }
 }

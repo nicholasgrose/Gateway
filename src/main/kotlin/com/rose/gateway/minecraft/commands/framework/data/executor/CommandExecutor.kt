@@ -16,7 +16,7 @@ import com.rose.gateway.shared.collections.builders.trieOf
  */
 data class CommandExecutor<A : CommandArgs<A>>(
     val executor: ((CommandExecuteContext<A>) -> Boolean),
-    val args: () -> A
+    val args: () -> A,
 ) {
     /**
      * Attempts to execute the executor in a particular context
@@ -32,10 +32,12 @@ data class CommandExecutor<A : CommandArgs<A>>(
                 CommandExecuteContext(
                     bukkit = context.bukkit,
                     command = context.command,
-                    args = args
-                )
+                    args = args,
+                ),
             )
-        } else null
+        } else {
+            null
+        }
     }
 
     /**
@@ -60,8 +62,8 @@ data class CommandExecutor<A : CommandArgs<A>>(
                 bukkit = context.bukkit,
                 command = context.command,
                 args = args,
-                completingParser = UnitParser()
-            )
+                completingParser = UnitParser(),
+            ),
         )
 
         return trieOf(completions).search(remainingArgs)

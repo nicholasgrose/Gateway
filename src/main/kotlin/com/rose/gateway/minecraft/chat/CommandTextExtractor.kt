@@ -4,7 +4,7 @@ import com.rose.gateway.discord.text.discordBoldSafe
 
 private val commandDiscordFormatterMap = mapOf(
     "me" to ::formatMeCommand,
-    "say" to ::formatSayCommand
+    "say" to ::formatSayCommand,
 )
 
 /**

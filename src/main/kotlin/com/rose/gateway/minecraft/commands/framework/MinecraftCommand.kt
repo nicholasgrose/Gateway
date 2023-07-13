@@ -20,7 +20,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         label: String,
-        args: Array<String>
+        args: Array<String>,
     ): Boolean {
         val argList = args.toList()
         val commandResult = command.parseAndExecute(
@@ -29,11 +29,11 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     sender = sender,
                     command = bukkitCommand,
                     label = label,
-                    args = args
+                    args = args,
                 ),
                 command = command,
-                args = emptyArgs(argList)
-            )
+                args = emptyArgs(argList),
+            ),
         )
 
         if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
@@ -51,7 +51,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender.sendMessage(
             "Usage:\n" + rankedExecutors.joinToString("\n") {
                 it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-            }
+            },
         )
     }
 
@@ -59,7 +59,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         alias: String,
-        args: Array<String>
+        args: Array<String>,
     ): List<String> {
         val argList = args.toList()
 
@@ -69,12 +69,12 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
-                    args = args
+                    args = args,
                 ),
                 command = command,
                 args = emptyArgs(argList),
-                completingParser = UnitParser()
-            )
+                completingParser = UnitParser(),
+            ),
         )
     }
 

@@ -17,5 +17,5 @@ import kotlinx.coroutines.Job
  */
 fun PluginCoroutineScope.launchIfChatExtensionEnabled(
     config: PluginConfig,
-    block: suspend CoroutineScope.() -> Unit
+    block: suspend CoroutineScope.() -> Unit,
 ): Job? = launchIf(config.chatExtensionEnabled(), block)

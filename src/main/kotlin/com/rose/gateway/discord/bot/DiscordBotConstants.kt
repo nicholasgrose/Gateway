@@ -27,7 +27,7 @@ object DiscordBotConstants {
         IpExtension,
         ListExtension,
         TpsExtension,
-        WhitelistExtension
+        WhitelistExtension,
     )
 
     /**
@@ -36,7 +36,7 @@ object DiscordBotConstants {
     val REQUIRED_PERMISSIONS = Permissions(
         setOf(
             Permission.SendMessages,
-            Permission.EmbedLinks
-        )
+            Permission.EmbedLinks,
+        ),
     )
 }

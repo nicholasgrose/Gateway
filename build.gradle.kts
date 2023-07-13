@@ -1,16 +1,16 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "1.9.0"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.0"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
     id("xyz.jpenilla.run-paper") version "2.1.0"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.0"
 }
 
 val version: String by project
@@ -58,10 +58,6 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
     // Library that supports loading and (more importantly) saving to YAML files.
     implementation("com.charleskorn.kaml:kaml:$kamlVersion")
-    // HTTP client library.
-    // Disabled until I implement update checking.
-//    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-//    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
     // Library for Discord bots.
     implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
@@ -73,7 +69,7 @@ ktlint {
 }
 
 detekt {
-    config = files("config/detekt/detekt.yml")
+    config.from("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
 }
 

@@ -27,7 +27,7 @@ object ConfigCommands {
      * @return Whether the command succeeded
      */
     fun <T, A : ConfigArgs<T, A, P>, P : ArgParser<T, A, P>> setConfig(
-        context: CommandExecuteContext<A>
+        context: CommandExecuteContext<A>,
     ): Boolean {
         val args = context.args
         val item = args.item
@@ -53,8 +53,8 @@ object ConfigCommands {
                 item.path.tertiaryComponent().italic(),
                 "set to".component(),
                 value.toString().secondaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 
@@ -68,7 +68,7 @@ object ConfigCommands {
      * @return Whether the command succeeded
      */
     fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> addConfiguration(
-        context: CommandExecuteContext<A>
+        context: CommandExecuteContext<A>,
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
@@ -107,8 +107,8 @@ object ConfigCommands {
                 values.toString().secondaryComponent().italic(),
                 "added to".component(),
                 item.path.tertiaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 
@@ -122,7 +122,7 @@ object ConfigCommands {
      * @return Whether the command succeeded
      */
     fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> removeConfiguration(
-        context: CommandExecuteContext<A>
+        context: CommandExecuteContext<A>,
     ): Boolean {
         val configItem = context.args.item
         val values = context.args.value
@@ -161,8 +161,8 @@ object ConfigCommands {
                 values.toString().secondaryComponent().italic(),
                 "removed from".component(),
                 item.path.tertiaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 }

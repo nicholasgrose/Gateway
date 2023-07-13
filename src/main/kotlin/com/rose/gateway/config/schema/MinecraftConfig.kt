@@ -22,5 +22,5 @@ data class MinecraftConfig(
     @ConfigItem("Used to indicate configuration paths and mark less important info")
     var tertiaryColor: String,
     @ConfigItem("Used to indicate errors/warnings and mark configurations that can be null")
-    var warningColor: String
+    var warningColor: String,
 ) : ConfigObject

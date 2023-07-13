@@ -16,7 +16,7 @@ import org.koin.core.component.inject
  */
 open class CommonExtensionConfig(
     enabled: Boolean,
-    @Transient val extensionName: String = "None"
+    @Transient val extensionName: String = "None",
 ) : KoinComponent, ConfigObject {
     private val bot: DiscordBot by inject()
 

@@ -22,5 +22,5 @@ data class ExtensionsConfig(
     @ConfigItem val ip: IpConfig,
     @ConfigItem val list: ListConfig,
     @ConfigItem val tps: TpsConfig,
-    @ConfigItem val whitelist: WhitelistConfig
+    @ConfigItem val whitelist: WhitelistConfig,
 ) : ConfigObject

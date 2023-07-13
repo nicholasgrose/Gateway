@@ -14,7 +14,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
  */
 public sealed class FrameworkContext<A : CommandArgs<A>>(
     val command: Command,
-    val args: A
+    val args: A,
 ) {
     /**
      * The context of an action for a Bukkit command
@@ -30,7 +30,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
     public sealed class BukkitCommand<B : BukkitContext, A : CommandArgs<A>>(
         val bukkit: B,
         command: Command,
-        args: A
+        args: A,
     ) : FrameworkContext<A>(command, args) {
         /**
          * The context for a command execution
@@ -45,11 +45,11 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
         public class CommandExecute<A : CommandArgs<A>>(
             bukkit: BukkitContext.CommandExecute,
             command: Command,
-            args: A
+            args: A,
         ) : BukkitCommand<BukkitContext.CommandExecute, A>(
             bukkit,
             command,
-            args
+            args,
         )
 
         /**
@@ -67,11 +67,11 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
             bukkit: BukkitContext.TabComplete,
             command: Command,
             args: A,
-            val completingParser: ArgParser<*, A, *>
+            val completingParser: ArgParser<*, A, *>,
         ) : BukkitCommand<BukkitContext.TabComplete, A>(
             bukkit,
             command,
-            args
+            args,
         )
     }
 }

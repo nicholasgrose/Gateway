@@ -14,7 +14,7 @@ import kotlin.reflect.KProperty
  * @constructor Create an arg parser
  */
 abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
-    open val builder: ParserBuilder<T, A, P>
+    open val builder: ParserBuilder<T, A, P>,
 ) {
     /**
      * Gives the name of this parser
@@ -73,7 +73,9 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
 
         return if (parseResult is ParseResult.Success && builder.validator(self(), parseResult)) {
             ParseResult.Success(parseResult.result, parseResult.context)
-        } else ParseResult.Failure(parseResult.context)
+        } else {
+            ParseResult.Failure(parseResult.context)
+        }
     }
 
     /**

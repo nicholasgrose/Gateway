@@ -12,7 +12,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
  */
 data class ExecutorArgsPair<A : CommandArgs<A>>(
     val executor: CommandExecutor<A>,
-    val args: A
+    val args: A,
 ) {
     companion object {
         /**

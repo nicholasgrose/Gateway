@@ -62,8 +62,8 @@ object ConfigMonitoringRunner : KoinComponent {
         sender.sendMessage(
             joinNewLine(
                 "Available Configurations: ".primaryComponent(),
-                joinNewLine(configs)
-            )
+                joinNewLine(configs),
+            ),
         )
     }
 
@@ -116,8 +116,8 @@ object ConfigMonitoringRunner : KoinComponent {
         sender.sendMessage(
             joinSpace(
                 "Config Status:".primaryComponent(),
-                configStatus.component()
-            )
+                configStatus.component(),
+            ),
         )
 
         return true
@@ -150,13 +150,13 @@ object ConfigMonitoringRunner : KoinComponent {
             join(
                 "Type: ".primaryComponent(),
                 item.type.simpleName.component(),
-                (if (item.type.isMarkedNullable) "?" else "").warningComponent()
+                (if (item.type.isMarkedNullable) "?" else "").warningComponent(),
             ),
             "Current Value: ".primaryComponent() + item.value.toString().component(),
             "Description: ".primaryComponent() + item.description.component(),
             "View All Configurations".secondaryComponent().underlined().italic()
                 .showTextOnHover("Click to view all configurations.".component())
-                .runCommandOnClick("/gateway config help")
+                .runCommandOnClick("/gateway config help"),
         )
     }
 }

@@ -10,7 +10,7 @@ import net.kyori.adventure.text.event.ClickEvent
  * @return The [Component] with the click event added
  */
 fun Component.runCommandOnClick(command: String): Component = this.clickEvent(
-    ClickEvent.runCommand(command)
+    ClickEvent.runCommand(command),
 )
 
 /**
@@ -20,5 +20,5 @@ fun Component.runCommandOnClick(command: String): Component = this.clickEvent(
  * @return The [Component] with the click event added
  */
 fun Component.openUrlOnClick(url: String): Component = this.clickEvent(
-    ClickEvent.openUrl(url)
+    ClickEvent.openUrl(url),
 )

@@ -40,7 +40,7 @@ class BotContext : KoinComponent {
             guild.channels.collect { channel ->
                 if (ClientInfo.hasChannelPermissions(
                         channel,
-                        DiscordBotConstants.REQUIRED_PERMISSIONS
+                        DiscordBotConstants.REQUIRED_PERMISSIONS,
                     ) && channel is TextChannel && channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)

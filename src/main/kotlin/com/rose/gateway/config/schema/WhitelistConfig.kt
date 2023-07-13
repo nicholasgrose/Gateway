@@ -21,7 +21,7 @@ class WhitelistConfig(
     /**
      * The maximum number of player allowed per list page
      */
-    @ConfigItem("The maximum number of player allowed per list page") var maxPlayersPerPage: Int
+    @ConfigItem("The maximum number of player allowed per list page") var maxPlayersPerPage: Int,
 ) : CommonExtensionConfig(enabled, WhitelistExtension.extensionName())
 
 /**
@@ -53,5 +53,5 @@ data class WhitelistConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage:
  */
 object WhitelistConfigSerializer : SurrogateBasedSerializer<WhitelistConfig, WhitelistConfigSurrogate>(
     WhitelistConfigSurrogate.serializer(),
-    WhitelistConfigSurrogate
+    WhitelistConfigSurrogate,
 )

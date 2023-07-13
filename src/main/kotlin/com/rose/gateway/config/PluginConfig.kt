@@ -98,6 +98,8 @@ class PluginConfig : KoinComponent {
         return if (match != null && match.type == type) {
             @Suppress("UNCHECKED_CAST")
             match as Item<ItemValueType>
-        } else null
+        } else {
+            null
+        }
     }
 }

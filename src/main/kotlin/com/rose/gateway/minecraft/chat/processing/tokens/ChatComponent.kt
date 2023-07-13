@@ -62,5 +62,5 @@ enum class ChatComponent : LixyTokenType {
      *
      * @constructor Create plaintext
      */
-    TEXT
+    TEXT,
 }

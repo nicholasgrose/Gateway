@@ -12,5 +12,5 @@ import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
  */
 data class ParseContext<A : CommandArgs<A>>(
     val args: A,
-    val currentIndex: Int
+    val currentIndex: Int,
 )

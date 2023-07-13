@@ -19,7 +19,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  */
 fun <T, A : CommandArgs<A>, B : ParserBuilder<T, A, P>, P : ArgParser<T, A, P>> CommandArgs<A>.genericParser(
     builderConstructor: () -> B,
-    body: B.() -> Unit
+    body: B.() -> Unit,
 ): P {
     val arg = genericParserBuilder(builderConstructor, body)
 
@@ -43,7 +43,7 @@ fun <T, A : CommandArgs<A>, B : ParserBuilder<T, A, P>, P : ArgParser<T, A, P>> 
  */
 fun <T, A : CommandArgs<A>, B : ParserBuilder<T, A, P>, P : ArgParser<T, A, P>> genericParserBuilder(
     builderConstructor: () -> B,
-    body: B.() -> Unit
+    body: B.() -> Unit,
 ): P {
     val builder = builderConstructor()
 

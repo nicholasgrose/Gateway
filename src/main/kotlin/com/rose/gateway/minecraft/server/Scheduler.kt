@@ -24,7 +24,7 @@ object Scheduler : KoinComponent {
             plugin,
             Runnable {
                 task()
-            }
+            },
         )
     }
 }

@@ -177,8 +177,8 @@ open class CommandArgs<A : CommandArgs<A>> {
                     bukkit = context.bukkit,
                     command = context.command,
                     args = context.args,
-                    completingParser = nextArg
-                )
+                    completingParser = nextArg,
+                ),
             ) ?: listOf()
         }
     }

@@ -1,6 +1,5 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
-import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.shared.parsing.TokenProcessor
@@ -11,7 +10,6 @@ import guru.zoroark.lixy.LixyTokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Token processor that defines the role mention token and its processing
@@ -19,8 +17,6 @@ import org.koin.core.component.inject
  * @constructor Create a role mention token processor
  */
 class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
-    private val config: PluginConfig by inject()
-
     companion object {
         private const val SNOWFLAKE_START_INDEX = 3
     }

@@ -1,6 +1,6 @@
 package com.rose.gateway.shared.collections.trie
 
-import java.util.SortedMap
+import java.util.*
 
 /**
  * A single node of a [Trie]
@@ -17,5 +17,5 @@ data class TrieNode(
     val nodeValue: String,
     val parent: TrieNode?,
     var isTerminalNode: Boolean = false,
-    val children: SortedMap<Char, TrieNode> = sortedMapOf(Comparator.reverseOrder())
+    val children: SortedMap<Char, TrieNode> = sortedMapOf(Comparator.reverseOrder()),
 )

@@ -29,7 +29,7 @@ object MentionResult : KoinComponent {
     fun mention(minecraftText: String, discordText: String): TokenProcessingResult {
         return TokenProcessingResult(
             minecraftText.primaryComponent(),
-            discordText
+            discordText,
         )
     }
 
@@ -67,7 +67,7 @@ object MentionResult : KoinComponent {
 
             return TokenProcessingResult(
                 atMember(firstMember, config.primaryColor()),
-                discordText
+                discordText,
             )
         }
 

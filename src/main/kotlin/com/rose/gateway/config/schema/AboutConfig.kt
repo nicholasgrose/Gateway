@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = AboutConfigSerializer::class)
 class AboutConfig(
-    enabled: Boolean
+    enabled: Boolean,
 ) : CommonExtensionConfig(enabled, AboutExtension.extensionName())
 
 /**

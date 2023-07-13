@@ -40,9 +40,14 @@ class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) :
         return if (stringResult is ParseResult.Success) {
             val result = stringResult.result.toIntOrNull()
 
-            if (result != null) ParseResult.Success(result, stringResult.context)
-            else ParseResult.Failure(stringResult.context)
-        } else ParseResult.Failure(stringResult.context)
+            if (result != null) {
+                ParseResult.Success(result, stringResult.context)
+            } else {
+                ParseResult.Failure(stringResult.context)
+            }
+        } else {
+            ParseResult.Failure(stringResult.context)
+        }
     }
 }
 

@@ -10,5 +10,5 @@ import net.kyori.adventure.text.event.HoverEvent
  * @return The [Component] with the hover event
  */
 fun Component.showTextOnHover(component: Component): Component = this.hoverEvent(
-    HoverEvent.showText(component)
+    HoverEvent.showText(component),
 )

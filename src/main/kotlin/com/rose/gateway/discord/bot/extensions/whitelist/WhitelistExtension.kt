@@ -93,7 +93,7 @@ class WhitelistExtension : Extension() {
                             title = plurality(
                                 whitelistedPlayerCount,
                                 "1 Whitelisted Player",
-                                "$whitelistedPlayerCount Whitelisted Players"
+                                "$whitelistedPlayerCount Whitelisted Players",
                             )
                             description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
                                 val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
@@ -110,7 +110,7 @@ class WhitelistExtension : Extension() {
     }
 
     private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistAddResponse(
-        state: WhitelistState
+        state: WhitelistState,
     ) {
         respond {
             when (state) {
@@ -138,7 +138,7 @@ class WhitelistExtension : Extension() {
     }
 
     private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistRemoveResponse(
-        state: WhitelistState
+        state: WhitelistState,
     ) {
         respond {
             when (state) {
