@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable(with = TpsConfigSerializer::class)
 class TpsConfig(
-    enabled: Boolean
+    enabled: Boolean,
 ) : CommonExtensionConfig(enabled, TpsExtension.extensionName())
 
 /**
@@ -44,5 +44,5 @@ data class TpsConfigSurrogate(val enabled: Boolean) {
  */
 object TpsConfigSerializer : SurrogateBasedSerializer<TpsConfig, TpsConfigSurrogate>(
     TpsConfigSurrogate.serializer(),
-    TpsConfigSurrogate
+    TpsConfigSurrogate,
 )

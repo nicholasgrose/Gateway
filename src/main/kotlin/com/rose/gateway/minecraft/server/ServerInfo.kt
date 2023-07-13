@@ -30,7 +30,7 @@ object ServerInfo {
     public data class TPS(
         val oneMinute: Double,
         val fiveMinute: Double,
-        val fifteenMinute: Double
+        val fifteenMinute: Double,
     )
 
     /**
@@ -43,7 +43,7 @@ object ServerInfo {
             return TPS(
                 bukkitTps[0],
                 bukkitTps[1],
-                bukkitTps[2]
+                bukkitTps[2],
             )
         }
 }

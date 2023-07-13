@@ -24,13 +24,13 @@ import kotlin.reflect.typeOf
 open class ConfigListArgs<
     ListElementType : Any,
     ListArgsType : ConfigListArgs<ListElementType, ListArgsType, ListElementParserType>,
-    ListElementParserType : ArgParser<ListElementType, ListArgsType, ListElementParserType>
+    ListElementParserType : ArgParser<ListElementType, ListArgsType, ListElementParserType>,
     >(
     resultType: KType,
-    valueArg: ListArgsType.() -> ListParser<ListElementType, ListArgsType, ListElementParserType>
+    valueArg: ListArgsType.() -> ListParser<ListElementType, ListArgsType, ListElementParserType>,
 ) : ConfigArgs<List<ListElementType>, ListArgsType, ListParser<ListElementType, ListArgsType, ListElementParserType>>(
     resultType,
-    valueArg
+    valueArg,
 )
 
 /**
@@ -43,9 +43,9 @@ open class ConfigListArgs<
  */
 class StringListConfigArgs(
     stringCompleter: StringParser<StringListConfigArgs>.(
-        TabCompleteContext<StringListConfigArgs>
+        TabCompleteContext<StringListConfigArgs>,
     ) -> List<String>,
-    stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean
+    stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean,
 ) :
     ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
@@ -60,7 +60,7 @@ class StringListConfigArgs(
                     validator = stringValidator
                 }
             }
-        }
+        },
     )
 
 /**
@@ -74,7 +74,7 @@ fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
         val item = it.context.args.item
 
         item.value.contains(it.result).not()
-    }
+    },
 )
 
 /**
@@ -93,12 +93,15 @@ fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
         val item = parseResult.context.args.item
 
         item.value.contains(parseResult.result)
-    }
+    },
 )
 
 private fun StringParser<StringListConfigArgs>.existingValues(
-    context: TabCompleteContext<StringListConfigArgs>
+    context: TabCompleteContext<StringListConfigArgs>,
 ): List<String> {
-    return if (context.args.wasSuccessful(context.completingParser)) context.args.value
-    else listOf()
+    return if (context.args.wasSuccessful(context.completingParser)) {
+        context.args.value
+    } else {
+        listOf()
+    }
 }

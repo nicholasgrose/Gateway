@@ -27,8 +27,8 @@ class CommandBuilder(val name: String) {
         return Command(
             CommandDefinition(
                 name = name,
-                executors = executors
-            )
+                executors = executors,
+            ),
         )
     }
 
@@ -51,7 +51,7 @@ class CommandBuilder(val name: String) {
      */
     fun <A : CommandArgs<A>> runner(
         arguments: () -> A,
-        commandFunction: (CommandExecuteContext<A>) -> Boolean
+        commandFunction: (CommandExecuteContext<A>) -> Boolean,
     ) {
         val executor = CommandExecutor(commandFunction, arguments)
 

@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender
 public sealed class BukkitContext(
     val sender: CommandSender,
     val command: Command,
-    val args: Array<String>
+    val args: Array<String>,
 ) {
     /**
      * A Bukkit command tab completion context
@@ -30,7 +30,7 @@ public sealed class BukkitContext(
         sender: CommandSender,
         command: Command,
         val alias: String,
-        args: Array<String>
+        args: Array<String>,
     ) : BukkitContext(sender, command, args)
 
     /**
@@ -47,6 +47,6 @@ public sealed class BukkitContext(
         sender: CommandSender,
         command: Command,
         val label: String,
-        args: Array<String>
+        args: Array<String>,
     ) : BukkitContext(sender, command, args)
 }

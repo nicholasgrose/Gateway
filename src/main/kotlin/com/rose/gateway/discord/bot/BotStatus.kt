@@ -41,7 +41,8 @@ enum class BotStatus(val status: String, var reason: String = "") {
      *
      * @constructor Create a "stopped" status
      */
-    STOPPED("Stopped");
+    STOPPED("Stopped"),
+    ;
 
     /**
      * Assign a reason to the bot's status

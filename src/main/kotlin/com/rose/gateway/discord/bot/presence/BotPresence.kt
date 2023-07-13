@@ -32,7 +32,7 @@ object BotPresence : KoinComponent {
         return plurality(
             playerCount,
             "Minecraft (1 Player)",
-            "Minecraft ($playerCount Players)"
+            "Minecraft ($playerCount Players)",
         )
     }
 }

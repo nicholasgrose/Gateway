@@ -15,7 +15,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @return The built parser
  */
 fun <A : CommandArgs<A>> CommandArgs<A>.boolean(
-    body: BooleanParserBuilder<A>.() -> Unit
+    body: BooleanParserBuilder<A>.() -> Unit,
 ): BooleanParser<A> =
     genericParser(::BooleanParserBuilder, body)
 
@@ -42,9 +42,14 @@ class BooleanParser<A : CommandArgs<A>>(builder: BooleanParserBuilder<A>) :
         return if (stringResult is ParseResult.Success) {
             val result = stringResult.result.toBooleanStrictOrNull()
 
-            if (result != null) ParseResult.Success(result, stringResult.context)
-            else ParseResult.Failure(stringResult.context)
-        } else ParseResult.Failure(stringResult.context)
+            if (result != null) {
+                ParseResult.Success(result, stringResult.context)
+            } else {
+                ParseResult.Failure(stringResult.context)
+            }
+        } else {
+            ParseResult.Failure(stringResult.context)
+        }
     }
 }
 

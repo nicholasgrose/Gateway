@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 class IpConfig(
     enabled: Boolean,
     @ConfigItem("The IP that will be displayed by the IP command.")
-    var displayIp: String
+    var displayIp: String,
 ) : CommonExtensionConfig(enabled, IpExtension.extensionName())
 
 /**

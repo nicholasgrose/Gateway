@@ -27,7 +27,7 @@ import org.koin.core.component.inject
 class BotConfig(
     token: String,
     botChannels: List<String>,
-    @ConfigItem val extensions: ExtensionsConfig
+    @ConfigItem val extensions: ExtensionsConfig,
 ) : KoinComponent, ConfigObject {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
     private val bot: DiscordBot by inject()
@@ -36,7 +36,7 @@ class BotConfig(
      * The Discord bot's bot token
      */
     @ConfigItem(
-        "The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/."
+        "The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/.",
     )
     var token = token
         set(value) {
@@ -72,19 +72,19 @@ class BotConfig(
 data class BotConfigSurrogate(
     val token: String,
     val botChannels: List<String>,
-    val extensions: ExtensionsConfig
+    val extensions: ExtensionsConfig,
 ) {
     companion object : SurrogateConverter<BotConfig, BotConfigSurrogate> {
         override fun fromBase(base: BotConfig): BotConfigSurrogate = BotConfigSurrogate(
             base.token,
             base.botChannels,
-            base.extensions
+            base.extensions,
         )
 
         override fun toBase(surrogate: BotConfigSurrogate): BotConfig = BotConfig(
             surrogate.token,
             surrogate.botChannels,
-            surrogate.extensions
+            surrogate.extensions,
         )
     }
 }

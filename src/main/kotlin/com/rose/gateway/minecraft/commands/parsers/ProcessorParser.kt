@@ -15,7 +15,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @return The built parser
  */
 fun <T, A : CommandArgs<A>> CommandArgs<A>.processor(
-    body: ProcessorParserBuilder<T, A>.() -> Unit
+    body: ProcessorParserBuilder<T, A>.() -> Unit,
 ): ProcessorParser<T, A> = genericParser(::ProcessorParserBuilder, body)
 
 /**

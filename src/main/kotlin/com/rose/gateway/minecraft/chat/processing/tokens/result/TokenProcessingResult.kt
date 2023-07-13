@@ -12,7 +12,7 @@ import net.kyori.adventure.text.Component
  */
 data class TokenProcessingResult(
     val minecraftMessage: Component,
-    val discordMessage: String
+    val discordMessage: String,
 ) {
     companion object {
         /**
@@ -24,7 +24,7 @@ data class TokenProcessingResult(
         fun error(text: String): TokenProcessingResult {
             return TokenProcessingResult(
                 text.warningComponent(),
-                text
+                text,
             )
         }
     }

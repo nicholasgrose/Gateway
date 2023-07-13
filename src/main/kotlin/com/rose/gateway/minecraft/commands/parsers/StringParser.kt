@@ -60,8 +60,8 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                     results.joinToString(" "),
                     ParseContext(
                         args = args,
-                        currentIndex = currentIndex + results.size
-                    )
+                        currentIndex = currentIndex + results.size,
+                    ),
                 )
             }
 
@@ -69,15 +69,15 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                 result,
                 ParseContext(
                     args = args,
-                    currentIndex = currentIndex + 1
-                )
+                    currentIndex = currentIndex + 1,
+                ),
             )
 
             else -> ParseResult.Failure(
                 ParseContext(
                     args = args,
-                    currentIndex = currentIndex + 1
-                )
+                    currentIndex = currentIndex + 1,
+                ),
             )
         }
     }

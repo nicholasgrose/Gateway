@@ -57,7 +57,7 @@ class ListExtension : Extension() {
                         title = plurality(
                             onlinePlayerCount,
                             "1 Online Player",
-                            "$onlinePlayerCount Player Online"
+                            "$onlinePlayerCount Player Online",
                         )
                         description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
                             val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1

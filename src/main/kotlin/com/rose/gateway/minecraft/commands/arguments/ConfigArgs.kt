@@ -30,10 +30,10 @@ import kotlin.reflect.typeOf
 abstract class ConfigArgs<
     T : Any,
     A : ConfigArgs<T, A, P>,
-    P : ArgParser<T, A, P>
+    P : ArgParser<T, A, P>,
     >(
     configType: KType,
-    valueArg: A.() -> P
+    valueArg: A.() -> P,
 ) : CommandArgs<A>() {
     /**
      * The config item of the given type that was specified
@@ -64,7 +64,7 @@ class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanParser<C
             name = "VALUE"
             description = "Boolean to use the item with."
         }
-    }
+    },
 )
 
 /**
@@ -79,7 +79,7 @@ class ConfigIntArgs : ConfigArgs<Int, ConfigIntArgs, IntParser<ConfigIntArgs>>(
             name = "VALUE"
             description = "Integer to use the item with."
         }
-    }
+    },
 )
 
 /**
@@ -94,5 +94,5 @@ class ConfigStringArgs : ConfigArgs<String, ConfigStringArgs, StringParser<Confi
             name = "VALUE"
             description = "String to use the item with."
         }
-    }
+    },
 )

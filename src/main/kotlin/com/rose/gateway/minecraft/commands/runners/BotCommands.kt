@@ -1,6 +1,5 @@
 package com.rose.gateway.minecraft.commands.runners
 
-import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.discord.bot.BotStatus
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
@@ -20,7 +19,6 @@ import org.koin.core.component.inject
  */
 object BotCommands : KoinComponent {
     private val bot: DiscordBot by inject()
-    private val config: PluginConfig by inject()
     private val pluginScope: PluginCoroutineScope by inject()
 
     /**
@@ -40,7 +38,7 @@ object BotCommands : KoinComponent {
             } else {
                 sendAndLogMessage(
                     context.bukkit.sender,
-                    "Discord bot failed to restart. Check bot status for more info."
+                    "Discord bot failed to restart. Check bot status for more info.",
                 )
             }
         }
@@ -71,8 +69,8 @@ object BotCommands : KoinComponent {
             joinSpace(
                 "Bot Status:".primaryComponent(),
                 status.status.component(),
-                (if (status.reason.isEmpty()) "" else "(${status.reason})").component()
-            )
+                (if (status.reason.isEmpty()) "" else "(${status.reason})").component(),
+            ),
         )
 
         return true

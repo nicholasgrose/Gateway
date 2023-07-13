@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 @Serializable(with = ChatConfigSerializer::class)
 class ChatConfig(
     enabled: Boolean,
-    @ConfigItem("Whether Discord role colors are shown in Minecraft chat") val showRoleColor: Boolean
+    @ConfigItem("Whether Discord role colors are shown in Minecraft chat") val showRoleColor: Boolean,
 ) : CommonExtensionConfig(enabled, ChatExtension.extensionName())
 
 /**
@@ -36,12 +36,12 @@ data class ChatConfigSurrogate(val enabled: Boolean, val showRoleColor: Boolean)
     companion object : SurrogateConverter<ChatConfig, ChatConfigSurrogate> {
         override fun fromBase(base: ChatConfig): ChatConfigSurrogate = ChatConfigSurrogate(
             base.enabled,
-            base.showRoleColor
+            base.showRoleColor,
         )
 
         override fun toBase(surrogate: ChatConfigSurrogate): ChatConfig = ChatConfig(
             surrogate.enabled,
-            surrogate.showRoleColor
+            surrogate.showRoleColor,
         )
     }
 }

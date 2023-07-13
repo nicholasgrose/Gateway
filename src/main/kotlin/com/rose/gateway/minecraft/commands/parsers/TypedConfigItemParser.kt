@@ -20,7 +20,7 @@ import kotlin.reflect.KType
  * @return The built parser
  */
 fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
-    body: TypedConfigItemParserBuilder<T, A>.() -> Unit
+    body: TypedConfigItemParserBuilder<T, A>.() -> Unit,
 ): TypedConfigItemParser<T, A> = genericParser(::TypedConfigItemParserBuilder, body)
 
 /**
@@ -50,9 +50,14 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: T
             val nextString = stringResult.result
             val matchedConfig = config.get<T>(builder.type, nextString)
 
-            if (matchedConfig != null) ParseResult.Success(matchedConfig, stringResult.context)
-            else ParseResult.Failure(stringResult.context)
-        } else ParseResult.Failure(stringResult.context)
+            if (matchedConfig != null) {
+                ParseResult.Success(matchedConfig, stringResult.context)
+            } else {
+                ParseResult.Failure(stringResult.context)
+            }
+        } else {
+            ParseResult.Failure(stringResult.context)
+        }
     }
 }
 

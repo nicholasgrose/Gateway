@@ -23,7 +23,7 @@ import kotlin.reflect.typeOf
 data class Item<ValueType>(
     val property: KMutableProperty<ValueType>,
     val path: String,
-    val description: String
+    val description: String,
 ) : KoinComponent {
     private val pluginConfig: PluginConfig by inject()
 
@@ -59,12 +59,15 @@ data class Item<ValueType>(
         val configProperties = source::class.memberProperties.filterConfigItems()
 
         for (member in configProperties) {
-            val result = if (member == property) source
-            else if (member.returnType canBe typeOf<ConfigObject>()) {
+            val result = if (member == property) {
+                source
+            } else if (member.returnType canBe typeOf<ConfigObject>()) {
                 val memberValue = member.getter.call(source) as ConfigObject
 
                 containingObject(memberValue)
-            } else null
+            } else {
+                null
+            }
 
             return result ?: continue
         }

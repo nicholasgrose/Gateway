@@ -11,5 +11,5 @@ import com.rose.gateway.minecraft.commands.framework.data.executor.CommandExecut
  */
 data class CommandDefinition(
     val name: String,
-    val executors: List<CommandExecutor<*>>
+    val executors: List<CommandExecutor<*>>,
 )

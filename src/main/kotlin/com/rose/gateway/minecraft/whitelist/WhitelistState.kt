@@ -25,5 +25,5 @@ enum class WhitelistState {
      *
      * @constructor Create a sustained state
      */
-    STATE_SUSTAINED
+    STATE_SUSTAINED,
 }
