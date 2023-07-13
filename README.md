@@ -1,28 +1,33 @@
 # Gateway
 
-A Paper server plugin that adds Discord-to-Minecraft interactions and vice versa.
+A [Paper](https://papermc.io/) server plugin that adds [Discord](https://discord.com/)
+-to-[Minecraft](https://www.minecraft.net/en-us) interactions and vice versa.
 It has a number of extensions that can be enabled or disabled in its configuration, so you don't need to use them all.
 
-Available extensions:
+## Available extensions:
 
-- About Extension – Lets Discord users view the plugin version and have fun.
+- About Extension – Lets Discord users view the server version and have fun.
 - Chat Extension – Adds cross-chat capabilities between Minecraft and Discord.
 - IP Extension – Adds a way for Discord users to query for the server's IP address.
 - List Extension – Lets Discord users list the names of online users.
 - TPS Extension - Lets Discord users see how the server is doing by checking its TPS.
-- Whitelist Extension – Lets Discord users add and remove people from the whitelist.
+- Whitelist Extension – Lets Discord users add and remove people from the server whitelist.
 
 ## Installing the Plugin:
 
 1. Install just like any other Paper plugin: plop the jar in your plugin's directory.
-2. After you install the plugin, you will need to add a configuration file for it.
-   You can get a sample configuration file from examples/Gateway.yaml in this repository.
-   Place this configuration file inside your server's 'plugins' directory in a new directory called 'Gateway'
-   (i.e., {SERVER_FOLDER}/plugins/Gateway/Gateway.yaml).
-3. Next, modify the configuration file by adding a Discord bot token and list of the text channels in which you wish to
-   have the bot respond detect commands and/or post messages.
+2. Start your server to create the default configuration in the `plugins/Gateway` directory.
+3. Next, modify the configuration. You can do this in two ways:
+
+   a. Modify the `plugins/Gateway/config.yaml` file by adding a Discord bot token and list of the text channels in which
+   you wish to have the bot post and detect messages.
+   You can reload from the file with `/gateway config reload` in-game.
+
+   b. Use `/gateway config set bot.token TOKEN` and `/gateway config add bot.botChannels CHANNEL_NAME` to update the bot
+   configuration.
+
    You can play with the other settings, too.
-   Those have further elaboration in the example yaml.
+   Information about those settings is viewable in-game via `/gateway config help` and in the YAML comments.
 4. Play!
 
 ## Discord Bot Tokens
@@ -66,8 +71,8 @@ This is an easy process, though:
 ## Building the Plugin
 
 If you are a developer and wish to be able to modify the plugin or contribute, you can clone this repository and use
-gradle to build and test the plugin.
-The following useful gradle commands are available:
+[Gradle](https://gradle.org/) to build and test the plugin.
+The following useful Gradle commands are available:
 
 `gradlew build` - Builds the jar, and nothing more.
 
