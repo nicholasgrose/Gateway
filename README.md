@@ -57,7 +57,7 @@ This is an easy process, though:
    First, go the 'Scopes' label within this section and click only 'bot'.
 9. At the bottom of the 'Scopes' box, there will now be a URL copy this, as it will be what you use for adding the bot
    to your server.
-10. Above the 'OAuth2 URL Generator' will be a section labelled 'Redirects'.
+10. Above the 'OAuth2 URL Generator' will be a section labeled 'Redirects'.
     Click 'Add Redirect' and paste your URL in.
     Save your changes with the pop-up now at the bottom of your screen.
 11. Add your bot to the server using the link still in your clipboard.
