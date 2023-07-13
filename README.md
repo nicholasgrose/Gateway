@@ -15,8 +15,8 @@ It has a number of extensions that can be enabled or disabled in its configurati
 
 ## Installing the Plugin:
 
-1. Install just like any other Paper plugin: plop the jar in your plugin's directory.
-2. Start your server to create the default configuration in the `plugins/Gateway` directory.
+1. Install just like any other Paper plugin: plop the `Gateway.jar` file in your `plugins/` directory.
+2. Start your server to create the default configuration in the `plugins/Gateway/` directory.
 3. Next, modify the configuration. You can do this in two ways:
 
    a. Modify the `plugins/Gateway/config.yaml` file by adding a Discord bot token and list of the text channels in which
