@@ -22,25 +22,63 @@ object BotCommands : KoinComponent {
     private val pluginScope: PluginCoroutineScope by inject()
 
     /**
-     * Command that restarts the discord bot
+     * Command that rebuilds the Discord bot
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun restartBot(context: CommandExecuteContext<NoArgs>): Boolean {
+    fun rebuild(context: CommandExecuteContext<NoArgs>): Boolean {
+        sendAndLogMessage(context.bukkit.sender, "Rebuilding the Discord bot. This may take a while...")
+
+        pluginScope.launch {
+            bot.rebuild()
+            sendAndLogMessage(
+                context.bukkit.sender, if (bot.botStatus == BotStatus.RUNNING) {
+                    "Discord bot restarted."
+                } else {
+                    "Discord bot failed to restart. Check bot status for more info."
+                }
+            )
+        }
+
+        return true
+    }
+
+    /**
+     * Command that restarts the Discord bot
+     *
+     * @param context A command context without arguments
+     * @return Whether the command succeeded
+     */
+    fun restart(context: CommandExecuteContext<NoArgs>): Boolean {
         sendAndLogMessage(context.bukkit.sender, "Restarting the Discord bot...")
 
         pluginScope.launch {
             bot.restart()
+            sendAndLogMessage(
+                context.bukkit.sender, if (bot.botStatus == BotStatus.RUNNING) {
+                    "Discord bot restarted."
+                } else {
+                    "Discord bot failed to restart. Check bot status for more info."
+                }
+            )
+        }
 
-            if (bot.botStatus == BotStatus.RUNNING) {
-                sendAndLogMessage(context.bukkit.sender, "Discord bot restarted.")
-            } else {
-                sendAndLogMessage(
-                    context.bukkit.sender,
-                    "Discord bot failed to restart. Check bot status for more info.",
-                )
-            }
+        return true
+    }
+
+    /**
+     * Stops the Discord bot
+     *
+     * @param context A command context without arguments
+     * @return Whether the command succeeded
+     */
+    fun stop(context: CommandExecuteContext<NoArgs>): Boolean {
+        sendAndLogMessage(context.bukkit.sender, "Stopping the Discord bot...")
+
+        pluginScope.launch {
+            bot.stop()
+            sendAndLogMessage(context.bukkit.sender, "Discord bot stopped.")
         }
 
         return true
@@ -63,7 +101,7 @@ object BotCommands : KoinComponent {
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
-    fun botStatus(context: CommandExecuteContext<NoArgs>): Boolean {
+    fun status(context: CommandExecuteContext<NoArgs>): Boolean {
         val status = bot.botStatus
         context.bukkit.sender.sendMessage(
             joinSpace(
