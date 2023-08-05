@@ -179,7 +179,7 @@ class DiscordBot : KoinComponent {
     /**
      * Stops the Discord bot such that it can be restarted
      */
-    private suspend fun stop() {
+    suspend fun stop() {
         botStatus = BotStatus.STOPPING
 
         bot?.stop()
