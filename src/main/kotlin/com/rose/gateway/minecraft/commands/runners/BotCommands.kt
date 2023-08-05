@@ -33,11 +33,12 @@ object BotCommands : KoinComponent {
         pluginScope.launch {
             bot.rebuild()
             sendAndLogMessage(
-                context.bukkit.sender, if (bot.botStatus == BotStatus.RUNNING) {
+                context.bukkit.sender,
+                if (bot.botStatus == BotStatus.RUNNING) {
                     "Discord bot restarted."
                 } else {
                     "Discord bot failed to restart. Check bot status for more info."
-                }
+                },
             )
         }
 
@@ -56,11 +57,12 @@ object BotCommands : KoinComponent {
         pluginScope.launch {
             bot.restart()
             sendAndLogMessage(
-                context.bukkit.sender, if (bot.botStatus == BotStatus.RUNNING) {
+                context.bukkit.sender,
+                if (bot.botStatus == BotStatus.RUNNING) {
                     "Discord bot restarted."
                 } else {
                     "Discord bot failed to restart. Check bot status for more info."
-                }
+                },
             )
         }
 
