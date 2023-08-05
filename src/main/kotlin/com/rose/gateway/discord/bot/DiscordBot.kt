@@ -12,7 +12,6 @@ import dev.kord.core.Kord
 import dev.kord.core.exception.KordInitializationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.IOException
@@ -41,8 +40,13 @@ class DiscordBot : KoinComponent {
     /**
      * The current instance of the bot
      */
-    var bot = runBlocking {
-        safelyBuildBot()
+    var bot: ExtensibleBot? = null
+
+    init {
+        // We will parallelize bot startup so that the server can continue loading while the bot starts
+        pluginScope.launch {
+            bot = safelyBuildBot()
+        }
     }
 
     private var botJob: Job? = null
@@ -52,7 +56,7 @@ class DiscordBot : KoinComponent {
      *
      * @return The build bot or null, if building failed
      */
-    private suspend fun safelyBuildBot(): ExtensibleBot? = try {
+    private suspend fun safelyBuildBot(): ExtensibleBot? = tryKordOperation("Constructing Discord Bot") {
         if (config.notLoaded()) {
             Logger.warning("Bot construction failed because no configuration is loaded.")
 
@@ -64,10 +68,32 @@ class DiscordBot : KoinComponent {
 
             buildBot(config.botToken())
         }
-    } catch (e: KordInitializationException) {
-        Logger.warning("Bot construction failed (${e.localizedMessage})")
+    }
 
-        botStatus = BotStatus.STOPPED because e.localizedMessage
+    /**
+     * Executes a suspend function for Kord while handling any exceptions that may occur.
+     *
+     * @param operationName The name of the operation being performed.
+     * @param operation The suspend function to be executed.
+     * @return The result of the Kord operation, or null if an exception occurred.
+     *
+     * @suppress("TooGenericExceptionCaught")
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun <T> tryKordOperation(operationName: String, operation: suspend () -> T?): T? = try {
+        operation()
+    } catch (error: java.lang.Exception) {
+        val errorMessage = error.message
+        val newLine = System.lineSeparator()
+
+        val failureMessage = when (error) {
+            is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
+            is IOException -> "An IO exception occurred:$newLine$errorMessage"
+            else -> "Unknown error occurred:$newLine$errorMessage"
+        }
+
+        botStatus = BotStatus.STOPPED because failureMessage
+        Logger.error("$operationName:$newLine$failureMessage")
 
         null
     }
@@ -149,9 +175,8 @@ class DiscordBot : KoinComponent {
     /**
      * Launches the bot in a new parallel task
      */
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun launchConcurrentBot() {
-        botJob = try {
+        botJob = tryKordOperation("Running Discord Bot") {
             botStatus = BotStatus.RUNNING
 
             pluginScope.launch {
@@ -159,20 +184,6 @@ class DiscordBot : KoinComponent {
 
                 botStatus = BotStatus.STOPPED
             }
-        } catch (error: Exception) {
-            val errorMessage = error.message
-            val newLine = System.lineSeparator()
-
-            val failureMessage = when (error) {
-                is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
-                is IOException -> "An IO exception occurred:$newLine$errorMessage"
-                else -> "Unknown error occurred:$newLine$errorMessage"
-            }
-
-            botStatus = BotStatus.STOPPED because failureMessage
-            Logger.error("Could not start Discord bot. Check status for info.")
-
-            null
         }
     }
 
