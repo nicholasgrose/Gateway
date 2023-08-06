@@ -10,7 +10,6 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import dev.kord.core.Kord
 import dev.kord.core.exception.KordInitializationException
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -28,45 +27,34 @@ class DiscordBot : KoinComponent {
     private val pluginScope: PluginCoroutineScope by inject()
 
     /**
-     * The bot's context
+     * The current instance of the KordEx [ExtensibleBot]]
      */
-    val context = BotContext()
-
-    /**
-     * The bot's status
-     */
-    var botStatus = BotStatus.NOT_STARTED
-
-    /**
-     * The current instance of the bot
-     */
-    var bot: ExtensibleBot? = null
+    var kordexBot: ExtensibleBot? = null
 
     init {
         // We will parallelize bot startup so that the server can continue loading while the bot starts
         pluginScope.launch {
-            bot = safelyBuildBot()
+            safelyBuildBot()
         }
     }
-
-    private var botJob: Job? = null
 
     /**
      * Builds a bot with error handling that returns null if building is impossible or fails
      *
      * @return The build bot or null, if building failed
      */
-    private suspend fun safelyBuildBot(): ExtensibleBot? = tryKordOperation("Constructing Discord Bot") {
+    suspend fun safelyBuildBot(): Result<ExtensibleBot> = tryKordOperation("Constructing Discord Bot") {
         if (config.notLoaded()) {
             Logger.warning("Bot construction failed because no configuration is loaded.")
 
-            botStatus = BotStatus.STOPPED because "No valid configuration is loaded."
-
-            null
+            Result.failure(Exception("No valid configuration is loaded."))
         } else {
             Logger.info("Building Discord bot...")
 
-            buildBot(config.botToken())
+            val builtBot = buildBot(config.botToken())
+            kordexBot = builtBot
+
+            Result.success(builtBot)
         }
     }
 
@@ -80,23 +68,23 @@ class DiscordBot : KoinComponent {
      * @suppress("TooGenericExceptionCaught")
      */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun <T> tryKordOperation(operationName: String, operation: suspend () -> T?): T? = try {
-        operation()
-    } catch (error: java.lang.Exception) {
-        val errorMessage = error.message
-        val newLine = System.lineSeparator()
+    suspend fun <T> tryKordOperation(operationName: String, operation: suspend () -> Result<T>): Result<T> =
+        try {
+            operation()
+        } catch (error: java.lang.Exception) {
+            val errorMessage = error.message
+            val newLine = System.lineSeparator()
 
-        val failureMessage = when (error) {
-            is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
-            is IOException -> "An IO exception occurred:$newLine$errorMessage"
-            else -> "Unknown error occurred:$newLine$errorMessage"
+            val failureMessage = when (error) {
+                is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
+                is IOException -> "An IO exception occurred:$newLine$errorMessage"
+                else -> "Unknown error occurred:$newLine$errorMessage"
+            }
+
+            Logger.error("$operationName:$newLine$failureMessage")
+
+            Result.failure(error)
         }
-
-        botStatus = BotStatus.STOPPED because failureMessage
-        Logger.error("$operationName:$newLine$failureMessage")
-
-        null
-    }
 
     /**
      * Builds the Discord bot on standby
@@ -133,6 +121,15 @@ class DiscordBot : KoinComponent {
             pluginPaths.clear()
             pluginPath(Path.of(plugin.dataFolder.path, "plugins"))
         }
+    }.also { unloadDisabledExtensions() }
+
+    /**
+     * Unloads disabled bot extensions
+     */
+    private suspend fun unloadDisabledExtensions() {
+        for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
+            if (!extension.isEnabled()) kordexBot!!.unloadExtension(extension.extensionName())
+        }
     }
 
     /**
@@ -140,87 +137,12 @@ class DiscordBot : KoinComponent {
      *
      * @return The Kord client or null, if no Discord bot exists
      */
-    fun kordClient(): Kord? = bot?.getKoin()?.get()
+    fun kordClient(): Kord? = kordexBot?.getKoin()?.get()
 
     /**
-     * Starts the Discord bot
+     * Checks if the bot has yet been built
+     *
+     * @return Whether the bot was built
      */
-    suspend fun start() {
-        Logger.info("Starting Discord bot...")
-
-        if (bot == null) {
-            Logger.warning("Could not start because no valid bot exists. Check bot status for error.")
-
-            return
-        }
-
-        botStatus = BotStatus.STARTING
-
-        unloadDisabledExtensions()
-        context.fillBotChannels()
-        launchConcurrentBot()
-
-        Logger.info("Discord bot ready!")
-    }
-
-    /**
-     * Unloads disabled bot extensions
-     */
-    private suspend fun unloadDisabledExtensions() {
-        for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
-            if (!extension.isEnabled()) bot!!.unloadExtension(extension.extensionName())
-        }
-    }
-
-    /**
-     * Launches the bot in a new parallel task
-     */
-    private suspend fun launchConcurrentBot() {
-        botJob = tryKordOperation("Running Discord Bot") {
-            botStatus = BotStatus.RUNNING
-
-            pluginScope.launch {
-                bot?.start()
-
-                botStatus = BotStatus.STOPPED
-            }
-        }
-    }
-
-    /**
-     * Stops the Discord bot such that it can be restarted
-     */
-    suspend fun stop() {
-        botStatus = BotStatus.STOPPING
-
-        bot?.stop()
-        botJob?.join()
-    }
-
-    /**
-     * Restart the Discord bot without rebuilding it
-     */
-    suspend fun restart() {
-        stop()
-        start()
-    }
-
-    /**
-     * Fully shutdown the Discord bot. It cannot be restarted unless rebuilt
-     */
-    suspend fun close() {
-        botStatus = BotStatus.STOPPING
-
-        bot?.close()
-        botJob?.join()
-    }
-
-    /**
-     * Fully rebuilds the Discord bot and starts it
-     */
-    suspend fun rebuild() {
-        close()
-        bot = safelyBuildBot()
-        start()
-    }
+    fun isBuilt(): Boolean = kordexBot != null
 }

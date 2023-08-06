@@ -1,6 +1,6 @@
 package com.rose.gateway
 
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
 import com.rose.gateway.minecraft.logging.Logger
@@ -32,7 +32,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
      */
     val loader = classLoader
 
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
     private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {

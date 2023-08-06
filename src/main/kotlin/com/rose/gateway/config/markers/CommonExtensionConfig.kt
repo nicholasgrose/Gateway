@@ -38,9 +38,9 @@ open class CommonExtensionConfig(
     private fun modifyExtensionLoadedStatus(enabled: Boolean) {
         runBlocking {
             if (enabled) {
-                bot.bot?.loadExtension(extensionName)
+                bot.kordexBot?.loadExtension(extensionName)
             } else {
-                bot.bot?.unloadExtension(extensionName)
+                bot.kordexBot?.unloadExtension(extensionName)
             }
         }
     }

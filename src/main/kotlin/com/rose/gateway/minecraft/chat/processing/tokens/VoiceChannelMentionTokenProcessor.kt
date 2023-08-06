@@ -1,6 +1,6 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.minecraft.chat.processing.tokens.result.MentionResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.shared.parsing.TokenProcessor
@@ -22,7 +22,7 @@ class VoiceChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, 
         private const val VOICE_CHANNEL_MENTION_START_INDEX = 3
     }
 
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
 
     override fun tokenType(): LixyTokenType {
         return ChatComponent.VOICE_CHANNEL_MENTION
@@ -40,7 +40,7 @@ class VoiceChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, 
     }
 
     private suspend fun createVoiceChannelMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.context.botGuilds) {
+        for (guild in bot.state.botGuilds) {
             for (channel in guild.channels.toSet()) {
                 if (channel.type != ChannelType.GuildVoice) continue
 

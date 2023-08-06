@@ -23,7 +23,7 @@ class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent 
          * @receiver The [DiscordBot]
          */
         suspend fun trigger(message: MessageCreateBuilder.() -> Unit) {
-            bot.bot?.send(GameChatEvent(message))
+            bot.kordexBot?.send(GameChatEvent(message))
         }
     }
 }

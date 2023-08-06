@@ -5,6 +5,7 @@ import com.rose.gateway.config.access.botChannels
 import com.rose.gateway.discord.bot.client.ClientInfo
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
+import kotlinx.coroutines.Job
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -13,9 +14,19 @@ import org.koin.core.component.inject
  *
  * @constructor Creates an empty bot context
  */
-class BotContext : KoinComponent {
+class BotState : KoinComponent {
     private val bot: DiscordBot by inject()
     private val config: PluginConfig by inject()
+
+    /**
+     * The bot's status
+     */
+    var status = BotStatus.NOT_STARTED
+
+    /**
+     * The job running the bot
+     */
+    var botJob: Job? = null
 
     /**
      * The text channels the bot operates in
