@@ -22,6 +22,6 @@ fun atMember(user: Member, userColor: TextColor): Component {
  * @return The member [Component]
  */
 fun member(user: Member): Component {
-    return user.displayName.secondaryComponent()
+    return user.effectiveName.secondaryComponent()
         .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())
 }

@@ -1,7 +1,8 @@
 package com.rose.gateway.config.markers
 
-import com.rose.gateway.discord.bot.DiscordBot
-import kotlinx.coroutines.runBlocking
+import com.rose.gateway.discord.bot.DiscordBotController
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Transient
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -18,7 +19,8 @@ open class CommonExtensionConfig(
     enabled: Boolean,
     @Transient val extensionName: String = "None",
 ) : KoinComponent, ConfigObject {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
+    private val pluginsScope: PluginCoroutineScope by inject()
 
     /**
      * Whether the extension is enabled
@@ -36,11 +38,11 @@ open class CommonExtensionConfig(
      * @param enabled The extensions new status
      */
     private fun modifyExtensionLoadedStatus(enabled: Boolean) {
-        runBlocking {
+        pluginsScope.launch {
             if (enabled) {
-                bot.bot?.loadExtension(extensionName)
+                bot.discordBot.kordexBot.await()?.loadExtension(extensionName)
             } else {
-                bot.bot?.unloadExtension(extensionName)
+                bot.discordBot.kordexBot.await()?.unloadExtension(extensionName)
             }
         }
     }

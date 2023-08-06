@@ -1,7 +1,7 @@
 # Gateway
 
-A [Paper](https://papermc.io/) server plugin that adds [Discord](https://discord.com/)
--to-[Minecraft](https://www.minecraft.net/en-us) interactions and vice versa.
+A [Paper](https://papermc.io/) server plugin that adds
+[Discord](https://discord.com/)-to-[Minecraft](https://www.minecraft.net/en-us) interactions and vice versa.
 It has a number of extensions that can be enabled or disabled in its configuration, so you don't need to use them all.
 
 ## Available extensions:
