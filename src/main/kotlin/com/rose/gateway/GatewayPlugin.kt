@@ -6,6 +6,7 @@ import com.rose.gateway.minecraft.EventListeners
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.koin.initializeKoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
@@ -36,7 +37,7 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
     private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {
-        runBlocking {
+        coroutineScope.launch {
             bot.start()
         }
 

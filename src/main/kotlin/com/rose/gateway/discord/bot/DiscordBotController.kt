@@ -17,24 +17,18 @@ class DiscordBotController : KoinComponent {
     /**
      * Represents the current state of the bot
      */
-    val state = BotState()
+    var state = BotState()
 
     /**
      * Represents a bot for Discord
      */
-    val discordBot = DiscordBot()
+    var discordBot = DiscordBot()
 
     /**
      * Starts the Discord bot
      */
     suspend fun start() {
         Logger.info("Starting Discord bot...")
-
-        if (discordBot.isBuilt()) {
-            Logger.warning("Could not start because no valid bot exists. Check bot status for error.")
-
-            return
-        }
 
         state.status = BotStatus.STARTING
         launchConcurrentBot()
@@ -46,19 +40,22 @@ class DiscordBotController : KoinComponent {
      * Launches the bot in a new parallel task
      */
     private suspend fun launchConcurrentBot() {
-        val startResult = discordBot.tryKordOperation("Running Discord Bot") {
-            state.status = BotStatus.RUNNING
+        state.botJob = pluginScope.launch {
+            val runResult = discordBot.tryKordOperation("Running Discord Bot") {
+                val bot = discordBot.kordexBot.await()
+                    ?: return@tryKordOperation Result.failure(Exception("No bot was built that could be started"))
 
-            Result.success(
-                pluginScope.launch {
-                    discordBot.kordexBot?.start()
+                state.status = BotStatus.RUNNING
+                bot.start()
+                state.status = BotStatus.STOPPED
 
-                    state.status = BotStatus.STOPPED
-                },
-            )
+                Result.success(Unit)
+            }
+
+            if (runResult.isFailure) {
+                state.status = BotStatus.STOPPED because runResult.exceptionOrNull()?.localizedMessage.toString()
+            }
         }
-
-        state.botJob = startResult.getOrNull()
     }
 
     /**
@@ -67,7 +64,7 @@ class DiscordBotController : KoinComponent {
     suspend fun stop() {
         state.status = BotStatus.STOPPING
 
-        discordBot.kordexBot?.stop()
+        discordBot.kordexBot.await()?.stop()
         state.botJob?.join()
     }
 
@@ -85,7 +82,7 @@ class DiscordBotController : KoinComponent {
     suspend fun close() {
         state.status = BotStatus.STOPPING
 
-        discordBot.kordexBot?.close()
+        discordBot.kordexBot.await()?.close()
         state.botJob?.join()
     }
 
@@ -94,9 +91,8 @@ class DiscordBotController : KoinComponent {
      */
     suspend fun rebuild() {
         close()
-
-        if (discordBot.safelyBuildBot().isSuccess) {
-            start()
-        }
+        discordBot = DiscordBot()
+        state = BotState()
+        start()
     }
 }

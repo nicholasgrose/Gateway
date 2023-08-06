@@ -10,10 +10,12 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import dev.kord.core.Kord
 import dev.kord.core.exception.KordInitializationException
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Path
 
 /**
@@ -29,13 +31,8 @@ class DiscordBot : KoinComponent {
     /**
      * The current instance of the KordEx [ExtensibleBot]]
      */
-    var kordexBot: ExtensibleBot? = null
-
-    init {
-        // We will parallelize bot startup so that the server can continue loading while the bot starts
-        pluginScope.launch {
-            safelyBuildBot()
-        }
+    val kordexBot: Deferred<ExtensibleBot?> = pluginScope.async {
+        safelyBuildBot().getOrNull()
     }
 
     /**
@@ -51,10 +48,7 @@ class DiscordBot : KoinComponent {
         } else {
             Logger.info("Building Discord bot...")
 
-            val builtBot = buildBot(config.botToken())
-            kordexBot = builtBot
-
-            Result.success(builtBot)
+            Result.success(buildBot(config.botToken()))
         }
     }
 
@@ -92,43 +86,51 @@ class DiscordBot : KoinComponent {
      * @param token The token the bot will be started with
      * @return The build bot
      */
-    private suspend fun buildBot(token: String): ExtensibleBot = ExtensibleBot(token) {
-        hooks {
-            kordShutdownHook = false
+    private suspend fun buildBot(token: String): ExtensibleBot {
+        val bot = ExtensibleBot(token) {
+            hooks {
+                kordShutdownHook = false
 
-            afterKoinSetup {
-                loadModule {
-                    single { plugin }
-                    single { config }
+                afterKoinSetup {
+                    loadModule {
+                        single { plugin }
+                        single { config }
+                    }
                 }
             }
+            presence {
+                since = plugin.startTime
+                playing(BotPresence.presenceForPlayerCount())
+            }
+            applicationCommands {
+                enabled = true
+            }
+            extensions {
+                extensions.addAll(
+                    DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() },
+                )
+            }
+            plugins {
+                // The default path of "plugins/" is problematic on a Minecraft server, so we'll remove it and
+                // redirect the plugin search to "plugins/Gateway/plugins/".
+                val correctPluginPath = Path.of(plugin.dataFolder.path, "plugins")
+                Files.createDirectories(correctPluginPath)
+                pluginPaths.clear()
+                pluginPath(correctPluginPath)
+            }
         }
-        presence {
-            since = plugin.startTime
-            playing(BotPresence.presenceForPlayerCount())
-        }
-        applicationCommands {
-            enabled = true
-        }
-        extensions {
-            extensions.addAll(
-                DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() },
-            )
-        }
-        plugins {
-            // The default path of "plugins/" is problematic on a Minecraft server, so we'll remove it and
-            // redirect the plugin search to "plugins/Gateway/plugins/".
-            pluginPaths.clear()
-            pluginPath(Path.of(plugin.dataFolder.path, "plugins"))
-        }
-    }.also { unloadDisabledExtensions() }
+
+        unloadDisabledExtensions()
+
+        return bot
+    }
 
     /**
      * Unloads disabled bot extensions
      */
     private suspend fun unloadDisabledExtensions() {
         for (extension in DiscordBotConstants.BOT_EXTENSIONS) {
-            if (!extension.isEnabled()) kordexBot!!.unloadExtension(extension.extensionName())
+            if (!extension.isEnabled()) kordexBot.await()?.unloadExtension(extension.extensionName())
         }
     }
 
@@ -137,12 +139,12 @@ class DiscordBot : KoinComponent {
      *
      * @return The Kord client or null, if no Discord bot exists
      */
-    fun kordClient(): Kord? = kordexBot?.getKoin()?.get()
+    suspend fun kordClient(): Kord? = kordexBot.await()?.getKoin()?.get()
 
     /**
      * Checks if the bot has yet been built
      *
      * @return Whether the bot was built
      */
-    fun isBuilt(): Boolean = kordexBot != null
+    suspend fun isBuilt(): Boolean = kordexBot.await() != null
 }
