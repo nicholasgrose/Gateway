@@ -22,7 +22,7 @@ class DiscordBotController : KoinComponent {
     /**
      * Represents a bot for Discord
      */
-    var bot = DiscordBot()
+    val discordBot = DiscordBot()
 
     /**
      * Starts the Discord bot
@@ -30,15 +30,13 @@ class DiscordBotController : KoinComponent {
     suspend fun start() {
         Logger.info("Starting Discord bot...")
 
-        if (bot.isBuilt()) {
+        if (discordBot.isBuilt()) {
             Logger.warning("Could not start because no valid bot exists. Check bot status for error.")
 
             return
         }
 
         state.status = BotStatus.STARTING
-
-        state.fillBotChannels()
         launchConcurrentBot()
 
         Logger.info("Discord bot ready!")
@@ -48,12 +46,12 @@ class DiscordBotController : KoinComponent {
      * Launches the bot in a new parallel task
      */
     private suspend fun launchConcurrentBot() {
-        val startResult = bot.tryKordOperation("Running Discord Bot") {
+        val startResult = discordBot.tryKordOperation("Running Discord Bot") {
             state.status = BotStatus.RUNNING
 
             Result.success(
                 pluginScope.launch {
-                    bot.kordexBot?.start()
+                    discordBot.kordexBot?.start()
 
                     state.status = BotStatus.STOPPED
                 },
@@ -69,7 +67,7 @@ class DiscordBotController : KoinComponent {
     suspend fun stop() {
         state.status = BotStatus.STOPPING
 
-        bot.kordexBot?.stop()
+        discordBot.kordexBot?.stop()
         state.botJob?.join()
     }
 
@@ -87,7 +85,7 @@ class DiscordBotController : KoinComponent {
     suspend fun close() {
         state.status = BotStatus.STOPPING
 
-        bot.kordexBot?.close()
+        discordBot.kordexBot?.close()
         state.botJob?.join()
     }
 
@@ -97,7 +95,7 @@ class DiscordBotController : KoinComponent {
     suspend fun rebuild() {
         close()
 
-        if (bot.safelyBuildBot().isSuccess) {
+        if (discordBot.safelyBuildBot().isSuccess) {
             start()
         }
     }

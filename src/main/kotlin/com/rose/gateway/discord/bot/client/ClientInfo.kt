@@ -1,7 +1,7 @@
 package com.rose.gateway.discord.bot.client
 
 import com.kotlindiscord.kord.extensions.utils.permissionsForMember
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import dev.kord.common.entity.Permissions
 import dev.kord.core.entity.channel.GuildChannel
 import org.koin.core.component.KoinComponent
@@ -13,7 +13,7 @@ import org.koin.core.component.inject
  * @constructor Create empty Client info
  */
 object ClientInfo : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
 
     /**
      * Determines whether the bot has the correct permissions for a channel
@@ -34,6 +34,6 @@ object ClientInfo : KoinComponent {
      * @return The permissions the bot has in the given channel
      */
     private suspend fun permissionsForChannel(channel: GuildChannel): Permissions {
-        return channel.permissionsForMember(bot.kordClient()!!.selfId)
+        return channel.permissionsForMember(bot.discordBot.kordClient()!!.selfId)
     }
 }

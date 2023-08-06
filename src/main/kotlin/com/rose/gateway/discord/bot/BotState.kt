@@ -3,9 +3,11 @@ package com.rose.gateway.discord.bot
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.botChannels
 import com.rose.gateway.discord.bot.client.ClientInfo
+import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import dev.kord.core.entity.Guild
 import dev.kord.core.entity.channel.TextChannel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -15,8 +17,9 @@ import org.koin.core.component.inject
  * @constructor Creates an empty bot context
  */
 class BotState : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
     private val config: PluginConfig by inject()
+    private val pluginScope: PluginCoroutineScope by inject()
 
     /**
      * The bot's status
@@ -38,6 +41,12 @@ class BotState : KoinComponent {
      */
     val botGuilds = mutableSetOf<Guild>()
 
+    init {
+        pluginScope.launch {
+            fillBotChannels()
+        }
+    }
+
     /**
      * Fills the valid bot channel set and the valid bot guild set
      */
@@ -47,7 +56,7 @@ class BotState : KoinComponent {
         botChannels.clear()
         botGuilds.clear()
 
-        bot.kordClient()?.guilds?.collect { guild ->
+        bot.discordBot.kordClient()?.guilds?.collect { guild ->
             guild.channels.collect { channel ->
                 if (ClientInfo.hasChannelPermissions(
                         channel,

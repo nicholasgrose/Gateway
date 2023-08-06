@@ -2,6 +2,7 @@ package com.rose.gateway.discord.bot.extensions.chat
 
 import com.kotlindiscord.kord.extensions.events.KordExEvent
 import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -14,7 +15,7 @@ import org.koin.core.component.inject
  */
 class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent {
     companion object : KoinComponent {
-        private val bot: DiscordBot by inject()
+        private val bot: DiscordBotController by inject()
 
         /**
          * Triggers a [GameChatEvent] in the [DiscordBot]
@@ -23,7 +24,7 @@ class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent 
          * @receiver The [DiscordBot]
          */
         suspend fun trigger(message: MessageCreateBuilder.() -> Unit) {
-            bot.kordexBot?.send(GameChatEvent(message))
+            bot.discordBot.kordexBot?.send(GameChatEvent(message))
         }
     }
 }
