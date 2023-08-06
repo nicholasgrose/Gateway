@@ -6,10 +6,22 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * Manages the functionality and lifecycle of the Discord bot
+ *
+ * @constructor Create the Discord bot controller
+ */
 class DiscordBotController : KoinComponent {
     private val pluginScope: PluginCoroutineScope by inject()
 
+    /**
+     * Represents the current state of the bot
+     */
     val state = BotState()
+
+    /**
+     * Represents a bot for Discord
+     */
     var bot = DiscordBot()
 
     /**
@@ -44,7 +56,7 @@ class DiscordBotController : KoinComponent {
                     bot.kordexBot?.start()
 
                     state.status = BotStatus.STOPPED
-                }
+                },
             )
         }
 
