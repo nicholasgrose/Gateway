@@ -10,7 +10,7 @@ plugins {
     // https://github.com/jlleitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
 }
 
 val version: String by project

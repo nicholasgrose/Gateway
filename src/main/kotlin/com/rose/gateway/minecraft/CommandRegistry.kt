@@ -41,7 +41,7 @@ object CommandRegistry : KoinComponent {
         command("gateway") {
             subcommand("bot") {
                 subcommand("rebuild") {
-                    runner { context -> BotCommands.restart(context) }
+                    runner { context -> BotCommands.rebuild(context) }
                 }
 
                 subcommand("restart") {

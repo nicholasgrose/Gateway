@@ -2,8 +2,8 @@ package com.rose.gateway.minecraft.chat.processing.tokens.result
 
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.primaryColor
-import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.DiscordBotConstants
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.minecraft.component.atMember
 import com.rose.gateway.minecraft.component.primaryComponent
 import dev.kord.common.annotation.KordExperimental
@@ -16,7 +16,7 @@ import org.koin.core.component.inject
  * Provides functions that build [TokenProcessingResult]s for mentions
  */
 object MentionResult : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
     private val config: PluginConfig by inject()
 
     /**
@@ -40,7 +40,7 @@ object MentionResult : KoinComponent {
      * @return The [TokenProcessingResult] for the role mention
      */
     suspend fun role(nameString: String): TokenProcessingResult {
-        for (guild in bot.context.botGuilds) {
+        for (guild in bot.state.botGuilds) {
             for (role in guild.roles.toSet()) {
                 val minecraftText = "@${role.name}"
                 val discordText = "<@&${role.id}>"
@@ -60,7 +60,7 @@ object MentionResult : KoinComponent {
      */
     @OptIn(KordExperimental::class)
     suspend fun userMention(nameString: String): TokenProcessingResult {
-        for (guild in bot.context.botGuilds) {
+        for (guild in bot.state.botGuilds) {
             val members = guild.getMembers(nameString, DiscordBotConstants.MEMBER_QUERY_MAX)
             val firstMember = members.firstOrNull() ?: break
             val discordText = "<@!${firstMember.id}>"

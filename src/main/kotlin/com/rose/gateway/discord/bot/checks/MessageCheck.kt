@@ -3,7 +3,7 @@ package com.rose.gateway.discord.bot.checks
 import com.kotlindiscord.kord.extensions.checks.channelFor
 import com.kotlindiscord.kord.extensions.checks.messageFor
 import com.kotlindiscord.kord.extensions.checks.types.Check
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import dev.kord.core.Kord
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -14,7 +14,7 @@ import org.koin.core.component.inject
  * @see Check
  */
 object MessageCheck : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
 
     /**
      * Check that checks that the event is in a valid bot channel
@@ -23,7 +23,7 @@ object MessageCheck : KoinComponent {
         val channelBehaviour = channelFor(event)
         val channel = channelBehaviour?.asChannelOrNull()
 
-        if (bot.context.botChannels.contains(channel)) {
+        if (bot.state.botChannels.contains(channel)) {
             pass()
         } else {
             fail("Channel is not configured bot channel.")

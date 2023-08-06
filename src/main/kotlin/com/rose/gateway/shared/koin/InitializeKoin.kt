@@ -3,7 +3,7 @@ package com.rose.gateway.shared.koin
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -22,7 +22,7 @@ fun initializeKoin(plugin: GatewayPlugin) {
                 single { plugin }
                 single { PluginConfig() }
                 single { ConfigStringMap() }
-                single { DiscordBot() }
+                single { DiscordBotController() }
                 single { HttpClient(CIO) }
                 single { PluginCoroutineScope() }
             },
