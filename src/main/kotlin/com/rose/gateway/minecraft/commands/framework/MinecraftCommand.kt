@@ -26,15 +26,14 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         val commandResult =
             command.parseAndExecute(
                 CommandExecuteContext(
-                    bukkit =
                     BukkitContext.CommandExecute(
                         sender = sender,
                         command = bukkitCommand,
                         label = label,
                         args = args,
                     ),
-                    command = command,
-                    args = emptyArgs(argList),
+                    command,
+                    emptyArgs(argList),
                 ),
             )
 
@@ -71,16 +70,15 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
 
         return command.parseAndComplete(
             TabCompleteContext(
-                bukkit =
                 BukkitContext.TabComplete(
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
                     args = args,
                 ),
-                command = command,
-                args = emptyArgs(argList),
-                completingParser = UnitParser(),
+                command,
+                emptyArgs(argList),
+                UnitParser(),
             ),
         )
     }

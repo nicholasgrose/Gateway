@@ -46,11 +46,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
             bukkit: BukkitContext.CommandExecute,
             command: Command,
             args: A,
-        ) : BukkitCommand<BukkitContext.CommandExecute, A>(
-            bukkit,
-            command,
-            args,
-        )
+        ) : BukkitCommand<BukkitContext.CommandExecute, A>(bukkit, command, args)
 
         /**
          * The context for a command tab completion
@@ -68,11 +64,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
             command: Command,
             args: A,
             val completingParser: ArgParser<*, A, *>,
-        ) : BukkitCommand<BukkitContext.TabComplete, A>(
-            bukkit,
-            command,
-            args,
-        )
+        ) : BukkitCommand<BukkitContext.TabComplete, A>(bukkit, command, args)
     }
 }
 

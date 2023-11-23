@@ -36,12 +36,10 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         val classifier = type.classifier
 
         return if (classifier is KClass<*>) {
-            (
-                !classifier.isData &&
+            !classifier.isData &&
                     !classifier.isSealed &&
                     !classifier.isInline() &&
                     classifier canBe ConfigObject::class
-                )
         } else {
             false
         }
