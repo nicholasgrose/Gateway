@@ -14,8 +14,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @param A The type of the args this parser is for
  * @constructor Create a unit parser
  */
-class UnitParser<A> : ArgParser<Unit, A, UnitParser<A>>(UnitParserBuilder())
-        where A : CommandArgs<A> {
+class UnitParser<A : CommandArgs<A>> : ArgParser<Unit, A, UnitParser<A>>(UnitParserBuilder()) {
     override fun typeName(): String = "Unit"
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Unit, A> = ParseResult.Success(Unit, context)

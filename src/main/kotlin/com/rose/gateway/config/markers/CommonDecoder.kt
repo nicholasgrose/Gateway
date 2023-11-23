@@ -37,9 +37,9 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
 
         return if (classifier is KClass<*>) {
             !classifier.isData &&
-                    !classifier.isSealed &&
-                    !classifier.isInline() &&
-                    classifier canBe ConfigObject::class
+                !classifier.isSealed &&
+                !classifier.isInline() &&
+                classifier canBe ConfigObject::class
         } else {
             false
         }

@@ -43,8 +43,8 @@ class StringListConfigArgs(
     ) -> Boolean,
 ) : ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
-    StringListConfigArgs::parser,
-) {
+        StringListConfigArgs::parser,
+    ) {
     /**
      * Creates the list parser for these string list config args
      *

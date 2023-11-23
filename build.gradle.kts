@@ -1,8 +1,8 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.21"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.21"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
