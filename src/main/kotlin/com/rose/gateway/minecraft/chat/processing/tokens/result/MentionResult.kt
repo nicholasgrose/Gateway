@@ -26,7 +26,10 @@ object MentionResult : KoinComponent {
      * @param discordText The text as it will appear in Discord
      * @return The [TokenProcessingResult] for the mention
      */
-    fun mention(minecraftText: String, discordText: String): TokenProcessingResult {
+    fun mention(
+        minecraftText: String,
+        discordText: String,
+    ): TokenProcessingResult {
         return TokenProcessingResult(
             minecraftText.primaryComponent(),
             discordText,

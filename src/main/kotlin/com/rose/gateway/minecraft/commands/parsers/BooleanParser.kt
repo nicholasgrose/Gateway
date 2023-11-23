@@ -14,9 +14,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <A : CommandArgs<A>> CommandArgs<A>.boolean(
-    body: BooleanParserBuilder<A>.() -> Unit,
-): BooleanParser<A> =
+fun <A : CommandArgs<A>> CommandArgs<A>.boolean(body: BooleanParserBuilder<A>.() -> Unit): BooleanParser<A> =
     genericParser(::BooleanParserBuilder, body)
 
 /**
@@ -31,10 +29,11 @@ class BooleanParser<A : CommandArgs<A>>(builder: BooleanParserBuilder<A>) :
     ArgParser<Boolean, A, BooleanParser<A>>(builder) {
     override fun typeName(): String = "Boolean"
 
-    private val internalParser = stringParser<A> {
-        name = builder.name
-        description = builder.description
-    }
+    private val internalParser =
+        stringParser<A> {
+            name = builder.name
+            description = builder.description
+        }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Boolean, A> {
         val stringResult = internalParser.parseValidValue(context)

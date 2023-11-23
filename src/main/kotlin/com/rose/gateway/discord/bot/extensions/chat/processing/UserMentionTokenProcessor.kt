@@ -31,7 +31,10 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
     @Language("RegExp")
     override fun regexPattern(): String = "<@\\d+>"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: MessageCreateEvent,
+    ): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)
         val id = Snowflake(snowflakeString)
         val member = additionalData.getGuildOrNull()?.getMemberOrNull(id) ?: return token.string.component()

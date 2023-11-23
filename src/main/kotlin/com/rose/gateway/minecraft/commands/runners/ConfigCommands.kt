@@ -26,9 +26,7 @@ object ConfigCommands {
      * @param context The command context with the config args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigArgs<T, A, P>, P : ArgParser<T, A, P>> setConfig(
-        context: CommandExecuteContext<A>,
-    ): Boolean {
+    fun <T, A : ConfigArgs<T, A, P>, P : ArgParser<T, A, P>> setConfig(context: CommandExecuteContext<A>): Boolean {
         val args = context.args
         val item = args.item
         val value = args.value ?: return false
@@ -47,7 +45,11 @@ object ConfigCommands {
      * @param item The config item that was set
      * @param value The config value that was set
      */
-    private fun <T> sendConfirmation(sender: CommandSender, item: Item<T>, value: T) {
+    private fun <T> sendConfirmation(
+        sender: CommandSender,
+        item: Item<T>,
+        value: T,
+    ) {
         sender.sendMessage(
             joinSpace(
                 item.path.tertiaryComponent().italic(),
@@ -67,9 +69,10 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> addConfiguration(
+    fun <T, A, P> addConfiguration(
         context: CommandExecuteContext<A>,
-    ): Boolean {
+    ): Boolean
+        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 
@@ -86,7 +89,10 @@ object ConfigCommands {
      * @param item The config item to add values to
      * @param additionalValues The values to add
      */
-    private fun <T> addToConfiguration(item: Item<List<T>>, additionalValues: List<T>) {
+    private fun <T> addToConfiguration(
+        item: Item<List<T>>,
+        additionalValues: List<T>,
+    ) {
         val currentValues = item.value
         val newValues = currentValues + additionalValues
 
@@ -101,7 +107,11 @@ object ConfigCommands {
      * @param item The config item that was added to
      * @param values The values that were added
      */
-    private fun <T> sendAddConfirmation(sender: CommandSender, item: Item<T>, values: T) {
+    private fun <T> sendAddConfirmation(
+        sender: CommandSender,
+        item: Item<T>,
+        values: T,
+    ) {
         sender.sendMessage(
             joinSpace(
                 values.toString().secondaryComponent().italic(),
@@ -121,9 +131,10 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> removeConfiguration(
+    fun <T, A, P> removeConfiguration(
         context: CommandExecuteContext<A>,
-    ): Boolean {
+    ): Boolean
+        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 
@@ -140,7 +151,10 @@ object ConfigCommands {
      * @param item The config item to remove values from
      * @param valuesToBeRemoved The values to remove
      */
-    private fun <T> removeFromConfiguration(item: Item<List<T>>, valuesToBeRemoved: List<T>) {
+    private fun <T> removeFromConfiguration(
+        item: Item<List<T>>,
+        valuesToBeRemoved: List<T>,
+    ) {
         val currentValues = item.value
         val newValues = currentValues - valuesToBeRemoved.toSet()
 
@@ -155,7 +169,11 @@ object ConfigCommands {
      * @param item The config item that was removed from
      * @param values The values that were removed
      */
-    private fun <T> sendRemoveConfirmation(sender: CommandSender, item: Item<T>, values: T) {
+    private fun <T> sendRemoveConfirmation(
+        sender: CommandSender,
+        item: Item<T>,
+        values: T,
+    ) {
         sender.sendMessage(
             joinSpace(
                 values.toString().secondaryComponent().italic(),

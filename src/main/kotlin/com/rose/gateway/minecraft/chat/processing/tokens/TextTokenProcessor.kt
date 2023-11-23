@@ -22,7 +22,10 @@ class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return ".[^@]*"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val text = token.string
 
         return TokenProcessingResult(text.component(), text)

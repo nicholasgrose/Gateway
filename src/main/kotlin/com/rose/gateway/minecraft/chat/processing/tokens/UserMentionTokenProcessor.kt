@@ -26,7 +26,10 @@ class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return "@[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val nameString = token.string.substring(USER_MENTION_START_INDEX)
 
         return MentionResult.userMention(nameString)

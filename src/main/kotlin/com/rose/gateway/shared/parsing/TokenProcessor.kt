@@ -46,5 +46,8 @@ interface TokenProcessor<ResultType, AdditionalDataType> {
      *
      * @see LixyToken
      */
-    suspend fun process(token: LixyToken, additionalData: AdditionalDataType): ResultType
+    suspend fun process(
+        token: LixyToken,
+        additionalData: AdditionalDataType,
+    ): ResultType
 }

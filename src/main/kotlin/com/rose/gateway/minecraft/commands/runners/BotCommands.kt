@@ -97,7 +97,10 @@ object BotCommands : KoinComponent {
      * @param sender The sender to send the message to
      * @param message The message to send and log
      */
-    private fun sendAndLogMessage(sender: CommandSender, message: Component) {
+    private fun sendAndLogMessage(
+        sender: CommandSender,
+        message: Component,
+    ) {
         Logger.info(PlainTextComponentSerializer.plainText().serialize(message))
         sender.sendMessage(message)
     }

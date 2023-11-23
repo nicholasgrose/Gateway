@@ -21,22 +21,24 @@ object DiscordBotConstants {
     /**
      * All the Discord bot extensions that exist in the plugin
      */
-    val BOT_EXTENSIONS = setOf(
-        AboutExtension,
-        ChatExtension,
-        IpExtension,
-        ListExtension,
-        TpsExtension,
-        WhitelistExtension,
-    )
+    val BOT_EXTENSIONS =
+        setOf(
+            AboutExtension,
+            ChatExtension,
+            IpExtension,
+            ListExtension,
+            TpsExtension,
+            WhitelistExtension,
+        )
 
     /**
      * The permissions the bot requires to function
      */
-    val REQUIRED_PERMISSIONS = Permissions(
-        setOf(
-            Permission.SendMessages,
-            Permission.EmbedLinks,
-        ),
-    )
+    val REQUIRED_PERMISSIONS =
+        Permissions(
+            setOf(
+                Permission.SendMessages,
+                Permission.EmbedLinks,
+            ),
+        )
 }

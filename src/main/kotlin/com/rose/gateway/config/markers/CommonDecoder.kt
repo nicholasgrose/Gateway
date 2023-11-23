@@ -24,7 +24,11 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         private val DECODER = DataClassDecoder()
     }
 
-    override fun safeDecode(node: Node, type: KType, context: DecoderContext): ConfigResult<Any> {
+    override fun safeDecode(
+        node: Node,
+        type: KType,
+        context: DecoderContext,
+    ): ConfigResult<Any> {
         return DECODER.safeDecode(node, type, context)
     }
 

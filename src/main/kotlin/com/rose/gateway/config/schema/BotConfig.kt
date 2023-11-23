@@ -75,17 +75,19 @@ data class BotConfigSurrogate(
     val extensions: ExtensionsConfig,
 ) {
     companion object : SurrogateConverter<BotConfig, BotConfigSurrogate> {
-        override fun fromBase(base: BotConfig): BotConfigSurrogate = BotConfigSurrogate(
-            base.token,
-            base.botChannels,
-            base.extensions,
-        )
+        override fun fromBase(base: BotConfig): BotConfigSurrogate =
+            BotConfigSurrogate(
+                base.token,
+                base.botChannels,
+                base.extensions,
+            )
 
-        override fun toBase(surrogate: BotConfigSurrogate): BotConfig = BotConfig(
-            surrogate.token,
-            surrogate.botChannels,
-            surrogate.extensions,
-        )
+        override fun toBase(surrogate: BotConfigSurrogate): BotConfig =
+            BotConfig(
+                surrogate.token,
+                surrogate.botChannels,
+                surrogate.extensions,
+            )
     }
 }
 

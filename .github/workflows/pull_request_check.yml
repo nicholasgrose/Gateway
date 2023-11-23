@@ -16,7 +16,7 @@ jobs:
 
         steps:
             # https://github.com/marketplace/actions/checkout
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
 
             # https://github.com/marketplace/actions/setup-java-jdk
             -   name: Set up JDK 17
@@ -39,13 +39,13 @@ jobs:
 
         steps:
             # https://github.com/marketplace/actions/checkout
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
 
             # https://github.com/marketplace/actions/run-ktlint-with-reviewdog
-            -   uses: ScaCap/action-ktlint@v1.7
+            -   uses: ScaCap/action-ktlint@v1.8
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
-                    ktlint_version: '0.50.0'
+                    ktlint_version: '1.0.1'
                     reporter: github-pr-review
                     fail_on_error: true
 
@@ -54,11 +54,11 @@ jobs:
 
         steps:
             # https://github.com/marketplace/actions/checkout
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
 
             # https://github.com/marketplace/actions/run-detekt-with-reviewdog
             -   name: Run detekt with reviewdog
-                uses: alaegin/Detekt-Action@v1.23.0
+                uses: alaegin/Detekt-Action@v1.23.3
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     detekt_config: config/detekt/detekt.yml

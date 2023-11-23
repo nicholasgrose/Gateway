@@ -26,7 +26,10 @@ class RoleQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Uni
         return "@[rR]=\"((\\\\\")|[^\"])+\""
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val tokenString = token.string
         val roleString = tokenString.substring(ROLE_QUOTE_MENTION_START_INDEX until tokenString.length - 1)
 

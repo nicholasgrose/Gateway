@@ -31,26 +31,28 @@ class DiscordBot : KoinComponent {
     /**
      * The current instance of the KordEx [ExtensibleBot]]
      */
-    val kordexBot: Deferred<ExtensibleBot?> = pluginScope.async {
-        safelyBuildBot().getOrNull()
-    }
+    val kordexBot: Deferred<ExtensibleBot?> =
+        pluginScope.async {
+            safelyBuildBot().getOrNull()
+        }
 
     /**
      * Builds a bot with error handling that returns null if building is impossible or fails
      *
      * @return The build bot or null, if building failed
      */
-    suspend fun safelyBuildBot(): Result<ExtensibleBot> = tryKordOperation("Constructing Discord Bot") {
-        if (config.notLoaded()) {
-            Logger.warning("Bot construction failed because no configuration is loaded.")
+    suspend fun safelyBuildBot(): Result<ExtensibleBot> =
+        tryKordOperation("Constructing Discord Bot") {
+            if (config.notLoaded()) {
+                Logger.warning("Bot construction failed because no configuration is loaded.")
 
-            Result.failure(Exception("No valid configuration is loaded."))
-        } else {
-            Logger.info("Building Discord bot...")
+                Result.failure(Exception("No valid configuration is loaded."))
+            } else {
+                Logger.info("Building Discord bot...")
 
-            Result.success(buildBot(config.botToken()))
+                Result.success(buildBot(config.botToken()))
+            }
         }
-    }
 
     /**
      * Executes a suspend function for Kord while handling any exceptions that may occur.
@@ -62,18 +64,22 @@ class DiscordBot : KoinComponent {
      * @suppress("TooGenericExceptionCaught")
      */
     @Suppress("TooGenericExceptionCaught")
-    suspend fun <T> tryKordOperation(operationName: String, operation: suspend () -> Result<T>): Result<T> =
+    suspend fun <T> tryKordOperation(
+        operationName: String,
+        operation: suspend () -> Result<T>,
+    ): Result<T> =
         try {
             operation()
         } catch (error: java.lang.Exception) {
             val errorMessage = error.message
             val newLine = System.lineSeparator()
 
-            val failureMessage = when (error) {
-                is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
-                is IOException -> "An IO exception occurred:$newLine$errorMessage"
-                else -> "Unknown error occurred:$newLine$errorMessage"
-            }
+            val failureMessage =
+                when (error) {
+                    is KordInitializationException -> "Kord failed to start:$newLine$errorMessage"
+                    is IOException -> "An IO exception occurred:$newLine$errorMessage"
+                    else -> "Unknown error occurred:$newLine$errorMessage"
+                }
 
             Logger.error("$operationName:$newLine$failureMessage")
 
@@ -87,38 +93,39 @@ class DiscordBot : KoinComponent {
      * @return The build bot
      */
     private suspend fun buildBot(token: String): ExtensibleBot {
-        val bot = ExtensibleBot(token) {
-            hooks {
-                kordShutdownHook = false
+        val bot =
+            ExtensibleBot(token) {
+                hooks {
+                    kordShutdownHook = false
 
-                afterKoinSetup {
-                    loadModule {
-                        single { plugin }
-                        single { config }
+                    afterKoinSetup {
+                        loadModule {
+                            single { plugin }
+                            single { config }
+                        }
                     }
                 }
+                presence {
+                    since = plugin.startTime
+                    playing(BotPresence.presenceForPlayerCount())
+                }
+                applicationCommands {
+                    enabled = true
+                }
+                extensions {
+                    extensions.addAll(
+                        DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() },
+                    )
+                }
+                plugins {
+                    // The default path of "plugins/" is problematic on a Minecraft server, so we'll remove it and
+                    // redirect the plugin search to "plugins/Gateway/plugins/".
+                    val correctPluginPath = Path.of(plugin.dataFolder.path, "plugins")
+                    Files.createDirectories(correctPluginPath)
+                    pluginPaths.clear()
+                    pluginPath(correctPluginPath)
+                }
             }
-            presence {
-                since = plugin.startTime
-                playing(BotPresence.presenceForPlayerCount())
-            }
-            applicationCommands {
-                enabled = true
-            }
-            extensions {
-                extensions.addAll(
-                    DiscordBotConstants.BOT_EXTENSIONS.map { extension -> extension.extensionConstructor() },
-                )
-            }
-            plugins {
-                // The default path of "plugins/" is problematic on a Minecraft server, so we'll remove it and
-                // redirect the plugin search to "plugins/Gateway/plugins/".
-                val correctPluginPath = Path.of(plugin.dataFolder.path, "plugins")
-                Files.createDirectories(correctPluginPath)
-                pluginPaths.clear()
-                pluginPath(correctPluginPath)
-            }
-        }
 
         unloadDisabledExtensions()
 

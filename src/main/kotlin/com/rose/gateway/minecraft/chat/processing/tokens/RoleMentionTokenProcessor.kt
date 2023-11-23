@@ -26,7 +26,10 @@ class RoleMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return "@[rR]=[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val roleString = token.string.substring(ROLE_MENTION_START_INDEX)
 
         return MentionResult.role(roleString)

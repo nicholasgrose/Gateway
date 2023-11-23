@@ -18,14 +18,15 @@ import guru.zoroark.lixy.matchers.matches
  */
 class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProcessor<ResultType, AdditionalDataType>>) {
     private val tokenProcessorMap = processors.associateBy { it.tokenType() }
-    private val lexer = lixy {
-        state {
-            // Defining the regex of each processor as matching that processor's token type.
-            for (processor in processors) {
-                matches(processor.regexPattern()) isToken processor.tokenType()
+    private val lexer =
+        lixy {
+            state {
+                // Defining the regex of each processor as matching that processor's token type.
+                for (processor in processors) {
+                    matches(processor.regexPattern()) isToken processor.tokenType()
+                }
             }
         }
-    }
 
     /**
      * Breaks a string of text into a list of tokens to be mapped through their respective [TokenProcessor]
@@ -37,7 +38,10 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
      * @see TokenProcessor
      * @see processorFor
      */
-    suspend fun parseText(text: String, additionalData: AdditionalDataType): List<ResultType> {
+    suspend fun parseText(
+        text: String,
+        additionalData: AdditionalDataType,
+    ): List<ResultType> {
         val tokens = lexer.tokenize(text)
 
         return tokens.map { token -> processorFor(token).process(token, additionalData) }

@@ -22,7 +22,10 @@ class UrlTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
     @Language("RegExp")
     override fun regexPattern(): String = "(https?|ftp|file)://[-a-zA-Z\\d+&@#/%?=~_|!:,.;]*[-a-zA-Z\\d+&@#/%=~_|]"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: MessageCreateEvent,
+    ): Component {
         val url = token.string
 
         return url.component().underlined()

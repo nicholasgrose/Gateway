@@ -57,14 +57,15 @@ data class CommandExecutor<A : CommandArgs<A>>(
     fun completions(context: TabCompleteContext<*>): List<String> {
         val args = filledArgs(context.args.rawArguments)
         val remainingArgs = args.remainingArgs().joinToString(" ")
-        val completions = args.completions(
-            TabCompleteContext(
-                bukkit = context.bukkit,
-                command = context.command,
-                args = args,
-                completingParser = UnitParser(),
-            ),
-        )
+        val completions =
+            args.completions(
+                TabCompleteContext(
+                    bukkit = context.bukkit,
+                    command = context.command,
+                    args = args,
+                    completingParser = UnitParser(),
+                ),
+            )
 
         return trieOf(completions).search(remainingArgs)
     }

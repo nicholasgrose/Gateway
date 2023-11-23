@@ -9,7 +9,10 @@ import com.rose.gateway.minecraft.commands.framework.CommandBuilder
  * @param initializer The settings for this subcommand
  * @receiver This command builder
  */
-fun CommandBuilder.subcommand(name: String, initializer: CommandBuilder.() -> Unit) {
+fun CommandBuilder.subcommand(
+    name: String,
+    initializer: CommandBuilder.() -> Unit,
+) {
     val subcommandBuilder = CommandBuilder(name)
     subcommandBuilder.apply(initializer)
 

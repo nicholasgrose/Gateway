@@ -22,7 +22,10 @@ class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEven
     @Language("RegExp")
     override fun regexPattern(): String = "<#\\d+>"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: MessageCreateEvent,
+    ): Component {
         val snowflakeString = token.string.substring(2 until token.string.length - 1)
         val id = Snowflake(snowflakeString)
         val channel = additionalData.getGuildOrNull()?.getChannelOrNull(id) ?: return token.string.component()

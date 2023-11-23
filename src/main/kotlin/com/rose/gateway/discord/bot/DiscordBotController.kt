@@ -40,22 +40,27 @@ class DiscordBotController : KoinComponent {
      * Launches the bot in a new parallel task
      */
     private suspend fun launchConcurrentBot() {
-        state.botJob = pluginScope.launch {
-            val runResult = discordBot.tryKordOperation("Running Discord Bot") {
-                val bot = discordBot.kordexBot.await()
-                    ?: return@tryKordOperation Result.failure(Exception("No bot was built that could be started"))
+        state.botJob =
+            pluginScope.launch {
+                val runResult =
+                    discordBot.tryKordOperation("Running Discord Bot") {
+                        val bot =
+                            discordBot.kordexBot.await()
+                                ?: return@tryKordOperation Result.failure(
+                                    Exception("No bot was built that could be started"),
+                                )
 
-                state.status = BotStatus.RUNNING
-                bot.start()
-                state.status = BotStatus.STOPPED
+                        state.status = BotStatus.RUNNING
+                        bot.start()
+                        state.status = BotStatus.STOPPED
 
-                Result.success(Unit)
+                        Result.success(Unit)
+                    }
+
+                if (runResult.isFailure) {
+                    state.status = BotStatus.STOPPED because runResult.exceptionOrNull()?.localizedMessage.toString()
+                }
             }
-
-            if (runResult.isFailure) {
-                state.status = BotStatus.STOPPED because runResult.exceptionOrNull()?.localizedMessage.toString()
-            }
-        }
     }
 
     /**

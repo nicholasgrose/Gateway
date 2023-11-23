@@ -24,9 +24,10 @@ class PluginConfig : KoinComponent {
     /**
      * The instance of the config the plugin is using
      */
-    var config: Config = runBlocking {
-        configFile.safelyLoadConfig()
-    }
+    var config: Config =
+        runBlocking {
+            configFile.safelyLoadConfig()
+        }
 
     /**
      * Reload the full config from the disk
@@ -92,7 +93,10 @@ class PluginConfig : KoinComponent {
      *
      * @see KType
      */
-    operator fun <ItemValueType : Any> get(type: KType, item: String): Item<ItemValueType>? {
+    operator fun <ItemValueType : Any> get(
+        type: KType,
+        item: String,
+    ): Item<ItemValueType>? {
         val match = get(item)
 
         return if (match != null && match.type == type) {

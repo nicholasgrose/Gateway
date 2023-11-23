@@ -139,21 +139,23 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return All possible usages for these args
      */
     fun usages(): List<String> {
-        val parserUsages = parsers.map { parser ->
-            parser.generateUsages()
-        }
+        val parserUsages =
+            parsers.map { parser ->
+                parser.generateUsages()
+            }
         var allUsages = listOf<String>()
 
         for (usageList in parserUsages) {
             if (usageList.isEmpty()) continue
 
-            allUsages = if (allUsages.isEmpty()) {
-                usageList.toList()
-            } else {
-                usageList.flatMap { usage ->
-                    allUsages.map { existingUsage -> "$existingUsage $usage" }
-                }.toList()
-            }
+            allUsages =
+                if (allUsages.isEmpty()) {
+                    usageList.toList()
+                } else {
+                    usageList.flatMap { usage ->
+                        allUsages.map { existingUsage -> "$existingUsage $usage" }
+                    }.toList()
+                }
         }
 
         return allUsages
@@ -166,20 +168,22 @@ open class CommandArgs<A : CommandArgs<A>> {
      * @return All completions this arg has in the given context
      */
     fun completions(context: TabCompleteContext<A>): List<String> {
-        val nextArg = parsers.firstOrNull {
-            !(wasSuccessful(it))
-        } ?: parsers.lastOrNull()
+        val nextArg =
+            parsers.firstOrNull {
+                !(wasSuccessful(it))
+            } ?: parsers.lastOrNull()
 
         return when {
             remainingArgCount() > 1 -> listOf()
-            else -> nextArg?.completions(
-                TabCompleteContext(
-                    bukkit = context.bukkit,
-                    command = context.command,
-                    args = context.args,
-                    completingParser = nextArg,
-                ),
-            ) ?: listOf()
+            else ->
+                nextArg?.completions(
+                    TabCompleteContext(
+                        bukkit = context.bukkit,
+                        command = context.command,
+                        args = context.args,
+                        completingParser = nextArg,
+                    ),
+                ) ?: listOf()
         }
     }
 }

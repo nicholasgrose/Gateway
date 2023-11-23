@@ -38,10 +38,11 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: T
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser = stringParser<A> {
-        name = "CONFIG_INTERNAL"
-        description = "Parses the string for the item."
-    }
+    private val internalStringParser =
+        stringParser<A> {
+            name = "CONFIG_INTERNAL"
+            description = "Parses the string for the item."
+        }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Item<T>, A> {
         val stringResult = internalStringParser.parseValue(context)

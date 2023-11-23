@@ -4,7 +4,6 @@ import com.kotlindiscord.kord.extensions.commands.application.slash.EphemeralSla
 import com.kotlindiscord.kord.extensions.commands.application.slash.ephemeralSubCommand
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
-import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.maxPlayersPerWhitelistPage
 import com.rose.gateway.config.access.primaryColor
@@ -19,7 +18,7 @@ import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
 import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.embed
 import org.koin.core.component.inject
 
 /**
@@ -90,17 +89,19 @@ class WhitelistExtension : Extension() {
                         }
                     }, { groupIndex, group ->
                         page {
-                            title = plurality(
-                                whitelistedPlayerCount,
-                                "1 Whitelisted Player",
-                                "$whitelistedPlayerCount Whitelisted Players",
-                            )
-                            description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
-                                val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
-                                val playerName = player.name?.discordBoldSafe() ?: player.uniqueId
+                            title =
+                                plurality(
+                                    whitelistedPlayerCount,
+                                    "1 Whitelisted Player",
+                                    "$whitelistedPlayerCount Whitelisted Players",
+                                )
+                            description =
+                                group.withIndex().joinToString("\n") { (playerIndex, player) ->
+                                    val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
+                                    val playerName = player.name?.discordBoldSafe() ?: player.uniqueId
 
-                                "**$playerNumber.** $playerName"
-                            }
+                                    "**$playerNumber.** $playerName"
+                                }
                             color = Color(config.secondaryColor().value())
                         }
                     })
@@ -114,25 +115,28 @@ class WhitelistExtension : Extension() {
     ) {
         respond {
             when (state) {
-                WhitelistState.STATE_MODIFIED -> embed {
-                    title = "Whitelist Changed"
-                    description =
-                        "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
-                    color = Color(WhitelistExtension.config.primaryColor().value())
-                }
+                WhitelistState.STATE_MODIFIED ->
+                    embed {
+                        title = "Whitelist Changed"
+                        description =
+                            "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
+                        color = Color(WhitelistExtension.config.primaryColor().value())
+                    }
 
-                WhitelistState.STATE_SUSTAINED -> embed {
-                    title = "Whitelist Not Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** already exists in whitelist."
-                    color = Color(WhitelistExtension.config.secondaryColor().value())
-                }
+                WhitelistState.STATE_SUSTAINED ->
+                    embed {
+                        title = "Whitelist Not Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** already exists in whitelist."
+                        color = Color(WhitelistExtension.config.secondaryColor().value())
+                    }
 
-                WhitelistState.STATE_INVALID -> embed {
-                    title = "Whitelist Addition Failed"
-                    description =
-                        "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
-                    color = Color(WhitelistExtension.config.warningColor().value())
-                }
+                WhitelistState.STATE_INVALID ->
+                    embed {
+                        title = "Whitelist Addition Failed"
+                        description =
+                            "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
+                        color = Color(WhitelistExtension.config.warningColor().value())
+                    }
             }
         }
     }
@@ -142,25 +146,28 @@ class WhitelistExtension : Extension() {
     ) {
         respond {
             when (state) {
-                WhitelistState.STATE_MODIFIED -> embed {
-                    title = "Whitelist Changed"
-                    description =
-                        "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
-                    color = Color(WhitelistExtension.config.primaryColor().value())
-                }
+                WhitelistState.STATE_MODIFIED ->
+                    embed {
+                        title = "Whitelist Changed"
+                        description =
+                            "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
+                        color = Color(WhitelistExtension.config.primaryColor().value())
+                    }
 
-                WhitelistState.STATE_SUSTAINED -> embed {
-                    title = "Whitelist Not Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** does not exist in whitelist."
-                    color = Color(WhitelistExtension.config.secondaryColor().value())
-                }
+                WhitelistState.STATE_SUSTAINED ->
+                    embed {
+                        title = "Whitelist Not Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** does not exist in whitelist."
+                        color = Color(WhitelistExtension.config.secondaryColor().value())
+                    }
 
-                WhitelistState.STATE_INVALID -> embed {
-                    title = "Whitelist Removal Failed"
-                    description = "Error occurred removing" +
-                        " **${arguments.username.discordBoldSafe()}** from whitelist."
-                    color = Color(WhitelistExtension.config.warningColor().value())
-                }
+                WhitelistState.STATE_INVALID ->
+                    embed {
+                        title = "Whitelist Removal Failed"
+                        description = "Error occurred removing" +
+                            " **${arguments.username.discordBoldSafe()}** from whitelist."
+                        color = Color(WhitelistExtension.config.warningColor().value())
+                    }
             }
         }
     }

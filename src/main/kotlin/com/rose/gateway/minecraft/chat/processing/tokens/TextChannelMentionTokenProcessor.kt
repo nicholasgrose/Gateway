@@ -33,7 +33,10 @@ class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, U
         return "@[cC]=[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val nameString = token.string.substring(TEXT_CHANNEL_MENTION_START_INDEX)
 
         return createTextChannelMention(nameString)

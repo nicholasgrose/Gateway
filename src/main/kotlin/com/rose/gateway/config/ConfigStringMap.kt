@@ -34,7 +34,10 @@ class ConfigStringMap : KoinComponent {
      * @param config The config class to pull items from
      * @param prefix The string path up to this config class
      */
-    private fun fillInItemMap(config: KClass<*>, prefix: String? = null) {
+    private fun fillInItemMap(
+        config: KClass<*>,
+        prefix: String? = null,
+    ) {
         for (property in config.memberProperties) {
             val configAnnotations = property.annotations.filterIsInstance<ConfigItem>()
 
@@ -51,7 +54,11 @@ class ConfigStringMap : KoinComponent {
      * @param prefix The string prefix, if any, to put in front of this property's path
      * @param configAnnotation The config annotation attached to this property
      */
-    private fun addPropertyToMap(property: KProperty1<out Any, *>, prefix: String?, configAnnotation: ConfigItem) {
+    private fun addPropertyToMap(
+        property: KProperty1<out Any, *>,
+        prefix: String?,
+        configAnnotation: ConfigItem,
+    ) {
         val propertyString = if (prefix == null) property.name else "$prefix.${property.name}"
         val propertyType = property.returnType
 

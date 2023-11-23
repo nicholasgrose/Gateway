@@ -19,7 +19,10 @@ class TextTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
     @Language("RegExp")
     override fun regexPattern(): String = ".[^<]*"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: MessageCreateEvent,
+    ): Component {
         return token.string.component()
     }
 }

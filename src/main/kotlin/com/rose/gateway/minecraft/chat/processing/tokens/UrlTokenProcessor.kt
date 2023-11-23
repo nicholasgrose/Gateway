@@ -25,11 +25,15 @@ class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: LixyToken,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val url = token.string
-        val component = url.component().underlined()
-            .showTextOnHover("Click to open url".component())
-            .openUrlOnClick(url)
+        val component =
+            url.component().underlined()
+                .showTextOnHover("Click to open url".component())
+                .openUrlOnClick(url)
 
         return TokenProcessingResult(component, url)
     }
