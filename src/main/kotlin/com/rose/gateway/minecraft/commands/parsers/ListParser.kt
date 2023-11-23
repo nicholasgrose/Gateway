@@ -30,7 +30,7 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  */
 class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
     ArgParser<List<T>, A, ListParser<T, A, P>>(builder)
-        where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
+    where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
