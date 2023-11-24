@@ -6,8 +6,8 @@ import com.rose.gateway.minecraft.component.showTextOnHover
 import com.rose.gateway.minecraft.component.underlined
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.core.event.message.MessageCreateEvent
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 
@@ -17,13 +17,13 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a URL token processor
  */
 class UrlTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
-    override fun tokenType(): LixyTokenType = DiscordChatComponent.URL
+    override fun tokenType(): TokenType = DiscordChatComponent.URL
 
     @Language("RegExp")
     override fun regexPattern(): String = "(https?|ftp|file)://[-a-zA-Z\\d+&@#/%?=~_|!:,.;]*[-a-zA-Z\\d+&@#/%=~_|]"
 
     override suspend fun process(
-        token: LixyToken,
+        token: Token,
         additionalData: MessageCreateEvent,
     ): Component {
         val url = token.string

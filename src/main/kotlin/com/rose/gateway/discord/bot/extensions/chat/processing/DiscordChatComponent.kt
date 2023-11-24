@@ -1,15 +1,15 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.TokenType
 
 /**
  * Defines all the tokens that can be pulled from a Discord message
  *
  * @constructor Create a Discord chat component
  *
- * @see LixyTokenType
+ * @see TokenType
  */
-enum class DiscordChatComponent : LixyTokenType {
+enum class DiscordChatComponent : TokenType {
     /**
      * A token representing the mention of a user
      *

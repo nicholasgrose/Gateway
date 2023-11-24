@@ -21,7 +21,7 @@ val ktlintVersion: String by project
 val minecraftVersion: String by project
 val paperApiRevision: String by project
 val kordexVersion: String by project
-val lixyVersion: String by project
+val tegralNiwenVersion: String by project
 val kamlVersion: String by project
 val ktorVersion: String by project
 val hopliteVersion: String by project
@@ -61,7 +61,7 @@ dependencies {
     // Library for Discord bots.
     implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
-    implementation("guru.zoroark.lixy:lixy:$lixyVersion")
+    implementation(tegralLibs.niwen.lexer)
 }
 
 ktlint {

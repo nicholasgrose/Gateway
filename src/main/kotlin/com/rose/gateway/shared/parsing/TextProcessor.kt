@@ -1,8 +1,8 @@
 package com.rose.gateway.shared.parsing
 
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.lixy
-import guru.zoroark.lixy.matchers.matches
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.matchers.matches
+import guru.zoroark.tegral.niwen.lexer.niwenLexer
 
 /**
  * A processor that can takes text, parses it, and maps the result into the [ResultType]
@@ -19,7 +19,7 @@ import guru.zoroark.lixy.matchers.matches
 class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProcessor<ResultType, AdditionalDataType>>) {
     private val tokenProcessorMap = processors.associateBy { it.tokenType() }
     private val lexer =
-        lixy {
+        niwenLexer {
             state {
                 // Defining the regex of each processor as matching that processor's token type.
                 for (processor in processors) {
@@ -48,16 +48,16 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
     }
 
     /**
-     * Finds the [TokenProcessor] that handles a [LixyToken]'s type
+     * Finds the [TokenProcessor] that handles a [Token]'s type
      *
      * @param token The token to find the processor for
      * @return The processor that can handle the token's type
      *
-     * @see LixyToken
-     * @see guru.zoroark.lixy.LixyTokenType
+     * @see Token
+     * @see guru.zoroark.lixy.TokenType
      * @see TokenProcessor
      */
-    private fun processorFor(token: LixyToken): TokenProcessor<ResultType, AdditionalDataType> {
+    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> {
         return tokenProcessorMap[token.tokenType]!!
     }
 }

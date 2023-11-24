@@ -3,8 +3,8 @@ package com.rose.gateway.minecraft.chat.processing.tokens
 import com.rose.gateway.minecraft.chat.processing.tokens.result.MentionResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.shared.parsing.TokenProcessor
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import org.intellij.lang.annotations.Language
 
 /**
@@ -17,7 +17,7 @@ class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         private const val USER_MENTION_START_INDEX = 1
     }
 
-    override fun tokenType(): LixyTokenType {
+    override fun tokenType(): TokenType {
         return ChatComponent.USER_MENTION
     }
 
@@ -27,7 +27,7 @@ class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     }
 
     override suspend fun process(
-        token: LixyToken,
+        token: Token,
         additionalData: Unit,
     ): TokenProcessingResult {
         val nameString = token.string.substring(USER_MENTION_START_INDEX)
