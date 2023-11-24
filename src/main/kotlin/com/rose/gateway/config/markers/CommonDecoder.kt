@@ -24,7 +24,11 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         private val DECODER = DataClassDecoder()
     }
 
-    override fun safeDecode(node: Node, type: KType, context: DecoderContext): ConfigResult<Any> {
+    override fun safeDecode(
+        node: Node,
+        type: KType,
+        context: DecoderContext,
+    ): ConfigResult<Any> {
         return DECODER.safeDecode(node, type, context)
     }
 
@@ -32,12 +36,10 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         val classifier = type.classifier
 
         return if (classifier is KClass<*>) {
-            (
-                !classifier.isData &&
-                    !classifier.isSealed &&
-                    !classifier.isInline() &&
-                    classifier canBe ConfigObject::class
-                )
+            !classifier.isData &&
+                !classifier.isSealed &&
+                !classifier.isInline() &&
+                classifier canBe ConfigObject::class
         } else {
             false
         }

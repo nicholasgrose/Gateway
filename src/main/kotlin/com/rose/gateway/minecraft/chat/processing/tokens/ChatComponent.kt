@@ -1,13 +1,13 @@
 package com.rose.gateway.minecraft.chat.processing.tokens
 
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.TokenType
 
 /**
  * A token representing an individual component of the chat
  *
  * @constructor Create a chat component
  */
-enum class ChatComponent : LixyTokenType {
+enum class ChatComponent : TokenType {
     /**
      * Represents a user mention
      *

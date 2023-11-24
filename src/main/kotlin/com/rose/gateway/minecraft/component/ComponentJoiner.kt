@@ -17,10 +17,11 @@ operator fun Component.plus(secondComponent: Component): Component = join(this, 
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(vararg components: Component): Component = join(
-    JoinConfiguration.noSeparators(),
-    components.toList(),
-)
+fun join(vararg components: Component): Component =
+    join(
+        JoinConfiguration.noSeparators(),
+        components.toList(),
+    )
 
 /**
  * Joins multiple [Component]s into one with given separators
@@ -28,10 +29,14 @@ fun join(vararg components: Component): Component = join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(joinConfig: JoinConfiguration, components: Collection<Component>): Component = Component.join(
-    joinConfig,
-    components,
-)
+fun join(
+    joinConfig: JoinConfiguration,
+    components: Collection<Component>,
+): Component =
+    Component.join(
+        joinConfig,
+        components,
+    )
 
 /**
  * Joins multiple [Component]s into one without separators
@@ -39,10 +44,11 @@ fun join(joinConfig: JoinConfiguration, components: Collection<Component>): Comp
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(components: Collection<Component>): Component = join(
-    JoinConfiguration.noSeparators(),
-    components,
-)
+fun join(components: Collection<Component>): Component =
+    join(
+        JoinConfiguration.noSeparators(),
+        components,
+    )
 
 /**
  * Joins multiple [Component]s into one without separators
@@ -50,10 +56,14 @@ fun join(components: Collection<Component>): Component = join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun join(joinConfig: JoinConfiguration, vararg components: Component): Component = join(
-    joinConfig,
-    components.asList(),
-)
+fun join(
+    joinConfig: JoinConfiguration,
+    vararg components: Component,
+): Component =
+    join(
+        joinConfig,
+        components.asList(),
+    )
 
 /**
  * Joins multiple [Component]s into one with new lines as separators
@@ -61,10 +71,11 @@ fun join(joinConfig: JoinConfiguration, vararg components: Component): Component
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinNewLine(vararg components: Component): Component = join(
-    JoinConfiguration.newlines(),
-    components.asList(),
-)
+fun joinNewLine(vararg components: Component): Component =
+    join(
+        JoinConfiguration.newlines(),
+        components.asList(),
+    )
 
 /**
  * Joins multiple [Component]s into one with new lines as separators
@@ -72,10 +83,11 @@ fun joinNewLine(vararg components: Component): Component = join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinNewLine(components: Collection<Component>): Component = join(
-    JoinConfiguration.newlines(),
-    components,
-)
+fun joinNewLine(components: Collection<Component>): Component =
+    join(
+        JoinConfiguration.newlines(),
+        components,
+    )
 
 /**
  * Joins multiple [Component]s into one with spaces as separators
@@ -83,7 +95,8 @@ fun joinNewLine(components: Collection<Component>): Component = join(
  * @param components The [Component]s to combine
  * @return The new, joined [Component]
  */
-fun joinSpace(vararg components: Component): Component = join(
-    JoinConfiguration.separator(" ".component()),
-    components.asList(),
-)
+fun joinSpace(vararg components: Component): Component =
+    join(
+        JoinConfiguration.separator(" ".component()),
+        components.asList(),
+    )

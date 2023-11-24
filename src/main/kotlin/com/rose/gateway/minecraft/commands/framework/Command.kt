@@ -32,14 +32,18 @@ class Command(val definition: CommandDefinition) {
      * @param executorArgsPairs The ranked executors with their parsed args
      * @return The result of execution
      */
-    fun execute(context: CommandExecuteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): CommandExecuteResult {
+    fun execute(
+        context: CommandExecuteContext<*>,
+        executorArgsPairs: List<ExecutorArgsPair<*>>,
+    ): CommandExecuteResult {
         val chosenPair = executorArgsPairs.firstOrNull()
 
-        val succeeded = if (chosenPair == null) {
-            false
-        } else {
-            chosenPair.executor.tryExecute(context) ?: false
-        }
+        val succeeded =
+            if (chosenPair == null) {
+                false
+            } else {
+                chosenPair.executor.tryExecute(context) ?: false
+            }
 
         return CommandExecuteResult(succeeded, executorArgsPairs)
     }
@@ -63,10 +67,14 @@ class Command(val definition: CommandDefinition) {
      * @param executorArgsPairs The ranked executors with their parsed args
      * @return Possible completions for the context
      */
-    fun complete(context: TabCompleteContext<*>, executorArgsPairs: List<ExecutorArgsPair<*>>): List<String> {
-        val tabCompletions = executorArgsPairs.map {
-            it.executor.completions(context)
-        }.flatten()
+    fun complete(
+        context: TabCompleteContext<*>,
+        executorArgsPairs: List<ExecutorArgsPair<*>>,
+    ): List<String> {
+        val tabCompletions =
+            executorArgsPairs.map {
+                it.executor.completions(context)
+            }.flatten()
 
         return tabCompletions
     }

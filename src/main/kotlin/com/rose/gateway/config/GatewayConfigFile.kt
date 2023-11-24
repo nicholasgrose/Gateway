@@ -36,11 +36,12 @@ class GatewayConfigFile : KoinComponent {
     /**
      * The default configuration that is used as an internal fallback
      */
-    val defaultConfig = run {
-        Logger.info("Loading fallback config...")
+    val defaultConfig =
+        run {
+            Logger.info("Loading fallback config...")
 
-        loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
-    }
+            loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
+        }
 
     /**
      * Loads the gateway config file, creating it if it is missing
@@ -92,9 +93,10 @@ class GatewayConfigFile : KoinComponent {
      */
     private suspend fun createConfigurationFile() {
         withContext(Dispatchers.IO) {
-            val defaultConfig = plugin.loader.getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
-                .notNullWithMissingDefaultConfigMessage()
-                .readAllBytes()
+            val defaultConfig =
+                plugin.loader.getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
+                    .notNullWithMissingDefaultConfigMessage()
+                    .readAllBytes()
 
             Files.createDirectories(configPath.parent)
             Files.createFile(configPath)
@@ -113,17 +115,18 @@ class GatewayConfigFile : KoinComponent {
         Logger.info("Loading configuration...")
 
         return try {
-            val config: Config = ConfigLoaderBuilder
-                .empty()
-                .withClassLoader(plugin.loader)
-                .addDefaultDecoders()
-                .addDefaultPreprocessors()
-                .addDefaultParamMappers()
-                .addDefaultPropertySources()
-                .addDefaultParsers()
-                .addDecoder(CommonDecoder())
-                .build()
-                .loadConfigOrThrow(path)
+            val config: Config =
+                ConfigLoaderBuilder
+                    .empty()
+                    .withClassLoader(plugin.loader)
+                    .addDefaultDecoders()
+                    .addDefaultPreprocessors()
+                    .addDefaultParamMappers()
+                    .addDefaultPropertySources()
+                    .addDefaultParsers()
+                    .addDecoder(CommonDecoder())
+                    .build()
+                    .loadConfigOrThrow(path)
             Logger.info("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {

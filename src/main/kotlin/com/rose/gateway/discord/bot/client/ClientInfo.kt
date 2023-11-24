@@ -22,7 +22,10 @@ object ClientInfo : KoinComponent {
      * @param permissions The permissions to check for the existence of
      * @return Whether the permissions exist for the given channel
      */
-    suspend fun hasChannelPermissions(channel: GuildChannel, permissions: Permissions): Boolean {
+    suspend fun hasChannelPermissions(
+        channel: GuildChannel,
+        permissions: Permissions,
+    ): Boolean {
         val channelPermissions = permissionsForChannel(channel)
         return permissions in channelPermissions
     }

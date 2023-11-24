@@ -11,7 +11,10 @@ import net.kyori.adventure.text.format.TextColor
  * @param userColor The color the user should be in the [Component]
  * @return The at [Component]
  */
-fun atMember(user: Member, userColor: TextColor): Component {
+fun atMember(
+    user: Member,
+    userColor: TextColor,
+): Component {
     return "@".primaryComponent() + member(user).color(userColor)
 }
 

@@ -37,10 +37,16 @@ class ListConfig(
 data class ListConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage: Int) {
     companion object : SurrogateConverter<ListConfig, ListConfigSurrogate> {
         override fun fromBase(base: ListConfig): ListConfigSurrogate =
-            ListConfigSurrogate(base.enabled, base.maxPlayersPerPage)
+            ListConfigSurrogate(
+                base.enabled,
+                base.maxPlayersPerPage,
+            )
 
         override fun toBase(surrogate: ListConfigSurrogate): ListConfig =
-            ListConfig(surrogate.enabled, surrogate.maxPlayersPerPage)
+            ListConfig(
+                surrogate.enabled,
+                surrogate.maxPlayersPerPage,
+            )
     }
 }
 

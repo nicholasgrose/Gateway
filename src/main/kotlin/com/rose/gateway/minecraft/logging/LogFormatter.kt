@@ -13,10 +13,11 @@ class LogFormatter : SimpleFormatter() {
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, yyyy-MM-dd HH:mm:ss")
 
     override fun format(record: LogRecord): String? {
-        val zdt = ZonedDateTime.ofInstant(
-            record.instant,
-            ZoneId.systemDefault(),
-        )
+        val zdt =
+            ZonedDateTime.ofInstant(
+                record.instant,
+                ZoneId.systemDefault(),
+            )
         val message = formatMessage(record)
         val warningLevel = record.level.localizedName
 

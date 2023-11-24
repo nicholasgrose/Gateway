@@ -23,18 +23,19 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         args: Array<String>,
     ): Boolean {
         val argList = args.toList()
-        val commandResult = command.parseAndExecute(
-            CommandExecuteContext(
-                bukkit = BukkitContext.CommandExecute(
-                    sender = sender,
-                    command = bukkitCommand,
-                    label = label,
-                    args = args,
+        val commandResult =
+            command.parseAndExecute(
+                CommandExecuteContext(
+                    BukkitContext.CommandExecute(
+                        sender = sender,
+                        command = bukkitCommand,
+                        label = label,
+                        args = args,
+                    ),
+                    command,
+                    emptyArgs(argList),
                 ),
-                command = command,
-                args = emptyArgs(argList),
-            ),
-        )
+            )
 
         if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
 
@@ -47,11 +48,15 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
      * @param sender The sender of the command to receive usages
      * @param rankedExecutors The most successful executors
      */
-    private fun sendUsages(sender: CommandSender, rankedExecutors: List<ExecutorArgsPair<*>>) {
+    private fun sendUsages(
+        sender: CommandSender,
+        rankedExecutors: List<ExecutorArgsPair<*>>,
+    ) {
         sender.sendMessage(
-            "Usage:\n" + rankedExecutors.joinToString("\n") {
-                it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-            },
+            "Usage:\n" +
+                rankedExecutors.joinToString("\n") {
+                    it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+                },
         )
     }
 
@@ -65,15 +70,15 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
 
         return command.parseAndComplete(
             TabCompleteContext(
-                bukkit = BukkitContext.TabComplete(
+                BukkitContext.TabComplete(
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
                     args = args,
                 ),
-                command = command,
-                args = emptyArgs(argList),
-                completingParser = UnitParser(),
+                command,
+                emptyArgs(argList),
+                UnitParser(),
             ),
         )
     }

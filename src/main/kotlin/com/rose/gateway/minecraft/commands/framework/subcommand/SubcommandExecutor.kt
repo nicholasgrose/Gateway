@@ -11,10 +11,11 @@ import com.rose.gateway.minecraft.commands.framework.emptyArgs
  * @param command The command to wrap into a subcommand
  * @return The executor for the subcommand
  */
-fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> = CommandExecutor(
-    ::subcommandRunner,
-    SubcommandArgs.forCommand(command),
-)
+fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> =
+    CommandExecutor(
+        ::subcommandRunner,
+        SubcommandArgs.forCommand(command),
+    )
 
 /**
  * The runner for subcommands
@@ -25,14 +26,15 @@ fun subcommandExecutor(command: Command): CommandExecutor<SubcommandArgs> = Comm
 fun subcommandRunner(context: CommandExecuteContext<SubcommandArgs>): Boolean {
     val args = context.args
     val remainingArguments = args.remainingArgs
-    val commandResult = context.args.command.execute(
-        CommandExecuteContext(
-            bukkit = context.bukkit,
-            command = context.command,
-            args = emptyArgs(remainingArguments),
-        ),
-        args.rankedExecutors,
-    )
+    val commandResult =
+        context.args.command.execute(
+            CommandExecuteContext(
+                bukkit = context.bukkit,
+                command = context.command,
+                args = emptyArgs(remainingArguments),
+            ),
+            args.rankedExecutors,
+        )
 
     return commandResult.succeeded
 }

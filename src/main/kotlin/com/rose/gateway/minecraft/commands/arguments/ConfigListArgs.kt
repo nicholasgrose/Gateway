@@ -13,25 +13,18 @@ import kotlin.reflect.typeOf
 /**
  * Arguments for a configuration that is a list of some values and some values for it
  *
- * @param ListElementType Type for the elements in the list for the config
- * @param ListArgsType The type of the args this is
- * @param ListElementParserType The type of the parser that will get the individual list elements
+ * @param T Type for the elements in the list for the config
+ * @param A The type of the args this is
+ * @param P The type of the parser that will get the individual list elements
  * @constructor Creates a config
  *
  * @param resultType The type of the list to associate with the args
  * @param valueArg The parser for the list arguments
  */
-open class ConfigListArgs<
-    ListElementType : Any,
-    ListArgsType : ConfigListArgs<ListElementType, ListArgsType, ListElementParserType>,
-    ListElementParserType : ArgParser<ListElementType, ListArgsType, ListElementParserType>,
-    >(
+open class ConfigListArgs<T : Any, A : ConfigListArgs<T, A, P>, P : ArgParser<T, A, P>>(
     resultType: KType,
-    valueArg: ListArgsType.() -> ListParser<ListElementType, ListArgsType, ListElementParserType>,
-) : ConfigArgs<List<ListElementType>, ListArgsType, ListParser<ListElementType, ListArgsType, ListElementParserType>>(
-    resultType,
-    valueArg,
-)
+    valueArg: A.() -> ListParser<T, A, P>,
+) : ConfigArgs<List<T>, A, ListParser<T, A, P>>(resultType, valueArg)
 
 /**
  * Config args for a list of strings
@@ -42,59 +35,70 @@ open class ConfigListArgs<
  * @param stringValidator The validator to use for each string
  */
 class StringListConfigArgs(
-    stringCompleter: StringParser<StringListConfigArgs>.(
+    val stringCompleter: StringParser<StringListConfigArgs>.(
         TabCompleteContext<StringListConfigArgs>,
     ) -> List<String>,
-    stringValidator: StringParser<StringListConfigArgs>.(ParseResult.Success<String, StringListConfigArgs>) -> Boolean,
-) :
-    ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
+    val stringValidator: StringParser<StringListConfigArgs>.(
+        ParseResult.Success<String, StringListConfigArgs>,
+    ) -> Boolean,
+) : ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
         typeOf<List<String>>(),
-        {
-            list {
-                name = "VALUES"
-                description = "Values to add."
-                element = stringParser {
+        StringListConfigArgs::parser,
+    ) {
+    /**
+     * Creates the list parser for these string list config args
+     *
+     * @return THe constructed parser
+     */
+    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> {
+        return list {
+            name = "VALUES"
+            description = "Values to add."
+            element =
+                stringParser {
                     name = "VALUE"
                     description = "String to add."
                     completer = stringCompleter
                     validator = stringValidator
                 }
-            }
-        },
-    )
+        }
+    }
+}
 
 /**
  * Creates a string list config args for adding strings
  *
  * @return The constructed config args
  */
-fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { listOf() },
-    {
-        val item = it.context.args.item
+fun addStringListConfigArgs(): StringListConfigArgs =
+    StringListConfigArgs(
+        { listOf() },
+        {
+            val item = it.context.args.item
 
-        item.value.contains(it.result).not()
-    },
-)
+            item.value.contains(it.result).not()
+        },
+    )
 
 /**
  * Creates a string list config args for removing strings
  *
  * @return The constructed config args
  */
-fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { context ->
-        val currentValues = context.args.item.value
-        val itemsSlatedForRemoval = existingValues(context)
+fun removeStringListConfigArgs(): StringListConfigArgs =
+    StringListConfigArgs(
+        { context ->
+            val currentValues = context.args.item.value
+            val itemsSlatedForRemoval = existingValues(context)
 
-        currentValues - itemsSlatedForRemoval.toSet()
-    },
-    { parseResult ->
-        val item = parseResult.context.args.item
+            currentValues - itemsSlatedForRemoval.toSet()
+        },
+        { parseResult ->
+            val item = parseResult.context.args.item
 
-        item.value.contains(parseResult.result)
-    },
-)
+            item.value.contains(parseResult.result)
+        },
+    )
 
 private fun StringParser<StringListConfigArgs>.existingValues(
     context: TabCompleteContext<StringListConfigArgs>,

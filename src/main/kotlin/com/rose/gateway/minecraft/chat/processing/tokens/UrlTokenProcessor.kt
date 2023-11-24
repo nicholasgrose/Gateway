@@ -6,8 +6,8 @@ import com.rose.gateway.minecraft.component.openUrlOnClick
 import com.rose.gateway.minecraft.component.showTextOnHover
 import com.rose.gateway.minecraft.component.underlined
 import com.rose.gateway.shared.parsing.TokenProcessor
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import org.intellij.lang.annotations.Language
 
 /**
@@ -16,7 +16,7 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a URL token processor
  */
 class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
-    override fun tokenType(): LixyTokenType {
+    override fun tokenType(): TokenType {
         return ChatComponent.URL
     }
 
@@ -25,11 +25,15 @@ class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: Token,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val url = token.string
-        val component = url.component().underlined()
-            .showTextOnHover("Click to open url".component())
-            .openUrlOnClick(url)
+        val component =
+            url.component().underlined()
+                .showTextOnHover("Click to open url".component())
+                .openUrlOnClick(url)
 
         return TokenProcessingResult(component, url)
     }

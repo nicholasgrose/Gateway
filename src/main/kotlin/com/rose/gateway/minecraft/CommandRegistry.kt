@@ -29,89 +29,90 @@ object CommandRegistry : KoinComponent {
         commands.registerCommands(plugin)
     }
 
-    private val commands = minecraftCommands {
-        command("discord") {
-            subcommand("help") {
-                runner { context ->
-                    DiscordCommands.help(context)
-                }
-            }
-        }
-
-        command("gateway") {
-            subcommand("bot") {
-                subcommand("rebuild") {
-                    runner { context -> BotCommands.rebuild(context) }
-                }
-
-                subcommand("restart") {
-                    runner { context -> BotCommands.restart(context) }
-                }
-
-                subcommand("stop") {
-                    runner { context -> BotCommands.stop(context) }
-                }
-
-                subcommand("status") {
-                    runner { context -> BotCommands.status(context) }
-                }
-            }
-
-            subcommand("config") {
-                subcommand("set") {
-                    runner(::ConfigBooleanArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
-
-                    runner(::ConfigIntArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
-
-                    runner(::ConfigStringArgs) { context ->
-                        ConfigCommands.setConfig(context)
-                    }
-                }
-
-                subcommand("add") {
-                    runner(::addStringListConfigArgs) { context ->
-                        ConfigCommands.addConfiguration(context)
-                    }
-                }
-
-                subcommand("remove") {
-                    runner(::removeStringListConfigArgs) { context ->
-                        ConfigCommands.removeConfiguration(context)
-                    }
-                }
-
+    private val commands =
+        minecraftCommands {
+            command("discord") {
                 subcommand("help") {
-                    runner(::ConfigItemArgs) { context ->
-                        ConfigMonitoringRunner.sendConfigurationHelp(context)
+                    runner { context ->
+                        DiscordCommands.help(context)
+                    }
+                }
+            }
+
+            command("gateway") {
+                subcommand("bot") {
+                    subcommand("rebuild") {
+                        runner { context -> BotCommands.rebuild(context) }
                     }
 
-                    runner { context ->
-                        ConfigMonitoringRunner.sendAllConfigurationHelp(context.bukkit.sender)
+                    subcommand("restart") {
+                        runner { context -> BotCommands.restart(context) }
+                    }
+
+                    subcommand("stop") {
+                        runner { context -> BotCommands.stop(context) }
+                    }
+
+                    subcommand("status") {
+                        runner { context -> BotCommands.status(context) }
                     }
                 }
 
-                subcommand("reload") {
-                    runner { context ->
-                        ConfigMonitoringRunner.reloadConfig(context)
-                    }
-                }
+                subcommand("config") {
+                    subcommand("set") {
+                        runner(::ConfigBooleanArgs) { context ->
+                            ConfigCommands.setConfig(context)
+                        }
 
-                subcommand("save") {
-                    runner { context ->
-                        ConfigMonitoringRunner.saveConfig(context)
-                    }
-                }
+                        runner(::ConfigIntArgs) { context ->
+                            ConfigCommands.setConfig(context)
+                        }
 
-                subcommand("status") {
-                    runner { context ->
-                        ConfigMonitoringRunner.sendConfigurationStatus(context.bukkit.sender)
+                        runner(::ConfigStringArgs) { context ->
+                            ConfigCommands.setConfig(context)
+                        }
+                    }
+
+                    subcommand("add") {
+                        runner(::addStringListConfigArgs) { context ->
+                            ConfigCommands.addConfiguration(context)
+                        }
+                    }
+
+                    subcommand("remove") {
+                        runner(::removeStringListConfigArgs) { context ->
+                            ConfigCommands.removeConfiguration(context)
+                        }
+                    }
+
+                    subcommand("help") {
+                        runner(::ConfigItemArgs) { context ->
+                            ConfigMonitoringRunner.sendConfigurationHelp(context)
+                        }
+
+                        runner { context ->
+                            ConfigMonitoringRunner.sendAllConfigurationHelp(context.bukkit.sender)
+                        }
+                    }
+
+                    subcommand("reload") {
+                        runner { context ->
+                            ConfigMonitoringRunner.reloadConfig(context)
+                        }
+                    }
+
+                    subcommand("save") {
+                        runner { context ->
+                            ConfigMonitoringRunner.saveConfig(context)
+                        }
+                    }
+
+                    subcommand("status") {
+                        runner { context ->
+                            ConfigMonitoringRunner.sendConfigurationStatus(context.bukkit.sender)
+                        }
                     }
                 }
             }
         }
-    }
 }

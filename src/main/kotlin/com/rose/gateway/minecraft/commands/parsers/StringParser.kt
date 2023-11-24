@@ -65,20 +65,22 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                 )
             }
 
-            result != null -> ParseResult.Success(
-                result,
-                ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1,
-                ),
-            )
+            result != null ->
+                ParseResult.Success(
+                    result,
+                    ParseContext(
+                        args = args,
+                        currentIndex = currentIndex + 1,
+                    ),
+                )
 
-            else -> ParseResult.Failure(
-                ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1,
-                ),
-            )
+            else ->
+                ParseResult.Failure(
+                    ParseContext(
+                        args = args,
+                        currentIndex = currentIndex + 1,
+                    ),
+                )
         }
     }
 }

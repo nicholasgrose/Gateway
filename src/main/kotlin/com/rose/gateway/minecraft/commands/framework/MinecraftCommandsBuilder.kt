@@ -18,7 +18,10 @@ class MinecraftCommandsBuilder {
      * @param initializer Configurations for this command
      * @receiver The command builder
      */
-    fun command(name: String, initializer: CommandBuilder.() -> Unit) {
+    fun command(
+        name: String,
+        initializer: CommandBuilder.() -> Unit,
+    ) {
         val builder = CommandBuilder(name)
 
         builder.apply(initializer)

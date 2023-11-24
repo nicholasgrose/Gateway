@@ -23,7 +23,10 @@ data class ExecutorArgsPair<A : CommandArgs<A>>(
          * @param rawArgs The raw arguments that are provided to the executor
          * @return The constructor executor-args pair
          */
-        fun <A : CommandArgs<A>> forExecutor(executor: CommandExecutor<A>, rawArgs: List<String>): ExecutorArgsPair<A> {
+        fun <A : CommandArgs<A>> forExecutor(
+            executor: CommandExecutor<A>,
+            rawArgs: List<String>,
+        ): ExecutorArgsPair<A> {
             val args = executor.filledArgs(rawArgs)
 
             return ExecutorArgsPair(executor, args)

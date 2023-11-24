@@ -5,8 +5,8 @@ import com.rose.gateway.minecraft.chat.processing.tokens.result.MentionResult
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.ChannelType
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import kotlinx.coroutines.flow.toSet
 import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
@@ -24,7 +24,7 @@ class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, U
 
     private val bot: DiscordBotController by inject()
 
-    override fun tokenType(): LixyTokenType {
+    override fun tokenType(): TokenType {
         return ChatComponent.TEXT_CHANNEL_MENTION
     }
 
@@ -33,7 +33,10 @@ class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, U
         return "@[cC]=[^\\s@]+"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: Token,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val nameString = token.string.substring(TEXT_CHANNEL_MENTION_START_INDEX)
 
         return createTextChannelMention(nameString)

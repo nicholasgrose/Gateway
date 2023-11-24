@@ -5,8 +5,8 @@ import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
@@ -17,12 +17,15 @@ import org.koin.core.component.KoinComponent
  * @constructor Create a channel mention token processor
  */
 class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
-    override fun tokenType(): LixyTokenType = DiscordChatComponent.CHANNEL_MENTION
+    override fun tokenType(): TokenType = DiscordChatComponent.CHANNEL_MENTION
 
     @Language("RegExp")
     override fun regexPattern(): String = "<#\\d+>"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: Token,
+        additionalData: MessageCreateEvent,
+    ): Component {
         val snowflakeString = token.string.substring(2 until token.string.length - 1)
         val id = Snowflake(snowflakeString)
         val channel = additionalData.getGuildOrNull()?.getChannelOrNull(id) ?: return token.string.component()

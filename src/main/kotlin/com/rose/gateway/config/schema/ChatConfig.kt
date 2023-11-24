@@ -34,15 +34,17 @@ class ChatConfig(
 @Serializable
 data class ChatConfigSurrogate(val enabled: Boolean, val showRoleColor: Boolean) {
     companion object : SurrogateConverter<ChatConfig, ChatConfigSurrogate> {
-        override fun fromBase(base: ChatConfig): ChatConfigSurrogate = ChatConfigSurrogate(
-            base.enabled,
-            base.showRoleColor,
-        )
+        override fun fromBase(base: ChatConfig): ChatConfigSurrogate =
+            ChatConfigSurrogate(
+                base.enabled,
+                base.showRoleColor,
+            )
 
-        override fun toBase(surrogate: ChatConfigSurrogate): ChatConfig = ChatConfig(
-            surrogate.enabled,
-            surrogate.showRoleColor,
-        )
+        override fun toBase(surrogate: ChatConfigSurrogate): ChatConfig =
+            ChatConfig(
+                surrogate.enabled,
+                surrogate.showRoleColor,
+            )
     }
 }
 

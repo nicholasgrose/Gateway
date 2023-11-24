@@ -3,8 +3,8 @@ package com.rose.gateway.minecraft.chat.processing.tokens
 import com.rose.gateway.minecraft.chat.processing.tokens.result.TokenProcessingResult
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.shared.parsing.TokenProcessor
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import org.intellij.lang.annotations.Language
 
 /**
@@ -13,7 +13,7 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a text token processor
  */
 class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
-    override fun tokenType(): LixyTokenType {
+    override fun tokenType(): TokenType {
         return ChatComponent.TEXT
     }
 
@@ -22,7 +22,10 @@ class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
         return ".[^@]*"
     }
 
-    override suspend fun process(token: LixyToken, additionalData: Unit): TokenProcessingResult {
+    override suspend fun process(
+        token: Token,
+        additionalData: Unit,
+    ): TokenProcessingResult {
         val text = token.string
 
         return TokenProcessingResult(text.component(), text)

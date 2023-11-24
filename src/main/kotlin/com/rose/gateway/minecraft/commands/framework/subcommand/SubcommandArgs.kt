@@ -33,22 +33,24 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         }
     }
 
-    private val subcommandParser = string {
-        name = "subcommand"
-        description = "The subcommand to run."
-        completer = { listOf(command.definition.name) }
-        validator = { it.result == command.definition.name }
-        usageGenerator = { listOf(command.definition.name) }
-    }
+    private val subcommandParser =
+        string {
+            name = "subcommand"
+            description = "The subcommand to run."
+            completer = { listOf(command.definition.name) }
+            validator = { it.result == command.definition.name }
+            usageGenerator = { listOf(command.definition.name) }
+        }
 
     /**
      * The args remaining for the command to use
      */
     val remainingArgs by list {
-        element = stringParser {
-            name = "Remaining Arg"
-            description = "One of the args remaining."
-        }
+        element =
+            stringParser {
+                name = "Remaining Arg"
+                description = "One of the args remaining."
+            }
         name = "Remaining Args"
         description = "All of the args to be passed to subcommands."
         usageGenerator = emptyUsageGenerator()
@@ -90,13 +92,14 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
         }
 
         usageGenerator = {
-            val subcommandDocs = if (wasSuccessful(subcommandParser)) {
-                rankedExecutors.flatMap {
-                    it.args.usages()
+            val subcommandDocs =
+                if (wasSuccessful(subcommandParser)) {
+                    rankedExecutors.flatMap {
+                        it.args.usages()
+                    }
+                } else {
+                    listOf()
                 }
-            } else {
-                listOf()
-            }
 
             subcommandDocs
         }

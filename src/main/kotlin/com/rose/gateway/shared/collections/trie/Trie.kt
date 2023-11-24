@@ -20,7 +20,10 @@ class Trie : MutableSet<String> {
      * @param index The index that might be the final index of the string
      * @return Whether the given index is the last index of the string
      */
-    private fun isLastIndexOfString(value: String, index: Int): Boolean {
+    private fun isLastIndexOfString(
+        value: String,
+        index: Int,
+    ): Boolean {
         return index == value.length - 1
     }
 
@@ -33,7 +36,11 @@ class Trie : MutableSet<String> {
      * @param currentCharacterIndex The current index of the string being inserted
      * @return The matching node or a newly created node that does match
      */
-    private fun getOrCreateChildNode(trieNode: TrieNode, stringToInsert: String, currentCharacterIndex: Int): TrieNode {
+    private fun getOrCreateChildNode(
+        trieNode: TrieNode,
+        stringToInsert: String,
+        currentCharacterIndex: Int,
+    ): TrieNode {
         val currentCharacter = stringToInsert[currentCharacterIndex]
         val matchingChild = trieNode.children[currentCharacter]
 
@@ -195,11 +202,12 @@ class Trie : MutableSet<String> {
         var success = false
 
         for (element in contents) {
-            val elementRemoved = if (!keepSet.contains(element)) {
-                remove(element)
-            } else {
-                false
-            }
+            val elementRemoved =
+                if (!keepSet.contains(element)) {
+                    remove(element)
+                } else {
+                    false
+                }
             success = success || elementRemoved
         }
 
