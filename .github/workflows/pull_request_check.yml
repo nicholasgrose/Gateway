@@ -42,7 +42,7 @@ jobs:
             -   uses: actions/checkout@v4
 
             # https://github.com/marketplace/actions/run-ktlint-with-reviewdog
-            -   uses: ScaCap/action-ktlint@v1.8
+            -   uses: ScaCap/action-ktlint@v1.8.0
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     ktlint_version: '1.0.1'
