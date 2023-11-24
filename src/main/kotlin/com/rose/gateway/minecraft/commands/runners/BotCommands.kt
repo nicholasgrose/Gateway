@@ -106,7 +106,7 @@ object BotCommands : KoinComponent {
     }
 
     /**
-     * Command that sends the command sender information about the bot's status
+     * Command that sends the command sender information about the bot status
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
