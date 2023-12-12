@@ -71,8 +71,7 @@ object ConfigCommands {
      */
     fun <T, A, P> addConfiguration(
         context: CommandExecuteContext<A>,
-    ): Boolean
-        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
+    ): Boolean where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 
@@ -133,8 +132,7 @@ object ConfigCommands {
      */
     fun <T, A, P> removeConfiguration(
         context: CommandExecuteContext<A>,
-    ): Boolean
-        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
+    ): Boolean where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 

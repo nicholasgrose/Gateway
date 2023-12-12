@@ -23,19 +23,18 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         args: Array<String>,
     ): Boolean {
         val argList = args.toList()
-        val commandResult =
-            command.parseAndExecute(
-                CommandExecuteContext(
-                    BukkitContext.CommandExecute(
-                        sender = sender,
-                        command = bukkitCommand,
-                        label = label,
-                        args = args,
-                    ),
-                    command,
-                    emptyArgs(argList),
+        val commandResult = command.parseAndExecute(
+            CommandExecuteContext(
+                BukkitContext.CommandExecute(
+                    sender = sender,
+                    command = bukkitCommand,
+                    label = label,
+                    args = args,
                 ),
-            )
+                command,
+                emptyArgs(argList),
+            ),
+        )
 
         if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
 
@@ -53,10 +52,9 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         rankedExecutors: List<ExecutorArgsPair<*>>,
     ) {
         sender.sendMessage(
-            "Usage:\n" +
-                rankedExecutors.joinToString("\n") {
-                    it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-                },
+            "Usage:\n" + rankedExecutors.joinToString("\n") {
+                it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+            },
         )
     }
 
