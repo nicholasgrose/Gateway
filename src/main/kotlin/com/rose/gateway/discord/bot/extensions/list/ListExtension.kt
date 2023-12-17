@@ -13,7 +13,7 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.minecraft.server.ServerInfo
 import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.embed
 import org.koin.core.component.inject
 
 /**
@@ -54,16 +54,18 @@ class ListExtension : Extension() {
                     }
                 }, { groupIndex, group ->
                     page {
-                        title = plurality(
-                            onlinePlayerCount,
-                            "1 Online Player",
-                            "$onlinePlayerCount Player Online",
-                        )
-                        description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
-                            val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
+                        title =
+                            plurality(
+                                onlinePlayerCount,
+                                "1 Online Player",
+                                "$onlinePlayerCount Player Online",
+                            )
+                        description =
+                            group.withIndex().joinToString("\n") { (playerIndex, player) ->
+                                val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
 
-                            "**$playerNumber.** ${player.name.discordBoldSafe()}"
-                        }
+                                "**$playerNumber.** ${player.name.discordBoldSafe()}"
+                            }
                         color = Color(config.secondaryColor().value())
                     }
                 })

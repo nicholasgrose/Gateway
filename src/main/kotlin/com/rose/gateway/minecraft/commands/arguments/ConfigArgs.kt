@@ -27,14 +27,10 @@ import kotlin.reflect.typeOf
  * @property item The config item referenced
  * @property value The config item's value
  */
-abstract class ConfigArgs<
-    T : Any,
-    A : ConfigArgs<T, A, P>,
-    P : ArgParser<T, A, P>,
-    >(
+abstract class ConfigArgs<T, A, P>(
     configType: KType,
     valueArg: A.() -> P,
-) : CommandArgs<A>() {
+) : CommandArgs<A>() where T : Any, A : ConfigArgs<T, A, P>, P : ArgParser<T, A, P> {
     /**
      * The config item of the given type that was specified
      */

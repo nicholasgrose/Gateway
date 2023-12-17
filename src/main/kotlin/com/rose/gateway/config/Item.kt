@@ -59,15 +59,16 @@ data class Item<ValueType>(
         val configProperties = source::class.memberProperties.filterConfigItems()
 
         for (member in configProperties) {
-            val result = if (member == property) {
-                source
-            } else if (member.returnType canBe typeOf<ConfigObject>()) {
-                val memberValue = member.getter.call(source) as ConfigObject
+            val result =
+                if (member == property) {
+                    source
+                } else if (member.returnType canBe typeOf<ConfigObject>()) {
+                    val memberValue = member.getter.call(source) as ConfigObject
 
-                containingObject(memberValue)
-            } else {
-                null
-            }
+                    containingObject(memberValue)
+                } else {
+                    null
+                }
 
             return result ?: continue
         }

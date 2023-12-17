@@ -18,9 +18,7 @@ import org.koin.core.component.inject
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <A : CommandArgs<A>> CommandArgs<A>.configItem(
-    body: ConfigItemParserBuilder<A>.() -> Unit,
-): ConfigItemParser<A> =
+fun <A : CommandArgs<A>> CommandArgs<A>.configItem(body: ConfigItemParserBuilder<A>.() -> Unit): ConfigItemParser<A> =
     genericParser(::ConfigItemParserBuilder, body)
 
 /**
@@ -37,10 +35,11 @@ class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) 
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser = stringParser<A> {
-        name = "CONFIG_INTERNAL"
-        description = "Parses the string for the item."
-    }
+    private val internalStringParser =
+        stringParser<A> {
+            name = "CONFIG_INTERNAL"
+            description = "Parses the string for the item."
+        }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Item<*>, A> {
         val stringResult = internalStringParser.parseValue(context)

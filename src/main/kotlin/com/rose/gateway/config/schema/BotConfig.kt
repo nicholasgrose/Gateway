@@ -2,7 +2,7 @@ package com.rose.gateway.config.schema
 
 import com.rose.gateway.config.markers.ConfigItem
 import com.rose.gateway.config.markers.ConfigObject
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.serialization.SurrogateBasedSerializer
 import com.rose.gateway.shared.serialization.SurrogateConverter
@@ -30,7 +30,7 @@ class BotConfig(
     @ConfigItem val extensions: ExtensionsConfig,
 ) : KoinComponent, ConfigObject {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
 
     /**
      * The Discord bot's bot token
@@ -53,7 +53,7 @@ class BotConfig(
     var botChannels = botChannels
         set(value) {
             field = value
-            runBlocking { bot.context.fillBotChannels() }
+            runBlocking { bot.state.fillBotChannels() }
         }
 }
 
@@ -75,17 +75,19 @@ data class BotConfigSurrogate(
     val extensions: ExtensionsConfig,
 ) {
     companion object : SurrogateConverter<BotConfig, BotConfigSurrogate> {
-        override fun fromBase(base: BotConfig): BotConfigSurrogate = BotConfigSurrogate(
-            base.token,
-            base.botChannels,
-            base.extensions,
-        )
+        override fun fromBase(base: BotConfig): BotConfigSurrogate =
+            BotConfigSurrogate(
+                base.token,
+                base.botChannels,
+                base.extensions,
+            )
 
-        override fun toBase(surrogate: BotConfigSurrogate): BotConfig = BotConfig(
-            surrogate.token,
-            surrogate.botChannels,
-            surrogate.extensions,
-        )
+        override fun toBase(surrogate: BotConfigSurrogate): BotConfig =
+            BotConfig(
+                surrogate.token,
+                surrogate.botChannels,
+                surrogate.extensions,
+            )
     }
 }
 

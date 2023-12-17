@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/Gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Gateway.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/GitHub.Gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Nicholas.Projects.GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Nicholas.Projects.GitHub.Gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Projects.GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Projects.GitHub.Gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.main.iml" />
     </modules>
   </component>

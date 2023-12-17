@@ -14,9 +14,9 @@ import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <T, A : CommandArgs<A>> CommandArgs<A>.processor(
+fun <T, A> CommandArgs<A>.processor(
     body: ProcessorParserBuilder<T, A>.() -> Unit,
-): ProcessorParser<T, A> = genericParser(::ProcessorParserBuilder, body)
+): ProcessorParser<T, A> where A : CommandArgs<A> = genericParser(::ProcessorParserBuilder, body)
 
 /**
  * Parser for a custom-processed argument

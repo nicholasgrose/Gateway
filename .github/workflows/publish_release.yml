@@ -3,7 +3,7 @@ name: Publish Release
 on:
     push:
         branches:
-            - main
+            - stable
 
         paths:
             - '**/gradle.properties'
@@ -16,7 +16,7 @@ jobs:
 
         steps:
             # https://github.com/marketplace/actions/checkout
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
 
             # https://github.com/marketplace/actions/setup-java-jdk
             -   name: Set up JDK 17

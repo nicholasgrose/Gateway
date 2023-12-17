@@ -87,7 +87,10 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @param property The property that this delegate is store in
      * @return The value that this parser has in the args or null if none was found
      */
-    operator fun getValue(thisRef: CommandArgs<A>, property: KProperty<*>): T {
+    operator fun getValue(
+        thisRef: CommandArgs<A>,
+        property: KProperty<*>,
+    ): T {
         val parseResult = thisRef.parserResults[this]
 
         @Suppress("UNCHECKED_CAST")

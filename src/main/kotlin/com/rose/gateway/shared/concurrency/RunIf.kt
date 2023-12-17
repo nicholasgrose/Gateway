@@ -15,7 +15,10 @@ import kotlinx.coroutines.runBlocking
  *
  * @see PluginCoroutineScope
  */
-fun PluginCoroutineScope.launchIf(condition: Boolean, block: suspend CoroutineScope.() -> Unit): Job? {
+fun PluginCoroutineScope.launchIf(
+    condition: Boolean,
+    block: suspend CoroutineScope.() -> Unit,
+): Job? {
     return if (condition) {
         launch(block = block)
     } else {
@@ -32,7 +35,10 @@ fun PluginCoroutineScope.launchIf(condition: Boolean, block: suspend CoroutineSc
  * @receiver The coroutine scope for general runBlocking calls
  * @return The type to return from the code block or null if the code did not run
  */
-fun <T> runBlockingIf(condition: Boolean, block: suspend CoroutineScope.() -> T): T? {
+fun <T> runBlockingIf(
+    condition: Boolean,
+    block: suspend CoroutineScope.() -> T,
+): T? {
     return if (condition) {
         runBlocking(block = block)
     } else {

@@ -11,7 +11,10 @@ import net.kyori.adventure.text.format.TextColor
  * @param userColor The color the user should be in the [Component]
  * @return The at [Component]
  */
-fun atMember(user: Member, userColor: TextColor): Component {
+fun atMember(
+    user: Member,
+    userColor: TextColor,
+): Component {
     return "@".primaryComponent() + member(user).color(userColor)
 }
 
@@ -22,6 +25,6 @@ fun atMember(user: Member, userColor: TextColor): Component {
  * @return The member [Component]
  */
 fun member(user: Member): Component {
-    return user.displayName.secondaryComponent()
+    return user.effectiveName.secondaryComponent()
         .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())
 }

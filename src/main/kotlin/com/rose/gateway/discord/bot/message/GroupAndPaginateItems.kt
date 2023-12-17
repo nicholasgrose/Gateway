@@ -2,8 +2,6 @@ package com.rose.gateway.discord.bot.message
 
 import com.kotlindiscord.kord.extensions.commands.application.slash.EphemeralSlashCommandContext
 import com.kotlindiscord.kord.extensions.pagination.builders.PaginatorBuilder
-import com.kotlindiscord.kord.extensions.types.editingPaginator
-import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.shared.collections.group
 import dev.kord.rest.builder.message.create.FollowupMessageCreateBuilder
 

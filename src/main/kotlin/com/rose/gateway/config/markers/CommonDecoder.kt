@@ -24,22 +24,36 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         private val DECODER = DataClassDecoder()
     }
 
-    override fun safeDecode(node: Node, type: KType, context: DecoderContext): ConfigResult<Any> {
+    override fun safeDecode(
+        node: Node,
+        type: KType,
+        context: DecoderContext,
+    ): ConfigResult<Any> {
         return DECODER.safeDecode(node, type, context)
     }
 
+    /**
+     * Checks if the decoder supports the given type.
+     *
+     * @param type The type to check.
+     * @return True if the type is supported, false otherwise.
+     */
     override fun supports(type: KType): Boolean {
         val classifier = type.classifier
+        return classifier is KClass<*> && isSupportedClassifier(classifier)
+    }
 
-        return if (classifier is KClass<*>) {
-            (
-                !classifier.isData &&
-                    !classifier.isSealed &&
-                    !classifier.isInline() &&
-                    classifier canBe ConfigObject::class
-                )
-        } else {
-            false
-        }
+    /**
+     * Check if the classifier is not a data class, sealed class, inline class
+     * and can be a ConfigObject.
+     *
+     * @param classifier The class we want to check
+     * @return true if it passes all conditions, false otherwise
+     */
+    fun isSupportedClassifier(classifier: KClass<*>): Boolean {
+        return !classifier.isData &&
+                !classifier.isSealed &&
+                !classifier.isInline() &&
+                classifier canBe ConfigObject::class
     }
 }

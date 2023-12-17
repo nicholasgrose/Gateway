@@ -30,8 +30,9 @@ class ActionListener : Listener, KoinComponent {
     fun onDeath(event: PlayerDeathEvent) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
             val deathMessage = event.deathMessage() ?: return@launchIfChatExtensionEnabled
-            val plainTextMessage = PlainTextComponentSerializer.plainText().serialize(deathMessage)
-                .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
+            val plainTextMessage =
+                PlainTextComponentSerializer.plainText().serialize(deathMessage)
+                    .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
             GameChatEvent.trigger {
                 content = plainTextMessage
@@ -48,8 +49,9 @@ class ActionListener : Listener, KoinComponent {
     fun onPlayerAdvancement(event: PlayerAdvancementDoneEvent) {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
             val advancementMessage = event.message() ?: return@launchIfChatExtensionEnabled
-            val advancementText = PlainTextComponentSerializer.plainText().serialize(advancementMessage)
-                .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
+            val advancementText =
+                PlainTextComponentSerializer.plainText().serialize(advancementMessage)
+                    .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
             GameChatEvent.trigger {
                 content = advancementText

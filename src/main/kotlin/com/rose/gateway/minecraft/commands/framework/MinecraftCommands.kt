@@ -9,9 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * @receiver The minecraft commands builder
  * @return The constructed Minecraft commands
  */
-fun minecraftCommands(
-    initializer: MinecraftCommandsBuilder.() -> Unit,
-): MinecraftCommands {
+fun minecraftCommands(initializer: MinecraftCommandsBuilder.() -> Unit): MinecraftCommands {
     val builder = MinecraftCommandsBuilder()
 
     builder.apply(initializer)

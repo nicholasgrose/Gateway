@@ -106,7 +106,10 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event that must be used for additional data
      * @return The author referenced by the message, if any
      */
-    private suspend fun replyReferenceComponent(referencedMessage: Message, event: MessageCreateEvent): Component? {
+    private suspend fun replyReferenceComponent(
+        referencedMessage: Message,
+        event: MessageCreateEvent,
+    ): Component? {
         val member = referencedMessageAuthor(referencedMessage, event) ?: return null
 
         return atMember(member, config.secondaryColor()).italic()
@@ -119,21 +122,25 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to source data from
      * @return The member that sent the referenced message
      */
-    private suspend fun referencedMessageAuthor(referencedMessage: Message, event: MessageCreateEvent): Member? {
+    private suspend fun referencedMessageAuthor(
+        referencedMessage: Message,
+        event: MessageCreateEvent,
+    ): Member? {
         val referencedAuthor = referencedMessage.author?.id ?: return null
 
         return event.getGuildOrNull()?.getMemberOrNull(referencedAuthor)
     }
 
-    private val textProcessor = TextProcessor(
-        listOf(
-            UrlTokenProcessor(),
-            UserMentionTokenProcessor(),
-            RoleMentionTokenProcessor(),
-            ChannelMentionTokenProcessor(),
-            TextTokenProcessor(),
-        ),
-    )
+    private val textProcessor =
+        TextProcessor(
+            listOf(
+                UrlTokenProcessor(),
+                UserMentionTokenProcessor(),
+                RoleMentionTokenProcessor(),
+                ChannelMentionTokenProcessor(),
+                TextTokenProcessor(),
+            ),
+        )
 
     /**
      * Generates a [Component] containing the main message block for Minecraft

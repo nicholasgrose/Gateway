@@ -56,7 +56,10 @@ open class SurrogateBasedSerializer<TypeToSerialize : Any, SurrogateType : Any>(
         return converter.toBase(surrogate)
     }
 
-    override fun serialize(encoder: Encoder, value: TypeToSerialize) {
+    override fun serialize(
+        encoder: Encoder,
+        value: TypeToSerialize,
+    ) {
         val surrogate = converter.fromBase(value)
 
         encoder.encodeSerializableValue(surrogateSerializer, surrogate)

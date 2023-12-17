@@ -7,8 +7,8 @@ import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.shared.parsing.TokenProcessor
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.event.message.MessageCreateEvent
-import guru.zoroark.lixy.LixyToken
-import guru.zoroark.lixy.LixyTokenType
+import guru.zoroark.tegral.niwen.lexer.Token
+import guru.zoroark.tegral.niwen.lexer.TokenType
 import net.kyori.adventure.text.Component
 import org.intellij.lang.annotations.Language
 import org.koin.core.component.KoinComponent
@@ -26,12 +26,15 @@ class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>,
         private const val SNOWFLAKE_START_INDEX = 2
     }
 
-    override fun tokenType(): LixyTokenType = DiscordChatComponent.USER_MENTION
+    override fun tokenType(): TokenType = DiscordChatComponent.USER_MENTION
 
     @Language("RegExp")
     override fun regexPattern(): String = "<@\\d+>"
 
-    override suspend fun process(token: LixyToken, additionalData: MessageCreateEvent): Component {
+    override suspend fun process(
+        token: Token,
+        additionalData: MessageCreateEvent,
+    ): Component {
         val snowflakeString = token.string.substring(SNOWFLAKE_START_INDEX until token.string.length - 1)
         val id = Snowflake(snowflakeString)
         val member = additionalData.getGuildOrNull()?.getMemberOrNull(id) ?: return token.string.component()

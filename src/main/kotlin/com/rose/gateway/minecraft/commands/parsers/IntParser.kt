@@ -14,8 +14,9 @@ import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <A : CommandArgs<A>> CommandArgs<A>.int(body: IntParserBuilder<A>.() -> Unit): IntParser<A> =
-    genericParser(::IntParserBuilder, body)
+fun <A> CommandArgs<A>.int(
+    body: IntParserBuilder<A>.() -> Unit,
+): IntParser<A> where A : CommandArgs<A> = genericParser(::IntParserBuilder, body)
 
 /**
  * Parser for an int argument
@@ -25,8 +26,7 @@ fun <A : CommandArgs<A>> CommandArgs<A>.int(body: IntParserBuilder<A>.() -> Unit
  *
  * @param builder The builder that defines this parser
  */
-class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) :
-    ArgParser<Int, A, IntParser<A>>(builder) {
+class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) : ArgParser<Int, A, IntParser<A>>(builder) {
     override fun typeName(): String = "Int"
 
     private val internalParser = stringParser<A> {

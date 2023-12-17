@@ -1,16 +1,16 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.21"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.21"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "2.2.2"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
 
 val version: String by project
@@ -21,7 +21,7 @@ val ktlintVersion: String by project
 val minecraftVersion: String by project
 val paperApiRevision: String by project
 val kordexVersion: String by project
-val lixyVersion: String by project
+val tegralVersion: String by project
 val kamlVersion: String by project
 val ktorVersion: String by project
 val hopliteVersion: String by project
@@ -61,7 +61,7 @@ dependencies {
     // Library for Discord bots.
     implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
-    implementation("guru.zoroark.lixy:lixy:$lixyVersion")
+    implementation("guru.zoroark.tegral:tegral-niwen-lexer:$tegralVersion")
 }
 
 ktlint {

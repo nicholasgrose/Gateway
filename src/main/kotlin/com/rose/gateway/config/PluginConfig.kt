@@ -1,7 +1,7 @@
 package com.rose.gateway.config
 
 import com.rose.gateway.config.schema.Config
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -15,7 +15,7 @@ import kotlin.reflect.KType
  * @constructor Creates plugin config
  */
 class PluginConfig : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
     private val stringMap: ConfigStringMap by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
@@ -24,9 +24,10 @@ class PluginConfig : KoinComponent {
     /**
      * The instance of the config the plugin is using
      */
-    var config: Config = runBlocking {
-        configFile.safelyLoadConfig()
-    }
+    var config: Config =
+        runBlocking {
+            configFile.safelyLoadConfig()
+        }
 
     /**
      * Reload the full config from the disk
@@ -92,7 +93,10 @@ class PluginConfig : KoinComponent {
      *
      * @see KType
      */
-    operator fun <ItemValueType : Any> get(type: KType, item: String): Item<ItemValueType>? {
+    operator fun <ItemValueType : Any> get(
+        type: KType,
+        item: String,
+    ): Item<ItemValueType>? {
         val match = get(item)
 
         return if (match != null && match.type == type) {

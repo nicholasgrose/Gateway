@@ -14,18 +14,19 @@ import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
 import io.papermc.paper.event.player.AsyncChatEvent
 
-private val textProcessor = TextProcessor(
-    listOf(
-        UrlTokenProcessor(),
-        VoiceChannelMentionTokenProcessor(),
-        TextChannelMentionTokenProcessor(),
-        RoleQuoteMentionTokenProcessor(),
-        RoleMentionTokenProcessor(),
-        UserQuoteMentionTokenProcessor(),
-        UserMentionTokenProcessor(),
-        TextTokenProcessor(),
-    ),
-)
+private val textProcessor =
+    TextProcessor(
+        listOf(
+            UrlTokenProcessor(),
+            VoiceChannelMentionTokenProcessor(),
+            TextChannelMentionTokenProcessor(),
+            RoleQuoteMentionTokenProcessor(),
+            RoleMentionTokenProcessor(),
+            UserQuoteMentionTokenProcessor(),
+            UserMentionTokenProcessor(),
+            TextTokenProcessor(),
+        ),
+    )
 
 /**
  * Creates a Discord message for some chat message using data from its event

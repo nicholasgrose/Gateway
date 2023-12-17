@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="KtlintProjectConfiguration">
+    <enableKtlint>false</enableKtlint>
     <disabledRules>
       <list>
-        <option value="filename" />
+        <option value="indent" />
       </list>
     </disabledRules>
   </component>

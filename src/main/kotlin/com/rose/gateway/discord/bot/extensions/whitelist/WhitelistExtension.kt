@@ -4,7 +4,6 @@ import com.kotlindiscord.kord.extensions.commands.application.slash.EphemeralSla
 import com.kotlindiscord.kord.extensions.commands.application.slash.ephemeralSubCommand
 import com.kotlindiscord.kord.extensions.extensions.Extension
 import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
-import com.kotlindiscord.kord.extensions.types.respond
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.maxPlayersPerWhitelistPage
 import com.rose.gateway.config.access.primaryColor
@@ -19,7 +18,7 @@ import com.rose.gateway.minecraft.whitelist.Whitelist
 import com.rose.gateway.minecraft.whitelist.WhitelistState
 import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.embed
 import org.koin.core.component.inject
 
 /**
@@ -116,8 +115,7 @@ class WhitelistExtension : Extension() {
             when (state) {
                 WhitelistState.STATE_MODIFIED -> embed {
                     title = "Whitelist Changed"
-                    description =
-                        "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
+                    description = "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
                     color = Color(WhitelistExtension.config.primaryColor().value())
                 }
 
@@ -129,8 +127,7 @@ class WhitelistExtension : Extension() {
 
                 WhitelistState.STATE_INVALID -> embed {
                     title = "Whitelist Addition Failed"
-                    description =
-                        "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
+                    description = "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
                     color = Color(WhitelistExtension.config.warningColor().value())
                 }
             }
@@ -144,8 +141,7 @@ class WhitelistExtension : Extension() {
             when (state) {
                 WhitelistState.STATE_MODIFIED -> embed {
                     title = "Whitelist Changed"
-                    description =
-                        "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
+                    description = "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
                     color = Color(WhitelistExtension.config.primaryColor().value())
                 }
 
@@ -157,8 +153,8 @@ class WhitelistExtension : Extension() {
 
                 WhitelistState.STATE_INVALID -> embed {
                     title = "Whitelist Removal Failed"
-                    description = "Error occurred removing" +
-                        " **${arguments.username.discordBoldSafe()}** from whitelist."
+                    description =
+                        "Error occurred removing" + " **${arguments.username.discordBoldSafe()}** from whitelist."
                     color = Color(WhitelistExtension.config.warningColor().value())
                 }
             }

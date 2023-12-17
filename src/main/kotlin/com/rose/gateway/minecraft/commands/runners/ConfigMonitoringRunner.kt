@@ -54,10 +54,14 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param sender The sender to receive the help message
      * @param items The list of config strings to send help for
      */
-    private fun sendConfigListHelp(sender: CommandSender, items: List<String>) {
-        val configs = items.map { config ->
-            "* ".component() + item(config)
-        }
+    private fun sendConfigListHelp(
+        sender: CommandSender,
+        items: List<String>,
+    ) {
+        val configs =
+            items.map { config ->
+                "* ".component() + item(config)
+            }
 
         sender.sendMessage(
             joinNewLine(

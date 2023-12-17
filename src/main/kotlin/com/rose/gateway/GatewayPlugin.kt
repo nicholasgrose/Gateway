@@ -1,11 +1,12 @@
 package com.rose.gateway
 
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.minecraft.CommandRegistry
 import com.rose.gateway.minecraft.EventListeners
 import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import com.rose.gateway.shared.koin.initializeKoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
@@ -32,11 +33,11 @@ class GatewayPlugin : JavaPlugin(), KoinComponent {
      */
     val loader = classLoader
 
-    private val bot: DiscordBot by inject()
+    private val bot: DiscordBotController by inject()
     private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {
-        runBlocking {
+        coroutineScope.launch {
             bot.start()
         }
 
