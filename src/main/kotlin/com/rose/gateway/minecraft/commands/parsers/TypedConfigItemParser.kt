@@ -2,26 +2,15 @@ package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.reflect.KType
-
-/**
- * Adds a typed config item argument to these args
- *
- * @param A The type of the [CommandArgs] this parser is a part of
- * @param body The arg body
- * @receiver The builder for the parser
- * @return The built parser
- */
-fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
-    body: TypedConfigItemParserBuilder<T, A>.() -> Unit,
-): TypedConfigItemParser<T, A> = genericParser(::TypedConfigItemParserBuilder, body)
+import kotlin.reflect.typeOf
 
 /**
  * Parser for a typed config item argument
@@ -32,23 +21,22 @@ fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
  *
  * @param builder The builder that defines this parser
  */
-class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: TypedConfigItemParserBuilder<T, A>) :
-    ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder), KoinComponent {
+class TypedConfigItemParser<T : Any>(builder: TypedConfigItemParserBuilder<T>) :
+    ArgParser<Item<T>, TypedConfigItemParser<T>, TypedConfigItemParserBuilder<T>>(builder), KoinComponent {
     private val config: PluginConfig by inject()
 
-    override fun typeName(): String = "ConfigItemType"
+    override fun typeName(): String = "ConfigItem"
 
-    private val internalStringParser =
-        stringParser<A> {
-            name = "CONFIG_INTERNAL"
-            description = "Parses the string for the item."
-        }
+    private val internalStringParser = stringParser {
+        name = "CONFIG_INTERNAL"
+        description = "Parses the string for the item."
+    }
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Item<T>, A> {
+    override fun parseValue(context: ParseContext): ParseResult<Item<T>> {
         val stringResult = internalStringParser.parseValue(context)
 
         return if (stringResult is ParseResult.Success) {
-            val nextString = stringResult.result
+            val nextString = stringResult.value
             val matchedConfig = config.get<T>(builder.type, nextString)
 
             if (matchedConfig != null) {
@@ -69,18 +57,29 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: T
  * @param A The args the parser will be a part of
  * @constructor Creates a typed config item parser builder
  */
-class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
-    ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>() {
+class TypedConfigItemParserBuilder<T : Any>(valueType: KType) :
+    ParserBuilder<Item<T>, TypedConfigItemParser<T>, TypedConfigItemParserBuilder<T>>(
+        "TypedConfigItem",
+        "A config item with a specific type",
+    ) {
+    companion object {
+        inline fun <reified T : Any> constructor(): () -> TypedConfigItemParserBuilder<T> {
+            return {
+                TypedConfigItemParserBuilder(typeOf<T>())
+            }
+        }
+    }
+
     /**
      * The KType for the config item
      */
-    lateinit var type: KType
+    var type: KType = valueType
 
-    override fun checkValidity() {
-        if (!::type.isInitialized) error("No type give for item arg.")
+    init {
+        completer = ConfigCompleter.configItemsWithType(type)
     }
 
-    override fun build(): TypedConfigItemParser<T, A> {
+    override fun build(): TypedConfigItemParser<T> {
         return TypedConfigItemParser(this)
     }
 }

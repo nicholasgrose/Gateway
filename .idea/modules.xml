@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Nicholas.Projects.GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Nicholas.Projects.GitHub.Gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Projects.GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Projects.GitHub.Gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.rose.gateway.Gateway.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/nicho.Projects.GitHub.Gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nicho.Projects.GitHub.Gateway.main.iml" />
     </modules>
   </component>

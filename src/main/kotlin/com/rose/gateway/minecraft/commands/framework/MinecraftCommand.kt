@@ -1,14 +1,10 @@
 package com.rose.gateway.minecraft.commands.framework
 
-import com.rose.gateway.minecraft.commands.framework.args.NoArgs
 import com.rose.gateway.minecraft.commands.framework.data.context.ArgsContext
 import com.rose.gateway.minecraft.commands.framework.data.context.BukkitContext
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.data.context.ParserSpecificContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsPair
-import com.rose.gateway.minecraft.commands.parsers.UnitParser
-import com.rose.gateway.shared.collections.bimap.bimapOf
+import com.rose.gateway.minecraft.commands.framework.data.definition.CommandExecutionResult
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.plugin.java.JavaPlugin
@@ -24,7 +20,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         label: String,
-        args: Array<String>
+        args: Array<String>,
     ): Boolean {
         val argList = args.toList()
         val commandResult = command.parseAndExecute(
@@ -33,17 +29,22 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                     sender = sender,
                     command = bukkitCommand,
                     label = label,
-                    args = args
+                    args = args,
                 ),
                 command = command,
                 args = ArgsContext(
                     raw = argList,
-                    parsed = bimapOf()
-                )
-            )
+                    parsed = mutableMapOf(),
+                ),
+            ),
         )
 
-        if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
+        when (commandResult) {
+            is CommandExecutionResult.Successful -> {}
+            is CommandExecutionResult.Failed -> {
+                sendUsages(sender, commandResult)
+            }
+        }
 
         return true
     }
@@ -54,11 +55,12 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
      * @param sender The sender of the command to receive usages
      * @param rankedExecutors The most successful executors
      */
-    private fun sendUsages(sender: CommandSender, rankedExecutors: List<ExecutorArgsPair<*>>) {
+    private fun sendUsages(sender: CommandSender, failedResult: CommandExecutionResult.Failed) {
+        sender.sendMessage("TODO")
         sender.sendMessage(
-            "Usage:\n" + rankedExecutors.joinToString("\n") {
-                it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-            }
+            "Usage:\n" + failedResult.bestExecutors.joinToString("\n") {
+                it.parser.generateUsages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+            },
         )
     }
 
@@ -66,7 +68,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,
         alias: String,
-        args: Array<String>
+        args: Array<String>,
     ): List<String> {
         val argList = args.toList()
 
@@ -74,20 +76,16 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
             TabCompleteContext(
                 command,
                 ArgsContext(
-                    argList,
-                    bimapOf()
+                    raw = argList,
+                    parsed = mutableMapOf(),
                 ),
                 BukkitContext.TabComplete(
                     sender = sender,
                     command = bukkitCommand,
                     alias = alias,
-                    args = args
+                    args = args,
                 ),
-                ParserSpecificContext(
-                    NoArgs.ref,
-                    UnitParser()
-                )
-            )
+            ),
         )
     }
 

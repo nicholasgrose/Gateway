@@ -8,7 +8,6 @@ package com.rose.gateway.minecraft.commands.framework.args
  * @param P The type of the parser for the argument the result provides usages for
  * @return A usage generator that always returns an empty set of usages
  */
-fun <T, A : CommandArgs<A>, P : ArgParser<T, A, P>> emptyUsageGenerator(): P.() -> List<String> =
-    {
-        listOf()
-    }
+fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> emptyUsageGenerator(): P.() -> List<String> = {
+    listOf()
+}

@@ -1,8 +1,9 @@
 package com.rose.gateway.minecraft.commands.framework.data.context
 
 import com.rose.gateway.minecraft.commands.framework.Command
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
+import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.ParseResult
+import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 
 /**
  * The context of an action for a command
@@ -16,7 +17,7 @@ import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
 public sealed class FrameworkContext<B : BukkitContext>(
     val command: Command,
     val args: ArgsContext,
-    val bukkit: B
+    val bukkit: B,
 ) {
     /**
      * The context of executing a command
@@ -30,92 +31,109 @@ public sealed class FrameworkContext<B : BukkitContext>(
     class CommandExecute(
         command: Command,
         args: ArgsContext,
-        bukkit: BukkitContext.CommandExecute
+        bukkit: BukkitContext.CommandExecute,
     ) : FrameworkContext<BukkitContext.CommandExecute>(command, args, bukkit)
 
     /**
-     * The context around an action involving a specific command argument
+     * The context around parsing a command
      *
      * @param A The type of the args in the context
-     * @param B The type of the bukkit context
-     * @property parserContext The context of the parser current being used
-     * @constructor Create a framework command arg context
+     * @property currentIndex The next index to use from the raw args
+     * @constructor Create a parse command arg context
      *
      * @param command The command in use
-     * @param argsContext Data about the args in this context
+     * @param args Data about the args in this context
+     * @param parser The context of the parser current being used
      * @param bukkit The context of the bukkit command
      */
-    public sealed class CommandArg<A : CommandArgs<A>, B : BukkitContext>(
+    class TabComplete(
         command: Command,
-        argsContext: ArgsContext,
-        bukkit: B,
-        val parserContext: ParserSpecificContext<A>
-    ) : FrameworkContext<B>(command, argsContext, bukkit) {
-        /**
-         * The context around parsing a command
-         *
-         * @param A The type of the args in the context
-         * @property currentIndex The next index to use from the raw args
-         * @constructor Create a parse command arg context
-         *
-         * @param command The command in use
-         * @param args Data about the args in this context
-         * @param parser The context of the parser current being used
-         * @param bukkit The context of the bukkit command
-         */
-        class TabComplete<A : CommandArgs<A>>(
-            command: Command,
-            args: ArgsContext,
-            bukkit: BukkitContext.TabComplete,
-            parser: ParserSpecificContext<A>
-        ) : CommandArg<A, BukkitContext.TabComplete>(command, args, bukkit, parser)
-
-        /**
-         * The context around parsing a command
-         *
-         * @param A The type of the args in the context
-         * @property currentIndex The next index to use from the raw args
-         * @constructor Create a parse command arg context
-         *
-         * @param command The command in use
-         * @param args Data about the args in this context
-         * @param parser The context of the parser current being used
-         * @param bukkit The context of the bukkit command
-         */
-        class Parse<A : CommandArgs<A>>(
-            command: Command,
-            args: ArgsContext,
-            bukkit: BukkitContext,
-            parser: ParserSpecificContext<A>,
-            val currentIndex: Int
-        ) : CommandArg<A, BukkitContext>(command, args, bukkit, parser)
-    }
+        args: ArgsContext,
+        bukkit: BukkitContext.TabComplete,
+    ) : FrameworkContext<BukkitContext.TabComplete>(command, args, bukkit)
 
     /**
-     * Gives the arguments for an args reference and casts them to the correct type
+     * The context around parsing a command
      *
-     * @param A The type of the args to get
+     * @param A The type of the args in the context
+     * @property currentIndex The next index to use from the raw args
+     * @constructor Create a parse command arg context
+     *
+     * @param command The command in use
+     * @param args Data about the args in this context
+     * @param parser The context of the parser current being used
+     * @param bukkit The context of the bukkit command
+     */
+    class Parse(
+        command: Command,
+        args: ArgsContext,
+        bukkit: BukkitContext,
+        val currentIndex: Int,
+    ) : FrameworkContext<BukkitContext>(command, args, bukkit)
+
+    /**
+     * Gives the result for an args reference and casts them to the correct type
+     *
      * @param argsRef The reference to the args
      * @return The referenced args
      */
-    fun <A : CommandArgs<A>> argsFor(argsRef: ArgsReference<A>): A {
-        val pulledArgs = args.parsed[argsRef]
+    fun <T, P, B> resultOf(
+        argParser: ArgParser<T, P, B>,
+    ): ParseResult<T>?
+            where P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
+        val parseResult = args.parsed[argParser] ?: return null
 
-        @Suppress("UNCHECKED_CAST") return pulledArgs as A
+        @Suppress("UNCHECKED_CAST")
+        return parseResult as ParseResult<T>
     }
 
     /**
-     * Gets the ref for an args instance or creates one if it doesn't yet exist
+     * Gives the result for an args reference and casts them to the correct type
      *
-     * @param A The type of the command args the result references
-     * @param argsConstructor The args to get the ref of
-     * @receiver None
-     * @return The reference for the args
+     * @param argsRef The reference to the args
+     * @return The referenced args
      */
-    fun <A : CommandArgs<A>> refFor(commandArgs: A): ArgsReference<A> {
-        val pulledRef = args.parsed[commandArgs]
+    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> resultOfOrDefault(argParser: P): ParseResult<T> {
+        return resultOf(argParser) ?: return ParseResult.Failure(
+            ParseContext(
+                command,
+                args,
+                bukkit,
+                0,
+            ),
+        )
+    }
 
-        @Suppress("UNCHECKED_CAST") return pulledRef as ArgsReference<A>
+    /**
+     * Gives the value for an args reference and casts it to the correct type
+     *
+     * @param argParser The reference to the args
+     * @return The referenced args
+     */
+    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> valueOf(argParser: ArgParser<T, P, B>): T {
+        val parseResult = resultOf(argParser)
+
+        return when (parseResult) {
+            null -> error("Asserted that result for $argParser exists but it doesn't")
+            is ParseResult.Failure -> error("Asserted that result for $argParser was successful but it wasn't")
+            is ParseResult.Success -> parseResult.value
+        }
+    }
+
+    /**
+     * Gives the value for the args reference to the parser and casts it to the correct type
+     *
+     * @param argParser The arg parser to get the parsed value for
+     * @return The value acquired or null if it has no successful result
+     */
+    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> valueOrNullOf(argParser: P): T? {
+        val parseResult = resultOf(argParser)
+
+        return when (parseResult) {
+            null -> null
+            is ParseResult.Failure -> null
+            is ParseResult.Success -> parseResult.value
+        }
     }
 }
 
@@ -127,9 +145,9 @@ typealias CommandExecuteContext = FrameworkContext.CommandExecute
 /**
  * The context for completing a command argument
  */
-typealias TabCompleteContext<A> = FrameworkContext.CommandArg.TabComplete<A>
+typealias TabCompleteContext = FrameworkContext.TabComplete
 
 /**
  * The context for parsing a command argument
  */
-typealias ParseContext<A> = FrameworkContext.CommandArg.Parse<A>
+typealias ParseContext = FrameworkContext.Parse

@@ -1,7 +1,7 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.discord.bot.BotStatus
-import com.rose.gateway.discord.bot.DiscordBot
+import com.rose.gateway.discord.bot.DiscordBotController
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.joinSpace
@@ -17,7 +17,7 @@ import org.koin.core.component.inject
  * Commands that affect the Discord bot
  */
 object BotCommands : KoinComponent {
-    private val bot: DiscordBot by inject()
+    private val controller: DiscordBotController by inject()
     private val pluginScope: PluginCoroutineScope by inject()
 
     /**
@@ -30,9 +30,9 @@ object BotCommands : KoinComponent {
         sendAndLogMessage(context.bukkit.sender, "Restarting the Discord bot...")
 
         pluginScope.launch {
-            bot.restart()
+            controller.restart()
 
-            if (bot.botStatus == BotStatus.RUNNING) {
+            if (controller.state.status == BotStatus.RUNNING) {
                 sendAndLogMessage(context.bukkit.sender, "Discord bot restarted.")
             } else {
                 sendAndLogMessage(
@@ -57,13 +57,13 @@ object BotCommands : KoinComponent {
     }
 
     /**
-     * Command that sends the command sender information about the bot's status
+     * Command that sends the command sender information about the bot status
      *
      * @param context A command context without arguments
      * @return Whether the command succeeded
      */
     fun botStatus(context: CommandExecuteContext): Boolean {
-        val status = bot.botStatus
+        val status = controller.state.status
         context.bukkit.sender.sendMessage(
             joinSpace(
                 "Bot Status:".primaryComponent(),

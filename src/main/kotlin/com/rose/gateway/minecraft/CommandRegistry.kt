@@ -1,15 +1,15 @@
 package com.rose.gateway.minecraft
 
 import com.rose.gateway.GatewayPlugin
-import com.rose.gateway.minecraft.commands.arguments.ConfigBooleanArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigIntArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigStringArgs
-import com.rose.gateway.minecraft.commands.arguments.addStringListConfigArgs
-import com.rose.gateway.minecraft.commands.arguments.removeStringListConfigArgs
+import com.rose.gateway.minecraft.commands.framework.args.booleanArg
+import com.rose.gateway.minecraft.commands.framework.args.configArg
+import com.rose.gateway.minecraft.commands.framework.args.intArg
+import com.rose.gateway.minecraft.commands.framework.args.stringArg
+import com.rose.gateway.minecraft.commands.framework.args.stringListArg
+import com.rose.gateway.minecraft.commands.framework.args.typedConfigArg
 import com.rose.gateway.minecraft.commands.framework.minecraftCommands
-import com.rose.gateway.minecraft.commands.framework.nesting.args
 import com.rose.gateway.minecraft.commands.framework.subcommand.subcommand
+import com.rose.gateway.minecraft.commands.parsers.stringParser
 import com.rose.gateway.minecraft.commands.runners.BotCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigCommands
 import com.rose.gateway.minecraft.commands.runners.ConfigMonitoringRunner
@@ -56,52 +56,105 @@ object CommandRegistry : KoinComponent {
 
             subcommand("config") {
                 subcommand("change") {
-                    args(::ConfigBooleanArgs) { configRef ->
+                    typedConfigArg<Boolean>({
+                        name = "BooleanConfigItem"
+                        description = "A config item that stores a Boolean"
+                    }) { configArg ->
                         subcommand("set") {
-                            args(::ConfigBooleanArgs) { _ ->
+                            booleanArg({
+                                name = "Value"
+                                description = "The value to give to a boolean config"
+                            }) { booleanArg ->
                                 executes { context ->
-                                    ConfigCommands.setConfig(context, configRef)
+                                    ConfigCommands.setConfig(context, configArg, booleanArg)
                                 }
                             }
                         }
                     }
 
-                    args(::ConfigIntArgs) { configRef ->
+                    typedConfigArg<Int>({
+                        name = "IntConfigItem"
+                        description = "A config item that stores an Int"
+                    }) { configArg ->
                         subcommand("set") {
-                            args(::ConfigIntArgs) { _ ->
+                            intArg({
+                                name = "Value"
+                                description = "The value to give to an int config"
+                            }) { intArg ->
                                 executes { context ->
-                                    ConfigCommands.setConfig(context, configRef)
+                                    ConfigCommands.setConfig(context, configArg, intArg)
                                 }
                             }
                         }
                     }
 
-                    args(::ConfigStringArgs) { configRef ->
+                    typedConfigArg<String>({
+                        name = "StringConfigItem"
+                        description = "A config item that stores a String"
+                    }) { configArg ->
                         subcommand("set") {
-                            args(::ConfigStringArgs) { _ ->
+                            stringArg({
+                                name = "Value"
+                                description = "The value to give to a string config"
+                            }) { stringArg ->
                                 executes { context ->
-                                    ConfigCommands.setConfig(context, configRef)
+                                    ConfigCommands.setConfig(context, configArg, stringArg)
                                 }
                             }
                         }
                     }
 
-                    args(::addStringListConfigArgs) { configRef ->
+                    typedConfigArg<List<String>>({
+                        name = "ListConfigItem"
+                        description = "A config item that contains a list of values"
+                    }) { configArg ->
                         subcommand("add") {
+                            stringListArg({
+                                name = "Values"
+                                description = "String values to add to the config"
+                                element = stringParser {
+                                    name = "Value"
+                                    description = "A value to add to the config"
 
-                            args(::addStringListConfigArgs) { _ ->
+                                    validator = { result ->
+                                        val itemValue = result.context.valueOf(configArg).value
+                                        val parsedValue = result.value
+
+                                        itemValue.contains(parsedValue).not()
+                                    }
+                                }
+                            }) { stringListArg ->
                                 executes { context ->
-                                    ConfigCommands.addConfiguration(context, configRef)
+                                    ConfigCommands.addConfiguration(context, configArg, stringListArg)
                                 }
                             }
                         }
-                    }
 
-                    args(::removeStringListConfigArgs) { configRef ->
                         subcommand("remove") {
-                            args(::addStringListConfigArgs) { _ ->
+                            stringListArg({
+                                name = "Values"
+                                description = "String values to remove from the config"
+                                element = stringParser {
+                                    name = "Value"
+                                    description = "A value to remove from the config"
+
+                                    validator = { result ->
+                                        val itemValue = result.context.valueOf(configArg).value
+                                        val parsedValue = result.value
+
+                                        itemValue.contains(parsedValue)
+                                    }
+                                }
+
+                                completer = { context ->
+                                    val itemValue = context.valueOf(configArg).value
+                                    val parsedValues = context.valueOrNullOf(this) ?: listOf()
+
+                                    itemValue - parsedValues
+                                }
+                            }) { stringListArg ->
                                 executes { context ->
-                                    ConfigCommands.addConfiguration(context, configRef)
+                                    ConfigCommands.removeConfiguration(context, configArg, stringListArg)
                                 }
                             }
                         }
@@ -109,9 +162,12 @@ object CommandRegistry : KoinComponent {
                 }
 
                 subcommand("help") {
-                    args(::ConfigItemArgs) { itemRef ->
+                    configArg({
+                        name = "Config"
+                        description = "The config to use."
+                    }) { configArg ->
                         executes { context ->
-                            ConfigMonitoringRunner.sendConfigurationHelp(context, itemRef)
+                            ConfigMonitoringRunner.sendConfigurationHelp(context, configArg)
                         }
                     }
 

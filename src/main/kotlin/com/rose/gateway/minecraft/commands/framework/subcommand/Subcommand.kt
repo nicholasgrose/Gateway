@@ -1,7 +1,8 @@
 package com.rose.gateway.minecraft.commands.framework.subcommand
 
 import com.rose.gateway.minecraft.commands.framework.CommandBuilder
-import com.rose.gateway.minecraft.commands.framework.nesting.args
+import com.rose.gateway.minecraft.commands.framework.args.StringArg
+import com.rose.gateway.minecraft.commands.framework.args.stringArg
 
 /**
  * Adds a subcommand to this command
@@ -11,9 +12,15 @@ import com.rose.gateway.minecraft.commands.framework.nesting.args
  * @receiver This command builder
  */
 fun CommandBuilder.subcommand(name: String, initializer: CommandBuilder.() -> Unit) {
-    val subcommandArgs = SubcommandArgs.forCommand(name)
+    stringArg({
+        this@stringArg.name = name
 
-    args(subcommandArgs) {
+        description = "The $name subcommand"
+        usageGenerator = { listOf(name) }
+
+        completer = { listOf(name) }
+        validator = { result -> result.value == name }
+    }) { _: StringArg ->
         initializer()
     }
 }

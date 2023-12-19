@@ -3,9 +3,8 @@ package com.rose.gateway.minecraft.commands.runners
 import com.rose.gateway.config.ConfigStringMap
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
-import com.rose.gateway.minecraft.commands.arguments.ConfigItemArgs
+import com.rose.gateway.minecraft.commands.framework.args.ConfigItemArg
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.item
@@ -133,8 +132,8 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param context The command context with the config item to send help for
      * @return Whether the command succeeded
      */
-    fun sendConfigurationHelp(context: CommandExecuteContext, itemRef: ArgsReference<ConfigItemArgs>): Boolean {
-        val item = context.argsFor(itemRef).item
+    fun sendConfigurationHelp(context: CommandExecuteContext, configArg: ConfigItemArg): Boolean {
+        val item = context.valueOf(configArg)
 
         context.bukkit.sender.sendMessage(itemHelpMessage(item))
 

@@ -2,24 +2,13 @@ package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.config.Item
 import com.rose.gateway.config.PluginConfig
+import com.rose.gateway.minecraft.commands.completers.ConfigCompleter
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-
-/**
- * Adds a config item argument to these args
- *
- * @param A The type of the [CommandArgs] this parser is a part of
- * @param body The arg body
- * @receiver The builder for the parser
- * @return The built parser
- */
-fun <A : CommandArgs<A>> CommandArgs<A>.configItem(body: ConfigItemParserBuilder<A>.() -> Unit): ConfigItemParser<A> =
-    genericParser(::ConfigItemParserBuilder, body)
 
 /**
  * Parser for a config item argument
@@ -29,23 +18,22 @@ fun <A : CommandArgs<A>> CommandArgs<A>.configItem(body: ConfigItemParserBuilder
  *
  * @param builder The builder that defines this parser
  */
-class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) :
-    ArgParser<Item<*>, A, ConfigItemParser<A>>(builder), KoinComponent {
+class ConfigItemParser(builder: ConfigItemParserBuilder) :
+    ArgParser<Item<*>, ConfigItemParser, ConfigItemParserBuilder>(builder), KoinComponent {
     private val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser =
-        stringParser<A> {
-            name = "CONFIG_INTERNAL"
-            description = "Parses the string for the item."
-        }
+    private val internalStringParser = stringParser {
+        name = "CONFIG_INTERNAL"
+        description = "Parses the string for the item."
+    }
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Item<*>, A> {
+    override fun parseValue(context: ParseContext): ParseResult<Item<*>> {
         val stringResult = internalStringParser.parseValue(context)
 
         return if (stringResult is ParseResult.Success) {
-            val nextString = stringResult.result
+            val nextString = stringResult.value
             val matchedConfig = config[nextString]
 
             if (matchedConfig != null) {
@@ -65,10 +53,15 @@ class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) 
  * @param A The args the parser will be a part of
  * @constructor Creates a config item parser builder
  */
-class ConfigItemParserBuilder<A : CommandArgs<A>> : ParserBuilder<Item<*>, A, ConfigItemParser<A>>() {
-    override fun checkValidity() = Unit
+class ConfigItemParserBuilder : ParserBuilder<Item<*>, ConfigItemParser, ConfigItemParserBuilder>(
+    "ConfigItem",
+    "A path to a particular item in the config",
+) {
+    init {
+        completer = ConfigCompleter.configStrings()
+    }
 
-    override fun build(): ConfigItemParser<A> {
+    override fun build(): ConfigItemParser {
         return ConfigItemParser(this)
     }
 }

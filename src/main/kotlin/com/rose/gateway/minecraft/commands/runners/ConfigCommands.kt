@@ -1,12 +1,11 @@
 package com.rose.gateway.minecraft.commands.runners
 
 import com.rose.gateway.config.Item
-import com.rose.gateway.minecraft.commands.arguments.ConfigArgs
-import com.rose.gateway.minecraft.commands.arguments.ConfigListArgs
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
+import com.rose.gateway.minecraft.commands.framework.args.ListArg
+import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
+import com.rose.gateway.minecraft.commands.framework.args.TypedConfigItemArg
 import com.rose.gateway.minecraft.commands.framework.data.context.CommandExecuteContext
-import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
-import com.rose.gateway.minecraft.commands.parsers.StringParser
 import com.rose.gateway.minecraft.component.component
 import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.joinSpace
@@ -27,13 +26,13 @@ object ConfigCommands {
      * @param context The command context with the config args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigArgs<T, A, P>, P : ArgParser<T, A, P>> setConfig(
+    fun <T, P, B> setConfig(
         context: CommandExecuteContext,
-        argsRef: ArgsReference<A>
-    ): Boolean {
-        val args = context.argsFor(argsRef)
-        val item = args.item
-        val value = args.value ?: return false
+        configArg: TypedConfigItemArg<T>,
+        valueArg: ArgParser<T, P, B>,
+    ): Boolean where T : Any, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
+        val item = context.valueOf(configArg)
+        val value = context.valueOf(valueArg)
 
         item.value = value
         sendConfirmation(context.bukkit.sender, item, value)
@@ -55,8 +54,8 @@ object ConfigCommands {
                 item.path.tertiaryComponent().italic(),
                 "set to".component(),
                 value.toString().secondaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 
@@ -69,13 +68,13 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> addConfiguration(
+    fun <T, P, B> addConfiguration(
         context: CommandExecuteContext,
-        argsRef: ArgsReference<A>
-    ): Boolean {
-        val args = context.argsFor(argsRef)
-        val configItem = args.item
-        val values = args.value
+        configArg: TypedConfigItemArg<List<T>>,
+        valueArg: ListArg<T, P, B>,
+    ): Boolean where T : Any, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
+        val configItem = context.valueOf(configArg)
+        val values = context.valueOf(valueArg)
 
         addToConfiguration(configItem, values)
         sendAddConfirmation(context.bukkit.sender, configItem, values)
@@ -111,8 +110,8 @@ object ConfigCommands {
                 values.toString().secondaryComponent().italic(),
                 "added to".component(),
                 item.path.tertiaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 
@@ -125,13 +124,13 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A : ConfigListArgs<T, A, P>, P : StringParser<A>> removeConfiguration(
+    fun <T, P, B> removeConfiguration(
         context: CommandExecuteContext,
-        argsRef: ArgsReference<A>
-    ): Boolean {
-        val args = context.argsFor(argsRef)
-        val configItem = args.item
-        val values = args.value
+        configArg: TypedConfigItemArg<List<T>>,
+        valueArg: ListArg<T, P, B>,
+    ): Boolean where T : Any, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
+        val configItem = context.valueOf(configArg)
+        val values = context.valueOf(valueArg)
 
         removeFromConfiguration(configItem, values)
         sendRemoveConfirmation(context.bukkit.sender, configItem, values)
@@ -167,8 +166,8 @@ object ConfigCommands {
                 values.toString().secondaryComponent().italic(),
                 "removed from".component(),
                 item.path.tertiaryComponent().italic(),
-                "successfully!".component()
-            )
+                "successfully!".component(),
+            ),
         )
     }
 }

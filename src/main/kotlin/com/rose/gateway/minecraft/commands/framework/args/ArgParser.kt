@@ -2,7 +2,6 @@ package com.rose.gateway.minecraft.commands.framework.args
 
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
 import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteContext
-import kotlin.reflect.KProperty
 
 /**
  * A parser for a single command argument
@@ -13,8 +12,8 @@ import kotlin.reflect.KProperty
  * @property builder A [ParserBuilder] for this arg parser
  * @constructor Create an arg parser
  */
-abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
-    open val builder: ParserBuilder<T, A, P>,
+abstract class ArgParser<T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>>(
+    open val builder: B,
 ) {
     /**
      * Gives the name of this parser
@@ -36,12 +35,10 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @param context The context of this tab completion
      * @return A list of possible tab completions
      */
-    fun completions(context: TabCompleteContext<A>): List<String> {
-        val argsRef = context.parserContext.args
-
+    fun completions(context: TabCompleteContext): List<String> {
         return when {
             builder.completesAfterSatisfied -> builder.completer(self(), context)
-            context.argsFor(argsRef).wasSuccessful(this) -> listOf()
+            context.resultOf(self()) is ParseResult.Success<T> -> listOf()
             else -> builder.completer(self(), context)
         }
     }
@@ -62,7 +59,7 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @param context The context to parse the value from
      * @return The result of parsing
      */
-    abstract fun parseValue(context: ParseContext<A>): ParseResult<T, A>
+    abstract fun parseValue(context: ParseContext): ParseResult<T>
 
     /**
      * Parses a value from the given context and then runs it against the validation function
@@ -70,33 +67,19 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @param context The context to parse the value from
      * @return The validated [ParseResult]
      */
-    fun parseValidValue(context: ParseContext<A>): ParseResult<T, A> {
-        val parseResult = parseValue(context)
+    fun parseValidValue(context: ParseContext): ParseResult<T> {
+        val existingParseResult = context.resultOfOrDefault(self())
+
+        val parseResult = when {
+            builder.completesAfterSatisfied -> parseValue(context)
+            existingParseResult is ParseResult.Failure -> parseValue(context)
+            else -> existingParseResult
+        }
 
         return if (parseResult is ParseResult.Success && builder.validator(self(), parseResult)) {
-            ParseResult.Success(parseResult.result, parseResult.context)
+            ParseResult.Success(parseResult.value, parseResult.context)
         } else {
             ParseResult.Failure(parseResult.context)
-        }
-    }
-
-    /**
-     * A delegate that retrieves this parser's value from a set of command args
-     *
-     * @param thisRef The command args to pull this parser's value from
-     * @param property The property that this delegate is store in
-     * @return The value that this parser has in the args or null if none was found
-     */
-    operator fun getValue(
-        thisRef: CommandArgs<A>,
-        property: KProperty<*>,
-    ): T {
-        val parseResult = thisRef.parserResults[this]
-
-        @Suppress("UNCHECKED_CAST")
-        return when (parseResult) {
-            is ParseResult.Success -> parseResult.result as T
-            else -> error("Attempted to use command argument that failed parsing")
         }
     }
 }

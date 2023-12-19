@@ -1,8 +1,7 @@
 package com.rose.gateway.minecraft.commands.framework.data.context
 
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
-import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
+import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 
 /**
  * Info for a context that is specific to a parser in an args instance
@@ -12,7 +11,7 @@ import com.rose.gateway.minecraft.commands.framework.data.executor.ArgsReference
  * @property parser The parser this context is specific to
  * @constructor Create a parser-specific context
  */
-data class ParserSpecificContext<A : CommandArgs<A>>(
-    val args: ArgsReference<A>,
-    val parser: ArgParser<*, A, *>
+data class ParserSpecificContext<T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>>(
+    val args: ArgParser<T, P, B>,
+    val parser: ArgParser<T, P, B>,
 )

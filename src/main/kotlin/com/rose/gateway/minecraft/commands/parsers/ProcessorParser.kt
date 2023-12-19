@@ -1,22 +1,9 @@
 package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
-
-/**
- * Adds a custom-processed argument to these args
- *
- * @param A The type of the [CommandArgs] this parser is a part of
- * @param body The arg body
- * @receiver The builder for the parser
- * @return The built parser
- */
-fun <T, A> CommandArgs<A>.processor(
-    body: ProcessorParserBuilder<T, A>.() -> Unit,
-): ProcessorParser<T, A> where A : CommandArgs<A> = genericParser(::ProcessorParserBuilder, body)
 
 /**
  * Parser for a custom-processed argument
@@ -27,11 +14,11 @@ fun <T, A> CommandArgs<A>.processor(
  *
  * @param builder The builder that defines this parser
  */
-class ProcessorParser<T, A : CommandArgs<A>>(override val builder: ProcessorParserBuilder<T, A>) :
-    ArgParser<T, A, ProcessorParser<T, A>>(builder) {
+class ProcessorParser<T>(builder: ProcessorParserBuilder<T>) :
+    ArgParser<T, ProcessorParser<T>, ProcessorParserBuilder<T>>(builder) {
     override fun typeName(): String = "CustomProcessor"
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<T, A> {
+    override fun parseValue(context: ParseContext): ParseResult<T> {
         return builder.processor(context)
     }
 }
@@ -43,7 +30,8 @@ class ProcessorParser<T, A : CommandArgs<A>>(override val builder: ProcessorPars
  * @param A The args the parser will be a part of
  * @constructor Creates a processor parser builder
  */
-class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, ProcessorParser<T, A>>() {
+class ProcessorParserBuilder<T> :
+    ParserBuilder<T, ProcessorParser<T>, ProcessorParserBuilder<T>>("Processor", "Some custom operation") {
     init {
         completesAfterSatisfied = false
     }
@@ -51,13 +39,9 @@ class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, Proces
     /**
      * The function to use when parsing this argument
      */
-    lateinit var processor: (ParseContext<A>) -> ParseResult<T, A>
+    lateinit var processor: (ParseContext) -> ParseResult<T>
 
-    override fun checkValidity() {
-        if (!::processor.isInitialized) error("no processor given to processor argument")
-    }
-
-    override fun build(): ProcessorParser<T, A> {
+    override fun build(): ProcessorParser<T> {
         return ProcessorParser(this)
     }
 }

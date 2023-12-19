@@ -1,7 +1,6 @@
 package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
@@ -14,19 +13,7 @@ import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <A : CommandArgs<A>> stringParser(body: StringParserBuilder<A>.() -> Unit): StringParser<A> =
-    genericParserBuilder(::StringParserBuilder, body)
-
-/**
- * Adds a string argument to these args
- *
- * @param A The type of the [CommandArgs] this parser is a part of
- * @param body The arg body
- * @receiver The builder for the parser
- * @return The built parser
- */
-fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -> Unit): StringParser<A> =
-    genericParser(::StringParserBuilder, body)
+fun stringParser(body: StringParserBuilder.() -> Unit): StringParser = genericParserBuilder(::StringParserBuilder, body)
 
 /**
  * Parser for a string argument
@@ -36,11 +23,11 @@ fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -
  *
  * @param builder The builder that defines this parser
  */
-class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder<A>) :
-    ArgParser<String, A, StringParser<A>>(builder) {
+class StringParser(builder: StringParserBuilder) :
+    ArgParser<String, StringParser, StringParserBuilder>(builder) {
     override fun typeName(): String = "String"
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<String, A> {
+    override fun parseValue(context: ParseContext): ParseResult<String> {
         val args = context.args
         var currentIndex = context.currentIndex
         val result = args.raw.getOrNull(currentIndex)
@@ -62,9 +49,8 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                         context.command,
                         args,
                         context.bukkit,
-                        context.parserContext,
-                        currentIndex = currentIndex + results.size
-                    )
+                        currentIndex = currentIndex + results.size,
+                    ),
                 )
             }
 
@@ -74,9 +60,8 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                     context.command,
                     args,
                     context.bukkit,
-                    context.parserContext,
-                    currentIndex + 1
-                )
+                    currentIndex + 1,
+                ),
             )
 
             else -> ParseResult.Failure(
@@ -84,9 +69,8 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
                     context.command,
                     args,
                     context.bukkit,
-                    context.parserContext,
-                    currentIndex + 1
-                )
+                    currentIndex + 1,
+                ),
             )
         }
     }
@@ -98,15 +82,14 @@ class StringParser<A : CommandArgs<A>>(override val builder: StringParserBuilder
  * @param A The args the parser will be a part of
  * @constructor Creates a string parser builder
  */
-class StringParserBuilder<A : CommandArgs<A>> : ParserBuilder<String, A, StringParser<A>>() {
+class StringParserBuilder :
+    ParserBuilder<String, StringParser, StringParserBuilder>("String", "An argument that is a string of characters") {
     /**
      * Whether additional arguments should be consumed as if they were part of one long string
      */
     var hungry = false
 
-    override fun checkValidity() = Unit
-
-    override fun build(): StringParser<A> {
+    override fun build(): StringParser {
         return StringParser(this)
     }
 }

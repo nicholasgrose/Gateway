@@ -1,7 +1,6 @@
 package com.rose.gateway.minecraft.commands.parsers
 
 import com.rose.gateway.minecraft.commands.framework.args.ArgParser
-import com.rose.gateway.minecraft.commands.framework.args.CommandArgs
 import com.rose.gateway.minecraft.commands.framework.args.ParseResult
 import com.rose.gateway.minecraft.commands.framework.args.ParserBuilder
 import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
@@ -14,11 +13,10 @@ import com.rose.gateway.minecraft.commands.framework.data.context.ParseContext
  * @param A The type of the args this parser is for
  * @constructor Create a unit parser
  */
-class UnitParser<A : CommandArgs<A>> : ArgParser<Unit, A, UnitParser<A>>(UnitParserBuilder()) {
+class UnitParser : ArgParser<Unit, UnitParser, UnitParserBuilder>(UnitParserBuilder()) {
     override fun typeName(): String = "Unit"
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<Unit, A> =
-        ParseResult.Success(Unit, context)
+    override fun parseValue(context: ParseContext): ParseResult<Unit> = ParseResult.Success(Unit, context)
 }
 
 /**
@@ -27,10 +25,6 @@ class UnitParser<A : CommandArgs<A>> : ArgParser<Unit, A, UnitParser<A>>(UnitPar
  * @param A The type of the args this is a builder for
  * @constructor Create a unit parser builder
  */
-class UnitParserBuilder<A : CommandArgs<A>> : ParserBuilder<Unit, A, UnitParser<A>>() {
-    override fun checkValidity() {
-        return
-    }
-
-    override fun build(): UnitParser<A> = UnitParser()
+class UnitParserBuilder : ParserBuilder<Unit, UnitParser, UnitParserBuilder>("Unit", "Nothing") {
+    override fun build(): UnitParser = UnitParser()
 }
