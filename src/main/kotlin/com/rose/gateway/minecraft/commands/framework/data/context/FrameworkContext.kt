@@ -93,7 +93,10 @@ public sealed class FrameworkContext<B : BukkitContext>(
      * @param argsRef The reference to the args
      * @return The referenced args
      */
-    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> resultOfOrDefault(argParser: P): ParseResult<T> {
+    fun <T, P, B> resultOfOrDefault(
+        argParser: ArgParser<T, P, B>,
+    ): ParseResult<T>
+            where P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
         return resultOf(argParser) ?: return ParseResult.Failure(
             ParseContext(
                 command,
@@ -110,7 +113,10 @@ public sealed class FrameworkContext<B : BukkitContext>(
      * @param argParser The reference to the args
      * @return The referenced args
      */
-    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> valueOf(argParser: ArgParser<T, P, B>): T {
+    fun <T, P, B> valueOf(
+        argParser: ArgParser<T, P, B>,
+    ): T
+            where P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
         val parseResult = resultOf(argParser)
 
         return when (parseResult) {
@@ -126,7 +132,10 @@ public sealed class FrameworkContext<B : BukkitContext>(
      * @param argParser The arg parser to get the parsed value for
      * @return The value acquired or null if it has no successful result
      */
-    fun <T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>> valueOrNullOf(argParser: P): T? {
+    fun <T, P, B> valueOrNullOf(
+        argParser: ArgParser<T, P, B>,
+    ): T?
+            where P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
         val parseResult = resultOf(argParser)
 
         return when (parseResult) {

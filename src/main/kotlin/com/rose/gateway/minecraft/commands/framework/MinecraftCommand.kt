@@ -22,7 +22,6 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
         label: String,
         args: Array<String>,
     ): Boolean {
-        val argList = args.toList()
         val commandResult = command.parseAndExecute(
             CommandExecuteContext(
                 bukkit = BukkitContext.CommandExecute(
@@ -33,7 +32,7 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
                 ),
                 command = command,
                 args = ArgsContext(
-                    raw = argList,
+                    raw = args.toList(),
                     parsed = mutableMapOf(),
                 ),
             ),
@@ -56,10 +55,11 @@ class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecuto
      * @param rankedExecutors The most successful executors
      */
     private fun sendUsages(sender: CommandSender, failedResult: CommandExecutionResult.Failed) {
-        sender.sendMessage("TODO")
         sender.sendMessage(
             "Usage:\n" + failedResult.bestExecutors.joinToString("\n") {
-                it.parser.generateUsages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+                it.parser.generateUsages().joinToString("\n") { usage ->
+                    "/${command.definition.name} $usage"
+                }
             },
         )
     }

@@ -52,8 +52,8 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
      */
     fun isSupportedClassifier(classifier: KClass<*>): Boolean {
         return !classifier.isData &&
-                !classifier.isSealed &&
-                !classifier.isInline() &&
-                classifier canBe ConfigObject::class
+            !classifier.isSealed &&
+            !classifier.isInline() &&
+            classifier canBe ConfigObject::class
     }
 }

@@ -34,6 +34,12 @@ class Command(val definition: CommandBuilder) {
         return CommandExecutionResult.Failed(context, executors)
     }
 
+    /**
+     * Returns the list of best CommandExecutors based on confidence level
+     *
+     * @param context The FrameworkContext representing the context of an action for a command
+     * @return The list of best CommandExecutors
+     */
     fun bestExecutors(context: FrameworkContext<*>): List<CommandExecutor<*, *, *>> {
         var maxConfidence = 0
         var topRankExecutors = mutableListOf<CommandExecutor<*, *, *>>()
@@ -92,46 +98,4 @@ class Command(val definition: CommandBuilder) {
             executor.parseArg(context) is ParseResult.Success
         }
     }
-
-//    /**
-//     * Determines which executors are considered the most successful
-//     *
-//     * Success is defined as either being successful or having the most arguments successfully parsed.
-//     * The returned executors are in the same order they were defined.
-//     *
-//     * @param args The incoming arguments to be parsed
-//     * @return List of executors in order of definition
-//     */
-//    fun mostSuccessfulExecutors(args: FrameworkContext<*>): List<ExecutorArgsPair<*>> {
-//        val mostSuccessfulExecutors = mutableListOf<ExecutorArgsPair<*>>()
-//        var successThreshold = 0
-//        var executorsMustBeSuccessful = false
-//
-//        for (executor in definition.executors) {
-//            val executorArgsPair = ExecutorArgsPair.forExecutor(executor, args)
-//            val argResult = executorArgsPair.args
-//            val argsParsed = argResult.argsParsed()
-//
-//            when {
-//                argResult.valid() -> {
-//                    if (!executorsMustBeSuccessful) {
-//                        mostSuccessfulExecutors.clear()
-//                        executorsMustBeSuccessful = true
-//                    }
-//
-//                    mostSuccessfulExecutors.add(executorArgsPair)
-//                }
-//
-//                executorsMustBeSuccessful && !argResult.valid() -> continue
-//                argsParsed == successThreshold -> mostSuccessfulExecutors.add(executorArgsPair)
-//                argsParsed > successThreshold -> {
-//                    successThreshold = argsParsed
-//                    mostSuccessfulExecutors.clear()
-//                    mostSuccessfulExecutors.add(executorArgsPair)
-//                }
-//            }
-//        }
-//
-//        return mostSuccessfulExecutors
-//    }
 }

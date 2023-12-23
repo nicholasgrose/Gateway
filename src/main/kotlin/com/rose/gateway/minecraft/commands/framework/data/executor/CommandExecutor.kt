@@ -10,18 +10,20 @@ import com.rose.gateway.minecraft.commands.framework.data.context.TabCompleteCon
 import com.rose.gateway.shared.collections.builders.trieOf
 
 /**
- * An executor for a command
+ * Represents a command executor that is responsible for parsing and executing commands.
  *
- * @param A The type of the args that will be used for execution
- * @property executor The action that this executor defines
- * @property parser The reference this executor will use when  adding its args to the context
- * @constructor Create a command executor
+ * @param T The type of the result from parsing arguments
+ * @param P The type of the ArgParser used for parsing arguments
+ * @param B The type of the ParserBuilder used for building the ArgParser
+ * @property executor The function that executes the command in a specific context
+ * @property parser The ArgParser used for parsing arguments
+ * @property confidenceModifier The function that modifies the confidence level of the executor
  */
-data class CommandExecutor<T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>>(
+data class CommandExecutor<T, P, B>(
     val executor: ((CommandExecuteContext) -> Boolean),
     val parser: ArgParser<T, P, B>,
     val confidenceModifier: (FrameworkContext<*>) -> Int = { 0 },
-) {
+) where P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B> {
     /**
      * Attempts to execute the executor in a particular context
      *
@@ -84,6 +86,12 @@ data class CommandExecutor<T, P : ArgParser<T, P, B>, B : ParserBuilder<T, P, B>
         return rawArgs.subList(lastIndex, rawArgs.size)
     }
 
+    /**
+     * Calculates the confidence level of that this executor should be used given the framework context.
+     *
+     * @param context The framework context to calculate confidence for.
+     * @return The confidence level. Returns 1 = confidence modifier, if any, otherwise returns 0.
+     */
     fun confidence(context: FrameworkContext<*>): Int {
         val parseResult = parseArg(context)
 

@@ -19,10 +19,33 @@ import com.rose.gateway.minecraft.commands.parsers.StringParserBuilder
 import com.rose.gateway.minecraft.commands.parsers.TypedConfigItemParser
 import com.rose.gateway.minecraft.commands.parsers.TypedConfigItemParserBuilder
 
+/**
+ * Type alias for an ArgParser<Boolean, BooleanParser, BooleanParserBuilder>
+ */
 typealias BooleanArg = ArgParser<Boolean, BooleanParser, BooleanParserBuilder>
+
+/**
+ * A typealias for [ArgParser] with type arguments [Int, IntParser, IntParserBuilder].
+ *
+ * This typealias is used to simplify the declaration of arg parsers for integers.
+ */
 typealias IntArg = ArgParser<Int, IntParser, IntParserBuilder>
+
+/**
+ * The `StringArg` typealias represents an argument parser specifically designed to parse string arguments.
+ *
+ * It is a typealias for `ArgParser<String, StringParser, StringParserBuilder>`, which supports parsing string
+ * arguments using `StringParser` and building string arguments using `StringParserBuilder`.
+ *
+ * @see ArgParser
+ * @see StringParser
+ * @see StringParserBuilder
+ */
 typealias StringArg = ArgParser<String, StringParser, StringParserBuilder>
 
+/**
+ *
+ */
 fun CommandBuilder.stringArg(
     parserBuilderBody: StringParserBuilder.() -> Unit,
     commandBuilderBody: CommandBuilder.(StringArg) -> Unit,
@@ -30,6 +53,13 @@ fun CommandBuilder.stringArg(
     addExecutorForArg(::StringParserBuilder, parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Adds an integer argument to the command builder.
+ *
+ * @param parserBuilderBody The configuration for the integer parser builder
+ * @param commandBuilderBody The command to execute when this argument is provided
+ * @receiver The command builder to add the argument to
+ */
 fun CommandBuilder.intArg(
     parserBuilderBody: IntParserBuilder.() -> Unit,
     commandBuilderBody: CommandBuilder.(IntArg) -> Unit,
@@ -37,6 +67,12 @@ fun CommandBuilder.intArg(
     addExecutorForArg(::IntParserBuilder, parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Adds a boolean argument to the command builder.
+ *
+ * @param parserBuilderBody The builder body for the BooleanParserBuilder
+ * @param commandBuilderBody The builder body for the CommandBuilder
+ */
 fun CommandBuilder.booleanArg(
     parserBuilderBody: BooleanParserBuilder.() -> Unit,
     commandBuilderBody: CommandBuilder.(BooleanArg) -> Unit,
@@ -44,11 +80,39 @@ fun CommandBuilder.booleanArg(
     addExecutorForArg(::BooleanParserBuilder, parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Represents a type alias for a list of arguments with String value type.
+ *
+ * @param <ListArg> the type of the list argument
+ * @param <StringParser> the type of the string parser
+ * @param <StringParserBuilder> the type of the string parser builder
+ */
 typealias StringListArg = ListArg<String, StringParser, StringParserBuilder>
+
+/**
+ * A builder for creating a string list parser.
+ *
+ * @param <R> The type of the result that the parser produces.
+ * @param <P> The type of the parser used to parse individual elements.
+ * @param <B> The type of the builder used to configure the parser.
+ */
 typealias StringListParserBuilder = ListParserBuilder<String, StringParser, StringParserBuilder>
 
+/**
+ * typealias statement for a list argument parser
+ *
+ * @param T The type of the list elements
+ * @param P The type of the parser for the list elements
+ * @param B The type of the builder for the list parser
+ */
 typealias ListArg<T, P, B> = ArgParser<List<T>, ListParser<T, P, B>, ListParserBuilder<T, P, B>>
 
+/**
+ * Adds a string list argument to the command.
+ *
+ * @param parserBuilderBody A lambda function containing the configuration of the string list parser builder.
+ * @param commandBuilderBody A lambda function containing the configuration of the command builder.
+ */
 fun CommandBuilder.stringListArg(
     parserBuilderBody: StringListParserBuilder.() -> Unit,
     commandBuilderBody: CommandBuilder.(StringListArg) -> Unit,
@@ -56,6 +120,15 @@ fun CommandBuilder.stringListArg(
     listArg(parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Adds a list argument to the command builder.
+ *
+ * @param parserBuilderBody A lambda function that configures the list parser builder
+ * @param commandBuilderBody A lambda function that defines how the list argument should be handled
+ * @param T The type of the list elements
+ * @param P The type of the arg parser for list elements
+ * @param B The type of the parser builder for list elements
+ */
 fun <T, P, B> CommandBuilder.listArg(
     parserBuilderBody: ListParserBuilder<T, P, B>.() -> Unit,
     commandBuilderBody: CommandBuilder.(ListArg<T, P, B>) -> Unit,
@@ -63,8 +136,19 @@ fun <T, P, B> CommandBuilder.listArg(
     addExecutorForArg(::ListParserBuilder, parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * A typealias for the ConfigItemArg parser
+ */
 typealias ConfigItemArg = ArgParser<Item<*>, ConfigItemParser, ConfigItemParserBuilder>
 
+/**
+ * Configures an argument for the command.
+ * This method takes in two lambda expressions: `parserBuilderBody` and `commandBuilderBody`.
+ *
+ * @param parserBuilderBody The lambda expression that configures the [ConfigItemParserBuilder] for the argument.
+ * @param commandBuilderBody The lambda expression that configures the [CommandBuilder] for the argument.
+ * @receiver The command builder to which the argument is being added.
+ */
 fun CommandBuilder.configArg(
     parserBuilderBody: ConfigItemParserBuilder.() -> Unit,
     commandBuilderBody: CommandBuilder.(ConfigItemArg) -> Unit,
@@ -72,8 +156,21 @@ fun CommandBuilder.configArg(
     addExecutorForArg(::ConfigItemParserBuilder, parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Represents a typed configuration item argument.
+ *
+ * @param T the type of the configuration item
+ */
 typealias TypedConfigItemArg<T> = ArgParser<Item<T>, TypedConfigItemParser<T>, TypedConfigItemParserBuilder<T>>
 
+/**
+ * Adds a typed configuration argument to the command builder.
+ *
+ * @param T The type of the configuration item
+ * @param parserBuilderBody The body of the parser builder, used to configure the parser
+ * @param commandBuilderBody The body of the command builder, used to configure the command
+ * @receiver The command builder
+ */
 inline fun <reified T : Any> CommandBuilder.typedConfigArg(
     parserBuilderBody: TypedConfigItemParserBuilder<T>.() -> Unit,
     commandBuilderBody: CommandBuilder.(TypedConfigItemArg<T>) -> Unit,
@@ -81,6 +178,16 @@ inline fun <reified T : Any> CommandBuilder.typedConfigArg(
     addExecutorForArg(TypedConfigItemParserBuilder.constructor<T>(), parserBuilderBody, commandBuilderBody)
 }
 
+/**
+ * Add an executor for the given argument parser
+ *
+ * @param T The type of the result from parsing
+ * @param P The type of the argument parser
+ * @param B The type of the parser builder
+ * @param parserBuilderConstructor A function that constructs the parser builder
+ * @param parserBuilderBody A function that configures the parser builder
+ * @param commandBuilderBody A function that configures the command builder
+ */
 inline fun <T, P, B> CommandBuilder.addExecutorForArg(
     parserBuilderConstructor: () -> B,
     parserBuilderBody: B.() -> Unit,

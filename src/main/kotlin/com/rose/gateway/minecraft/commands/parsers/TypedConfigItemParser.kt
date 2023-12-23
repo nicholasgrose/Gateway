@@ -63,6 +63,14 @@ class TypedConfigItemParserBuilder<T : Any>(valueType: KType) :
         "A config item with a specific type",
     ) {
     companion object {
+        /**
+         * Constructor
+         *
+         * Constructs a typed config item parser builder for a specific type T.
+         *
+         * @param T The type of the config item's value
+         * @return A function that returns the typed config item parser builder
+         */
         inline fun <reified T : Any> constructor(): () -> TypedConfigItemParserBuilder<T> {
             return {
                 TypedConfigItemParserBuilder(typeOf<T>())
