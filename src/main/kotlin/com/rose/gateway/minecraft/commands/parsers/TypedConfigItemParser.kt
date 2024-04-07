@@ -16,7 +16,6 @@ import kotlin.reflect.typeOf
  * Parser for a typed config item argument
  *
  * @param T The type of the config item's value
- * @param A The type of the args this parser is used by
  * @constructor Creates a typed config item parser
  *
  * @param builder The builder that defines this parser
@@ -54,7 +53,6 @@ class TypedConfigItemParser<T : Any>(builder: TypedConfigItemParserBuilder<T>) :
  * Builder for a [TypedConfigItemParser]
  *
  * @param T The type of the config item's value
- * @param A The args the parser will be a part of
  * @constructor Creates a typed config item parser builder
  */
 class TypedConfigItemParserBuilder<T : Any>(valueType: KType) :

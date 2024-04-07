@@ -1,16 +1,16 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.9.23"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.23"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("xyz.jpenilla.run-paper") version "2.2.3"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 val version: String by project
@@ -62,6 +62,9 @@ dependencies {
     implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
     // Lexer library that supports regex.
     implementation("guru.zoroark.tegral:tegral-niwen-lexer:$tegralVersion")
+    // KTOR client
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 }
 
 ktlint {

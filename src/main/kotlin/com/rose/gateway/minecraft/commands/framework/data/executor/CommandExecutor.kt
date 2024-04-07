@@ -42,7 +42,7 @@ data class CommandExecutor<T, P, B>(
     /**
      * Constructs filled-in arguments for the given raw arguments
      *
-     * @param argsContext The context that in which the args will be parsed
+     * @param context The context that in which the args will be parsed
      * @return The constructed arguments
      */
     fun parseArg(context: FrameworkContext<*>): ParseResult<T> {
@@ -79,7 +79,7 @@ data class CommandExecutor<T, P, B>(
      * @param parseContext The context to pull the args from
      * @return The remaining args
      */
-    fun remainingArgs(parseContext: ParseContext): List<String> {
+    private fun remainingArgs(parseContext: ParseContext): List<String> {
         val rawArgs = parseContext.args.raw
         val lastIndex = parseContext.currentIndex
 
