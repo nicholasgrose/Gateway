@@ -1,30 +1,19 @@
 plugins {
-    // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.23"
-    // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.23"
-    // https://github.com/johnrengelman/shadow
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.2.3"
-    // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
-    // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.23.6"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.runPaper)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.qodana)
 }
 
 val version: String by project
 val group: String by project
 
 val ktlintVersion: String by project
-
 val minecraftVersion: String by project
-val paperApiRevision: String by project
-val kordexVersion: String by project
-val tegralVersion: String by project
-val kamlVersion: String by project
-val ktorVersion: String by project
-val hopliteVersion: String by project
 
 val jvmVersion: String by project
 val kotlinLanguageVersion: String by project
@@ -51,20 +40,12 @@ repositories {
 }
 
 dependencies {
-    // Paper plugin development API.
-    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperApiRevision-SNAPSHOT")
-    // Config library that provides nice parsing error descriptions.
-    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
-    implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
-    // Library that supports loading and (more importantly) saving to YAML files.
-    implementation("com.charleskorn.kaml:kaml:$kamlVersion")
-    // Library for Discord bots.
-    implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
-    // Lexer library that supports regex.
-    implementation("guru.zoroark.tegral:tegral-niwen-lexer:$tegralVersion")
-    // KTOR client
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    compileOnly(libs.papermc)
+    implementation(libs.bundles.hoplite)
+    implementation(libs.kaml)
+    implementation(libs.kordExtensions)
+    implementation(libs.tegralLexer)
+    implementation(libs.bundles.ktor)
 }
 
 ktlint {
@@ -110,8 +91,6 @@ tasks {
     }
 
     runServer {
-        val minecraftVersion: String by project
-
         this.minecraftVersion(minecraftVersion)
     }
 
