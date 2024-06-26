@@ -1,14 +1,14 @@
 plugins {
     // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "2.0.0"
     // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.21"
+    kotlin("plugin.serialization") version "2.0.0"
     // https://github.com/johnrengelman/shadow
     id("com.github.johnrengelman.shadow") version "8.1.1"
     // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
     // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     // https://detekt.dev/
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
@@ -71,6 +71,7 @@ ktlint {
 detekt {
     config.from("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
+    toolVersion = "1.23.6"
 }
 
 tasks {
