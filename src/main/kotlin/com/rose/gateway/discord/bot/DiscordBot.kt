@@ -141,11 +141,4 @@ class DiscordBot : KoinComponent {
      * @return The Kord client or null, if no Discord bot exists
      */
     suspend fun kordClient(): Kord? = kordexBot.await()?.getKoin()?.get()
-
-    /**
-     * Checks if the bot has yet been built
-     *
-     * @return Whether the bot was built
-     */
-    suspend fun isBuilt(): Boolean = kordexBot.await() != null
 }
