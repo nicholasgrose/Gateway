@@ -35,10 +35,10 @@ open class ConfigListArgs<T : Any, A : ConfigListArgs<T, A, P>, P : ArgParser<T,
  * @param stringValidator The validator to use for each string
  */
 class StringListConfigArgs(
-    val stringCompleter: StringParser<StringListConfigArgs>.(
+    private val stringCompleter: StringParser<StringListConfigArgs>.(
         TabCompleteContext<StringListConfigArgs>,
     ) -> List<String>,
-    val stringValidator: StringParser<StringListConfigArgs>.(
+    private val stringValidator: StringParser<StringListConfigArgs>.(
         ParseResult.Success<String, StringListConfigArgs>,
     ) -> Boolean,
 ) : ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(

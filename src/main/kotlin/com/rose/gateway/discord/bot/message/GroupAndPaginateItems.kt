@@ -17,7 +17,6 @@ import dev.kord.rest.builder.message.create.FollowupMessageCreateBuilder
  * @receiver Editing paginator builder
  *
  * @see group
- * @see editingPaginator
  */
 suspend fun <T : Any> EphemeralSlashCommandContext<*, *>.groupAndPaginateItems(
     displayItems: Collection<T>,

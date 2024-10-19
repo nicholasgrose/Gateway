@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender
  * @property args The args that exist for the action
  * @constructor Create a Bukkit context
  */
-public sealed class BukkitContext(
+sealed class BukkitContext(
     val sender: CommandSender,
     val command: Command,
     val args: Array<String>,
@@ -26,7 +26,7 @@ public sealed class BukkitContext(
      * @param command The command that is completing
      * @param args The args that exist at the moment of completion
      */
-    public class TabComplete(
+    class TabComplete(
         sender: CommandSender,
         command: Command,
         val alias: String,
@@ -43,7 +43,7 @@ public sealed class BukkitContext(
      * @param command The command that is executing
      * @param args The args that were passed in for execution
      */
-    public class CommandExecute(
+    class CommandExecute(
         sender: CommandSender,
         command: Command,
         val label: String,

@@ -26,6 +26,8 @@ runPaper = "2.3.1"
 ktlint-plugin = "12.1.1"
 # https://detekt.dev/
 detekt-plugin = "1.23.7"
+# https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
+qodana = "2024.2.3"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
@@ -45,3 +47,4 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-plugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt-plugin" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }

@@ -27,7 +27,7 @@ object ServerInfo {
      * @property fifteenMinute The TPS over the past fifteen minutes
      * @constructor Create a TPS snapshot
      */
-    public data class TPS(
+    data class TPS(
         val oneMinute: Double,
         val fiveMinute: Double,
         val fifteenMinute: Double,

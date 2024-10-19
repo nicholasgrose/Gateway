@@ -20,26 +20,26 @@ object Color : KoinComponent {
      *
      * @return The colored component
      */
-    public fun Component.primary(): Component = this.color(config.primaryColor())
+    fun Component.primary(): Component = this.color(config.primaryColor())
 
     /**
      * Apply the secondary color to the component
      *
      * @return The colored component
      */
-    public fun Component.secondary(): Component = this.color(config.secondaryColor())
+    fun Component.secondary(): Component = this.color(config.secondaryColor())
 
     /**
      * Apply the tertiary color to the component
      *
      * @return The colored component
      */
-    public fun Component.tertiary(): Component = this.color(config.tertiaryColor())
+    fun Component.tertiary(): Component = this.color(config.tertiaryColor())
 
     /**
      * Apply the warning color to the component
      *
      * @return The colored component
      */
-    public fun Component.warning(): Component = this.color(config.warningColor())
+    fun Component.warning(): Component = this.color(config.warningColor())
 }

@@ -33,7 +33,7 @@ class DiscordBotController : KoinComponent {
         state.status = BotStatus.STARTING
         launchConcurrentBot()
 
-        Logger.info("Discord bot ready!")
+        Logger.info("Discord bot started!")
     }
 
     /**

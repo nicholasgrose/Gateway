@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.run.paper)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.qodana)
 }
 
 val version: String by project
@@ -91,7 +92,7 @@ tasks {
         mustRunAfter(ktlintFormat)
     }
 
-    create("runChecks") {
+    create("runLints") {
         dependsOn(ktlintFormat, detekt)
     }
 

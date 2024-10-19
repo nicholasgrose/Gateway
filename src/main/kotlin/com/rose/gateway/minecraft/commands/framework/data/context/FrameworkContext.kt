@@ -12,7 +12,7 @@ import com.rose.gateway.minecraft.commands.framework.runner.CommandArgs
  * @property args The args in use
  * @constructor Create a framework context
  */
-public sealed class FrameworkContext<A : CommandArgs<A>>(
+sealed class FrameworkContext<A : CommandArgs<A>>(
     val command: Command,
     val args: A,
 ) {
@@ -27,7 +27,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
      * @param command The command in use
      * @param args The args in use
      */
-    public sealed class BukkitCommand<B : BukkitContext, A : CommandArgs<A>>(
+    sealed class BukkitCommand<B : BukkitContext, A : CommandArgs<A>>(
         val bukkit: B,
         command: Command,
         args: A,
@@ -42,7 +42,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
          * @param command The command in use
          * @param args The args in use
          */
-        public class CommandExecute<A : CommandArgs<A>>(
+        class CommandExecute<A : CommandArgs<A>>(
             bukkit: BukkitContext.CommandExecute,
             command: Command,
             args: A,
@@ -59,7 +59,7 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
          * @param command The command in use
          * @param args The args in use
          */
-        public class TabComplete<A : CommandArgs<A>>(
+        class TabComplete<A : CommandArgs<A>>(
             bukkit: BukkitContext.TabComplete,
             command: Command,
             args: A,
@@ -71,9 +71,9 @@ public sealed class FrameworkContext<A : CommandArgs<A>>(
 /**
  * @see FrameworkContext.BukkitCommand.CommandExecute
  */
-public typealias CommandExecuteContext<A> = FrameworkContext.BukkitCommand.CommandExecute<A>
+typealias CommandExecuteContext<A> = FrameworkContext.BukkitCommand.CommandExecute<A>
 
 /**
  * @see FrameworkContext.BukkitCommand.TabComplete
  */
-public typealias TabCompleteContext<A> = FrameworkContext.BukkitCommand.TabComplete<A>
+typealias TabCompleteContext<A> = FrameworkContext.BukkitCommand.TabComplete<A>

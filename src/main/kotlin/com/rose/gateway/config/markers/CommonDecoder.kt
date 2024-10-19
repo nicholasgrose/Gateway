@@ -53,6 +53,6 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
      * @param classifier The class we want to check
      * @return true if it passes all conditions, false otherwise
      */
-    fun isSupportedClassifier(classifier: KClass<*>): Boolean =
+    private fun isSupportedClassifier(classifier: KClass<*>): Boolean =
         !classifier.isData && !classifier.isSealed && !classifier.isInline() && classifier canBe ConfigObject::class
 }

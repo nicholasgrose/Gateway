@@ -11,10 +11,9 @@ import java.util.logging.FileHandler
 object Logger : KoinComponent {
     private val plugin: GatewayPlugin by inject()
     private val pluginLogger = plugin.logger
-    private val handler: FileHandler
+    private val handler: FileHandler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
 
     init {
-        handler = FileHandler(plugin.dataFolder.path.plus("/gateway_log.txt"), true)
         handler.formatter = LogFormatter()
         pluginLogger.addHandler(handler)
     }
