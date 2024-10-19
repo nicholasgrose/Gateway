@@ -29,10 +29,11 @@ object MentionResult : KoinComponent {
     fun mention(
         minecraftText: String,
         discordText: String,
-    ): TokenProcessingResult = TokenProcessingResult(
-        minecraftText.primaryComponent(),
-        discordText,
-    )
+    ): TokenProcessingResult =
+        TokenProcessingResult(
+            minecraftText.primaryComponent(),
+            discordText,
+        )
 
     /**
      * Creates a [TokenProcessingResult] representing a role mention in Discord

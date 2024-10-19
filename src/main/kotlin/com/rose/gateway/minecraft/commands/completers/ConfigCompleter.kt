@@ -40,11 +40,12 @@ object ConfigCompleter : KoinComponent {
         type: KType,
     ): P.(TabCompleteContext<A>) -> List<String> where A : CommandArgs<A>, P : ArgParser<T, A, P> {
         val items = config.allItems()
-        val matchedItems = items.filter {
-            val itemType = it.type
+        val matchedItems =
+            items.filter {
+                val itemType = it.type
 
-            itemType == type
-        }
+                itemType == type
+            }
 
         return { matchedItems.map { it.path } }
     }

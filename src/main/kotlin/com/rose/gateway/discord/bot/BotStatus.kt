@@ -7,7 +7,10 @@ package com.rose.gateway.discord.bot
  * @property reason Why the bot is in that status
  * @constructor Creates a bot status with the given info
  */
-enum class BotStatus(val status: String, var reason: String = "") {
+enum class BotStatus(
+    val status: String,
+    var reason: String = "",
+) {
     /**
      * Represents that the bot has not yet started
      *

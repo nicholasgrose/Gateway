@@ -35,7 +35,10 @@ class WhitelistConfig(
  * @see WhitelistConfigSerializer
  */
 @Serializable
-data class WhitelistConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage: Int) {
+data class WhitelistConfigSurrogate(
+    val enabled: Boolean,
+    val maxPlayersPerPage: Int,
+) {
     /**
      * Companion
      *

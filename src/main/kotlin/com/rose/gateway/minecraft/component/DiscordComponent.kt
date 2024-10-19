@@ -22,5 +22,7 @@ fun atMember(
  * @param user The user to create a [Component] for
  * @return The member [Component]
  */
-fun member(user: Member): Component = user.effectiveName.secondaryComponent()
-    .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())
+fun member(user: Member): Component =
+    user.effectiveName
+        .secondaryComponent()
+        .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())

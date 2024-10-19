@@ -18,11 +18,12 @@ import kotlinx.coroutines.runBlocking
 fun PluginCoroutineScope.launchIf(
     condition: Boolean,
     block: suspend CoroutineScope.() -> Unit,
-): Job? = if (condition) {
-    launch(block = block)
-} else {
-    null
-}
+): Job? =
+    if (condition) {
+        launch(block = block)
+    } else {
+        null
+    }
 
 /**
  * Launches some code in a blocking context if the condition is true
@@ -36,8 +37,9 @@ fun PluginCoroutineScope.launchIf(
 fun <T> runBlockingIf(
     condition: Boolean,
     block: suspend CoroutineScope.() -> T,
-): T? = if (condition) {
-    runBlocking(block = block)
-} else {
-    null
-}
+): T? =
+    if (condition) {
+        runBlocking(block = block)
+    } else {
+        null
+    }

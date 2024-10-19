@@ -12,7 +12,9 @@ import com.rose.gateway.minecraft.commands.framework.data.executor.ExecutorArgsP
  * @property definition This command's definition
  * @constructor Create a command
  */
-class Command(val definition: CommandDefinition) {
+class Command(
+    val definition: CommandDefinition,
+) {
     /**
      * Parses the arguments of a context and then executes on the result
      *
@@ -72,9 +74,10 @@ class Command(val definition: CommandDefinition) {
         executorArgsPairs: List<ExecutorArgsPair<*>>,
     ): List<String> {
         val tabCompletions =
-            executorArgsPairs.map {
-                it.executor.completions(context)
-            }.flatten()
+            executorArgsPairs
+                .map {
+                    it.executor.completions(context)
+                }.flatten()
 
         return tabCompletions
     }

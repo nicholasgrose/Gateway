@@ -15,8 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin
  * @property command The framework command to use for execution
  * @constructor Create a Minecraft command
  */
-class MinecraftCommand(val command: Command) :
-    org.bukkit.command.CommandExecutor,
+class MinecraftCommand(
+    val command: Command,
+) : org.bukkit.command.CommandExecutor,
     TabCompleter {
     override fun onCommand(
         sender: CommandSender,
@@ -25,18 +26,19 @@ class MinecraftCommand(val command: Command) :
         args: Array<String>,
     ): Boolean {
         val argList = args.toList()
-        val commandResult = command.parseAndExecute(
-            CommandExecuteContext(
-                BukkitContext.CommandExecute(
-                    sender = sender,
-                    command = bukkitCommand,
-                    label = label,
-                    args = args,
+        val commandResult =
+            command.parseAndExecute(
+                CommandExecuteContext(
+                    BukkitContext.CommandExecute(
+                        sender = sender,
+                        command = bukkitCommand,
+                        label = label,
+                        args = args,
+                    ),
+                    command,
+                    emptyArgs(argList),
                 ),
-                command,
-                emptyArgs(argList),
-            ),
-        )
+            )
 
         if (!commandResult.succeeded) sendUsages(sender, commandResult.rankedExecutors)
 
@@ -54,9 +56,10 @@ class MinecraftCommand(val command: Command) :
         rankedExecutors: List<ExecutorArgsPair<*>>,
     ) {
         sender.sendMessage(
-            "Usage:\n" + rankedExecutors.joinToString("\n") {
-                it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
-            },
+            "Usage:\n" +
+                rankedExecutors.joinToString("\n") {
+                    it.args.usages().joinToString("\n") { usage -> "/${command.definition.name} $usage" }
+                },
         )
     }
 

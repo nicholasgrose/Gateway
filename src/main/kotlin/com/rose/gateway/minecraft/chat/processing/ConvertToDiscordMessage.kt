@@ -38,13 +38,14 @@ private val textProcessor =
 suspend fun discordMessage(
     message: String,
     event: AsyncChatEvent,
-): (MessageCreateBuilder.() -> Unit)? = discordMessageWithContent(message) { result ->
-    val playerName = event.player.name
+): (MessageCreateBuilder.() -> Unit)? =
+    discordMessageWithContent(message) { result ->
+        val playerName = event.player.name
 
-    event.message(result.minecraftMessage)
+        event.message(result.minecraftMessage)
 
-    "**${playerName.discordBoldSafe()} »** ${result.discordMessage}"
-}
+        "**${playerName.discordBoldSafe()} »** ${result.discordMessage}"
+    }
 
 /**
  * Creates a Discord message for some chat message

@@ -28,7 +28,9 @@ class AboutConfig(
  * @see AboutConfigSerializer
  */
 @Serializable
-data class AboutConfigSurrogate(val enabled: Boolean) {
+data class AboutConfigSurrogate(
+    val enabled: Boolean,
+) {
     /**
      * Companion
      *

@@ -27,7 +27,9 @@ class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     ): TokenProcessingResult {
         val url = token.string
         val component =
-            url.component().underlined()
+            url
+                .component()
+                .underlined()
                 .showTextOnHover("Click to open url".component())
                 .openUrlOnClick(url)
 

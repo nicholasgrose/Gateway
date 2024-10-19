@@ -38,12 +38,13 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to convert to a [Component]
      * @return The text after processing
      */
-    suspend fun createMessage(event: MessageCreateEvent): Component = join(
-        generateNameBlock(event),
-        generateMessagePrefixBlock(event),
-        generateMessageBlock(event),
-        generateMessageSuffixBlock(event),
-    )
+    suspend fun createMessage(event: MessageCreateEvent): Component =
+        join(
+            generateNameBlock(event),
+            generateMessagePrefixBlock(event),
+            generateMessageBlock(event),
+            generateMessageSuffixBlock(event),
+        )
 
     /**
      * Creates the name block to show in Minecraft
@@ -52,7 +53,12 @@ object DiscordMessageProcessor : KoinComponent {
      * @return The name block
      */
     private suspend fun generateNameBlock(event: MessageCreateEvent): Component {
-        if (!(config.config.bot.extensions.chat.showRoleColor) || event.member!!.roles.toList().isEmpty()) {
+        if (!(config.config.bot.extensions.chat.showRoleColor) ||
+            event.member!!
+                .roles
+                .toList()
+                .isEmpty()
+        ) {
             return join(
                 "<".component(),
                 member(event.member!!),
@@ -60,7 +66,11 @@ object DiscordMessageProcessor : KoinComponent {
             )
         }
 
-        val roleColor = event.member!!.getTopRole()?.color?.let { TextColor.color(it.rgb) }
+        val roleColor =
+            event.member!!
+                .getTopRole()
+                ?.color
+                ?.let { TextColor.color(it.rgb) }
 
         return join(
             "<".component(),
@@ -163,8 +173,12 @@ object DiscordMessageProcessor : KoinComponent {
             join(
                 JoinConfiguration.separator(", ".primaryComponent().italic()),
                 event.message.attachments.mapIndexed { index, attachment ->
-                    "Attachment$index".tertiaryComponent().italic().underlined()
-                        .showTextOnHover("Open attachment link".component()).openUrlOnClick(attachment.url)
+                    "Attachment$index"
+                        .tertiaryComponent()
+                        .italic()
+                        .underlined()
+                        .showTextOnHover("Open attachment link".component())
+                        .openUrlOnClick(attachment.url)
                 },
             ),
             ")".primaryComponent().italic(),

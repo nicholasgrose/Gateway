@@ -34,7 +34,10 @@ class ListConfig(
  * @see ListConfigSerializer
  */
 @Serializable
-data class ListConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage: Int) {
+data class ListConfigSurrogate(
+    val enabled: Boolean,
+    val maxPlayersPerPage: Int,
+) {
     /**
      * Companion
      *

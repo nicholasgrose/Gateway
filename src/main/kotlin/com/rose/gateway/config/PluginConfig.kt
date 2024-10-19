@@ -31,33 +31,13 @@ class PluginConfig : KoinComponent {
 
     /**
      * Reload the full config from the disk
-     *
-     * @return Whether the config was successfully loaded
      */
-    suspend fun reloadConfig(): Boolean {
+    suspend fun reloadConfig() {
         config = configFile.safelyLoadConfig()
-
-        return if (notLoaded()) {
-            pluginCoroutineScope.launch {
-                bot.close()
-            }
-
-            false
-        } else {
-            pluginCoroutineScope.launch {
-                bot.rebuild()
-            }
-
-            true
+        pluginCoroutineScope.launch {
+            bot.rebuild()
         }
     }
-
-    /**
-     * Determines whether the config was loaded by comparing it to the default config
-     *
-     * @return Whether the user-defined config was successfully loaded
-     */
-    fun notLoaded(): Boolean = config == configFile.defaultConfig
 
     /**
      * Saves the current config to disk, replacing the existing config file

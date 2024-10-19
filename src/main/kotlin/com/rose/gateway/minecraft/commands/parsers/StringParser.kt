@@ -36,7 +36,9 @@ fun <A : CommandArgs<A>> CommandArgs<A>.string(body: StringParserBuilder<A>.() -
  *
  * @param builder The builder that defines this parser
  */
-class StringParser<A>(override val builder: StringParserBuilder<A>) : ArgParser<String, A, StringParser<A>>(builder)
+class StringParser<A>(
+    override val builder: StringParserBuilder<A>,
+) : ArgParser<String, A, StringParser<A>>(builder)
     where A : CommandArgs<A> {
     override fun typeName(): String = "String"
 
@@ -65,20 +67,22 @@ class StringParser<A>(override val builder: StringParserBuilder<A>) : ArgParser<
                 )
             }
 
-            result != null -> ParseResult.Success(
-                result,
-                ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1,
-                ),
-            )
+            result != null ->
+                ParseResult.Success(
+                    result,
+                    ParseContext(
+                        args = args,
+                        currentIndex = currentIndex + 1,
+                    ),
+                )
 
-            else -> ParseResult.Failure(
-                ParseContext(
-                    args = args,
-                    currentIndex = currentIndex + 1,
-                ),
-            )
+            else ->
+                ParseResult.Failure(
+                    ParseContext(
+                        args = args,
+                        currentIndex = currentIndex + 1,
+                    ),
+                )
         }
     }
 }

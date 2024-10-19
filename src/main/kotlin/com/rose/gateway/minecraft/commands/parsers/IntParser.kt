@@ -14,9 +14,8 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @receiver The builder for the parser
  * @return The built parser
  */
-fun <A> CommandArgs<A>.int(
-    body: IntParserBuilder<A>.() -> Unit,
-): IntParser<A> where A : CommandArgs<A> = genericParser(::IntParserBuilder, body)
+fun <A> CommandArgs<A>.int(body: IntParserBuilder<A>.() -> Unit): IntParser<A> where A : CommandArgs<A> =
+    genericParser(::IntParserBuilder, body)
 
 /**
  * Parser for an int argument
@@ -26,13 +25,16 @@ fun <A> CommandArgs<A>.int(
  *
  * @param builder The builder that defines this parser
  */
-class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) : ArgParser<Int, A, IntParser<A>>(builder) {
+class IntParser<A : CommandArgs<A>>(
+    builder: IntParserBuilder<A>,
+) : ArgParser<Int, A, IntParser<A>>(builder) {
     override fun typeName(): String = "Int"
 
-    private val internalParser = stringParser<A> {
-        name = builder.name
-        description = builder.description
-    }
+    private val internalParser =
+        stringParser<A> {
+            name = builder.name
+            description = builder.description
+        }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Int, A> {
         val stringResult = internalParser.parseValidValue(context)

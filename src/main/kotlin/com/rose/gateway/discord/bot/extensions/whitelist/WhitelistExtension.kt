@@ -94,17 +94,19 @@ class WhitelistExtension : Extension() {
                         }
                     }, { groupIndex, group ->
                         page {
-                            title = plurality(
-                                whitelistedPlayerCount,
-                                "1 Whitelisted Player",
-                                "$whitelistedPlayerCount Whitelisted Players",
-                            )
-                            description = group.withIndex().joinToString("\n") { (playerIndex, player) ->
-                                val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
-                                val playerName = player.name?.discordBoldSafe() ?: player.uniqueId
+                            title =
+                                plurality(
+                                    whitelistedPlayerCount,
+                                    "1 Whitelisted Player",
+                                    "$whitelistedPlayerCount Whitelisted Players",
+                                )
+                            description =
+                                group.withIndex().joinToString("\n") { (playerIndex, player) ->
+                                    val playerNumber = (groupIndex * maxPlayersPerPage) + playerIndex + 1
+                                    val playerName = player.name?.discordBoldSafe() ?: player.uniqueId
 
-                                "**$playerNumber.** $playerName"
-                            }
+                                    "**$playerNumber.** $playerName"
+                                }
                             color = Color(config.secondaryColor().value())
                         }
                     })
@@ -113,55 +115,60 @@ class WhitelistExtension : Extension() {
         }
     }
 
-    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistAddResponse(
-        state: WhitelistState,
-    ) {
+    @Suppress("MaxLineLength")
+    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistAddResponse(state: WhitelistState) {
         respond {
             when (state) {
-                WhitelistState.STATE_MODIFIED -> embed {
-                    title = "Whitelist Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
-                    color = Color(WhitelistExtension.config.primaryColor().value())
-                }
+                WhitelistState.STATE_MODIFIED ->
+                    embed {
+                        title = "Whitelist Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** successfully added to whitelist."
+                        color = Color(config.primaryColor().value())
+                    }
 
-                WhitelistState.STATE_SUSTAINED -> embed {
-                    title = "Whitelist Not Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** already exists in whitelist."
-                    color = Color(WhitelistExtension.config.secondaryColor().value())
-                }
+                WhitelistState.STATE_SUSTAINED ->
+                    embed {
+                        title = "Whitelist Not Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** already exists in whitelist."
+                        color = Color(config.secondaryColor().value())
+                    }
 
-                WhitelistState.STATE_INVALID -> embed {
-                    title = "Whitelist Addition Failed"
-                    description = "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
-                    color = Color(WhitelistExtension.config.warningColor().value())
-                }
+                WhitelistState.STATE_INVALID ->
+                    embed {
+                        title = "Whitelist Addition Failed"
+                        @Suppress("MaxLineLength")
+                        description = "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
+                        color = Color(config.warningColor().value())
+                    }
             }
         }
     }
 
-    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistRemoveResponse(
-        state: WhitelistState,
-    ) {
+    @Suppress("MaxLineLength")
+    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistRemoveResponse(state: WhitelistState) {
         respond {
             when (state) {
-                WhitelistState.STATE_MODIFIED -> embed {
-                    title = "Whitelist Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
-                    color = Color(WhitelistExtension.config.primaryColor().value())
-                }
+                WhitelistState.STATE_MODIFIED ->
+                    embed {
+                        title = "Whitelist Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** successfully removed from whitelist."
+                        color = Color(config.primaryColor().value())
+                    }
 
-                WhitelistState.STATE_SUSTAINED -> embed {
-                    title = "Whitelist Not Changed"
-                    description = "**${arguments.username.discordBoldSafe()}** does not exist in whitelist."
-                    color = Color(WhitelistExtension.config.secondaryColor().value())
-                }
+                WhitelistState.STATE_SUSTAINED ->
+                    embed {
+                        title = "Whitelist Not Changed"
+                        description = "**${arguments.username.discordBoldSafe()}** does not exist in whitelist."
+                        color = Color(config.secondaryColor().value())
+                    }
 
-                WhitelistState.STATE_INVALID -> embed {
-                    title = "Whitelist Removal Failed"
-                    description =
-                        "Error occurred removing" + " **${arguments.username.discordBoldSafe()}** from whitelist."
-                    color = Color(WhitelistExtension.config.warningColor().value())
-                }
+                WhitelistState.STATE_INVALID ->
+                    embed {
+                        title = "Whitelist Removal Failed"
+                        description =
+                            "Error occurred removing" + " **${arguments.username.discordBoldSafe()}** from whitelist."
+                        color = Color(config.warningColor().value())
+                    }
             }
         }
     }

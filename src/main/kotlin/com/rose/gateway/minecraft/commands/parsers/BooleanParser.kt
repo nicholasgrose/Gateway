@@ -25,14 +25,17 @@ fun <A : CommandArgs<A>> CommandArgs<A>.boolean(body: BooleanParserBuilder<A>.()
  *
  * @param builder The builder that defines this parser
  */
-class BooleanParser<A>(builder: BooleanParserBuilder<A>) : ArgParser<Boolean, A, BooleanParser<A>>(builder)
+class BooleanParser<A>(
+    builder: BooleanParserBuilder<A>,
+) : ArgParser<Boolean, A, BooleanParser<A>>(builder)
     where A : CommandArgs<A> {
     override fun typeName(): String = "Boolean"
 
-    private val internalParser = stringParser<A> {
-        name = builder.name
-        description = builder.description
-    }
+    private val internalParser =
+        stringParser<A> {
+            name = builder.name
+            description = builder.description
+        }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Boolean, A> {
         val stringResult = internalParser.parseValidValue(context)

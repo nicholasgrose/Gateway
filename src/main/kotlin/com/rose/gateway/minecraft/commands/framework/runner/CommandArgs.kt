@@ -152,9 +152,10 @@ open class CommandArgs<A : CommandArgs<A>> {
                 if (allUsages.isEmpty()) {
                     usageList.toList()
                 } else {
-                    usageList.flatMap { usage ->
-                        allUsages.map { existingUsage -> "$existingUsage $usage" }
-                    }.toList()
+                    usageList
+                        .flatMap { usage ->
+                            allUsages.map { existingUsage -> "$existingUsage $usage" }
+                        }.toList()
                 }
         }
 

@@ -106,12 +106,6 @@ object CommandRegistry : KoinComponent {
                             ConfigMonitoringRunner.saveConfig(context)
                         }
                     }
-
-                    subcommand("status") {
-                        runner { context ->
-                            ConfigMonitoringRunner.sendConfigurationStatus(context.bukkit.sender)
-                        }
-                    }
                 }
             }
         }

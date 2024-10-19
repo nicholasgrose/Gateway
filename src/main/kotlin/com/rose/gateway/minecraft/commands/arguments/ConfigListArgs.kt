@@ -42,24 +42,26 @@ class StringListConfigArgs(
         ParseResult.Success<String, StringListConfigArgs>,
     ) -> Boolean,
 ) : ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
-    typeOf<List<String>>(),
-    StringListConfigArgs::parser,
-) {
+        typeOf<List<String>>(),
+        StringListConfigArgs::parser,
+    ) {
     /**
      * Creates the list parser for these string list config args
      *
      * @return THe constructed parser
      */
-    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> = list {
-        name = "VALUES"
-        description = "Values to add."
-        element = stringParser {
-            name = "VALUE"
-            description = "String to add."
-            completer = stringCompleter
-            validator = stringValidator
+    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> =
+        list {
+            name = "VALUES"
+            description = "Values to add."
+            element =
+                stringParser {
+                    name = "VALUE"
+                    description = "String to add."
+                    completer = stringCompleter
+                    validator = stringValidator
+                }
         }
-    }
 }
 
 /**
@@ -67,38 +69,39 @@ class StringListConfigArgs(
  *
  * @return The constructed config args
  */
-fun addStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { listOf() },
-    {
-        val item = it.context.args.item
+fun addStringListConfigArgs(): StringListConfigArgs =
+    StringListConfigArgs(
+        { listOf() },
+        {
+            val item = it.context.args.item
 
-        item.value.contains(it.result).not()
-    },
-)
+            item.value.contains(it.result).not()
+        },
+    )
 
 /**
  * Creates a string list config args for removing strings
  *
  * @return The constructed config args
  */
-fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
-    { context ->
-        val currentValues = context.args.item.value
-        val itemsSlatedForRemoval = existingValues(context)
+fun removeStringListConfigArgs(): StringListConfigArgs =
+    StringListConfigArgs(
+        { context ->
+            val currentValues = context.args.item.value
+            val itemsSlatedForRemoval = existingValues(context)
 
-        currentValues - itemsSlatedForRemoval.toSet()
-    },
-    { parseResult ->
-        val item = parseResult.context.args.item
+            currentValues - itemsSlatedForRemoval.toSet()
+        },
+        { parseResult ->
+            val item = parseResult.context.args.item
 
-        item.value.contains(parseResult.result)
-    },
-)
+            item.value.contains(parseResult.result)
+        },
+    )
 
-private fun StringParser<StringListConfigArgs>.existingValues(
-    context: TabCompleteContext<StringListConfigArgs>,
-): List<String> = if (context.args.wasSuccessful(context.completingParser)) {
-    context.args.value
-} else {
-    listOf()
-}
+private fun existingValues(context: TabCompleteContext<StringListConfigArgs>): List<String> =
+    if (context.args.wasSuccessful(context.completingParser)) {
+        context.args.value
+    } else {
+        listOf()
+    }

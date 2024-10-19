@@ -32,7 +32,10 @@ class ChatConfig(
  * @see ChatConfigSerializer
  */
 @Serializable
-data class ChatConfigSurrogate(val enabled: Boolean, val showRoleColor: Boolean) {
+data class ChatConfigSurrogate(
+    val enabled: Boolean,
+    val showRoleColor: Boolean,
+) {
     /**
      * Companion
      *

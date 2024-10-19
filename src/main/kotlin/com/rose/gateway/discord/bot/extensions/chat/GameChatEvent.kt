@@ -13,7 +13,9 @@ import org.koin.core.component.inject
  * @property message The message to print in Discord
  * @constructor Creates a game chat event with the given message
  */
-class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent {
+class GameChatEvent(
+    val message: MessageCreateBuilder.() -> Unit,
+) : KordExEvent {
     /**
      * Companion
      *
@@ -29,7 +31,9 @@ class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent 
          * @receiver The [DiscordBot]
          */
         suspend fun trigger(message: MessageCreateBuilder.() -> Unit) {
-            bot.discordBot.kordexBot.await()?.send(GameChatEvent(message))
+            bot.discordBot.kordexBot
+                .await()
+                ?.send(GameChatEvent(message))
         }
     }
 }

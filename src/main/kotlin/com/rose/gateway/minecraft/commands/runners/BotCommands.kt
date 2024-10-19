@@ -37,7 +37,8 @@ object BotCommands : KoinComponent {
             context.bukkit.sender,
             join(
                 "Discord bot will now rebuild. ".component(),
-                "Check Status".tertiaryComponent()
+                "Check Status"
+                    .tertiaryComponent()
                     .showTextOnHover("Click to view status".component())
                     .runCommandOnClick("/gateway bot status"),
             ),
@@ -61,7 +62,8 @@ object BotCommands : KoinComponent {
             context.bukkit.sender,
             join(
                 "Discord bot will now restart. ".component(),
-                "Check Status".tertiaryComponent()
+                "Check Status"
+                    .tertiaryComponent()
                     .showTextOnHover("Click to view status".component())
                     .runCommandOnClick("/gateway bot status"),
             ),

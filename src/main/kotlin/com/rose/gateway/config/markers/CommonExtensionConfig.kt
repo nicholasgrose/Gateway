@@ -41,9 +41,13 @@ open class CommonExtensionConfig(
     private fun modifyExtensionLoadedStatus(enabled: Boolean) {
         pluginsScope.launch {
             if (enabled) {
-                bot.discordBot.kordexBot.await()?.loadExtension(extensionName)
+                bot.discordBot.kordexBot
+                    .await()
+                    ?.loadExtension(extensionName)
             } else {
-                bot.discordBot.kordexBot.await()?.unloadExtension(extensionName)
+                bot.discordBot.kordexBot
+                    .await()
+                    ?.unloadExtension(extensionName)
             }
         }
     }

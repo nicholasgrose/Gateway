@@ -28,7 +28,9 @@ class TpsConfig(
  * @see TpsConfigSerializer
  */
 @Serializable
-data class TpsConfigSurrogate(val enabled: Boolean) {
+data class TpsConfigSurrogate(
+    val enabled: Boolean,
+) {
     /**
      * Companion
      *

@@ -29,7 +29,9 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  * @param builder The builder that defines this parser
  */
 @Suppress("MaxLineLength")
-class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) : ArgParser<List<T>, A, ListParser<T, A, P>>(builder)
+class ListParser<T, A, P>(
+    override val builder: ListParserBuilder<T, A, P>,
+) : ArgParser<List<T>, A, ListParser<T, A, P>>(builder)
     where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
@@ -64,7 +66,8 @@ class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) : Ar
  * @param P The type of the parser for list elements
  * @constructor Creates a list parser builder
  */
-class ListParserBuilder<T, A, P> : ParserBuilder<List<T>, A, ListParser<T, A, P>>()
+class ListParserBuilder<T, A, P> :
+    ParserBuilder<List<T>, A, ListParser<T, A, P>>()
     where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     init {
         completer = {

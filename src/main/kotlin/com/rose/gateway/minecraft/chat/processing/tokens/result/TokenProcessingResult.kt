@@ -26,9 +26,10 @@ data class TokenProcessingResult(
          * @param text The text as it appeared in Minecraft
          * @return The [TokenProcessingResult] for the failure
          */
-        fun error(text: String): TokenProcessingResult = TokenProcessingResult(
-            text.warningComponent(),
-            text,
-        )
+        fun error(text: String): TokenProcessingResult =
+            TokenProcessingResult(
+                text.warningComponent(),
+                text,
+            )
     }
 }

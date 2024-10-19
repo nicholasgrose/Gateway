@@ -27,7 +27,7 @@ class DiscordBotController : KoinComponent {
     /**
      * Starts the Discord bot
      */
-    suspend fun start() {
+    fun start() {
         Logger.info("Starting Discord bot...")
 
         state.status = BotStatus.STARTING
@@ -39,7 +39,7 @@ class DiscordBotController : KoinComponent {
     /**
      * Launches the bot in a new parallel task
      */
-    private suspend fun launchConcurrentBot() {
+    private fun launchConcurrentBot() {
         state.botJob =
             pluginScope.launch {
                 val runResult =

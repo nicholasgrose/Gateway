@@ -41,17 +41,11 @@ class DiscordBot : KoinComponent {
      *
      * @return The build bot or null, if building failed
      */
-    suspend fun safelyBuildBot(): Result<ExtensibleBot> =
+    private suspend fun safelyBuildBot(): Result<ExtensibleBot> =
         tryKordOperation("Constructing Discord Bot") {
-            if (config.notLoaded()) {
-                Logger.warning("Bot construction failed because no configuration is loaded.")
+            Logger.info("Building Discord bot...")
 
-                Result.failure(Exception("No valid configuration is loaded."))
-            } else {
-                Logger.info("Building Discord bot...")
-
-                Result.success(buildBot(config.botToken()))
-            }
+            Result.success(buildBot(config.botToken()))
         }
 
     /**

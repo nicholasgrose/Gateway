@@ -23,7 +23,9 @@ fun minecraftCommands(initializer: MinecraftCommandsBuilder.() -> Unit): Minecra
  * @property builder The builder for these commands
  * @constructor Create minecraft commands for some commands
  */
-class MinecraftCommands(private val builder: MinecraftCommandsBuilder) {
+class MinecraftCommands(
+    private val builder: MinecraftCommandsBuilder,
+) {
     /**
      * Register these commands with a plugin
      *
