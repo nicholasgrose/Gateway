@@ -17,7 +17,9 @@ import org.koin.core.component.inject
  *
  * @constructor Create an action listener
  */
-class ActionListener : Listener, KoinComponent {
+class ActionListener :
+    Listener,
+    KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
@@ -31,7 +33,9 @@ class ActionListener : Listener, KoinComponent {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
             val deathMessage = event.deathMessage() ?: return@launchIfChatExtensionEnabled
             val plainTextMessage =
-                PlainTextComponentSerializer.plainText().serialize(deathMessage)
+                PlainTextComponentSerializer
+                    .plainText()
+                    .serialize(deathMessage)
                     .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
             GameChatEvent.trigger {
@@ -50,7 +54,9 @@ class ActionListener : Listener, KoinComponent {
         pluginCoroutineScope.launchIfChatExtensionEnabled(config) {
             val advancementMessage = event.message() ?: return@launchIfChatExtensionEnabled
             val advancementText =
-                PlainTextComponentSerializer.plainText().serialize(advancementMessage)
+                PlainTextComponentSerializer
+                    .plainText()
+                    .serialize(advancementMessage)
                     .replaceFirst(event.player.name, "**${event.player.name.discordBoldSafe()}**")
 
             GameChatEvent.trigger {

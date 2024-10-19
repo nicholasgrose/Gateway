@@ -14,6 +14,11 @@ data class TokenProcessingResult(
     val minecraftMessage: Component,
     val discordMessage: String,
 ) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         /**
          * Creates a [TokenProcessingResult] representing a failed Discord mention
@@ -21,11 +26,10 @@ data class TokenProcessingResult(
          * @param text The text as it appeared in Minecraft
          * @return The [TokenProcessingResult] for the failure
          */
-        fun error(text: String): TokenProcessingResult {
-            return TokenProcessingResult(
+        fun error(text: String): TokenProcessingResult =
+            TokenProcessingResult(
                 text.warningComponent(),
                 text,
             )
-        }
     }
 }

@@ -38,15 +38,14 @@ private val textProcessor =
 suspend fun discordMessage(
     message: String,
     event: AsyncChatEvent,
-): (MessageCreateBuilder.() -> Unit)? {
-    return discordMessageWithContent(message) { result ->
+): (MessageCreateBuilder.() -> Unit)? =
+    discordMessageWithContent(message) { result ->
         val playerName = event.player.name
 
         event.message(result.minecraftMessage)
 
         "**${playerName.discordBoldSafe()} »** ${result.discordMessage}"
     }
-}
 
 /**
  * Creates a Discord message for some chat message
@@ -54,11 +53,10 @@ suspend fun discordMessage(
  * @param message The message to create the Discord message from
  * @return The Discord message or null, if it could not be parsed
  */
-suspend fun discordMessage(message: String): (MessageCreateBuilder.() -> Unit)? {
-    return discordMessageWithContent(message) { result ->
+suspend fun discordMessage(message: String): (MessageCreateBuilder.() -> Unit)? =
+    discordMessageWithContent(message) { result ->
         result.discordMessage
     }
-}
 
 /**
  * Parses the message and then creates a Discord message containing the content derived from the result

@@ -69,10 +69,8 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A, P> addConfiguration(
-        context: CommandExecuteContext<A>,
-    ): Boolean
-        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
+    @Suppress("MaxLineLength")
+    fun <T, A, P> addConfiguration(context: CommandExecuteContext<A>): Boolean where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 
@@ -131,10 +129,8 @@ object ConfigCommands {
      * @param context The command context with the config list args
      * @return Whether the command succeeded
      */
-    fun <T, A, P> removeConfiguration(
-        context: CommandExecuteContext<A>,
-    ): Boolean
-        where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
+    @Suppress("MaxLineLength")
+    fun <T, A, P> removeConfiguration(context: CommandExecuteContext<A>): Boolean where A : ConfigListArgs<T, A, P>, P : StringParser<A> {
         val configItem = context.args.item
         val values = context.args.value
 

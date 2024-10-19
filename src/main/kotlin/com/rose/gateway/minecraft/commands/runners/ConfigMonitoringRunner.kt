@@ -11,7 +11,6 @@ import com.rose.gateway.minecraft.component.italic
 import com.rose.gateway.minecraft.component.item
 import com.rose.gateway.minecraft.component.join
 import com.rose.gateway.minecraft.component.joinNewLine
-import com.rose.gateway.minecraft.component.joinSpace
 import com.rose.gateway.minecraft.component.plus
 import com.rose.gateway.minecraft.component.primaryComponent
 import com.rose.gateway.minecraft.component.runCommandOnClick
@@ -81,13 +80,8 @@ object ConfigMonitoringRunner : KoinComponent {
         context.bukkit.sender.sendMessage("Loading configuration...")
 
         pluginCoroutineScope.launch {
-            val loadSuccessful = config.reloadConfig()
-
-            if (loadSuccessful) {
-                context.bukkit.sender.sendMessage("New configuration loaded successfully. Bot restarted.")
-            } else {
-                context.bukkit.sender.sendMessage("Failed to load new configuration. Bot stopped for safety.")
-            }
+            config.reloadConfig()
+            context.bukkit.sender.sendMessage("Configuration loaded. Bot restarted.")
         }
 
         return true
@@ -104,25 +98,6 @@ object ConfigMonitoringRunner : KoinComponent {
             config.saveConfig()
             context.bukkit.sender.sendMessage("Saved current configuration.")
         }
-
-        return true
-    }
-
-    /**
-     * Command that sends the command sender the current status of the plugin configuration
-     *
-     * @param sender The sender to receive the message
-     * @return Whether the command succeeded
-     */
-    fun sendConfigurationStatus(sender: CommandSender): Boolean {
-        val configStatus = if (config.notLoaded()) "Not Loaded (Check logs to fix file and then reload)" else "Loaded"
-
-        sender.sendMessage(
-            joinSpace(
-                "Config Status:".primaryComponent(),
-                configStatus.component(),
-            ),
-        )
 
         return true
     }
@@ -147,8 +122,8 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param item The item to create the help message for
      * @return The created help message
      */
-    private fun itemHelpMessage(item: Item<*>): Component {
-        return joinNewLine(
+    private fun itemHelpMessage(item: Item<*>): Component =
+        joinNewLine(
             "Configuration Help:".primaryComponent(),
             "Name: ".primaryComponent() + item.path.tertiaryComponent().italic(),
             join(
@@ -158,9 +133,11 @@ object ConfigMonitoringRunner : KoinComponent {
             ),
             "Current Value: ".primaryComponent() + item.value.toString().component(),
             "Description: ".primaryComponent() + item.description.component(),
-            "View All Configurations".secondaryComponent().underlined().italic()
+            "View All Configurations"
+                .secondaryComponent()
+                .underlined()
+                .italic()
                 .showTextOnHover("Click to view all configurations.".component())
                 .runCommandOnClick("/gateway config help"),
         )
-    }
 }

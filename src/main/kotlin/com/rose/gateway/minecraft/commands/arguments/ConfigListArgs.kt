@@ -35,10 +35,10 @@ open class ConfigListArgs<T : Any, A : ConfigListArgs<T, A, P>, P : ArgParser<T,
  * @param stringValidator The validator to use for each string
  */
 class StringListConfigArgs(
-    val stringCompleter: StringParser<StringListConfigArgs>.(
+    private val stringCompleter: StringParser<StringListConfigArgs>.(
         TabCompleteContext<StringListConfigArgs>,
     ) -> List<String>,
-    val stringValidator: StringParser<StringListConfigArgs>.(
+    private val stringValidator: StringParser<StringListConfigArgs>.(
         ParseResult.Success<String, StringListConfigArgs>,
     ) -> Boolean,
 ) : ConfigListArgs<String, StringListConfigArgs, StringParser<StringListConfigArgs>>(
@@ -50,8 +50,8 @@ class StringListConfigArgs(
      *
      * @return THe constructed parser
      */
-    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> {
-        return list {
+    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> =
+        list {
             name = "VALUES"
             description = "Values to add."
             element =
@@ -62,7 +62,6 @@ class StringListConfigArgs(
                     validator = stringValidator
                 }
         }
-    }
 }
 
 /**
@@ -100,12 +99,9 @@ fun removeStringListConfigArgs(): StringListConfigArgs =
         },
     )
 
-private fun StringParser<StringListConfigArgs>.existingValues(
-    context: TabCompleteContext<StringListConfigArgs>,
-): List<String> {
-    return if (context.args.wasSuccessful(context.completingParser)) {
+private fun existingValues(context: TabCompleteContext<StringListConfigArgs>): List<String> =
+    if (context.args.wasSuccessful(context.completingParser)) {
         context.args.value
     } else {
         listOf()
     }
-}

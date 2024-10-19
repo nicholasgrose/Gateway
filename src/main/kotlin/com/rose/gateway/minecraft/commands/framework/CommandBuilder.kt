@@ -12,7 +12,9 @@ import com.rose.gateway.minecraft.commands.framework.runner.NoArgs
  * @property name The name of the command to build
  * @constructor Create an empty command builder
  */
-class CommandBuilder(val name: String) {
+class CommandBuilder(
+    val name: String,
+) {
     /**
      * The executors for this command
      */
@@ -23,14 +25,13 @@ class CommandBuilder(val name: String) {
      *
      * @return The command that was built
      */
-    fun build(): Command {
-        return Command(
+    fun build(): Command =
+        Command(
             CommandDefinition(
                 name = name,
                 executors = executors,
             ),
         )
-    }
 
     /**
      * Add a runner to this command that does not use any arguments

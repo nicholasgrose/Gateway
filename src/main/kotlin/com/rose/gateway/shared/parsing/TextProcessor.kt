@@ -16,7 +16,9 @@ import guru.zoroark.tegral.niwen.lexer.niwenLexer
  *
  * @see TokenProcessor
  */
-class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProcessor<ResultType, AdditionalDataType>>) {
+class TextProcessor<ResultType, AdditionalDataType>(
+    processors: List<TokenProcessor<ResultType, AdditionalDataType>>,
+) {
     private val tokenProcessorMap = processors.associateBy { it.tokenType() }
     private val lexer =
         niwenLexer {
@@ -54,10 +56,9 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
      * @return The processor that can handle the token's type
      *
      * @see Token
-     * @see guru.zoroark.lixy.TokenType
+     * @see guru.zoroark.tegral.niwen.lexer.TokenType
      * @see TokenProcessor
      */
-    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> {
-        return tokenProcessorMap[token.tokenType]!!
-    }
+    @Suppress("MaxLineLength")
+    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> = tokenProcessorMap[token.tokenType]!!
 }

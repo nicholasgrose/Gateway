@@ -15,7 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin
  * @property command The framework command to use for execution
  * @constructor Create a Minecraft command
  */
-class MinecraftCommand(val command: Command) : org.bukkit.command.CommandExecutor, TabCompleter {
+class MinecraftCommand(
+    val command: Command,
+) : org.bukkit.command.CommandExecutor,
+    TabCompleter {
     override fun onCommand(
         sender: CommandSender,
         bukkitCommand: org.bukkit.command.Command,

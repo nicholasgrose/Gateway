@@ -14,6 +14,11 @@ data class ExecutorArgsPair<A : CommandArgs<A>>(
     val executor: CommandExecutor<A>,
     val args: A,
 ) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         /**
          * Creates an paired executor and args instance from a list of raw args

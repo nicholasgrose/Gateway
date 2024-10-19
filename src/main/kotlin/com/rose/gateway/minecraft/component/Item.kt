@@ -8,8 +8,10 @@ import net.kyori.adventure.text.Component
  * @param itemName The name of the item to create the [Component] for
  * @return The config item [Component]
  */
-fun item(itemName: String): Component {
-    return itemName.tertiaryComponent().italic().showTextOnHover(
-        "Get help for ".component() + itemName.tertiaryComponent().italic(),
-    ).runCommandOnClick("/gateway config help $itemName")
-}
+fun item(itemName: String): Component =
+    itemName
+        .tertiaryComponent()
+        .italic()
+        .showTextOnHover(
+            "Get help for ".component() + itemName.tertiaryComponent().italic(),
+        ).runCommandOnClick("/gateway config help $itemName")

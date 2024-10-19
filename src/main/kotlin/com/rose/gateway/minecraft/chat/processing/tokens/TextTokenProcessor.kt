@@ -13,14 +13,10 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a text token processor
  */
 class TextTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
-    override fun tokenType(): TokenType {
-        return ChatComponent.TEXT
-    }
+    override fun tokenType(): TokenType = ChatComponent.TEXT
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return ".[^@]*"
-    }
+    override fun regexPattern(): String = ".[^@]*"
 
     override suspend fun process(
         token: Token,

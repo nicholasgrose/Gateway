@@ -7,6 +7,4 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return Whether the extension is enabled
  */
-fun PluginConfig.aboutExtensionEnabled(): Boolean {
-    return config.bot.extensions.about.enabled
-}
+fun PluginConfig.aboutExtensionEnabled(): Boolean = config.bot.extensions.about.enabled

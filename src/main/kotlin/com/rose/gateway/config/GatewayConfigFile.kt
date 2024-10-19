@@ -8,6 +8,7 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.error.notNull
 import com.sksamuel.hoplite.ConfigException
 import com.sksamuel.hoplite.ConfigLoaderBuilder
+import com.sksamuel.hoplite.ExperimentalHoplite
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
@@ -22,6 +23,11 @@ import java.nio.file.Path
  * @constructor Creates a gateway config file
  */
 class GatewayConfigFile : KoinComponent {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val DEFAULT_CONFIG_FILE_RESOURCE_NAME = "default_gateway_config.yaml"
         private const val DEFAULT_CONFIG_FILE_RESOURCE_PATH = "/$DEFAULT_CONFIG_FILE_RESOURCE_NAME"
@@ -34,16 +40,6 @@ class GatewayConfigFile : KoinComponent {
     private val configPath = Path.of("$pluginDirPath/$CONFIG_FILE_NAME")
 
     /**
-     * The default configuration that is used as an internal fallback
-     */
-    val defaultConfig =
-        run {
-            Logger.info("Loading fallback config...")
-
-            loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
-        }
-
-    /**
      * Loads the gateway config file, creating it if it is missing
      *
      * @return The loaded Gateway config object
@@ -54,9 +50,9 @@ class GatewayConfigFile : KoinComponent {
         val config = loadConfig(configPath.toString())
 
         return if (config == null) {
-            Logger.warning("Fell back to default config.")
+            Logger.warning("Fell back to default config. Loading fallback...")
 
-            defaultConfig
+            loadConfig(DEFAULT_CONFIG_FILE_RESOURCE_PATH).notNullWithMissingDefaultConfigMessage()
         } else {
             config
         }
@@ -68,9 +64,8 @@ class GatewayConfigFile : KoinComponent {
      * @param T The type to guarantee the value is
      * @return The non-nullable type
      */
-    private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T {
-        return this.notNull("default config resource does not exist to be loaded")
-    }
+    @Suppress("MaxLineLength")
+    private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T = this.notNull("default config resource does not exist to be loaded")
 
     /**
      * Ensures that a configuration file exists to be loaded
@@ -94,13 +89,11 @@ class GatewayConfigFile : KoinComponent {
     private suspend fun createConfigurationFile() {
         withContext(Dispatchers.IO) {
             val defaultConfig =
-                plugin.loader.getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
+                plugin.loader
+                    .getResourceAsStream(DEFAULT_CONFIG_FILE_RESOURCE_NAME)
                     .notNullWithMissingDefaultConfigMessage()
-                    .readAllBytes()
 
-            Files.createDirectories(configPath.parent)
-            Files.createFile(configPath)
-            Files.write(configPath, defaultConfig)
+            Files.copy(defaultConfig, configPath)
         }
     }
 
@@ -111,13 +104,14 @@ class GatewayConfigFile : KoinComponent {
      * @param path The path to load the config from
      * @return The loaded config or null, if it can't be loaded
      */
+    @OptIn(ExperimentalHoplite::class)
     private fun loadConfig(path: String): Config? {
         Logger.info("Loading configuration...")
 
         return try {
             val config: Config =
                 ConfigLoaderBuilder
-                    .empty()
+                    .newBuilder()
                     .withClassLoader(plugin.loader)
                     .addDefaultDecoders()
                     .addDefaultPreprocessors()
@@ -125,8 +119,9 @@ class GatewayConfigFile : KoinComponent {
                     .addDefaultPropertySources()
                     .addDefaultParsers()
                     .addDecoder(CommonDecoder())
+                    .withExplicitSealedTypes()
                     .build()
-                    .loadConfigOrThrow(path)
+                    .loadConfigOrThrow(path, DEFAULT_CONFIG_FILE_RESOURCE_PATH)
             Logger.info("Configuration loaded successfully.")
             config
         } catch (error: ConfigException) {

@@ -19,9 +19,16 @@ import org.koin.core.component.inject
  *
  * @constructor Create a user mention token processor
  */
-class UserMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
+class UserMentionTokenProcessor :
+    TokenProcessor<Component, MessageCreateEvent>,
+    KoinComponent {
     private val config: PluginConfig by inject()
 
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val SNOWFLAKE_START_INDEX = 2
     }

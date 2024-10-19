@@ -16,7 +16,14 @@ import org.koin.core.component.KoinComponent
  *
  * @constructor Create a role mention token processor
  */
-class RoleMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
+class RoleMentionTokenProcessor :
+    TokenProcessor<Component, MessageCreateEvent>,
+    KoinComponent {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val SNOWFLAKE_START_INDEX = 3
     }

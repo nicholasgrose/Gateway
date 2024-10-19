@@ -36,7 +36,6 @@ object ClientInfo : KoinComponent {
      * @param channel The channel to check the permissions for
      * @return The permissions the bot has in the given channel
      */
-    private suspend fun permissionsForChannel(channel: GuildChannel): Permissions {
-        return channel.permissionsForMember(bot.discordBot.kordClient()!!.selfId)
-    }
+    private suspend fun permissionsForChannel(channel: GuildChannel): Permissions =
+        channel.permissionsForMember(bot.discordBot.kordClient()!!.selfId)
 }

@@ -7,6 +7,4 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return Whether the extension is enabled
  */
-fun PluginConfig.tpsExtensionEnabled(): Boolean {
-    return config.bot.extensions.tps.enabled
-}
+fun PluginConfig.tpsExtensionEnabled(): Boolean = config.bot.extensions.tps.enabled

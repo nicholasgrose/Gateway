@@ -29,8 +29,10 @@ fun <A : CommandArgs<A>> CommandArgs<A>.configItem(body: ConfigItemParserBuilder
  *
  * @param builder The builder that defines this parser
  */
-class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) :
-    ArgParser<Item<*>, A, ConfigItemParser<A>>(builder), KoinComponent {
+class ConfigItemParser<A : CommandArgs<A>>(
+    builder: ConfigItemParserBuilder<A>,
+) : ArgParser<Item<*>, A, ConfigItemParser<A>>(builder),
+    KoinComponent {
     private val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
@@ -68,7 +70,5 @@ class ConfigItemParser<A : CommandArgs<A>>(builder: ConfigItemParserBuilder<A>) 
 class ConfigItemParserBuilder<A : CommandArgs<A>> : ParserBuilder<Item<*>, A, ConfigItemParser<A>>() {
     override fun checkValidity() = Unit
 
-    override fun build(): ConfigItemParser<A> {
-        return ConfigItemParser(this)
-    }
+    override fun build(): ConfigItemParser<A> = ConfigItemParser(this)
 }

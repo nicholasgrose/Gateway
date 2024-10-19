@@ -34,7 +34,5 @@ class MinecraftCommandsBuilder {
      *
      * @return The created command group
      */
-    fun build(): MinecraftCommands {
-        return MinecraftCommands(this)
-    }
+    fun build(): MinecraftCommands = MinecraftCommands(this)
 }

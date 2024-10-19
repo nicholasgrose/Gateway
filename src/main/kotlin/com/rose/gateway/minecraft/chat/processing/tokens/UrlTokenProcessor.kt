@@ -16,14 +16,10 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a URL token processor
  */
 class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
-    override fun tokenType(): TokenType {
-        return ChatComponent.URL
-    }
+    override fun tokenType(): TokenType = ChatComponent.URL
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
-    }
+    override fun regexPattern(): String = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
 
     override suspend fun process(
         token: Token,
@@ -31,7 +27,9 @@ class UrlTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
     ): TokenProcessingResult {
         val url = token.string
         val component =
-            url.component().underlined()
+            url
+                .component()
+                .underlined()
                 .showTextOnHover("Click to open url".component())
                 .openUrlOnClick(url)
 

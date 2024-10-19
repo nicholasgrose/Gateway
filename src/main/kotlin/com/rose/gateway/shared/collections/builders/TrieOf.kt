@@ -10,6 +10,4 @@ import com.rose.gateway.shared.collections.trie.Trie
  *
  * @see Trie
  */
-fun trieOf(values: Collection<String>): Trie {
-    return values.toCollection(Trie())
-}
+fun trieOf(values: Collection<String>): Trie = values.toCollection(Trie())

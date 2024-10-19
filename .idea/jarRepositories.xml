@@ -17,34 +17,24 @@
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="Jitpack" />
-      <option name="name" value="Jitpack" />
-      <option name="url" value="https://jitpack.io" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="PaperMC" />
-      <option name="name" value="PaperMC" />
-      <option name="url" value="https://papermc.io/repo/repository/maven-public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="Kotlin Discord" />
-      <option name="name" value="Kotlin Discord" />
-      <option name="url" value="https://maven.kotlindiscord.com/repository/maven-public/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="Gradle Central Plugin Repository" />
       <option name="name" value="Gradle Central Plugin Repository" />
       <option name="url" value="https://plugins.gradle.org/m2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="Kord Emojis" />
-      <option name="name" value="Kord Emojis" />
-      <option name="url" value="https://dl.bintray.com/kordlib/Kord" />
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="Kotlin Discord" />
-      <option name="name" value="Kotlin Discord" />
+      <option name="id" value="maven2" />
+      <option name="name" value="maven2" />
       <option name="url" value="https://s01.oss.sonatype.org/content/repositories/snapshots" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven3" />
+      <option name="name" value="maven3" />
+      <option name="url" value="https://jitpack.io" />
     </remote-repository>
   </component>
 </project>

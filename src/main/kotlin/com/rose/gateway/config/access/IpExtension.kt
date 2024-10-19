@@ -7,15 +7,11 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return Whether the extension is enabled
  */
-fun PluginConfig.ipExtensionEnabled(): Boolean {
-    return config.bot.extensions.ip.enabled
-}
+fun PluginConfig.ipExtensionEnabled(): Boolean = config.bot.extensions.ip.enabled
 
 /**
  * The IP to display with the IP extension
  *
  * @return The IP to display
  */
-fun PluginConfig.displayIp(): String {
-    return config.bot.extensions.ip.displayIp
-}
+fun PluginConfig.displayIp(): String = config.bot.extensions.ip.displayIp

@@ -1,34 +1,23 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
-    // https://kotlinlang.org/
-    kotlin("jvm") version "1.9.21"
-    // https://kotlinlang.org/docs/serialization.html
-    kotlin("plugin.serialization") version "1.9.21"
-    // https://github.com/johnrengelman/shadow
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    // https://github.com/jpenilla/run-paper
-    id("xyz.jpenilla.run-paper") version "2.2.2"
-    // https://github.com/jlleitschuh/ktlint-gradle
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
-    // https://detekt.dev/
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.qodana)
 }
 
 val version: String by project
 val group: String by project
 
+val minecraftTestVersion: String by project
+
 val ktlintVersion: String by project
-
-val minecraftVersion: String by project
-val paperApiRevision: String by project
-val kordexVersion: String by project
-val tegralVersion: String by project
-val kamlVersion: String by project
-val ktorVersion: String by project
-val hopliteVersion: String by project
-
-val jvmVersion: String by project
-val kotlinLanguageVersion: String by project
-val kotlinApiVersion: String by project
+val detektVersion: String by project
 
 project.group = group
 project.version = version
@@ -36,32 +25,17 @@ project.version = version
 repositories {
     mavenCentral()
     gradlePluginPortal()
-    maven {
-        name = "PaperMC"
-        url = uri("https://papermc.io/repo/repository/maven-public/")
-    }
-    maven {
-        name = "Kotlin Discord"
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots")
-    }
-    maven {
-        name = "Jitpack"
-        url = uri("https://jitpack.io")
-    }
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+    maven("https://jitpack.io")
 }
 
 dependencies {
-    // Paper plugin development API.
-    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperApiRevision-SNAPSHOT")
-    // Config library that provides nice parsing error descriptions.
-    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
-    implementation("com.sksamuel.hoplite:hoplite-yaml:$hopliteVersion")
-    // Library that supports loading and (more importantly) saving to YAML files.
-    implementation("com.charleskorn.kaml:kaml:$kamlVersion")
-    // Library for Discord bots.
-    implementation("com.kotlindiscord.kord.extensions:kord-extensions:$kordexVersion")
-    // Lexer library that supports regex.
-    implementation("guru.zoroark.tegral:tegral-niwen-lexer:$tegralVersion")
+    compileOnly(libs.paper.api)
+    implementation(libs.bundles.hoplite)
+    implementation(libs.kaml)
+    implementation(libs.kordex)
+    implementation(libs.tegral)
 }
 
 ktlint {
@@ -71,15 +45,19 @@ ktlint {
 detekt {
     config.from("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
+    toolVersion = detektVersion
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 tasks {
     compileKotlin {
-        kotlinOptions {
-            jvmTarget = jvmVersion
-            apiVersion = kotlinApiVersion
-            languageVersion = kotlinLanguageVersion
-            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+            apiVersion = KotlinVersion.KOTLIN_2_0
+            languageVersion = KotlinVersion.KOTLIN_2_0
         }
     }
 
@@ -107,16 +85,14 @@ tasks {
     }
 
     runServer {
-        val minecraftVersion: String by project
-
-        this.minecraftVersion(minecraftVersion)
+        this.minecraftVersion(minecraftTestVersion)
     }
 
     detekt.configure {
         mustRunAfter(ktlintFormat)
     }
 
-    create("runChecks") {
+    create("runLints") {
         dependsOn(ktlintFormat, detekt)
     }
 

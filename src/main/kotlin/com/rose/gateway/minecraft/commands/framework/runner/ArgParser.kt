@@ -36,13 +36,12 @@ abstract class ArgParser<T, A : CommandArgs<A>, P : ArgParser<T, A, P>>(
      * @param context The context of this tab completion
      * @return A list of possible tab completions
      */
-    fun completions(context: TabCompleteContext<A>): List<String> {
-        return when {
+    fun completions(context: TabCompleteContext<A>): List<String> =
+        when {
             builder.completesAfterSatisfied -> builder.completer(self(), context)
             context.args.wasSuccessful(this) -> listOf()
             else -> builder.completer(self(), context)
         }
-    }
 
     @Suppress("UNCHECKED_CAST")
     private fun self(): P = this as P

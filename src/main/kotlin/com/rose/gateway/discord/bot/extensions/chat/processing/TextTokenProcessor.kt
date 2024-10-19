@@ -22,7 +22,5 @@ class TextTokenProcessor : TokenProcessor<Component, MessageCreateEvent> {
     override suspend fun process(
         token: Token,
         additionalData: MessageCreateEvent,
-    ): Component {
-        return token.string.component()
-    }
+    ): Component = token.string.component()
 }

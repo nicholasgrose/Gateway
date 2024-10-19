@@ -17,6 +17,11 @@ import kotlin.reflect.KType
  * @constructor Create a Common decoder
  */
 open class CommonDecoder : NullHandlingDecoder<Any> {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         /**
          * The data class decoder this decoder uses internally
@@ -28,20 +33,26 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         node: Node,
         type: KType,
         context: DecoderContext,
-    ): ConfigResult<Any> {
-        return DECODER.safeDecode(node, type, context)
-    }
+    ): ConfigResult<Any> = DECODER.safeDecode(node, type, context)
 
+    /**
+     * Checks if the decoder supports the given type.
+     *
+     * @param type The type to check.
+     * @return True if the type is supported, false otherwise.
+     */
     override fun supports(type: KType): Boolean {
         val classifier = type.classifier
-
-        return if (classifier is KClass<*>) {
-            !classifier.isData &&
-                !classifier.isSealed &&
-                !classifier.isInline() &&
-                classifier canBe ConfigObject::class
-        } else {
-            false
-        }
+        return classifier is KClass<*> && isSupportedClassifier(classifier)
     }
+
+    /**
+     * Check if the classifier is not a data class, sealed class, inline class
+     * and can be a ConfigObject.
+     *
+     * @param classifier The class we want to check
+     * @return true if it passes all conditions, false otherwise
+     */
+    private fun isSupportedClassifier(classifier: KClass<*>): Boolean =
+        !classifier.isData && !classifier.isSealed && !classifier.isInline() && classifier canBe ConfigObject::class
 }

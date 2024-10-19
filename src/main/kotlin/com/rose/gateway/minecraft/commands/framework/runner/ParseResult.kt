@@ -10,7 +10,9 @@ import com.rose.gateway.minecraft.commands.framework.data.parser.ParseContext
  * @property context The new context after parsing
  * @constructor Create a parse result
  */
-sealed class ParseResult<T, A : CommandArgs<A>>(val context: ParseContext<A>) {
+sealed class ParseResult<T, A : CommandArgs<A>>(
+    val context: ParseContext<A>,
+) {
     /**
      * A successful parse result
      *
@@ -21,7 +23,10 @@ sealed class ParseResult<T, A : CommandArgs<A>>(val context: ParseContext<A>) {
      *
      * @param context The new context after parsing
      */
-    class Success<T, A : CommandArgs<A>>(val result: T, context: ParseContext<A>) : ParseResult<T, A>(context)
+    class Success<T, A : CommandArgs<A>>(
+        val result: T,
+        context: ParseContext<A>,
+    ) : ParseResult<T, A>(context)
 
     /**
      * A failed parse result
@@ -32,5 +37,7 @@ sealed class ParseResult<T, A : CommandArgs<A>>(val context: ParseContext<A>) {
      *
      * @param context The new context after parsing
      */
-    class Failure<T, A : CommandArgs<A>>(context: ParseContext<A>) : ParseResult<T, A>(context)
+    class Failure<T, A : CommandArgs<A>>(
+        context: ParseContext<A>,
+    ) : ParseResult<T, A>(context)
 }

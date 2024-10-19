@@ -9,33 +9,25 @@ import net.kyori.adventure.text.format.TextColor
  *
  * @return The color in a form usable for Minecraft
  */
-fun PluginConfig.primaryColor(): TextColor {
-    return config.minecraft.primaryColor.asTextColor()
-}
+fun PluginConfig.primaryColor(): TextColor = config.minecraft.primaryColor.asTextColor()
 
 /**
  * Gives the Minecraft secondary color from the plugin config
  *
  * @return The color in a form usable for Minecraft
  */
-fun PluginConfig.secondaryColor(): TextColor {
-    return config.minecraft.secondaryColor.asTextColor()
-}
+fun PluginConfig.secondaryColor(): TextColor = config.minecraft.secondaryColor.asTextColor()
 
 /**
  * Gives the Minecraft tertiary color from the plugin config
  *
  * @return The color in a form usable for Minecraft
  */
-fun PluginConfig.tertiaryColor(): TextColor {
-    return config.minecraft.tertiaryColor.asTextColor()
-}
+fun PluginConfig.tertiaryColor(): TextColor = config.minecraft.tertiaryColor.asTextColor()
 
 /**
  * Gives the Minecraft warning color from the plugin config
  *
  * @return The color in a form usable for Minecraft
  */
-fun PluginConfig.warningColor(): TextColor {
-    return config.minecraft.warningColor.asTextColor()
-}
+fun PluginConfig.warningColor(): TextColor = config.minecraft.warningColor.asTextColor()

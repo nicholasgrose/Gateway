@@ -16,7 +16,9 @@ import org.koin.core.component.KoinComponent
  *
  * @constructor Create a channel mention token processor
  */
-class ChannelMentionTokenProcessor : TokenProcessor<Component, MessageCreateEvent>, KoinComponent {
+class ChannelMentionTokenProcessor :
+    TokenProcessor<Component, MessageCreateEvent>,
+    KoinComponent {
     override fun tokenType(): TokenType = DiscordChatComponent.CHANNEL_MENTION
 
     @Language("RegExp")

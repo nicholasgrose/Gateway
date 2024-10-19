@@ -12,7 +12,7 @@ import java.util.logging.SimpleFormatter
 class LogFormatter : SimpleFormatter() {
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, yyyy-MM-dd HH:mm:ss")
 
-    override fun format(record: LogRecord): String? {
+    override fun format(record: LogRecord): String {
         val zdt =
             ZonedDateTime.ofInstant(
                 record.instant,

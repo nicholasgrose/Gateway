@@ -18,7 +18,8 @@ import org.koin.core.component.inject
 open class CommonExtensionConfig(
     enabled: Boolean,
     @Transient val extensionName: String = "None",
-) : KoinComponent, ConfigObject {
+) : KoinComponent,
+    ConfigObject {
     private val bot: DiscordBotController by inject()
     private val pluginsScope: PluginCoroutineScope by inject()
 
@@ -40,9 +41,13 @@ open class CommonExtensionConfig(
     private fun modifyExtensionLoadedStatus(enabled: Boolean) {
         pluginsScope.launch {
             if (enabled) {
-                bot.discordBot.kordexBot.await()?.loadExtension(extensionName)
+                bot.discordBot.kordexBot
+                    .await()
+                    ?.loadExtension(extensionName)
             } else {
-                bot.discordBot.kordexBot.await()?.unloadExtension(extensionName)
+                bot.discordBot.kordexBot
+                    .await()
+                    ?.unloadExtension(extensionName)
             }
         }
     }

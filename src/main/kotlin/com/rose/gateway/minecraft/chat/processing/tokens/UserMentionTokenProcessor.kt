@@ -13,18 +13,19 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a user mention token processor
  */
 class UserMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val USER_MENTION_START_INDEX = 1
     }
 
-    override fun tokenType(): TokenType {
-        return ChatComponent.USER_MENTION
-    }
+    override fun tokenType(): TokenType = ChatComponent.USER_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "@[^\\s@]+"
-    }
+    override fun regexPattern(): String = "@[^\\s@]+"
 
     override suspend fun process(
         token: Token,

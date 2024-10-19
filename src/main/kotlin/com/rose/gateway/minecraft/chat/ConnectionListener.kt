@@ -15,7 +15,9 @@ import org.koin.core.component.inject
  *
  * @constructor Create connection listener
  */
-class ConnectionListener : Listener, KoinComponent {
+class ConnectionListener :
+    Listener,
+    KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 

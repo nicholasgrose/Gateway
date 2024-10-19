@@ -18,6 +18,11 @@ import kotlin.math.roundToInt
  * @constructor Create a TPS extension
  */
 class TpsExtension : Extension() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
 

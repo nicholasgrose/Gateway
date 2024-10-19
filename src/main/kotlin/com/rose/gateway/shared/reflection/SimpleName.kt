@@ -14,7 +14,10 @@ val KType.simpleName: String
                 ""
             } else {
                 type.arguments.joinToString(", ", "<", ">") {
-                    it.type?.asClass()?.simpleName.toString()
+                    it.type
+                        ?.asClass()
+                        ?.simpleName
+                        .toString()
                 }
             }
 

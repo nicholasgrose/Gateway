@@ -28,7 +28,14 @@ class TpsConfig(
  * @see TpsConfigSerializer
  */
 @Serializable
-data class TpsConfigSurrogate(val enabled: Boolean) {
+data class TpsConfigSurrogate(
+    val enabled: Boolean,
+) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<TpsConfig, TpsConfigSurrogate> {
         override fun fromBase(base: TpsConfig): TpsConfigSurrogate = TpsConfigSurrogate(base.enabled)
 

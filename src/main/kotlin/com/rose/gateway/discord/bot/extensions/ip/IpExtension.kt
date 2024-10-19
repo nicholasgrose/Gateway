@@ -18,6 +18,11 @@ import org.koin.core.component.inject
  * @constructor Creates an "IP extension"
  */
 class IpExtension : Extension() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
 

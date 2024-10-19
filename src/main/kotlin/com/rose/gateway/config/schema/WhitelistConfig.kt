@@ -35,7 +35,15 @@ class WhitelistConfig(
  * @see WhitelistConfigSerializer
  */
 @Serializable
-data class WhitelistConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage: Int) {
+data class WhitelistConfigSurrogate(
+    val enabled: Boolean,
+    val maxPlayersPerPage: Int,
+) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<WhitelistConfig, WhitelistConfigSurrogate> {
         override fun fromBase(base: WhitelistConfig): WhitelistConfigSurrogate =
             WhitelistConfigSurrogate(base.enabled, base.maxPlayersPerPage)

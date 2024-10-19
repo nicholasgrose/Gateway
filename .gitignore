@@ -91,3 +91,6 @@ gradle-app.setting
 
 # Paper run
 run/
+
+# Gradle docker cache
+.gradleDocker
