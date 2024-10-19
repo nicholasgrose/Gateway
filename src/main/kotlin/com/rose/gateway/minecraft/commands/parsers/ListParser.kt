@@ -28,8 +28,9 @@ fun <T : Any, A : CommandArgs<A>, R : ArgParser<T, A, R>> CommandArgs<A>.list(
  *
  * @param builder The builder that defines this parser
  */
-class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
-    ArgParser<List<T>, A, ListParser<T, A, P>>(builder) where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
+@Suppress("MaxLineLength")
+class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) : ArgParser<List<T>, A, ListParser<T, A, P>>(builder)
+    where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     private val parser = builder.element
 
     override fun typeName(): String = "List<${parser.typeName()}>"
@@ -63,8 +64,8 @@ class ListParser<T, A, P>(override val builder: ListParserBuilder<T, A, P>) :
  * @param P The type of the parser for list elements
  * @constructor Creates a list parser builder
  */
-class ListParserBuilder<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>> :
-    ParserBuilder<List<T>, A, ListParser<T, A, P>>() {
+class ListParserBuilder<T, A, P> : ParserBuilder<List<T>, A, ListParser<T, A, P>>()
+    where T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P> {
     init {
         completer = {
             element.completions(it)
@@ -86,7 +87,5 @@ class ListParserBuilder<T : Any, A : CommandArgs<A>, P : ArgParser<T, A, P>> :
         if (!::element.isInitialized) error("no type given for list argument")
     }
 
-    override fun build(): ListParser<T, A, P> {
-        return ListParser(this)
-    }
+    override fun build(): ListParser<T, A, P> = ListParser(this)
 }

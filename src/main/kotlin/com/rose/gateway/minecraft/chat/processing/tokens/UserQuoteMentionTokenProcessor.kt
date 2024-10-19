@@ -13,18 +13,19 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a role quote-mention token processor
  */
 class UserQuoteMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val USER_QUOTE_MENTION_START_INDEX = 2
     }
 
-    override fun tokenType(): TokenType {
-        return ChatComponent.USER_QUOTE_MENTION
-    }
+    override fun tokenType(): TokenType = ChatComponent.USER_QUOTE_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "@\"((\\\\\")|[^\"])+\""
-    }
+    override fun regexPattern(): String = "@\"((\\\\\")|[^\"])+\""
 
     override suspend fun process(
         token: Token,

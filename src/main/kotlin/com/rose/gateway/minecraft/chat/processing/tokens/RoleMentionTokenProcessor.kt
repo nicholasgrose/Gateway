@@ -13,18 +13,19 @@ import org.intellij.lang.annotations.Language
  * @constructor Create a role mention token processor
  */
 class RoleMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit> {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val ROLE_MENTION_START_INDEX = 3
     }
 
-    override fun tokenType(): TokenType {
-        return ChatComponent.ROLE_MENTION
-    }
+    override fun tokenType(): TokenType = ChatComponent.ROLE_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "@[rR]=[^\\s@]+"
-    }
+    override fun regexPattern(): String = "@[rR]=[^\\s@]+"
 
     override suspend fun process(
         token: Token,

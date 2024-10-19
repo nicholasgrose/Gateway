@@ -60,7 +60,5 @@ class IntParser<A : CommandArgs<A>>(builder: IntParserBuilder<A>) : ArgParser<In
 class IntParserBuilder<A : CommandArgs<A>> : ParserBuilder<Int, A, IntParser<A>>() {
     override fun checkValidity() = Unit
 
-    override fun build(): IntParser<A> {
-        return IntParser(this)
-    }
+    override fun build(): IntParser<A> = IntParser(this)
 }

@@ -18,7 +18,8 @@ import org.koin.core.component.inject
 open class CommonExtensionConfig(
     enabled: Boolean,
     @Transient val extensionName: String = "None",
-) : KoinComponent, ConfigObject {
+) : KoinComponent,
+    ConfigObject {
     private val bot: DiscordBotController by inject()
     private val pluginsScope: PluginCoroutineScope by inject()
 

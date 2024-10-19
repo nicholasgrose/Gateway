@@ -23,14 +23,12 @@ class CommandBuilder(val name: String) {
      *
      * @return The command that was built
      */
-    fun build(): Command {
-        return Command(
-            CommandDefinition(
-                name = name,
-                executors = executors,
-            ),
-        )
-    }
+    fun build(): Command = Command(
+        CommandDefinition(
+            name = name,
+            executors = executors,
+        ),
+    )
 
     /**
      * Add a runner to this command that does not use any arguments

@@ -14,9 +14,7 @@ import net.kyori.adventure.text.format.TextColor
 fun atMember(
     user: Member,
     userColor: TextColor,
-): Component {
-    return "@".primaryComponent() + member(user).color(userColor)
-}
+): Component = "@".primaryComponent() + member(user).color(userColor)
 
 /**
  * Creates a member [Component] for a Discord [Member]
@@ -24,7 +22,5 @@ fun atMember(
  * @param user The user to create a [Component] for
  * @return The member [Component]
  */
-fun member(user: Member): Component {
-    return user.effectiveName.secondaryComponent()
-        .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())
-}
+fun member(user: Member): Component = user.effectiveName.secondaryComponent()
+    .showTextOnHover("Username: ".component() + user.username.primaryComponent().italic())

@@ -147,20 +147,18 @@ object ConfigMonitoringRunner : KoinComponent {
      * @param item The item to create the help message for
      * @return The created help message
      */
-    private fun itemHelpMessage(item: Item<*>): Component {
-        return joinNewLine(
-            "Configuration Help:".primaryComponent(),
-            "Name: ".primaryComponent() + item.path.tertiaryComponent().italic(),
-            join(
-                "Type: ".primaryComponent(),
-                item.type.simpleName.component(),
-                (if (item.type.isMarkedNullable) "?" else "").warningComponent(),
-            ),
-            "Current Value: ".primaryComponent() + item.value.toString().component(),
-            "Description: ".primaryComponent() + item.description.component(),
-            "View All Configurations".secondaryComponent().underlined().italic()
-                .showTextOnHover("Click to view all configurations.".component())
-                .runCommandOnClick("/gateway config help"),
-        )
-    }
+    private fun itemHelpMessage(item: Item<*>): Component = joinNewLine(
+        "Configuration Help:".primaryComponent(),
+        "Name: ".primaryComponent() + item.path.tertiaryComponent().italic(),
+        join(
+            "Type: ".primaryComponent(),
+            item.type.simpleName.component(),
+            (if (item.type.isMarkedNullable) "?" else "").warningComponent(),
+        ),
+        "Current Value: ".primaryComponent() + item.value.toString().component(),
+        "Description: ".primaryComponent() + item.description.component(),
+        "View All Configurations".secondaryComponent().underlined().italic()
+            .showTextOnHover("Click to view all configurations.".component())
+            .runCommandOnClick("/gateway config help"),
+    )
 }

@@ -17,7 +17,9 @@ import org.koin.core.component.inject
  *
  * @constructor Create an action listener
  */
-class ActionListener : Listener, KoinComponent {
+class ActionListener :
+    Listener,
+    KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 

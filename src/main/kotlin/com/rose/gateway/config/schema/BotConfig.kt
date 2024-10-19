@@ -28,7 +28,8 @@ class BotConfig(
     token: String,
     botChannels: List<String>,
     @ConfigItem val extensions: ExtensionsConfig,
-) : KoinComponent, ConfigObject {
+) : KoinComponent,
+    ConfigObject {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
     private val bot: DiscordBotController by inject()
 
@@ -74,6 +75,11 @@ data class BotConfigSurrogate(
     val botChannels: List<String>,
     val extensions: ExtensionsConfig,
 ) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<BotConfig, BotConfigSurrogate> {
         override fun fromBase(base: BotConfig): BotConfigSurrogate =
             BotConfigSurrogate(

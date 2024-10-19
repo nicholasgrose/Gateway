@@ -27,6 +27,11 @@ import org.koin.core.component.inject
  * @constructor Create a "whitelist extension"
  */
 class WhitelistExtension : Extension() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
 

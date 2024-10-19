@@ -44,10 +44,8 @@ data class Item<ValueType>(
      *
      * @return The object found
      */
-    private fun containingObject(): ConfigObject {
-        return containingObject(pluginConfig.config)
-            .notNull("no ConfigObject exists that contains referenced item: $this")
-    }
+    private fun containingObject(): ConfigObject = containingObject(pluginConfig.config)
+        .notNull("no ConfigObject exists that contains referenced item: $this")
 
     /**
      * Finds the [ConfigObject] that contains this item's property using a depth-first search

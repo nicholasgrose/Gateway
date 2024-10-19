@@ -34,6 +34,11 @@ class IpConfig(
  */
 @Serializable
 data class IpConfigSurrogate(val enabled: Boolean, val displayIp: String) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<IpConfig, IpConfigSurrogate> {
         override fun fromBase(base: IpConfig): IpConfigSurrogate = IpConfigSurrogate(base.enabled, base.displayIp)
 

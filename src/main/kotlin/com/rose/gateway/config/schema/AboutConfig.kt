@@ -29,6 +29,11 @@ class AboutConfig(
  */
 @Serializable
 data class AboutConfigSurrogate(val enabled: Boolean) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<AboutConfig, AboutConfigSurrogate> {
         override fun fromBase(base: AboutConfig): AboutConfigSurrogate = AboutConfigSurrogate(base.enabled)
 

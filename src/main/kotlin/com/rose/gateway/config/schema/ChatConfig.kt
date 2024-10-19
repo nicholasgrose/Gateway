@@ -33,6 +33,11 @@ class ChatConfig(
  */
 @Serializable
 data class ChatConfigSurrogate(val enabled: Boolean, val showRoleColor: Boolean) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<ChatConfig, ChatConfigSurrogate> {
         override fun fromBase(base: ChatConfig): ChatConfigSurrogate =
             ChatConfigSurrogate(

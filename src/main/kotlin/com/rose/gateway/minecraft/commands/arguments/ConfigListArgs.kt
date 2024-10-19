@@ -50,16 +50,14 @@ class StringListConfigArgs(
      *
      * @return THe constructed parser
      */
-    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> {
-        return list {
-            name = "VALUES"
-            description = "Values to add."
-            element = stringParser {
-                name = "VALUE"
-                description = "String to add."
-                completer = stringCompleter
-                validator = stringValidator
-            }
+    fun parser(): ListParser<String, StringListConfigArgs, StringParser<StringListConfigArgs>> = list {
+        name = "VALUES"
+        description = "Values to add."
+        element = stringParser {
+            name = "VALUE"
+            description = "String to add."
+            completer = stringCompleter
+            validator = stringValidator
         }
     }
 }
@@ -99,10 +97,8 @@ fun removeStringListConfigArgs(): StringListConfigArgs = StringListConfigArgs(
 
 private fun StringParser<StringListConfigArgs>.existingValues(
     context: TabCompleteContext<StringListConfigArgs>,
-): List<String> {
-    return if (context.args.wasSuccessful(context.completingParser)) {
-        context.args.value
-    } else {
-        listOf()
-    }
+): List<String> = if (context.args.wasSuccessful(context.completingParser)) {
+    context.args.value
+} else {
+    listOf()
 }

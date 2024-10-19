@@ -17,21 +17,24 @@ import org.koin.core.component.inject
  *
  * @constructor Create a text channel mention token processor
  */
-class TextChannelMentionTokenProcessor : TokenProcessor<TokenProcessingResult, Unit>, KoinComponent {
+class TextChannelMentionTokenProcessor :
+    TokenProcessor<TokenProcessingResult, Unit>,
+    KoinComponent {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         private const val TEXT_CHANNEL_MENTION_START_INDEX = 3
     }
 
     private val bot: DiscordBotController by inject()
 
-    override fun tokenType(): TokenType {
-        return ChatComponent.TEXT_CHANNEL_MENTION
-    }
+    override fun tokenType(): TokenType = ChatComponent.TEXT_CHANNEL_MENTION
 
     @Language("RegExp")
-    override fun regexPattern(): String {
-        return "@[cC]=[^\\s@]+"
-    }
+    override fun regexPattern(): String = "@[cC]=[^\\s@]+"
 
     override suspend fun process(
         token: Token,

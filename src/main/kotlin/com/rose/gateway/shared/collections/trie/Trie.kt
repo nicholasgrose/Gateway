@@ -23,9 +23,7 @@ class Trie : MutableSet<String> {
     private fun isLastIndexOfString(
         value: String,
         index: Int,
-    ): Boolean {
-        return index == value.length - 1
-    }
+    ): Boolean = index == value.length - 1
 
     /**
      * Finds an existing node by following the provided string starting at the current index
@@ -105,17 +103,11 @@ class Trie : MutableSet<String> {
         return results
     }
 
-    override fun contains(element: String): Boolean {
-        return followSearchString(element)?.isTerminalNode ?: false
-    }
+    override fun contains(element: String): Boolean = followSearchString(element)?.isTerminalNode ?: false
 
-    override fun containsAll(elements: Collection<String>): Boolean {
-        return elements.all { contains(it) }
-    }
+    override fun containsAll(elements: Collection<String>): Boolean = elements.all { contains(it) }
 
-    override fun isEmpty(): Boolean {
-        return rootNode.children.isEmpty()
-    }
+    override fun isEmpty(): Boolean = rootNode.children.isEmpty()
 
     override fun add(element: String): Boolean {
         size += 1
@@ -147,18 +139,14 @@ class Trie : MutableSet<String> {
         rootNode.children.clear()
     }
 
-    override fun iterator(): MutableIterator<String> {
-        return getAll().iterator()
-    }
+    override fun iterator(): MutableIterator<String> = getAll().iterator()
 
     /**
      * Gets all the strings in the trie
      *
      * @return A list of all strings in the Trie
      */
-    private fun getAll(): MutableList<String> {
-        return depthFirstSearch(rootNode)
-    }
+    private fun getAll(): MutableList<String> = depthFirstSearch(rootNode)
 
     override fun remove(element: String): Boolean {
         val node = followSearchString(element)

@@ -8,6 +8,4 @@ package com.rose.gateway.shared.error
  * @param failureMessage The error to raise if the value is null
  * @return The non-nullable type
  */
-fun <T> T?.notNull(failureMessage: String): T {
-    return this ?: error(failureMessage)
-}
+fun <T> T?.notNull(failureMessage: String): T = this ?: error(failureMessage)

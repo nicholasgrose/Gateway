@@ -57,7 +57,6 @@ class TextProcessor<ResultType, AdditionalDataType>(processors: List<TokenProces
      * @see guru.zoroark.lixy.TokenType
      * @see TokenProcessor
      */
-    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> {
-        return tokenProcessorMap[token.tokenType]!!
-    }
+    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> =
+        tokenProcessorMap[token.tokenType]!!
 }

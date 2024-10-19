@@ -35,6 +35,11 @@ class ListConfig(
  */
 @Serializable
 data class ListConfigSurrogate(val enabled: Boolean, val maxPlayersPerPage: Int) {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : SurrogateConverter<ListConfig, ListConfigSurrogate> {
         override fun fromBase(base: ListConfig): ListConfigSurrogate =
             ListConfigSurrogate(

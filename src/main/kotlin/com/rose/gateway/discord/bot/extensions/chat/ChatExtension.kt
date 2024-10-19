@@ -17,6 +17,11 @@ import org.koin.core.component.inject
  * @constructor Create a "chat extension"
  */
 class ChatExtension : Extension() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
 

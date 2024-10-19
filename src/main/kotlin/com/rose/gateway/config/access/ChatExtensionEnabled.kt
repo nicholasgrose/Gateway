@@ -7,6 +7,4 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return Whether the extension is enabled
  */
-fun PluginConfig.chatExtensionEnabled(): Boolean {
-    return config.bot.extensions.chat.enabled
-}
+fun PluginConfig.chatExtensionEnabled(): Boolean = config.bot.extensions.chat.enabled

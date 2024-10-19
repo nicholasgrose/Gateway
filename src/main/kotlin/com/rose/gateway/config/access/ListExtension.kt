@@ -7,15 +7,11 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return Whether the extension is enabled
  */
-fun PluginConfig.listExtensionEnabled(): Boolean {
-    return config.bot.extensions.list.enabled
-}
+fun PluginConfig.listExtensionEnabled(): Boolean = config.bot.extensions.list.enabled
 
 /**
  * Gives the maximum number of players that can be displayed on each list page
  *
  * @return The maximum number of players per page
  */
-fun PluginConfig.maxPlayersPerListPage(): Int {
-    return config.bot.extensions.list.maxPlayersPerPage
-}
+fun PluginConfig.maxPlayersPerListPage(): Int = config.bot.extensions.list.maxPlayersPerPage

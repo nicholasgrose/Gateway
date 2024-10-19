@@ -10,25 +10,25 @@ api-version: 1.20
 load: POSTWORLD
 
 commands:
-    discord:
-        description: Controls one's own Discord interactions.
-        usage: /discord
-        aliases:
-            - d
-        permission: gateway.discord
-        permission-message: You do not have control your Discord interactions!
-    gateway:
-        description: Controls the Gateway plugin.
-        usage: /gateway
-        aliases:
-            - g
-        permission: gateway.control
-        permission-message: You do not have permission to control Gateway!
+  discord:
+    description: Controls one's own Discord interactions.
+    usage: /discord
+    aliases:
+      - d
+    permission: gateway.discord
+    permission-message: You do not have control your Discord interactions!
+  gateway:
+    description: Controls the Gateway plugin.
+    usage: /gateway
+    aliases:
+      - g
+    permission: gateway.control
+    permission-message: You do not have permission to control Gateway!
 
 permissions:
-    gateway.discord:
-        description: Gives permission to control one's own Discord interactions.
-        default: true
-    gateway.control:
-        description: Gives permission to control the Gateway plugin.
-        default: op
+  gateway.discord:
+    description: Gives permission to control one's own Discord interactions.
+    default: true
+  gateway.control:
+    description: Gives permission to control the Gateway plugin.
+    default: op

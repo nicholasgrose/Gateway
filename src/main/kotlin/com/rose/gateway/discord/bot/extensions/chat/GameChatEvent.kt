@@ -14,6 +14,11 @@ import org.koin.core.component.inject
  * @constructor Creates a game chat event with the given message
  */
 class GameChatEvent(val message: MessageCreateBuilder.() -> Unit) : KordExEvent {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : KoinComponent {
         private val bot: DiscordBotController by inject()
 

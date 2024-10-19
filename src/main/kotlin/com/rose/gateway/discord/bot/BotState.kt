@@ -61,7 +61,9 @@ class BotState : KoinComponent {
                 if (ClientInfo.hasChannelPermissions(
                         channel,
                         DiscordBotConstants.REQUIRED_PERMISSIONS,
-                    ) && channel is TextChannel && channel.name in validBotChannels
+                    ) &&
+                    channel is TextChannel &&
+                    channel.name in validBotChannels
                 ) {
                     botChannels.add(channel)
                     // The guilds are only added if they have valid channels for message sending.

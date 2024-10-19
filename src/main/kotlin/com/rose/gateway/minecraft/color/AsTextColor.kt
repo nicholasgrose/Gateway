@@ -7,6 +7,4 @@ import net.kyori.adventure.text.format.TextColor
  *
  * @return The string as a text color
  */
-fun String.asTextColor(): TextColor {
-    return TextColor.fromHexString(this)!!
-}
+fun String.asTextColor(): TextColor = TextColor.fromHexString(this)!!

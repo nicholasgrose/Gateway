@@ -10,9 +10,7 @@ import kotlin.reflect.KProperty
  * @see KProperty
  * @see ConfigItem
  */
-fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
-    return this.filter { it.isConfigItem() }
-}
+fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> = this.filter { it.isConfigItem() }
 
 /**
  * Determines whether the [KProperty] has the [ConfigItem] annotation
@@ -22,6 +20,4 @@ fun Collection<KProperty<*>>.filterConfigItems(): List<KProperty<*>> {
  * @see KProperty
  * @see ConfigItem
  */
-fun KProperty<*>.isConfigItem(): Boolean {
-    return this.annotations.any { it is ConfigItem }
-}
+fun KProperty<*>.isConfigItem(): Boolean = this.annotations.any { it is ConfigItem }

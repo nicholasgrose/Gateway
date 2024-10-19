@@ -5,6 +5,4 @@ package com.rose.gateway.discord.text
  *
  * @return The bold-safe string
  */
-fun String.discordBoldSafe(): String {
-    return this.replace("**", "\\**")
-}
+fun String.discordBoldSafe(): String = this.replace("**", "\\**")

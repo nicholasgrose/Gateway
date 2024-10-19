@@ -79,9 +79,7 @@ class PluginConfig : KoinComponent {
      * @param item The config path to get the item with
      * @return The item that matches the provided path or null if no match was found
      */
-    operator fun get(item: String): Item<*>? {
-        return stringMap.fromString(item)
-    }
+    operator fun get(item: String): Item<*>? = stringMap.fromString(item)
 
     /**
      * Gets a particularly typed item based on its path string

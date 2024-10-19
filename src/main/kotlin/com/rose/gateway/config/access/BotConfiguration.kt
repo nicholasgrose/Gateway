@@ -7,15 +7,11 @@ import com.rose.gateway.config.PluginConfig
  *
  * @return The Discord bot's token
  */
-fun PluginConfig.botToken(): String {
-    return config.bot.token
-}
+fun PluginConfig.botToken(): String = config.bot.token
 
 /**
  * Gives the bot channels from the plugin config
  *
  * @return The Discord bot's bot channels
  */
-fun PluginConfig.botChannels(): List<String> {
-    return config.bot.botChannels
-}
+fun PluginConfig.botChannels(): List<String> = config.bot.botChannels

@@ -53,42 +53,45 @@ abstract class ConfigArgs<T, A, P>(
  *
  * @constructor Create config boolean args
  */
-class ConfigBooleanArgs : ConfigArgs<Boolean, ConfigBooleanArgs, BooleanParser<ConfigBooleanArgs>>(
-    typeOf<Boolean>(),
-    {
-        boolean {
-            name = "VALUE"
-            description = "Boolean to use the item with."
-        }
-    },
-)
+class ConfigBooleanArgs :
+    ConfigArgs<Boolean, ConfigBooleanArgs, BooleanParser<ConfigBooleanArgs>>(
+        typeOf<Boolean>(),
+        {
+            boolean {
+                name = "VALUE"
+                description = "Boolean to use the item with."
+            }
+        },
+    )
 
 /**
  * Config args for int values
  *
  * @constructor Create config boolean args
  */
-class ConfigIntArgs : ConfigArgs<Int, ConfigIntArgs, IntParser<ConfigIntArgs>>(
-    typeOf<Int>(),
-    {
-        int {
-            name = "VALUE"
-            description = "Integer to use the item with."
-        }
-    },
-)
+class ConfigIntArgs :
+    ConfigArgs<Int, ConfigIntArgs, IntParser<ConfigIntArgs>>(
+        typeOf<Int>(),
+        {
+            int {
+                name = "VALUE"
+                description = "Integer to use the item with."
+            }
+        },
+    )
 
 /**
  * Config args for string values
  *
  * @constructor Create config string args
  */
-class ConfigStringArgs : ConfigArgs<String, ConfigStringArgs, StringParser<ConfigStringArgs>>(
-    typeOf<String>(),
-    {
-        string {
-            name = "VALUE"
-            description = "String to use the item with."
-        }
-    },
-)
+class ConfigStringArgs :
+    ConfigArgs<String, ConfigStringArgs, StringParser<ConfigStringArgs>>(
+        typeOf<String>(),
+        {
+            string {
+                name = "VALUE"
+                description = "String to use the item with."
+            }
+        },
+    )

@@ -19,6 +19,11 @@ import com.rose.gateway.minecraft.commands.parsers.stringParser
  * @constructor Create empty subcommand args for a command
  */
 class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         /**
          * Gives a constructor for [SubcommandArgs] that use a specific command
@@ -26,10 +31,8 @@ class SubcommandArgs(val command: Command) : CommandArgs<SubcommandArgs>() {
          * @param command The command the subcommand executes
          * @return A constructor a the command's [SubcommandArgs]
          */
-        fun forCommand(command: Command): () -> SubcommandArgs {
-            return {
-                SubcommandArgs(command)
-            }
+        fun forCommand(command: Command): () -> SubcommandArgs = {
+            SubcommandArgs(command)
         }
     }
 

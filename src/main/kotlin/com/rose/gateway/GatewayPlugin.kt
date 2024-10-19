@@ -18,7 +18,9 @@ import org.koin.core.component.inject
  *
  * @constructor Creates a Gateway plugin. Should not be called except when the plugin is initially loaded by the server
  */
-class GatewayPlugin : JavaPlugin(), KoinComponent {
+class GatewayPlugin :
+    JavaPlugin(),
+    KoinComponent {
     init {
         initializeKoin(this)
     }

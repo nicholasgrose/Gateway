@@ -22,6 +22,11 @@ import org.koin.core.component.inject
  * @constructor Create a "list extension"
  */
 class ListExtension : Extension() {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
 

@@ -16,7 +16,9 @@ import org.koin.core.component.inject
  *
  * @constructor Create a user count listener
  */
-class UserCount : Listener, KoinComponent {
+class UserCount :
+    Listener,
+    KoinComponent {
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 
     /**

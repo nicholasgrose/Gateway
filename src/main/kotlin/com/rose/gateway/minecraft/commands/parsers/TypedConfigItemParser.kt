@@ -32,17 +32,18 @@ fun <T : Any, A : CommandArgs<A>> CommandArgs<A>.typedConfigItem(
  *
  * @param builder The builder that defines this parser
  */
-class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: TypedConfigItemParserBuilder<T, A>) :
-    ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder), KoinComponent {
+class TypedConfigItemParser<T, A>(override val builder: TypedConfigItemParserBuilder<T, A>) :
+    ArgParser<Item<T>, A, TypedConfigItemParser<T, A>>(builder),
+    KoinComponent
+    where T : Any, A : CommandArgs<A> {
     private val config: PluginConfig by inject()
 
     override fun typeName(): String = "ConfigItemType"
 
-    private val internalStringParser =
-        stringParser<A> {
-            name = "CONFIG_INTERNAL"
-            description = "Parses the string for the item."
-        }
+    private val internalStringParser = stringParser<A> {
+        name = "CONFIG_INTERNAL"
+        description = "Parses the string for the item."
+    }
 
     override fun parseValue(context: ParseContext<A>): ParseResult<Item<T>, A> {
         val stringResult = internalStringParser.parseValue(context)
@@ -69,8 +70,8 @@ class TypedConfigItemParser<T : Any, A : CommandArgs<A>>(override val builder: T
  * @param A The args the parser will be a part of
  * @constructor Creates a typed config item parser builder
  */
-class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
-    ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>() {
+class TypedConfigItemParserBuilder<T, A> : ParserBuilder<Item<T>, A, TypedConfigItemParser<T, A>>()
+    where T : Any, A : CommandArgs<A> {
     /**
      * The KType for the config item
      */
@@ -80,7 +81,5 @@ class TypedConfigItemParserBuilder<T : Any, A : CommandArgs<A>> :
         if (!::type.isInitialized) error("No type give for item arg.")
     }
 
-    override fun build(): TypedConfigItemParser<T, A> {
-        return TypedConfigItemParser(this)
-    }
+    override fun build(): TypedConfigItemParser<T, A> = TypedConfigItemParser(this)
 }

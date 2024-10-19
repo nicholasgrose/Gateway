@@ -20,7 +20,9 @@ import org.koin.core.component.inject
  *
  * @constructor Create empty Chat listener
  */
-class ChatListener : Listener, KoinComponent {
+class ChatListener :
+    Listener,
+    KoinComponent {
     private val config: PluginConfig by inject()
     private val pluginCoroutineScope: PluginCoroutineScope by inject()
 

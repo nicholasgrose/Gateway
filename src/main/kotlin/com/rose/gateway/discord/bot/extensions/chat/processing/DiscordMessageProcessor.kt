@@ -38,14 +38,12 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event to convert to a [Component]
      * @return The text after processing
      */
-    suspend fun createMessage(event: MessageCreateEvent): Component {
-        return join(
-            generateNameBlock(event),
-            generateMessagePrefixBlock(event),
-            generateMessageBlock(event),
-            generateMessageSuffixBlock(event),
-        )
-    }
+    suspend fun createMessage(event: MessageCreateEvent): Component = join(
+        generateNameBlock(event),
+        generateMessagePrefixBlock(event),
+        generateMessageBlock(event),
+        generateMessageSuffixBlock(event),
+    )
 
     /**
      * Creates the name block to show in Minecraft
@@ -148,9 +146,8 @@ object DiscordMessageProcessor : KoinComponent {
      * @param event The event ot pull data from
      * @return The message for Minecraft
      */
-    private suspend fun generateMessageBlock(event: MessageCreateEvent): Component {
-        return join(textProcessor.parseText(event.message.content, event))
-    }
+    private suspend fun generateMessageBlock(event: MessageCreateEvent): Component =
+        join(textProcessor.parseText(event.message.content, event))
 
     /**
      * Generates the suffix [Component] for Minecraft

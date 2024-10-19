@@ -1,52 +1,52 @@
 # Settings for how the Discord bot functions
 bot:
-    # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/
-    token: PLACEHOLDER_BOT_TOKEN
-    # The names of the channels in which the bot should post/accept chat messages
-    botChannels:
-        - speakers-of-the-gateway
-    # Configurations for the various bot extensions
-    extensions:
-        # Configurations for the about extension, which gives information about the plugin
-        about:
-            # Whether the extension is enabled
-            enabled: true
-        # Configurations for the chat extension, which gives Minecraft chat integration
-        chat:
-            # Whether the extension is enabled
-            enabled: true
-            # Whether Discord role colors are shown in Minecraft chat
-            showRoleColor: true
-        # Configurations for the IP extension, which gives the IP command
-        ip:
-            # Whether the extension is enabled
-            enabled: true
-            # The IP that will be displayed by the IP command
-            displayIp: 'localhost:25565'
-        # Configurations for the list extension, which gives information about online players
-        list:
-            # Whether the extension is enabled
-            enabled: true
-            # The maximum number of player allowed per list page
-            maxPlayersPerPage: 15
-        # Configurations for the tps extension, which allows the querying of server TPS data
-        tps:
-            # Whether the extension is enabled
-            enabled: true
-        # Configurations for the whitelist extension, which gives commands that manipulate the whitelist
-        whitelist:
-            # Whether the extension is enabled
-            enabled: true
-            # The maximum number of player allowed per whitelist page
-            maxPlayersPerPage: 15
+  # The token used by the bot to access discord. Accessible at https://discord.com/developers/applications/
+  token: PLACEHOLDER_BOT_TOKEN
+  # The names of the channels in which the bot should post/accept chat messages
+  botChannels:
+    - speakers-of-the-gateway
+  # Configurations for the various bot extensions
+  extensions:
+    # Configurations for the about extension, which gives information about the plugin
+    about:
+      # Whether the extension is enabled
+      enabled: true
+    # Configurations for the chat extension, which gives Minecraft chat integration
+    chat:
+      # Whether the extension is enabled
+      enabled: true
+      # Whether Discord role colors are shown in Minecraft chat
+      showRoleColor: true
+    # Configurations for the IP extension, which gives the IP command
+    ip:
+      # Whether the extension is enabled
+      enabled: true
+      # The IP that will be displayed by the IP command
+      displayIp: 'localhost:25565'
+    # Configurations for the list extension, which gives information about online players
+    list:
+      # Whether the extension is enabled
+      enabled: true
+      # The maximum number of player allowed per list page
+      maxPlayersPerPage: 15
+    # Configurations for the tps extension, which allows the querying of server TPS data
+    tps:
+      # Whether the extension is enabled
+      enabled: true
+    # Configurations for the whitelist extension, which gives commands that manipulate the whitelist
+    whitelist:
+      # Whether the extension is enabled
+      enabled: true
+      # The maximum number of player allowed per whitelist page
+      maxPlayersPerPage: 15
 
 # Settings for how the plugin functions on the Minecraft server
 minecraft:
-    # Used to indicate success, color headers, and mark Discord mentions in-game
-    primaryColor: '#56EE5C'
-    # Used to indicate information, differentiate text, and mark names of Discord users in-game
-    secondaryColor: '#7289DA'
-    # Used to indicate configuration paths and mark less important info
-    tertiaryColor: '#F526ED'
-    # Used to indicate errors/warnings and mark configurations that can be null
-    warningColor: '#EB4325'
+  # Used to indicate success, color headers, and mark Discord mentions in-game
+  primaryColor: '#56EE5C'
+  # Used to indicate information, differentiate text, and mark names of Discord users in-game
+  secondaryColor: '#7289DA'
+  # Used to indicate configuration paths and mark less important info
+  tertiaryColor: '#F526ED'
+  # Used to indicate errors/warnings and mark configurations that can be null
+  warningColor: '#EB4325'

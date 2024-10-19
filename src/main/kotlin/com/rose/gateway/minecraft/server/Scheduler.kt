@@ -19,12 +19,10 @@ object Scheduler : KoinComponent {
      * @receiver The Bukkit server scheduler
      * @return The task being executed
      */
-    fun runTask(task: () -> Unit): BukkitTask {
-        return Bukkit.getScheduler().runTask(
-            plugin,
-            Runnable {
-                task()
-            },
-        )
-    }
+    fun runTask(task: () -> Unit): BukkitTask = Bukkit.getScheduler().runTask(
+        plugin,
+        Runnable {
+            task()
+        },
+    )
 }

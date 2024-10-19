@@ -27,13 +27,12 @@ fun <T, A> CommandArgs<A>.processor(
  *
  * @param builder The builder that defines this parser
  */
-class ProcessorParser<T, A : CommandArgs<A>>(override val builder: ProcessorParserBuilder<T, A>) :
-    ArgParser<T, A, ProcessorParser<T, A>>(builder) {
+@Suppress("MaxLineLength")
+class ProcessorParser<T, A>(override val builder: ProcessorParserBuilder<T, A>) : ArgParser<T, A, ProcessorParser<T, A>>(builder)
+    where A : CommandArgs<A> {
     override fun typeName(): String = "CustomProcessor"
 
-    override fun parseValue(context: ParseContext<A>): ParseResult<T, A> {
-        return builder.processor(context)
-    }
+    override fun parseValue(context: ParseContext<A>): ParseResult<T, A> = builder.processor(context)
 }
 
 /**
@@ -57,7 +56,5 @@ class ProcessorParserBuilder<T, A : CommandArgs<A>> : ParserBuilder<T, A, Proces
         if (!::processor.isInitialized) error("no processor given to processor argument")
     }
 
-    override fun build(): ProcessorParser<T, A> {
-        return ProcessorParser(this)
-    }
+    override fun build(): ProcessorParser<T, A> = ProcessorParser(this)
 }

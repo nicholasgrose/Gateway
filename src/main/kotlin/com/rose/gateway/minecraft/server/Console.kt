@@ -13,9 +13,7 @@ object Console {
      * @param command The command to run
      * @return Whether execution succeeded
      */
-    fun runCommand(command: String): Boolean {
-        return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
-    }
+    fun runCommand(command: String): Boolean = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command)
 
     /**
      * Broadcasts a message to the entire server via the chat

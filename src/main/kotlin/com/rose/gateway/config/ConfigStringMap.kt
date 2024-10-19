@@ -78,9 +78,7 @@ class ConfigStringMap : KoinComponent {
      * @param configString The config path to pull from the map
      * @return The matched item or null, if none matched
      */
-    fun fromString(configString: String): Item<*>? {
-        return itemMap[configString]
-    }
+    fun fromString(configString: String): Item<*>? = itemMap[configString]
 
     /**
      * All config strings

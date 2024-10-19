@@ -9,6 +9,4 @@ package com.rose.gateway.shared.collections.builders
  *
  * @see ArrayDeque
  */
-fun <ElementType> dequeOf(vararg elements: ElementType): ArrayDeque<ElementType> {
-    return elements.toCollection(ArrayDeque())
-}
+fun <ElementType> dequeOf(vararg elements: ElementType): ArrayDeque<ElementType> = elements.toCollection(ArrayDeque())

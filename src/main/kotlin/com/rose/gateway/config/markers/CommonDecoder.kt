@@ -17,6 +17,11 @@ import kotlin.reflect.KType
  * @constructor Create a Common decoder
  */
 open class CommonDecoder : NullHandlingDecoder<Any> {
+    /**
+     * Companion
+     *
+     * @constructor Create empty Companion
+     */
     companion object {
         /**
          * The data class decoder this decoder uses internally
@@ -28,9 +33,7 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
         node: Node,
         type: KType,
         context: DecoderContext,
-    ): ConfigResult<Any> {
-        return DECODER.safeDecode(node, type, context)
-    }
+    ): ConfigResult<Any> = DECODER.safeDecode(node, type, context)
 
     /**
      * Checks if the decoder supports the given type.
@@ -50,10 +53,6 @@ open class CommonDecoder : NullHandlingDecoder<Any> {
      * @param classifier The class we want to check
      * @return true if it passes all conditions, false otherwise
      */
-    fun isSupportedClassifier(classifier: KClass<*>): Boolean {
-        return !classifier.isData &&
-                !classifier.isSealed &&
-                !classifier.isInline() &&
-                classifier canBe ConfigObject::class
-    }
+    fun isSupportedClassifier(classifier: KClass<*>): Boolean =
+        !classifier.isData && !classifier.isSealed && !classifier.isInline() && classifier canBe ConfigObject::class
 }
