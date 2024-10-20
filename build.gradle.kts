@@ -1,9 +1,11 @@
+import dev.kordex.gradle.plugins.kordex.DataCollection
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kordex)
     alias(libs.plugins.shadow)
     alias(libs.plugins.run.paper)
     alias(libs.plugins.ktlint)
@@ -14,6 +16,8 @@ plugins {
 val version: String by project
 val group: String by project
 
+val jvmTargetVersion: String by project
+val kotlinTargetVersion: String by project
 val minecraftTestVersion: String by project
 
 val ktlintVersion: String by project
@@ -25,8 +29,8 @@ project.version = version
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven("https://repo.kordex.dev/snapshots/")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
     maven("https://jitpack.io")
 }
 
@@ -34,12 +38,7 @@ dependencies {
     compileOnly(libs.paper.api)
     implementation(libs.bundles.hoplite)
     implementation(libs.kaml)
-    implementation(libs.kordex)
     implementation(libs.tegral)
-}
-
-ktlint {
-    version.set(ktlintVersion)
 }
 
 detekt {
@@ -48,16 +47,27 @@ detekt {
     toolVersion = detektVersion
 }
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+ktlint {
+    version = ktlintVersion
+}
+
+kordEx {
+    jvmTarget = jvmTargetVersion.toInt()
+
+    bot {
+        // See https://docs.kordex.dev/data-collection.html
+        dataCollection(DataCollection.Standard)
+
+        mainClass = "com.rose.gateway.discord.bot.DiscordBotKt"
+    }
 }
 
 tasks {
     compileKotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
-            apiVersion = KotlinVersion.KOTLIN_2_0
-            languageVersion = KotlinVersion.KOTLIN_2_0
+            jvmTarget = JvmTarget.fromTarget(jvmTargetVersion)
+            apiVersion = KotlinVersion.fromVersion(kotlinTargetVersion)
+            languageVersion = KotlinVersion.fromVersion(kotlinTargetVersion)
         }
     }
 
@@ -78,10 +88,6 @@ tasks {
         archiveClassifier.set("")
         archiveVersion.set(rootProject.version.toString())
         mergeServiceFiles()
-    }
-
-    build {
-        dependsOn(shadowJar)
     }
 
     runServer {

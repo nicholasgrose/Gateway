@@ -8,8 +8,8 @@ paper-api = "1.21.1-R0.1-SNAPSHOT"
 hoplite = "2.8.2"
 # https://github.com/charleskorn/kaml
 kaml = "0.61.0"
-# https://kordex.kotlindiscord.com/
-kordex = "1.9.0-SNAPSHOT"
+# https://docs.kordex.dev/getting-started
+kordexPlugin = "1.4.2"
 # https://tegral.zoroark.guru/docs/modules/core/niwen/
 tegral = "0.0.4"
 
@@ -34,7 +34,6 @@ paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "pap
 hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }
 hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.ref = "hoplite" }
 kaml = { group = "com.charleskorn.kaml", name = "kaml", version.ref = "kaml" }
-kordex = { group = "com.kotlindiscord.kord.extensions", name = "kord-extensions", version.ref = "kordex" }
 tegral = { group = "guru.zoroark.tegral", name = "tegral-niwen-lexer", version.ref = "tegral" }
 
 [bundles]
@@ -43,6 +42,7 @@ hoplite = ["hoplite-core", "hoplite-yaml"]
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kordex = { id = "dev.kordex.gradle.kordex", version.ref = "kordexPlugin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-plugin" }

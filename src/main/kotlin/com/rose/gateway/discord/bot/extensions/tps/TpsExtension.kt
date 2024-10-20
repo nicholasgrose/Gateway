@@ -1,7 +1,5 @@
 package com.rose.gateway.discord.bot.extensions.tps
 
-import com.kotlindiscord.kord.extensions.extensions.Extension
-import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.config.access.tpsExtensionEnabled
@@ -9,6 +7,8 @@ import com.rose.gateway.discord.bot.extensions.ExtensionToggle
 import com.rose.gateway.minecraft.server.ServerInfo
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
+import dev.kordex.core.extensions.Extension
+import dev.kordex.core.extensions.ephemeralSlashCommand
 import org.koin.core.component.inject
 import kotlin.math.roundToInt
 
