@@ -1,9 +1,9 @@
 package com.rose.gateway.discord.bot.message
 
-import com.kotlindiscord.kord.extensions.commands.application.slash.EphemeralSlashCommandContext
-import com.kotlindiscord.kord.extensions.pagination.builders.PaginatorBuilder
 import com.rose.gateway.shared.collections.group
 import dev.kord.rest.builder.message.create.FollowupMessageCreateBuilder
+import dev.kordex.core.commands.application.slash.EphemeralSlashCommandContext
+import dev.kordex.core.pagination.builders.PaginatorBuilder
 
 /**
  * Groups the items of a collection and then displays them in a paginator if any exist

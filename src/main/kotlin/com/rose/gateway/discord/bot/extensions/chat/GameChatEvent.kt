@@ -1,9 +1,9 @@
 package com.rose.gateway.discord.bot.extensions.chat
 
-import com.kotlindiscord.kord.extensions.events.KordExEvent
 import com.rose.gateway.discord.bot.DiscordBot
 import com.rose.gateway.discord.bot.DiscordBotController
 import dev.kord.rest.builder.message.create.MessageCreateBuilder
+import dev.kordex.core.events.KordExEvent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

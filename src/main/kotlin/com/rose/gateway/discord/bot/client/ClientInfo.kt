@@ -1,9 +1,9 @@
 package com.rose.gateway.discord.bot.client
 
-import com.kotlindiscord.kord.extensions.utils.permissionsForMember
 import com.rose.gateway.discord.bot.DiscordBotController
 import dev.kord.common.entity.Permissions
 import dev.kord.core.entity.channel.GuildChannel
+import dev.kordex.core.utils.permissionsForMember
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

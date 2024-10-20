@@ -1,9 +1,5 @@
 package com.rose.gateway.discord.bot.extensions.whitelist
 
-import com.kotlindiscord.kord.extensions.commands.application.slash.EphemeralSlashCommandContext
-import com.kotlindiscord.kord.extensions.commands.application.slash.ephemeralSubCommand
-import com.kotlindiscord.kord.extensions.extensions.Extension
-import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.maxPlayersPerWhitelistPage
 import com.rose.gateway.config.access.primaryColor
@@ -19,6 +15,10 @@ import com.rose.gateway.minecraft.whitelist.WhitelistState
 import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
+import dev.kordex.core.commands.application.slash.EphemeralSlashCommandContext
+import dev.kordex.core.commands.application.slash.ephemeralSubCommand
+import dev.kordex.core.extensions.Extension
+import dev.kordex.core.extensions.ephemeralSlashCommand
 import org.koin.core.component.inject
 
 /**

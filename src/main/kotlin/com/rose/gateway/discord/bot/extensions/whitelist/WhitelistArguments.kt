@@ -1,7 +1,7 @@
 package com.rose.gateway.discord.bot.extensions.whitelist
 
-import com.kotlindiscord.kord.extensions.commands.Arguments
-import com.kotlindiscord.kord.extensions.commands.converters.impl.string
+import dev.kordex.core.commands.Arguments
+import dev.kordex.core.commands.converters.impl.string
 
 /**
  * Arguments for whitelist-related Discord commands
