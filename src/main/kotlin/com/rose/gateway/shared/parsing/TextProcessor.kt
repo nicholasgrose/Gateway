@@ -60,5 +60,6 @@ class TextProcessor<ResultType, AdditionalDataType>(
      * @see TokenProcessor
      */
     @Suppress("MaxLineLength")
-    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> = tokenProcessorMap[token.tokenType]!!
+    private fun processorFor(token: Token): TokenProcessor<ResultType, AdditionalDataType> =
+        tokenProcessorMap[token.tokenType]!!
 }

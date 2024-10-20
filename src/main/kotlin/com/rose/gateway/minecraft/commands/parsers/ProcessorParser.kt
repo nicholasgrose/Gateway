@@ -15,8 +15,9 @@ import com.rose.gateway.minecraft.commands.framework.runner.ParserBuilder
  * @return The built parser
  */
 @Suppress("MaxLineLength")
-fun <T, A> CommandArgs<A>.processor(body: ProcessorParserBuilder<T, A>.() -> Unit): ProcessorParser<T, A> where A : CommandArgs<A> =
-    genericParser(::ProcessorParserBuilder, body)
+fun <T, A> CommandArgs<A>.processor(
+    body: ProcessorParserBuilder<T, A>.() -> Unit,
+): ProcessorParser<T, A> where A : CommandArgs<A> = genericParser(::ProcessorParserBuilder, body)
 
 /**
  * Parser for a custom-processed argument

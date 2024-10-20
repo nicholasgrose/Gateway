@@ -9,6 +9,7 @@ import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
 import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.ephemeralSlashCommand
+import gateway.i18n.Translations
 import org.koin.core.component.inject
 import kotlin.math.roundToInt
 
@@ -19,9 +20,9 @@ import kotlin.math.roundToInt
  */
 class TpsExtension : Extension() {
     /**
-     * Companion
+     * Toggle for the TPS extension
      *
-     * @constructor Create empty Companion
+     * @constructor Creates the extension's toggle
      */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
@@ -37,8 +38,8 @@ class TpsExtension : Extension() {
 
     override suspend fun setup() {
         ephemeralSlashCommand {
-            name = "tps"
-            description = "Queries the server for its current TPS"
+            name = Translations.Commands.Tps.name
+            description = Translations.Commands.Tps.description
 
             action {
                 val tps = ServerInfo.tps

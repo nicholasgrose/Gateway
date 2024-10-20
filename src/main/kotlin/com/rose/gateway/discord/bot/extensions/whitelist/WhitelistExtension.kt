@@ -19,6 +19,7 @@ import dev.kordex.core.commands.application.slash.EphemeralSlashCommandContext
 import dev.kordex.core.commands.application.slash.ephemeralSubCommand
 import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.ephemeralSlashCommand
+import gateway.i18n.Translations
 import org.koin.core.component.inject
 
 /**
@@ -28,9 +29,9 @@ import org.koin.core.component.inject
  */
 class WhitelistExtension : Extension() {
     /**
-     * Companion
+     * Toggle object for the whitelist extension
      *
-     * @constructor Create empty Companion
+     * @constructor Create toggle
      */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
@@ -46,12 +47,12 @@ class WhitelistExtension : Extension() {
 
     override suspend fun setup() {
         ephemeralSlashCommand {
-            name = "whitelist"
-            description = "Runs an operation that relates to the server whitelist."
+            name = Translations.Commands.Whitelist.name
+            description = Translations.Commands.Whitelist.description
 
             ephemeralSubCommand(::WhitelistArguments) {
-                name = "add"
-                description = "Adds a player to the whitelist"
+                name = Translations.Commands.Whitelist.Subcommands.Add.name
+                description = Translations.Commands.Whitelist.Subcommands.Add.description
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} added ${arguments.username} to whitelist!")
@@ -63,8 +64,8 @@ class WhitelistExtension : Extension() {
             }
 
             ephemeralSubCommand(::WhitelistArguments) {
-                name = "remove"
-                description = "Removes a player from the whitelist"
+                name = Translations.Commands.Whitelist.Subcommands.Remove.name
+                description = Translations.Commands.Whitelist.Subcommands.Remove.description
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} removed ${arguments.username} from whitelist!")
@@ -76,8 +77,8 @@ class WhitelistExtension : Extension() {
             }
 
             ephemeralSubCommand {
-                name = "list"
-                description = "Lists all currently whitelisted players"
+                name = Translations.Commands.Whitelist.Subcommands.List.name
+                description = Translations.Commands.Whitelist.Subcommands.List.description
 
                 action {
                     Logger.info("${user.asUserOrNull()?.username} requested list of whitelisted players!")
@@ -115,8 +116,9 @@ class WhitelistExtension : Extension() {
         }
     }
 
-    @Suppress("MaxLineLength")
-    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistAddResponse(state: WhitelistState) {
+    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistAddResponse(
+        state: WhitelistState,
+    ) {
         respond {
             when (state) {
                 WhitelistState.STATE_MODIFIED ->
@@ -136,16 +138,17 @@ class WhitelistExtension : Extension() {
                 WhitelistState.STATE_INVALID ->
                     embed {
                         title = "Whitelist Addition Failed"
-                        @Suppress("MaxLineLength")
-                        description = "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
+                        description =
+                            "An error occurred adding **${arguments.username.discordBoldSafe()}** to whitelist."
                         color = Color(config.warningColor().value())
                     }
             }
         }
     }
 
-    @Suppress("MaxLineLength")
-    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistRemoveResponse(state: WhitelistState) {
+    private suspend fun EphemeralSlashCommandContext<WhitelistArguments, *>.whitelistRemoveResponse(
+        state: WhitelistState,
+    ) {
         respond {
             when (state) {
                 WhitelistState.STATE_MODIFIED ->

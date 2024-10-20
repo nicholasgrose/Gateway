@@ -9,6 +9,7 @@ import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
 import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.ephemeralSlashCommand
+import gateway.i18n.Translations
 import org.bukkit.Bukkit
 import org.koin.core.component.inject
 
@@ -19,9 +20,9 @@ import org.koin.core.component.inject
  */
 class AboutExtension : Extension() {
     /**
-     * Companion
+     * Toggle for the about extension
      *
-     * @constructor Create empty Companion
+     * @constructor Create toggle
      */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
@@ -37,8 +38,8 @@ class AboutExtension : Extension() {
 
     override suspend fun setup() {
         ephemeralSlashCommand {
-            name = "version"
-            description = "Gives the current version of the Minecraft server"
+            name = Translations.Commands.Version.name
+            description = Translations.Commands.Version.description
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested plugin version!")
@@ -54,8 +55,8 @@ class AboutExtension : Extension() {
         }
 
         ephemeralSlashCommand {
-            name = "blockgod"
-            description = "Summon the block god for but a moment"
+            name = Translations.Commands.BlockGod.name
+            description = Translations.Commands.BlockGod.description
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} used the super secret command!")

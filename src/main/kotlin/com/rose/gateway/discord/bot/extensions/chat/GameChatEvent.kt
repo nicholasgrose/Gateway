@@ -17,9 +17,9 @@ class GameChatEvent(
     val message: MessageCreateBuilder.() -> Unit,
 ) : KordExEvent {
     /**
-     * Companion
+     * Provides easy event triggers
      *
-     * @constructor Create empty Companion
+     * @constructor Construct the trigger object
      */
     companion object : KoinComponent {
         private val bot: DiscordBotController by inject()

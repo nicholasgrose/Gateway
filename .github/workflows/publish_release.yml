@@ -19,14 +19,15 @@ jobs:
       - uses: actions/checkout@v4
 
       # https://github.com/marketplace/actions/setup-java-jdk
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: 21
           distribution: temurin
 
-      - name: Set gradlew execution permission
-        run: chmod u+x gradlew
+      # https://github.com/marketplace/actions/build-with-gradle
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       # https://github.com/marketplace/actions/generate-version
       - name: Get release version
@@ -36,18 +37,11 @@ jobs:
           version-file: gradle.properties
           version-file-extraction-pattern: '(?<=version=).+'
 
-      # https://github.com/marketplace/actions/semver-parser
-      - name: Parse release version
-        uses: apexskier/github-semver-parse@v1
-        id: semver
-        with:
-          version: ${{ env.RELEASE_VERSION }}
+      - name: Get changelog
+        run: ./gradlew getChangelog --console=plain -q --no-header --no-summary > LATEST_CHANGES.md
 
-      # https://github.com/marketplace/actions/gradle-build-action
       - name: Build artifacts
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: shadowJar
+        run: ./gradlew shadowJar
 
       # https://github.com/marketplace/actions/create-release
       - name: Create release
@@ -55,7 +49,7 @@ jobs:
         with:
           name: Gateway ${{ env.RELEASE_VERSION }}
           tag: v${{ env.RELEASE_VERSION }}
-          generateReleaseNotes: true
+          bodyFile: 'LATEST_CHANGES.md'
           artifacts: 'build/libs/*.jar'
-          prerelease: ${{ !!steps.semver.outputs.prerelease }}
+          prerelease: ${{ !!env.RELEASE_VERSION_PRERELEASE }}
           token: ${{ secrets.GITHUB_TOKEN }}

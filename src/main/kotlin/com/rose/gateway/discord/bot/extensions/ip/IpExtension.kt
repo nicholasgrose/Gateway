@@ -10,6 +10,7 @@ import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
 import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.ephemeralSlashCommand
+import gateway.i18n.Translations
 import org.koin.core.component.inject
 
 /**
@@ -37,8 +38,8 @@ class IpExtension : Extension() {
 
     override suspend fun setup() {
         ephemeralSlashCommand {
-            name = "ip"
-            description = "Displays the server IP"
+            name = Translations.Commands.Ip.name
+            description = Translations.Commands.Ip.description
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested server IP!")

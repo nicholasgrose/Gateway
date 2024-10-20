@@ -14,6 +14,7 @@ import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
 import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.ephemeralSlashCommand
+import gateway.i18n.Translations
 import org.koin.core.component.inject
 
 /**
@@ -23,9 +24,9 @@ import org.koin.core.component.inject
  */
 class ListExtension : Extension() {
     /**
-     * Companion
+     * Toggle for the list extension
      *
-     * @constructor Create empty Companion
+     * @constructor Creates the toggle
      */
     companion object : ExtensionToggle {
         private val config: PluginConfig by inject()
@@ -41,8 +42,8 @@ class ListExtension : Extension() {
 
     override suspend fun setup() {
         ephemeralSlashCommand {
-            name = "list"
-            description = "Lists all online players"
+            name = Translations.Commands.List.name
+            description = Translations.Commands.List.description
 
             action {
                 Logger.info("${user.asUserOrNull()?.username} requested player list!")
