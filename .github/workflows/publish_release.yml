@@ -37,11 +37,11 @@ jobs:
           version-file: gradle.properties
           version-file-extraction-pattern: '(?<=version=).+'
 
-      - name: Get changelog
-        run: ./gradlew getChangelog --console=plain -q --no-header --no-summary > LATEST_CHANGES.md
-
       - name: Build artifacts
         run: ./gradlew shadowJar
+
+      - name: Get changelog
+        run: ./gradlew getChangelog --console=plain -q --no-header --no-summary > LATEST_CHANGES.md
 
       # https://github.com/marketplace/actions/create-release
       - name: Create release
