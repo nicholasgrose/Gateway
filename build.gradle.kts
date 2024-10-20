@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.dotenv)
     alias(libs.plugins.run.paper)
+    alias(libs.plugins.kover)
     alias(libs.plugins.detekt)
     alias(libs.plugins.qodana)
     alias(libs.plugins.changelog)
@@ -46,16 +47,37 @@ repositories {
 }
 
 dependencies {
-    detektPlugins(libs.detekt.formatting)
     compileOnly(libs.paper.api)
+
     implementation(libs.bundles.hoplite)
     implementation(libs.kaml)
     implementation(libs.tegral)
+
+    testImplementation(kotlin("test"))
+
+    detektPlugins(libs.detekt.formatting)
 }
 
 detekt {
     buildUponDefaultConfig = true
     config.from("config/detekt/detekt.yml")
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                // This package is automatically generated
+                packages("gateway.i18n")
+            }
+        }
+
+        total {
+            xml {
+                onCheck = true
+            }
+        }
+    }
 }
 
 tasks {
@@ -78,6 +100,10 @@ tasks {
         archiveClassifier = ""
         archiveVersion = rootProject.version.toString()
         mergeServiceFiles()
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     runServer {

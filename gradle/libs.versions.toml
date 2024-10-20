@@ -23,7 +23,9 @@ run-paper = "2.3.1"
 # https://github.com/klahap/dotenv
 dotenv = "1.1.3"
 
-# Code style and static analysis
+# Code analysis
+# https://github.com/Kotlin/kotlinx-kover
+kover = "0.8.3"
 # https://detekt.dev/
 detekt = "1.23.7"
 # https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
@@ -51,6 +53,7 @@ kordex = { id = "dev.kordex.gradle.kordex", version.ref = "kordex-plugin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
 dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
