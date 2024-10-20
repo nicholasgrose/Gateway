@@ -47,7 +47,7 @@ jobs:
       - name: Build artifacts
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: build
+          arguments: shadowJar
 
       # https://github.com/marketplace/actions/create-release
       - name: Create release

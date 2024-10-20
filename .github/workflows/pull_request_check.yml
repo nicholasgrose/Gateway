@@ -32,7 +32,7 @@ jobs:
       - name: Build artifacts
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: build --stacktrace
+          arguments: shadowJar
 
   ktlint:
     runs-on: ubuntu-latest
@@ -63,4 +63,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           detekt_config: config/detekt/detekt.yml
           detekt_build_upon_default_config: true
-          reporter: github-pr-review

@@ -1,7 +1,5 @@
 package com.rose.gateway.discord.bot.extensions.list
 
-import com.kotlindiscord.kord.extensions.extensions.Extension
-import com.kotlindiscord.kord.extensions.extensions.ephemeralSlashCommand
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.listExtensionEnabled
 import com.rose.gateway.config.access.maxPlayersPerListPage
@@ -14,6 +12,8 @@ import com.rose.gateway.minecraft.server.ServerInfo
 import com.rose.gateway.shared.text.plurality
 import dev.kord.common.Color
 import dev.kord.rest.builder.message.embed
+import dev.kordex.core.extensions.Extension
+import dev.kordex.core.extensions.ephemeralSlashCommand
 import org.koin.core.component.inject
 
 /**

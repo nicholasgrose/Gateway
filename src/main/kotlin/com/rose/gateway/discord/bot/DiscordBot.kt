@@ -1,7 +1,5 @@
 package com.rose.gateway.discord.bot
 
-import com.kotlindiscord.kord.extensions.ExtensibleBot
-import com.kotlindiscord.kord.extensions.utils.loadModule
 import com.rose.gateway.GatewayPlugin
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.botToken
@@ -10,6 +8,8 @@ import com.rose.gateway.minecraft.logging.Logger
 import com.rose.gateway.shared.concurrency.PluginCoroutineScope
 import dev.kord.core.Kord
 import dev.kord.core.exception.KordInitializationException
+import dev.kordex.core.ExtensibleBot
+import dev.kordex.core.utils.loadModule
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import org.koin.core.component.KoinComponent

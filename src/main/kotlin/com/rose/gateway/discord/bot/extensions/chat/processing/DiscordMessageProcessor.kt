@@ -1,6 +1,5 @@
 package com.rose.gateway.discord.bot.extensions.chat.processing
 
-import com.kotlindiscord.kord.extensions.utils.getTopRole
 import com.rose.gateway.config.PluginConfig
 import com.rose.gateway.config.access.secondaryColor
 import com.rose.gateway.minecraft.component.atMember
@@ -17,6 +16,7 @@ import com.rose.gateway.shared.parsing.TextProcessor
 import dev.kord.core.entity.Member
 import dev.kord.core.entity.Message
 import dev.kord.core.event.message.MessageCreateEvent
+import dev.kordex.core.utils.getTopRole
 import kotlinx.coroutines.flow.toList
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.JoinConfiguration

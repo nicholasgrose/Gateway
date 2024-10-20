@@ -1,6 +1,6 @@
 package com.rose.gateway.discord.bot.extensions
 
-import com.kotlindiscord.kord.extensions.extensions.Extension
+import dev.kordex.core.extensions.Extension
 import org.koin.core.component.KoinComponent
 
 /**
