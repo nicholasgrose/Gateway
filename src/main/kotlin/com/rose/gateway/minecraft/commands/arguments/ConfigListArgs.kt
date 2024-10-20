@@ -34,6 +34,7 @@ open class ConfigListArgs<T : Any, A : ConfigListArgs<T, A, P>, P : ArgParser<T,
  * @param stringCompleter The completer to use for each string
  * @param stringValidator The validator to use for each string
  */
+@Suppress("Indentation")
 class StringListConfigArgs(
     private val stringCompleter: StringParser<StringListConfigArgs>.(
         TabCompleteContext<StringListConfigArgs>,

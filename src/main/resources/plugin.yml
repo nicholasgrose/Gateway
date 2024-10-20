@@ -6,7 +6,7 @@ description: Provides a configurable set of features that link the in-game chat 
 website: https://github.com/nicholasgrose/Gateway
 
 main: com.rose.gateway.GatewayPlugin
-api-version: 1.20
+api-version: 1.21
 load: POSTWORLD
 
 commands:
@@ -16,7 +16,7 @@ commands:
     aliases:
       - d
     permission: gateway.discord
-    permission-message: You do not have control your Discord interactions!
+    permission-message: You do not have permission to control your Discord interactions!
   gateway:
     description: Controls the Gateway plugin.
     usage: /gateway

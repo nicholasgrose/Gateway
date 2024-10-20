@@ -5,6 +5,7 @@ import dev.kord.core.Kord
 import dev.kordex.core.checks.channelFor
 import dev.kordex.core.checks.messageFor
 import dev.kordex.core.checks.types.Check
+import gateway.i18n.Translations
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -26,7 +27,7 @@ object MessageCheck : KoinComponent {
         if (bot.state.botChannels.contains(channel)) {
             pass()
         } else {
-            fail("Channel is not configured bot channel.")
+            fail(Translations.Checks.Chat.Channel.NotBotChannel.fail)
         }
     }
 
@@ -38,8 +39,8 @@ object MessageCheck : KoinComponent {
         val author = messageFor(event)?.asMessageOrNull()?.author
 
         when {
-            author == null -> fail("No author found.")
-            author.id == kordClient.selfId -> fail("Is self.")
+            author == null -> fail(Translations.Checks.Chat.Self.NoAuthor.fail)
+            author.id == kordClient.selfId -> fail(Translations.Checks.Chat.Self.OwnId.fail)
             else -> pass()
         }
     }

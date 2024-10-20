@@ -1,11 +1,12 @@
-rootProject.name = "Gateway"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven {
-            name = "Integrated Server"
-            url = uri("https://repo.jpenilla.xyz/snapshots/")
-        }
+        mavenCentral()
+
+        maven("https://repo.jpenilla.xyz/snapshots/")
+        maven("https://snapshots-repo.kordex.dev")
+        maven("https://releases-repo.kordex.dev")
     }
 }
+
+rootProject.name = "Gateway"

@@ -65,7 +65,8 @@ class GatewayConfigFile : KoinComponent {
      * @return The non-nullable type
      */
     @Suppress("MaxLineLength")
-    private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T = this.notNull("default config resource does not exist to be loaded")
+    private fun <T> T?.notNullWithMissingDefaultConfigMessage(): T =
+        this.notNull("default config resource does not exist to be loaded")
 
     /**
      * Ensures that a configuration file exists to be loaded

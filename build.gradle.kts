@@ -1,16 +1,17 @@
 import dev.kordex.gradle.plugins.kordex.DataCollection
+import io.github.klahap.dotenv.DotEnvBuilder.Companion.dotEnv
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kordex)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.dotenv)
     alias(libs.plugins.run.paper)
-    alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
     alias(libs.plugins.qodana)
+    alias(libs.plugins.changelog)
 }
 
 val version: String by project
@@ -20,36 +21,8 @@ val jvmTargetVersion: String by project
 val kotlinTargetVersion: String by project
 val minecraftTestVersion: String by project
 
-val ktlintVersion: String by project
-val detektVersion: String by project
-
 project.group = group
 project.version = version
-
-repositories {
-    mavenCentral()
-    gradlePluginPortal()
-    maven("https://repo.kordex.dev/snapshots/")
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://jitpack.io")
-}
-
-dependencies {
-    compileOnly(libs.paper.api)
-    implementation(libs.bundles.hoplite)
-    implementation(libs.kaml)
-    implementation(libs.tegral)
-}
-
-detekt {
-    config.from("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-    toolVersion = detektVersion
-}
-
-ktlint {
-    version = ktlintVersion
-}
 
 kordEx {
     jvmTarget = jvmTargetVersion.toInt()
@@ -57,17 +30,38 @@ kordEx {
     bot {
         // See https://docs.kordex.dev/data-collection.html
         dataCollection(DataCollection.Standard)
-
-        mainClass = "com.rose.gateway.discord.bot.DiscordBotKt"
     }
+
+    i18n {
+        classPackage = "gateway.i18n"
+        translationBundle = "discord.strings"
+    }
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    detektPlugins(libs.detekt.formatting)
+    compileOnly(libs.paper.api)
+    implementation(libs.bundles.hoplite)
+    implementation(libs.kaml)
+    implementation(libs.tegral)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config.from("config/detekt/detekt.yml")
 }
 
 tasks {
     compileKotlin {
         compilerOptions {
             jvmTarget = JvmTarget.fromTarget(jvmTargetVersion)
-            apiVersion = KotlinVersion.fromVersion(kotlinTargetVersion)
-            languageVersion = KotlinVersion.fromVersion(kotlinTargetVersion)
         }
     }
 
@@ -79,30 +73,21 @@ tasks {
         }
     }
 
-    jar.configure {
-        onlyIf { false }
-    }
-
     shadowJar {
-        archiveBaseName.set(rootProject.name)
-        archiveClassifier.set("")
-        archiveVersion.set(rootProject.version.toString())
+        archiveBaseName = rootProject.name
+        archiveClassifier = ""
+        archiveVersion = rootProject.version.toString()
         mergeServiceFiles()
     }
 
     runServer {
-        this.minecraftVersion(minecraftTestVersion)
-    }
+        version = minecraftTestVersion
 
-    detekt.configure {
-        mustRunAfter(ktlintFormat)
-    }
-
-    create("runLints") {
-        dependsOn(ktlintFormat, detekt)
-    }
-
-    clean {
-        delete("build")
+        // Adding environment variables useful for testing
+        environment(
+            dotEnv {
+                addFile("$rootDir/dev.env")
+            },
+        )
     }
 }
