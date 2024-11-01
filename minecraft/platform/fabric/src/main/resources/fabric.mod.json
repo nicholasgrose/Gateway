@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "gateway",
+  "version": "${version}",
+  "name": "Gateway",
+  "description": "A plugin to integrate Discord and Minecraft.",
+  "authors": [
+    "Nicholas Rose"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/gateway/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "xyz.rose.gateway.GatewayMod"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21.3",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+  }
+}

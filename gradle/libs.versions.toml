@@ -2,24 +2,12 @@
 # Dependencies
 # https://kotlinlang.org/
 kotlin = "2.0.21"
-# https://docs.papermc.io/paper/dev/project-setup
-paper-api = "1.21.1-R0.1-SNAPSHOT"
-# https://github.com/sksamuel/hoplite
-hoplite = "2.8.2"
-# https://github.com/charleskorn/kaml
-kaml = "0.61.0"
-# https://docs.kordex.dev/getting-started
-kordex-plugin = "1.5.2"
-# https://tegral.zoroark.guru/docs/modules/core/niwen/
-tegral = "0.0.4"
 
 # Build tools
 # https://github.com/johnrengelman/shadow
-shadow = "8.3.3"
+shadow = "8.3.5"
 
 # Testing tools
-# https://github.com/jpenilla/run-paper
-run-paper = "2.3.1"
 # https://github.com/klahap/dotenv
 dotenv = "1.1.3"
 
@@ -29,31 +17,30 @@ kover = "0.8.3"
 # https://detekt.dev/
 detekt = "1.23.7"
 # https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
-qodana = "2024.2.3"
+qodana = "2024.2.6"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
 changelog = "2.2.1"
 
 [libraries]
-detekt-formatting = { group = "io.gitlab.arturbosch.detekt" ,name = "detekt-formatting", version.ref = "detekt" }
-paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
-hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }
-hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.ref = "hoplite" }
-kaml = { group = "com.charleskorn.kaml", name = "kaml", version.ref = "kaml" }
-tegral = { group = "guru.zoroark.tegral", name = "tegral-niwen-lexer", version.ref = "tegral" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
-[bundles]
-hoplite = ["hoplite-core", "hoplite-yaml"]
+plugin-kotlin-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+#plugin-kotlin-serialization = { group = "org.jetbrains.kotlin.plugin.serialization", name = "", version.ref = "kotlin" }
+#plugin-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+#plugin-dotenv = { group = "io.github.klahap.dotenv", name = "dotenv", version.ref = "dotenv" }
+plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
+plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref = "qodana" }
+#plugin-changelog = { group = "org.jetbrains.changelog", name = "", version.ref = "changelog" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kordex = { id = "dev.kordex.gradle.kordex", version.ref = "kordex-plugin" }
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
-dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
+#kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+#kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+#shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+#dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
-changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+#detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+#qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+#changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
