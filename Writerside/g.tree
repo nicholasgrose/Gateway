@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="g"
+                 name="Gateway"
+                 start-page="Welcome.topic">
+
+    <toc-element topic="Welcome.topic">
+    </toc-element>
+    <toc-element topic="Changelog.md"/>
+    <toc-element topic="Installation.topic">
+        <toc-element topic="Quick-Start.topic">
+            <toc-element topic="Fabric.md"/>
+            <toc-element topic="Paper.md"/>
+        </toc-element>
+        <toc-element topic="Reference.md"/>
+    </toc-element>
+    <toc-element topic="Development.topic">
+        <toc-element topic="How-to.md"/>
+        <toc-element topic="Architecture.topic">
+            <toc-element topic="Overview.md"/>
+        </toc-element>
+    </toc-element>
+</instance-profile>
