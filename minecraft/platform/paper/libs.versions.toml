@@ -1,7 +1,7 @@
 [versions]
 # Build tools
 # https://docs.papermc.io/paper/dev/project-setup
-paper-api = "1.21.3-R0.1-SNAPSHOT"
+paper-api = "1.21.4-R0.1-SNAPSHOT"
 
 # Testing tools
 # https://github.com/jpenilla/run-paper

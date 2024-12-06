@@ -1,10 +1,10 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 
 # Build tools
-# https://github.com/johnrengelman/shadow
+# https://github.com/GradleUp/shadow
 shadow = "8.3.5"
 
 # Testing tools
@@ -17,7 +17,7 @@ kover = "0.8.3"
 # https://detekt.dev/
 detekt = "1.23.7"
 # https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
-qodana = "2024.2.6"
+qodana = "2024.3.2"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
