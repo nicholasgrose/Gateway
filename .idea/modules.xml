@@ -10,6 +10,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/com.rose.gateway.gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/com.rose.gateway.gateway.minecraft.platform.paper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.client.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/fabric.gateway.minecraft.platform.fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.test.iml" />
@@ -25,6 +28,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/paper.gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/paper.gateway.minecraft.platform.paper.main.iml" />
     </modules>
   </component>
 </project>

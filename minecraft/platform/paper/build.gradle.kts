@@ -1,5 +1,4 @@
-import gateway.conventions.Expand_versions_gradle
-import org.gradle.kotlin.dsl.assign
+import gateway.conventions.Expand_versions_gradle.ExpandVersionsPluginExtension
 import org.gradle.kotlin.dsl.getByType
 
 plugins {
@@ -19,7 +18,7 @@ dependencies {
     compileOnly(paperLibs.paper.api)
 }
 
-extensions.getByType<Expand_versions_gradle.ExpandVersionsPluginExtension>().filePattern = "plugin.yml"
+extensions.getByType<ExpandVersionsPluginExtension>().filePattern = "plugin.yml"
 
 tasks {
     runServer {
