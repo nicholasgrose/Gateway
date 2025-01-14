@@ -1,4 +1,4 @@
-import gateway.conventions.Expand_versions_gradle
+import gateway.conventions.Expand_versions_gradle.ExpandVersionsPluginExtension
 import org.gradle.kotlin.dsl.repositories
 
 plugins {
@@ -31,7 +31,7 @@ dependencies {
     modImplementation(fabricLibs.bundles.fabric)
 }
 
-extensions.getByType<Expand_versions_gradle.ExpandVersionsPluginExtension>().filePattern = "fabric.mod.json"
+extensions.getByType<ExpandVersionsPluginExtension>().filePattern = "fabric.mod.json"
 
 tasks {
     runClient {

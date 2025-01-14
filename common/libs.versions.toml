@@ -3,7 +3,7 @@
 # https://github.com/sksamuel/hoplite
 hoplite = "2.9.0"
 # https://github.com/charleskorn/kaml
-kaml = "0.66.0"
+kaml = "0.67.0"
 # https://tegral.zoroark.guru/docs/modules/core/niwen/
 tegral = "0.0.4"
 

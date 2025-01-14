@@ -4,6 +4,7 @@ import gateway.libs
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import kotlin.io.path.relativeTo
 
 plugins {
     kotlin("jvm")
@@ -27,7 +28,7 @@ dependencies {
 
 detekt {
     buildUponDefaultConfig = true
-    config.from("detekt.yaml")
+    config.from(rootDir.path + "/detekt.yaml")
 }
 
 kover {
