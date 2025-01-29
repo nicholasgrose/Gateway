@@ -25,7 +25,7 @@
 
         <!--    Add up to 2 topics that you want to promote. Use the "type" attribute to select an icon.    -->
         <spotlight>
-            <a href="" type="cloud" summary="How the dots are connected">Overview</a>
+            <a href="Overview.md" type="cloud" summary="How the dots are connected"/>
         </spotlight>
     </section-starting-page>
 

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="21" />
+    <bytecodeTargetLevel target="21">
+      <module name="Gateway" target="21" />
+      <module name="Gateway.main" target="21" />
+      <module name="Gateway.test" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="com.rose.gateway.gateway.minecraft.platform.fabric.main" options="-AoutRefMapFile=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\classes\java\main\fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_5.1.21.5+build.1.main.tiny -AinMapFileNamedIntermediary=C:\Users\Nicholas\.gradle\caches\fabric-loom\1.21.5\net.fabricmc.yarn.1_21_5.1.21.5+build.1\mappings.tiny" />
+      <module name="gateway.minecraft.platform.fabric" options="-AoutRefMapFile=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\classes\java\client\client-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_5.1.21.5+build.1.client.tiny -AinMapFileNamedIntermediary=C:\Users\Nicholas\.gradle\caches\fabric-loom\1.21.5\net.fabricmc.yarn.1_21_5.1.21.5+build.1\mappings.tiny" />
+      <module name="gateway.minecraft.platform.fabric.client" options="-AoutRefMapFile=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\classes\java\client\client-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_5.1.21.5+build.1.client.tiny -AinMapFileNamedIntermediary=C:\Users\Nicholas\.gradle\caches\fabric-loom\1.21.5\net.fabricmc.yarn.1_21_5.1.21.5+build.1\mappings.tiny" />
+      <module name="gateway.minecraft.platform.fabric.test" options="-AoutRefMapFile=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\classes\java\test\test-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\Nicholas\Projects\GitHub\Gateway\minecraft\platform\fabric\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21_5.1.21.5+build.1.test.tiny -AinMapFileNamedIntermediary=C:\Users\Nicholas\.gradle\caches\fabric-loom\1.21.5\net.fabricmc.yarn.1_21_5.1.21.5+build.1\mappings.tiny" />
+    </option>
   </component>
 </project>

@@ -36,19 +36,22 @@ sequenceDiagram
 
     Pla ->>+ G: Open connection
     G ->>+ P: Register platform
-    P ->>+ R: Register plugins
-
-    loop Per platform plugin
-        R ->>+ Plu: Create plugin
-        Plu -->>- R: Plugin created
-        R ->>+ C: Register capabilities
-        C ->>+ Plu: Get capabilities
-        Plu -->>- C: Register capabilities
-        C -->>- R: Capabilities registered
+    alt Platform registers plugins?
+        P ->>+ R: Register plugins
+        R ->>+ Pla: Get plugin constructors
+        Pla -->>- R: Plugin constructors
+        loop Per platform plugin
+            R ->>+ Plu: Create plugin
+            Plu -->>- R: Plugin created
+            alt Plugin registers capabilities?
+                R ->>+ C: Register capabilities
+                C ->>+ Plu: Get capabilities
+                Plu -->>- C: Register capabilities
+                C -->>- R: Capabilities registered
+            end
+        end
+        R -->>- P: Plugins registered
     end
-
-    R -->>- P: Plugin registration data
-    Note over P: Registration data saved off
     P -->>- G: Platform registered
     G -->>- Pla: Connection opened
 ```
@@ -71,13 +74,16 @@ sequenceDiagram
 
     Pla ->>+ G: Close connection
     G ->>+ P: Deregister platform
-
-    Note over P: Using registration data
-    P ->>+ R: Deregister plugins
-    R -->>- P: Plugins unregistered
-    P ->>+ C: Deregister capabilities
-    C -->>- P: Capabilities unregistered
-
+    alt Platform registers plugins?
+        P ->>+ R: Deregister plugins
+        loop Per plugin
+            alt Plugin registers capabilities?
+                R ->>+ C: Deregister capabilities
+                C -->>- R: Capabilities unregistered
+            end
+        end
+        R -->>- P: Plugins unregistered
+    end
     P -->>- G: Platform unregistered
     G -->>- Pla: Connection closed
 ```
@@ -107,6 +113,8 @@ Plugins group related pieces of functionality together for ease of organization 
 
 ### Gateway App
 
+#### Overall
+
 ```mermaid
 classDiagram
     class Gateway {
@@ -115,16 +123,28 @@ classDiagram
         +disconnect(platform: Platform)
     }
 
-    Gateway *--Config
-
-    class Config {
-        <<interface>>
-        +load()
-    }
-
+    Gateway *-- GatewayConfig
     Gateway *-- PlatformRegistry
     Gateway *-- PluginRegistry
     Gateway *-- CapabilityRegistry
+
+    class GatewayConfig {
+        <<interface>>
+        +List~Platform~ platforms
+    }
+
+    GatewayConfig o-- GatewayPlatformConfig
+
+    class GatewayPlatformConfig {
+        <<interface>>
+    }
+
+    class Platform {
+        <<interface>>
+    }
+
+    Platform --> RegistryItem
+    PlatformRegistry *-- Platform
 
     class PlatformRegistry {
         <<interface>>
@@ -132,11 +152,25 @@ classDiagram
         +deregister(platform: Platform)
     }
 
+    class Plugin {
+        <<interface>>
+    }
+
+    Plugin --> RegistryItem
+    PluginRegistry *-- Plugin
+
     class PluginRegistry {
         <<interface>>
         +register(plugin: Plugin): PluginRegistrationData
         +deregister(plugin: Plugin)
     }
+
+    class Capability {
+        <<interface>>
+    }
+
+    Capability --> RegistryItem
+    CapabilityRegistry *-- Capability
 
     class CapabilityRegistry {
         <<interface>>
@@ -148,224 +182,330 @@ classDiagram
     PluginRegistry <|-- Registry~Plugin~
     CapabilityRegistry <|-- Registry~Capability~
 
-    class Registry~T~ {
+    class Registry~I~ {
         <<interface>>
-        +register(item: T): RegistrationData~T~
-        +deregister(item: T)
+        +register(item: Registrar~I~)
+        +register(item: I)
+        +deregister(item: I)
     }
 
-    Registry~T~ -- RegistrationData~T~
+    Registry~I~ o-- RegistryItem
+    Registry~I~ -- Registrar~I~
 
-    class RegistrationData~T~ {
+    class RegistryItem {
+        <<interface>>
+    }
+
+    class Registrar~I~ {
+        <<interface>>
+        +registrations(): List~I~
+    }
+```
+
+#### Generic Capabilities
+
+```mermaid
+classDiagram
+    SendMessageCapability <|-- Capability
+    MessageEventCapability <|-- Capability
+    AllowlistReadCapability <|-- Capability
+    AllowlistWriteCapability <|-- Capability
+    PerformanceReadCapability <|-- Capability
+    VersionInfoReadCapability <|-- Capability
+    OnlineCountCapability <|-- Capability
+    ConnectionInfoReadCapability <|-- Capability
+
+    class SendMessageCapability {
+        <<interface>>
+    }
+    class MessageEventCapability {
+        <<interface>>
+    }
+    class AllowlistReadCapability {
+        <<interface>>
+    }
+    class AllowlistWriteCapability {
+        <<interface>>
+    }
+    class PerformanceReadCapability {
+        <<interface>>
+    }
+    class VersionInfoReadCapability {
+        <<interface>>
+    }
+    class OnlineCountCapability {
+        <<interface>>
+    }
+    class ConnectionInfoReadCapability {
         <<interface>>
     }
 ```
 
 ### Discord Platform
+
+#### Discord Config
 ```mermaid
 classDiagram
-    class Gateway {
-        +connectPlatform(platform: Platform)
-        +disconnectPlatform(platform: Platform)
+    class DiscordConfig {
+        <<interface>>
+        +String token
+        +BotConfig bot
+    }
+
+    DiscordConfig --> GatewayPlatformConfig
+    DiscordConfig *-- BotConfig
+
+    class BotConfig {
+        <<interface>>
+        +List~String~ channels
+        +ExtensionConfig extensions
+    }
+
+    BotConfig *-- ExtensionConfig
+
+    class ExtensionConfig {
+        <<interface>>
+        +AboutConfig about
+        +ChatConfig chat
+        +ConnectionConfig ip
+        +PlayerListConfig list
+        +PerformanceConfig performance
+        +AllowlistConfig allowlist
+    }
+
+    ExtensionConfig *-- AboutConfig
+    ExtensionConfig *-- ChatConfig
+    ExtensionConfig *-- ConnectionConfig
+    ExtensionConfig *-- PlayerListConfig
+    ExtensionConfig *-- PerformanceConfig
+    ExtensionConfig *-- AllowlistConfig
+
+    class AboutConfig {
+        <<interface>>
+    }
+
+    class ChatConfig {
+        <<interface>>
+        +Boolean showRoleColor
+    }
+
+    class ConnectionConfig {
+        <<interface>>
+        +String displayIp
+    }
+
+    class PlayerListConfig {
+        <<interface>>
+        +Number playersPerPage
+    }
+
+    class PerformanceConfig {
+        <<interface>>
+    }
+
+    class AllowlistConfig {
+        <<interface>>
+        +Number playersPerPage
+    }
+
+    AboutConfig --> BaseExtensionConfig
+    ChatConfig --> BaseExtensionConfig
+    ConnectionConfig --> BaseExtensionConfig
+    PlayerListConfig --> BaseExtensionConfig
+    PerformanceConfig --> BaseExtensionConfig
+    AllowlistConfig --> BaseExtensionConfig
+
+    class BaseExtensionConfig {
+        <<interface>>
+        +Boolean enabled
     }
 ```
 
-### Minecraft Platform
+#### Overall Discord Platform
 ```mermaid
 classDiagram
-    class Gateway {
-        +connectPlatform(platform: Platform)
-        +disconnectPlatform(platform: Platform)
+    class DiscordPlatform {
+        <<interface>>
+    }
+
+    class KordexBot {
+        <<interface>>
+    }
+
+    KordexBot <|-- DiscordPlatform
+    KordexBot *-- KordexMessagePlugin
+    KordexBot *-- KordexAllowlistPlugin
+    KordexBot *-- KordexPerformancePlugin
+    KordexBot *-- KordexAboutPlugin
+    KordexBot *-- KordexCountingPlugin
+    KordexBot *-- KordexConnectPlugin
+
+    class KordexMessagePlugin {
+        <<interface>>
+    }
+
+    KordexMessagePlugin --> SendMessageCapability
+    KordexMessagePlugin *-- KordexMessageEventCapability
+
+    class KordexMessageEventCapability {
+        <<interface>>
+    }
+
+    KordexMessageEventCapability <|-- MessageEventCapability
+
+    class KordexAllowlistPlugin {
+        <<interface>>
+    }
+
+    KordexAllowlistPlugin --> AllowlistReadCapability
+    KordexAllowlistPlugin --> AllowlistWriteCapability
+
+    class KordexPerformancePlugin {
+        <<interface>>
+    }
+
+    KordexPerformancePlugin --> PerformanceReadCapability
+
+    class KordexAboutPlugin {
+        <<interface>>
+    }
+
+    KordexAboutPlugin --> VersionInfoReadCapability
+
+    class KordexCountingPlugin {
+        <<interface>>
+    }
+
+    KordexCountingPlugin --> OnlineCountCapability
+
+    class KordexConnectPlugin {
+        <<interface>>
+    }
+
+    KordexConnectPlugin --> ConnectionInfoReadCapability
+```
+
+### Minecraft Platforms
+
+#### Minecraft Config
+```mermaid
+classDiagram
+    class MinecraftConfig {
+        <<interface>>
+    }
+
+    MinecraftConfig --> GatewayPlatformConfig
+    MinecraftConfig *-- MinecraftColorConfig
+
+    class MinecraftColorConfig {
+        <<interface>>
+        +String primary
+        +String secondary
+        +String tertiary
+        +String warning
     }
 ```
 
+#### Overall Minecraft Platform
+
 ```mermaid
----
-title: Classes
----
 classDiagram
-    class Gateway {
-        +connectPlatform(platform: Platform)
-        +disconnectPlatform(platform: Platform)
+    class MinecraftPlatform {
+        <<interface>>
     }
 
-    Gateway *-- GatewayPlatform
+    MinecraftPlatform *-- MinecraftWhitelistPlugin
+    MinecraftPlatform *-- MinecraftTpsPlugin
+    MinecraftPlatform *-- MinecraftVersionInfoPlugin
+    MinecraftPlatform *-- MinecraftPlayerCountPlugin
+    MinecraftPlatform *-- MinecraftChatPlugin
 
-    namespace Platform {
-        class GatewayPlatform {
-            <<interface>>
-            +connect()
-            +disconnect()
-        }
-        class PluginRegistry {
-            <<interface>>
-            +loadPlugin(plugin: PlatformPlugin)
-            +unloadPlugin(plugin: PlatformPlugin)
-        }
-
-        class PlatformPlugin {
-            <<interface>>
-            +enable()
-            +disable()
-        }
-
-        class PlatformIntegration {
-            <<interface>>
-        }
+    class MinecraftWhitelistPlugin {
+        <<interface>>
     }
 
-    GatewayPlatform *.. PluginRegistry
-    PluginRegistry *.. PlatformPlugin
-    PlatformIntegration ..|> PlatformPlugin
+    MinecraftWhitelistPlugin *-- MinecraftWhitelistReadCapability
+    MinecraftWhitelistPlugin *-- MinecraftWhitelistWriteCapability
+    MinecraftWhitelistReadCapability <|-- AllowlistReadCapability
+    MinecraftWhitelistWriteCapability <|-- AllowlistWriteCapability
 
-    namespace Social {
-        class SocialPlatform {
-            <<interface>>
-        }
-
-        class Discord {
-            <<interface>>
-        }
-
-        class KordexBot {
-        }
-
-        class DiscordBot {
-            <<interface>>
-            +start()
-            +stop()
-        }
-
-        class DiscordChatEventPlugin {
-            <<interface>>
-            +onChatReceived(chatInfo: DiscordChat)
-        }
-
-        class DiscordChat {
-            <<interface>>
-            +senderName(): String
-            +channel(): String
-            +message(): String
-        }
-
-        class DiscordIntegration~T~ {
-            <<interface>>
-        }
-
-        class DiscordMessageConverter {
-            <<interface>>
-        }
-
-        class DiscordMinecraftPlugin {
-        }
-
-        class DiscordMinecraftMessageConverter {
-        }
-
-        class DiscordStringParser {
-        }
-
-        class DiscordStringBuilder {
-        }
+    class MinecraftWhitelistReadCapability {
+        <<interface>>
     }
 
-    SocialPlatform ..|> GatewayPlatform
-    Discord ..|> SocialPlatform
-    Discord *.. DiscordIntegration
-    DiscordIntegration ..|> PlatformIntegration
-    DiscordIntegration *.. DiscordMessageConverter
-    Discord *.. DiscordStringBuilder
-    DiscordMinecraftPlugin ..|> DiscordIntegration
-    DiscordMinecraftPlugin *.. DiscordMinecraftMessageConverter
-    DiscordMinecraftMessageConverter ..|> DiscordMessageConverter
-    DiscordMinecraftMessageConverter *.. MinecraftStringBuilder
-    DiscordBot ..|> Discord
-    KordexBot ..|> DiscordBot
-    KordexBot *.. DiscordChatEventPlugin
-    DiscordChatEventPlugin ..|> PlatformPlugin
-    DiscordChatEventPlugin .. DiscordChat
-
-    namespace Game {
-        class GameServer {
-            <<interface>>
-        }
-
-        class MinecraftServer {
-            <<interface>>
-        }
-
-        class MinecraftStringBuilder {
-            <<interface>>
-        }
-
-        class AdventureStringBuilder {
-        }
-
-        class MinecraftInfoPlugin {
-            <<interface>>
-        }
-
-        class MinecraftDiscordPlugin {
-        }
-
-        class MinecraftMessageConverter {
-            <<interface>>
-        }
-
-        class DiscordAdventureConverter {
-        }
-
-        class AdventureParser {
-        }
-
-        class PaperServer {
-        }
-
-        class PaperServerPlugin {
-        }
-
-        class PaperInfoPlugin {
-        }
-
-        class FabricServer {
-        }
-
-        class FabricMod {
-        }
-
-        class FabricInfoPlugin {
-        }
+    class MinecraftWhitelistWriteCapability {
+        <<interface>>
     }
 
-    GameServer ..|> GatewayPlatform
-    MinecraftServer ..|> GameServer
-    MinecraftServer *.. MinecraftDiscordPlugin
-    MinecraftServer *.. MinecraftStringBuilder
-    AdventureStringBuilder ..|> MinecraftStringBuilder
-    MinecraftInfoPlugin ..|> PlatformPlugin
-    MinecraftDiscordPlugin ..|> PlatformIntegration
-    MinecraftDiscordPlugin *.. DiscordAdventureConverter
-    DiscordAdventureConverter ..|> MinecraftMessageConverter
-    DiscordAdventureConverter *.. AdventureParser
-    DiscordAdventureConverter *.. DiscordStringBuilder
-    PaperServer ..|> MinecraftServer
-    PaperServerPlugin *.. PaperServer
-    PaperServer *.. PaperInfoPlugin
-    PaperInfoPlugin ..|> MinecraftInfoPlugin
-    FabricServer ..|> MinecraftServer
-    FabricServer *.. FabricInfoPlugin
-    FabricMod *.. FabricServer
-    FabricInfoPlugin ..|> MinecraftInfoPlugin
-
-    namespace Config {
-        class GatewayConfig {
-            <<interface>>
-        }
-
-        class YamlConfig {
-        }
+    class MinecraftTpsPlugin {
+        <<interface>>
     }
 
-    Gateway *.. GatewayConfig
-    YamlConfig ..|> GatewayConfig
+    MinecraftTpsPlugin *-- MinecraftTpsReadCapability
+    MinecraftTpsReadCapability <|-- PerformanceReadCapability
+
+    class MinecraftTpsReadCapability {
+        <<interface>>
+    }
+
+    class MinecraftVersionInfoPlugin {
+        <<interface>>
+    }
+
+    MinecraftVersionInfoPlugin *-- MinecraftVersionInfoReadCapability
+    MinecraftVersionInfoReadCapability <|-- VersionInfoReadCapability
+
+    class MinecraftVersionInfoReadCapability {
+        <<interface>>
+    }
+
+    class MinecraftPlayerCountPlugin {
+        <<interface>>
+    }
+
+    MinecraftPlayerCountPlugin *-- MinecraftOnlinePlayerReadPlugin
+    MinecraftOnlinePlayerReadPlugin <|-- OnlineCountCapability
+
+    class MinecraftOnlinePlayerReadPlugin {
+        <<interface>>
+    }
+    class MinecraftChatPlugin {
+        <<interface>>
+    }
+
+    MinecraftChatPlugin --> SendMessageCapability
+    MinecraftChatPlugin *-- MinecraftSendMessageCapability
+    MinecraftChatPlugin *-- MinecraftChatMessageEventCapability
+    MinecraftSendMessageCapability <|-- SendMessageCapability
+    MinecraftChatMessageEventCapability <|-- MessageEventCapability
+
+    class MinecraftSendMessageCapability {
+        <<interface>>
+    }
+
+    class MinecraftChatMessageEventCapability {
+        <<interface>>
+    }
+```
+
+#### Paper Platform
+
+```mermaid
+classDiagram
+    class MinecraftPaperPlatform {
+        <<interface>>
+    }
+
+    MinecraftPaperPlatform --> MinecraftPlatform
+```
+
+#### Fabric Platform
+
+```mermaid
+classDiagram
+    class MinecraftFabricPlatform {
+        <<interface>>
+    }
+
+    MinecraftFabricPlatform --> MinecraftPlatform
 ```
