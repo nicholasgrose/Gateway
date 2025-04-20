@@ -12,6 +12,7 @@ import kotlinx.datetime.Clock
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.nio.file.Files
 
 /**
  * The base class and entry point for the Gateway plugin. Also provides the scope for parallelized plugin operations
@@ -33,12 +34,15 @@ class GatewayPlugin :
     /**
      * The classloader for this plugin
      */
-    val loader = classLoader
+    val loader: ClassLoader
+        get() = classLoader
 
     private val bot: DiscordBotController by inject()
     private val coroutineScope: PluginCoroutineScope by inject()
 
     override fun onEnable() {
+        if (!dataFolder.exists()) dataFolder.mkdirs()
+
         coroutineScope.launch {
             bot.start()
         }

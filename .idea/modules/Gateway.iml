@@ -2,7 +2,18 @@
 <module version="4">
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/../.." dumb="true">
-      <excludeFolder url="file://$MODULE_DIR$/../../.gradleDocker" />
+      <excludeFolder url="file://$MODULE_DIR$/.." />
+      <excludeFolder url="file://$MODULE_DIR$/../../.kotlin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../bridge/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../buildSrc/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../buildSrc/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../common/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../discord/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../minecraft/common/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../minecraft/platform/fabric/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../minecraft/platform/fabric/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../minecraft/platform/fabric/run" />
+      <excludeFolder url="file://$MODULE_DIR$/../../minecraft/platform/paper/build" />
       <excludeFolder url="file://$MODULE_DIR$/../../run" />
     </content>
   </component>
