@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updating to Minecraft 1.21.5
+- Updating to Minecraft 1.21.4
 - Updated dependencies
 
 ### Fixed

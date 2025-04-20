@@ -19,7 +19,6 @@ val version: String by project
 val group: String by project
 
 val jvmTargetVersion: String by project
-val kotlinTargetVersion: String by project
 val minecraftTestVersion: String by project
 
 project.group = group
@@ -37,6 +36,9 @@ kordEx {
         classPackage = "gateway.i18n"
         translationBundle = "discord.strings"
     }
+
+    // Remove once compatibility issues with Kotlin 2.1+ are resolved
+    ignoreIncompatibleKotlinVersion = true
 }
 
 repositories {

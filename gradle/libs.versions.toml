@@ -1,15 +1,15 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 # https://docs.papermc.io/paper/dev/project-setup
-paper-api = "1.21.5-R0.1-SNAPSHOT"
+paper-api = "1.21.4-R0.1-SNAPSHOT"
 # https://github.com/sksamuel/hoplite
 hoplite = "2.9.0"
 # https://github.com/charleskorn/kaml
 kaml = "0.77.0"
 # https://docs.kordex.dev/getting-started
-kordex-plugin = "1.6.1"
+kordex-plugin = "1.7.0"
 # https://tegral.zoroark.guru/docs/modules/core/niwen/
 tegral = "0.0.4"
 
