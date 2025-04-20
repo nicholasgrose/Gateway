@@ -1,21 +1,21 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.0.21"
+kotlin = "2.0.20"
 # https://docs.papermc.io/paper/dev/project-setup
-paper-api = "1.21.1-R0.1-SNAPSHOT"
+paper-api = "1.21.5-R0.1-SNAPSHOT"
 # https://github.com/sksamuel/hoplite
-hoplite = "2.8.2"
+hoplite = "2.9.0"
 # https://github.com/charleskorn/kaml
-kaml = "0.61.0"
+kaml = "0.77.0"
 # https://docs.kordex.dev/getting-started
-kordex-plugin = "1.5.2"
+kordex-plugin = "1.6.1"
 # https://tegral.zoroark.guru/docs/modules/core/niwen/
 tegral = "0.0.4"
 
 # Build tools
 # https://github.com/johnrengelman/shadow
-shadow = "8.3.3"
+shadow = "8.3.5"
 
 # Testing tools
 # https://github.com/jpenilla/run-paper
@@ -25,9 +25,9 @@ dotenv = "1.1.3"
 
 # Code style and static analysis
 # https://detekt.dev/
-detekt = "1.23.7"
+detekt = "1.23.8"
 # https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
-qodana = "2024.2.3"
+qodana = "2024.3.4"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
