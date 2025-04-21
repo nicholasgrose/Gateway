@@ -18,6 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## 1.6.5 - 2024-10-20
+
+### Changed
+
+- Updated to Minecraft 1.21.4
+- Updated dependencies
+
+### Fixed
+
+- Fixed a crash when there was not a pre-existing directory for Gateway in the plugins directory
+
 ## 1.6.4 - 2024-10-20
 
 ### Added
