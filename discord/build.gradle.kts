@@ -10,6 +10,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation(project(":common"))
+}
+
 kordEx {
     jvmTarget = 21
 

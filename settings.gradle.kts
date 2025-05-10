@@ -21,6 +21,10 @@ dependencyResolutionManagement {
             from(files("discord/libs.versions.toml"))
         }
 
+        create("minecraftCommonLibs") {
+            from(files("minecraft/common/libs.versions.toml"))
+        }
+
         create("fabricLibs") {
             from(files("minecraft/platform/fabric/libs.versions.toml"))
         }

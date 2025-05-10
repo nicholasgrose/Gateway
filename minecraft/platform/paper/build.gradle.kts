@@ -16,6 +16,8 @@ repositories {
 
 dependencies {
     compileOnly(paperLibs.paper.api)
+    implementation(project(":common"))
+    implementation(project(":minecraft:common"))
 }
 
 extensions.getByType<ExpandVersionsPluginExtension>().filePattern = "plugin.yml"

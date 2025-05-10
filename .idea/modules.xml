@@ -15,6 +15,8 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.main.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/gateway.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/gateway.common.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/gateway.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/gateway.common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/discord/gateway.discord.main.iml" filepath="$PROJECT_DIR$/.idea/modules/discord/gateway.discord.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/discord/gateway.discord.test.iml" filepath="$PROJECT_DIR$/.idea/modules/discord/gateway.discord.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/gateway.gateway-common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/gateway.gateway-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.test.iml" />
@@ -23,6 +25,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.test.iml" />
     </modules>
   </component>
 </project>
