@@ -9,17 +9,8 @@ plugins {
 //    alias(libs.plugins.detekt)
 //    alias(libs.plugins.qodana)
 //    alias(libs.plugins.changelog)
+    alias(fabricLibs.plugins.fabric.loom).apply(false)
 }
-
-val version: String by project
-val group: String by project
-
-val jvmTargetVersion: String by project
-val kotlinTargetVersion: String by project
-val minecraftTestVersion: String by project
-
-project.group = group
-project.version = version
 
 repositories {
     mavenCentral()

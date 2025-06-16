@@ -8,24 +8,24 @@ plugins {
     alias(paperLibs.plugins.run.paper)
 }
 
+val minecraftVersion: String by project
+
 repositories {
-    gradlePluginPortal()
-    mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
     compileOnly(paperLibs.paper.api)
-    implementation(project(":common"))
+    implementation(project(":core"))
     implementation(project(":minecraft:common"))
 }
 
-extensions.getByType<ExpandVersionsPluginExtension>().filePattern = "plugin.yml"
+extensions.getByType<ExpandVersionsPluginExtension>().filePattern.set("plugin.yml")
 
 tasks {
     runServer {
         dependsOn("setupDevEnv")
 
-        version = "1.21.3"
+        version = minecraftVersion
     }
 }

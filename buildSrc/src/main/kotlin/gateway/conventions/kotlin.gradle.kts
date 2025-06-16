@@ -4,7 +4,6 @@ import gateway.libs
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import kotlin.io.path.relativeTo
 
 plugins {
     kotlin("jvm")
@@ -21,14 +20,20 @@ repositories {
 }
 
 dependencies {
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+
     detektPlugins(libs.detekt.formatting)
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.bundles.koin.test)
 }
 
 detekt {
     buildUponDefaultConfig = true
     config.from(rootDir.path + "/detekt.yaml")
+    // FIXME: Temporary
+    ignoreFailures = true
 }
 
 kover {

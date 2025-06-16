@@ -5,13 +5,8 @@ plugins {
     alias(discordLibs.plugins.kordex)
 }
 
-repositories {
-    gradlePluginPortal()
-    mavenCentral()
-}
-
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":core"))
 }
 
 kordEx {

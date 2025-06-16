@@ -13,8 +13,8 @@ pluginManagement {
 
 dependencyResolutionManagement {
     versionCatalogs {
-        create("commonLibs") {
-            from(files("common/libs.versions.toml"))
+        create("coreLibs") {
+            from(files("core/libs.versions.toml"))
         }
 
         create("discordLibs") {
@@ -39,7 +39,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "gateway"
 listOf(
-    "common",
+    "core",
     "bridge",
     "discord",
     "minecraft:common",
