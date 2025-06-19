@@ -18,7 +18,6 @@ dependencies {
     compileOnly(paperLibs.paper.api)
     implementation(project(":core"))
     implementation(project(":minecraft:common"))
-    implementation(project(":discord"))
 }
 
 extensions.getByType<ExpandVersionsPluginExtension>().filePattern.set("plugin.yml")

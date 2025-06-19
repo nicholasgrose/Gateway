@@ -4,15 +4,15 @@
     <facet type="minecraft" name="Minecraft">
       <configuration>
         <autoDetectTypes>
-          <platformType>PAPER</platformType>
-          <platformType>ADVENTURE</platformType>
+          <platformType>FABRIC</platformType>
+          <platformType>MIXIN</platformType>
+          <platformType>MCP</platformType>
         </autoDetectTypes>
         <projectReimportVersion>1</projectReimportVersion>
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <orderEntry type="sourceFolder" forTests="false" />
+  <component name="McpModuleSettings">
+    <option name="minecraftVersion" value="1.21.4" />
   </component>
 </module>
