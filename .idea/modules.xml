@@ -2,23 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Writerside.iml" filepath="$PROJECT_DIR$/Writerside.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle/build-logic/build-logic.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle/build-logic/build-logic.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle/build-logic/build-logic.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle/build-logic/build-logic.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle/build-logic/buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle/build-logic/buildSrc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/com.rose.gateway.gateway.minecraft.platform.fabric.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/com.rose.gateway.gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/com.rose.gateway.gateway.minecraft.platform.paper.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bridge/gateway.bridge.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.main.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc/gateway.buildSrc.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/discord/gateway.discord.main.iml" filepath="$PROJECT_DIR$/.idea/modules/discord/gateway.discord.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/discord/gateway.discord.test.iml" filepath="$PROJECT_DIR$/.idea/modules/discord/gateway.discord.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/gateway.gateway-common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/gateway.gateway-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/common/gateway.minecraft.common.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.client.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" />

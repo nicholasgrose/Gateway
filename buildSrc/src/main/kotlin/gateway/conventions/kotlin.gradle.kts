@@ -22,7 +22,7 @@ repositories {
 dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
-
+    implementation(libs.bundles.kotlinx)
     detektPlugins(libs.detekt.formatting)
 
     testImplementation(kotlin("test"))

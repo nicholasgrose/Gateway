@@ -95,3 +95,9 @@ run/
 
 # Gradle docker cache
 .gradleDocker
+.idea/discord.xml
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/modules/minecraft/common/gateway.minecraft.common.main.iml
+.idea/modules/minecraft/common/gateway.minecraft.common.test.iml

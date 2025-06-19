@@ -1,0 +1,84 @@
+package xyz.rose.gateway.core.core.config
+
+import com.rose.gateway.config.schema.Config
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import xyz.rose.gateway.core.core.shared.concurrency.PluginCoroutineScope
+import kotlin.reflect.KType
+
+/**
+ * The configuration for the Gateway plugin
+ *
+ * @constructor Creates plugin config
+ */
+class PluginConfig : KoinComponent {
+    private val stringMap: ConfigStringMap by inject()
+    private val pluginCoroutineScope: PluginCoroutineScope by inject()
+
+    private val configFile = GatewayConfigFile()
+
+    /**
+     * The instance of the config the plugin is using
+     */
+    var config: Config =
+        runBlocking {
+            configFile.safelyLoadConfig()
+        }
+
+    /**
+     * Reload the full config from the disk
+     */
+    suspend fun reloadConfig() {
+        config = configFile.safelyLoadConfig()
+        pluginCoroutineScope.launch {
+        }
+    }
+
+    /**
+     * Saves the current config to disk, replacing the existing config file
+     */
+    suspend fun saveConfig() {
+        configFile.saveConfig(config)
+    }
+
+    /**
+     * Gives a list of all available config items
+     *
+     * @return The list of config items
+     */
+    fun allItems(): List<Item<*>> = stringMap.itemMap.values.toList()
+
+    /**
+     * Gets a particular config item based on its path string
+     *
+     * @param item The config path to get the item with
+     * @return The item that matches the provided path or null if no match was found
+     */
+    operator fun get(item: String): Item<*>? = stringMap.fromString(item)
+
+    /**
+     * Gets a particularly typed item based on its path string
+     *
+     * @param ItemValueType The type of the item to get
+     * @param type The [KType] representation of [ItemValueType]
+     * @param item The config path of the item to get
+     * @return The item that matches the path and type provided or null if no match was found
+     *
+     * @see KType
+     */
+    operator fun <ItemValueType : Any> get(
+        type: KType,
+        item: String,
+    ): Item<ItemValueType>? {
+        val match = get(item)
+
+        return if (match != null && match.type == type) {
+            @Suppress("UNCHECKED_CAST")
+            match as Item<ItemValueType>
+        } else {
+            null
+        }
+    }
+}
