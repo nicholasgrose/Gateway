@@ -1,4 +1,4 @@
-package xyz.rose.gateway.core.core.platform
+package xyz.rose.gateway.core.platform
 
 
 interface GatewayPlatform {

@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation(coreLibs.bundles.hoplite)
-    implementation(coreLibs.bundles.kotlinx)
     implementation(coreLibs.kaml)
     implementation(coreLibs.tegral)
 }

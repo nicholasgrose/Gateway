@@ -7,6 +7,7 @@ dependencies {
     // in pre-compiled plugin scripts.
     // https://github.com/gradle/gradle/issues/15383#issuecomment-1855984127
     implementation(libs.plugin.kotlin.jvm)
+    implementation(libs.plugin.kotlin.serialization)
     implementation(libs.plugin.kover)
     implementation(libs.plugin.detekt)
     implementation(libs.plugin.qodana)

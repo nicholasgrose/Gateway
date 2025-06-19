@@ -1,4 +1,4 @@
-package xyz.rose.gateway.core.core
+package xyz.rose.gateway.core
 
 interface GatewayApp {
     fun start()
