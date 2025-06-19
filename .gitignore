@@ -95,3 +95,8 @@ run/
 
 # Gradle docker cache
 .gradleDocker
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml
+.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml
