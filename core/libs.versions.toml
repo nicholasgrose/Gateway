@@ -6,10 +6,6 @@ hoplite = "2.9.0"
 kaml = "0.82.0"
 # https://tegral.zoroark.guru/docs/modules/core/niwen/
 tegral = "0.0.4"
-# https://github.com/Kotlin/kotlinx.coroutines
-kotlinx-coroutines = "1.10.2"
-# https://github.com/Kotlin/kotlinx-datetime
-kotlinx-datetime = "0.6.2"
 
 [libraries]
 hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }
@@ -17,9 +13,5 @@ hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.
 kaml = { group = "com.charleskorn.kaml", name = "kaml", version.ref = "kaml" }
 tegral = { group = "guru.zoroark.tegral", name = "tegral-niwen-lexer", version.ref = "tegral" }
 
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
-
 [bundles]
 hoplite = ["hoplite-core", "hoplite-yaml"]
-kotlinx = ["kotlinx-coroutines-core", "kotlinx-datetime"]

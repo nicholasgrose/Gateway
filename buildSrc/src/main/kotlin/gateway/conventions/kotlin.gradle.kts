@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
     id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.qodana")
@@ -22,6 +23,8 @@ repositories {
 dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
+
+    implementation(libs.bundles.kotlinx)
 
     detektPlugins(libs.detekt.formatting)
 

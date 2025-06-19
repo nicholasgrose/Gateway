@@ -22,6 +22,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.client.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/fabric/gateway.minecraft.platform.fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.test.iml" />
     </modules>
