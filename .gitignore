@@ -103,3 +103,5 @@ run/
 .idea/modules/minecraft/platform/paper/gateway.minecraft.platform.paper.main.iml
 .idea/discord.xml
 /.idea/modules/**
+.idea/vcs.xml
+.idea/kotlinc.xml
