@@ -103,3 +103,4 @@ run/
 .idea/discord.xml
 /.idea/modules/*
 .idea/compiler.xml
+.idea/modules.xml
