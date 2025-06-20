@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/KyoriPowered/adventure
-adventure = "4.21.0"
+adventure = "4.23.0"
 
 [libraries]
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
