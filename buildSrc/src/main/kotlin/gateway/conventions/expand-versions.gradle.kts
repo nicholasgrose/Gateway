@@ -1,5 +1,9 @@
 package gateway.conventions
 
+import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.main
+import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.processResources
+import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.sourceSets
+
 /**
  * Extension for configuring the version expanding convention plugin
  *
@@ -7,7 +11,8 @@ package gateway.conventions
  */
 interface ExpandVersionsPluginExtension {
     /**
-     * The Regex pattern of the file to run the expansion against
+     * The Ant-style pattern of the file to run the expansion against
+     * @see CopySpec.filesMatching
      */
     val filePattern: Property<String>
 }
@@ -18,15 +23,26 @@ version = project.property("version") as String
 val extension = project.extensions.create<ExpandVersionsPluginExtension>("files")
 extension.filePattern.convention("")
 
-tasks {
-    getByName<ProcessResources>("processResources") {
+// afterEvaluate() is not the best to use, but, unfortunately, we can't get around needing to use it here.
+// filesMatching() gets evaluated at build time, and it doesn't accept Property<String>.
+// That means that this block would run before any build script we run this in, and filePattern will always be blank
+// since that script won't have been able to set the property at the time this executes.
+// Once we have a viable alternative to passing a constant string into fileMatching(), we can make this better.
+project.afterEvaluate {
+    tasks {
+        processResources {
+            // The usage of duplicateStrategy and with() here is a workaround for IntelliJ giving annoying warnings.
+            // https://youtrack.jetbrains.com/issue/IDEA-296490
+            // We can make this a bit cleaner once this is fixed.
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
-        filesMatching("**") {
-            if (name.matches(Regex(extension.filePattern.get()))) {
-                expand(
-                    "version" to version
-                )
-            }
+            with(copySpec {
+                from(sourceSets.main.get().resources.srcDirs)
+
+                filesMatching(extension.filePattern.get()) {
+                    expand("version" to version)
+                }
+            })
         }
     }
 }

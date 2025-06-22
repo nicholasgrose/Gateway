@@ -8,6 +8,12 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/deployment.xml
+
+# Plugins
+.idea/**/kotlinc.xml
+.idea/**/detekt.xml
+.idea/**/git_toolbox_prj.xml
 
 # Generated files
 .idea/**/contentModel.xml
@@ -21,6 +27,9 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 .idea/**/sonarlint/
+.idea/**/.name
+.idea/**/vcs.xml
+.idea/**/misc.xml
 
 # Gradle
 .idea/**/gradle.xml

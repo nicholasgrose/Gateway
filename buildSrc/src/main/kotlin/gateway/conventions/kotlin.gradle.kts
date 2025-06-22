@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     implementation(libs.bundles.kotlinx)
@@ -30,13 +30,12 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(libs.bundles.koin.test)
+    testImplementation(libs.mockk)
 }
 
 detekt {
     buildUponDefaultConfig = true
     config.from(rootDir.path + "/detekt.yaml")
-    // FIXME: Temporary
-    ignoreFailures = true
 }
 
 kover {
