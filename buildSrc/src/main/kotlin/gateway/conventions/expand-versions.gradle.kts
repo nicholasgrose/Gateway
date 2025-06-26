@@ -1,8 +1,8 @@
 package gateway.conventions
 
-import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.main
-import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.processResources
-import gradle.kotlin.dsl.accessors._4964ece764ced77546b2b800bcde52db.sourceSets
+plugins {
+    java
+}
 
 /**
  * Extension for configuring the version expanding convention plugin
@@ -37,7 +37,7 @@ project.afterEvaluate {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
             with(copySpec {
-                from(sourceSets.main.get().resources.srcDirs)
+                from(project.sourceSets.main.get().resources.srcDirs)
 
                 filesMatching(extension.filePattern.get()) {
                     expand("version" to version)
