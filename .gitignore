@@ -115,3 +115,7 @@ run/
 .idea/vcs.xml
 .idea/kotlinc.xml
 .idea/material_theme_project_new.xml
+buildSrc/src/main/kotlin/gateway/conventions/.idea/material_theme_project_new.xml
+buildSrc/src/main/kotlin/gateway/conventions/.idea/misc.xml
+buildSrc/src/main/kotlin/gateway/conventions/.idea/vcs.xml
+buildSrc/src/main/kotlin/gateway/conventions/.idea/gradle.xml
