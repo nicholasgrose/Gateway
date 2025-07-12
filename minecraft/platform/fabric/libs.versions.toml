@@ -2,13 +2,13 @@
 # Minecraft dependencies
 # https://fabricmc.net/develop/
 # https://www.minecraft.net/en-us/articles
-minecraft = "1.21.7"
+minecraft = "1.21.8"
 # https://github.com/FabricMC/yarn
-fabric-yarn = "1.21.7+build.6:v2"
+fabric-yarn = "1.21.8+build.1:v2"
 # https://github.com/FabricMC/fabric-loader
-fabric-loader = "0.16.14"
+fabric-loader = "0.17.2"
 # https://github.com/FabricMC/fabric
-fabric = "0.129.0+1.21.7"
+fabric = "0.133.4+1.21.8"
 
 # Build tools
 # https://github.com/FabricMC/fabric-loom

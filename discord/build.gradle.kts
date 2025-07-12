@@ -21,6 +21,8 @@ kordEx {
         classPackage = "gateway.i18n"
         translationBundle = "discord.strings"
     }
+
+    ignoreIncompatibleKotlinVersion = true
 }
 
 kover {

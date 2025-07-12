@@ -1,9 +1,9 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.2.0"
+kotlin = "2.2.20"
 # https://insert-koin.io/docs/support/releases/
-koin = "4.1.0"
+koin = "4.1.1"
 # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.2"
 # https://github.com/Kotlin/kotlinx-datetime
@@ -11,11 +11,11 @@ kotlinx-datetime = "0.7.1"
 
 # Test Dependencies
 # https://mockk.io
-mockk = "1.14.4"
+mockk = "1.14.5"
 
 # Build tools
 # https://github.com/GradleUp/shadow
-#shadow = "9.0.0-rc1"
+shadow = "9.1.0"
 
 # Testing tools
 # https://github.com/klahap/dotenv
@@ -23,15 +23,15 @@ mockk = "1.14.4"
 
 # Code analysis
 # https://github.com/Kotlin/kotlinx-kover
-kover = "0.9.1"
+kover = "0.9.2"
 # https://detekt.dev/
 detekt = "1.23.8"
 # https://www.jetbrains.com/help/qodana/deploy-qodana.html#Gradle+plugin
-qodana = "2025.1.1"
+qodana = "2025.2.1"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
-#changelog = "2.2.1"
+changelog = "2.4.0"
 
 [libraries]
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -58,12 +58,12 @@ plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref =
 [plugins]
 #kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 #kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-#shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 #dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
 #kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 #detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 #qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
-#changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
 
 [bundles]
 koin-test = ["koin-test", "koin-test-junit5"]
