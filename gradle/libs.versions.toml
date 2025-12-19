@@ -1,7 +1,7 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.2.20"
+kotlin = "2.3.0"
 # https://insert-koin.io/docs/support/releases/
 koin = "4.1.1"
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -11,11 +11,11 @@ kotlinx-datetime = "0.7.1"
 
 # Test Dependencies
 # https://mockk.io
-mockk = "1.14.5"
+mockk = "1.14.7"
 
 # Build tools
 # https://github.com/GradleUp/shadow
-shadow = "9.1.0"
+shadow = "9.3.0"
 
 # Testing tools
 # https://github.com/klahap/dotenv
@@ -23,15 +23,15 @@ shadow = "9.1.0"
 
 # Code analysis
 # https://github.com/Kotlin/kotlinx-kover
-kover = "0.9.2"
+kover = "0.9.4"
 # https://detekt.dev/
 detekt = "1.23.8"
 # https://www.jetbrains.com/help/qodana/deploy-qodana.html#Gradle+plugin
-qodana = "2025.2.1"
+qodana = "2025.3.1"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
-changelog = "2.4.0"
+changelog = "2.5.0"
 
 [libraries]
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }

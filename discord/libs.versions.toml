@@ -1,7 +1,7 @@
 [versions]
 # https://docs.kordex.dev/getting-started
 # https://github.com/Kord-Extensions/gradle-plugins
-kordex-plugin = "1.7.3"
+kordex-plugin = "1.8.1"
 
 [plugins]
 kordex = { id = "dev.kordex.gradle.kordex", version.ref = "kordex-plugin" }

@@ -9,6 +9,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/**/deployment.xml
+.idea/**/AndroidProjectSystem.xml
 
 # Plugins
 .idea/**/kotlinc.xml

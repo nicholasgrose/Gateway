@@ -1,14 +1,8 @@
 [versions]
 # Dependencies
-# https://github.com/sksamuel/hoplite
-hoplite = "2.9.0"
-# https://github.com/charleskorn/kaml
-kaml = "0.96.0"
+# https://github.com/him188/yamlkt
+yamlkt = "0.13.0"
 
 [libraries]
-hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }
-hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.ref = "hoplite" }
-kaml = { group = "com.charleskorn.kaml", name = "kaml", version.ref = "kaml" }
+yamlkt = { group = "net.mamoe.yamlkt", name = "yamlkt", version.ref = "yamlkt" }
 
-[bundles]
-hoplite = ["hoplite-core", "hoplite-yaml"]

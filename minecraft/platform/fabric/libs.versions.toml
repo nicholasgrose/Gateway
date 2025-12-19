@@ -2,17 +2,17 @@
 # Minecraft dependencies
 # https://fabricmc.net/develop/
 # https://www.minecraft.net/en-us/articles
-minecraft = "1.21.8"
+minecraft = "1.21.11"
 # https://github.com/FabricMC/yarn
-fabric-yarn = "1.21.8+build.1:v2"
+fabric-yarn = "1.21.11+build.3:v2"
 # https://github.com/FabricMC/fabric-loader
-fabric-loader = "0.17.2"
+fabric-loader = "0.18.3"
 # https://github.com/FabricMC/fabric
-fabric = "0.133.4+1.21.8"
+fabric = "0.140.0+1.21.11"
 
 # Build tools
 # https://github.com/FabricMC/fabric-loom
-fabric-loom = "1.11-SNAPSHOT"
+fabric-loom = "1.14-SNAPSHOT"
 
 [libraries]
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }

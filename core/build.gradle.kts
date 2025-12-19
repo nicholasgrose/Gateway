@@ -3,6 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(coreLibs.bundles.hoplite)
-    implementation(coreLibs.kaml)
+    implementation(coreLibs.yamlkt)
 }
