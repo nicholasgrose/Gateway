@@ -1,8 +1,10 @@
 import dev.kordex.gradle.plugins.kordex.DataCollection
+import org.gradle.kotlin.dsl.i18n
 
 plugins {
     id("gateway.conventions.kotlin")
     alias(discordLibs.plugins.kordex)
+    alias(discordLibs.plugins.i18n)
 }
 
 dependencies {
@@ -17,12 +19,11 @@ kordEx {
         dataCollection(DataCollection.Standard)
     }
 
-    i18n {
-        classPackage = "gateway.i18n"
-        translationBundle = "discord.strings"
-    }
-
     ignoreIncompatibleKotlinVersion = true
+}
+
+i18n {
+    bundle("discord.strings", "gateway.i18n")
 }
 
 kover {

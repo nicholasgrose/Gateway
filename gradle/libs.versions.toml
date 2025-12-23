@@ -8,6 +8,8 @@ koin = "4.1.1"
 kotlinx-coroutines = "1.10.2"
 # https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.7.1"
+# https://github.com/oshai/kotlin-logging
+kotlinLogging = "7.0.13"
 
 # Test Dependencies
 # https://mockk.io
@@ -41,6 +43,8 @@ koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5", version = "koin
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlinLogging" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 

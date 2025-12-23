@@ -26,6 +26,8 @@ dependencies {
 
     implementation(libs.bundles.kotlinx)
 
+    implementation(libs.kotlinLogging)
+
     detektPlugins(libs.detekt.formatting)
 
     testImplementation(kotlin("test"))

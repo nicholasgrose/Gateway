@@ -17,6 +17,7 @@ repositories {
 dependencies {
     compileOnly(paperLibs.paper.api)
     implementation(project(":core"))
+    implementation(project(":discord"))
     implementation(project(":minecraft:common"))
 }
 
