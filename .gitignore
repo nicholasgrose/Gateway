@@ -108,3 +108,5 @@ run/
 
 # Gradle docker cache
 .gradleDocker
+.idea/discord.xml
+.idea/material_theme_project_new.xml
