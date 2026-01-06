@@ -1,7 +1,6 @@
 package xyz.rose.gateway.core
 
 import org.koin.core.definition.KoinDefinition
-import org.koin.dsl.bind
 import org.koin.dsl.binds
 import xyz.rose.gateway.core.capability.GatewayCapability
 import xyz.rose.gateway.core.platform.GatewayPlatform

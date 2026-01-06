@@ -5,14 +5,12 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.mp.KoinPlatform.getKoin
-import xyz.rose.gateway.core.EmbeddedGatewayApp
+import xyz.rose.gateway.core.EmbeddedGatewayEnvironment
 import xyz.rose.gateway.core.GatewayApp
-import xyz.rose.gateway.core.GatewayEnvironment
-import xyz.rose.gateway.core.config.CombinedGatewayConfigBuilder
 import xyz.rose.gateway.core.config.YamlFileConfigSource
-import xyz.rose.gateway.core.gateway
-import xyz.rose.gateway.platform.discord.DiscordPlatformProvider
-import xyz.rose.gateway.platform.minecraft.common.MinecraftPlatformProvider
+import xyz.rose.gateway.core.gatewayModule
+import xyz.rose.gateway.platform.discord.DiscordPlatform
+import xyz.rose.gateway.platform.minecraft.common.MinecraftPlatform
 import java.nio.file.Path
 
 /**
@@ -30,34 +28,30 @@ class GatewayPlugin : JavaPlugin() {
     override fun onEnable() {
         val configPath = dataFolder.toPath().resolve("config.yml")
 
-        initializeGateway(configPath)
+        // This will eventually need to be saved off so we can "restart" Gateway by destroying and rebuilding this module
+        val gatewayModule = newGatewayModule(configPath)
+
+        startKoin {
+            modules(gatewayModule)
+        }
+
         getKoin().get<GatewayApp>().start()
 
         pluginLogger.info { "Gateway started!" }
     }
 
     /**
-     * Initializes the Gateway application with the specified configuration file path.
+     * Create the Gateway runtime module
      *
-     * This method sets up the Gateway runtime environment by loading the configuration from the provided YAML file,
-     * creating the relevant Gateway components, and registering platform providers.
-     *
-     * @param configPath The path to the YAML configuration file that specifies the Gateway application settings.
+     * @param configPath The path to the config file
      */
-    private fun initializeGateway(configPath: Path) {
-        startKoin {
-            gateway(
-                GatewayEnvironment(
-                    logger = pluginLogger,
-                    appProvider = { EmbeddedGatewayApp() },
-                    configBuilder = CombinedGatewayConfigBuilder(
-                        YamlFileConfigSource(configPath)
-                    ),
-                    providers = listOf(MinecraftPlatformProvider(), DiscordPlatformProvider())
-                )
-            )
-        }
-    }
+    fun newGatewayModule(configPath: Path) = gatewayModule(
+        EmbeddedGatewayEnvironment(
+            logger = pluginLogger,
+            platforms = listOf(MinecraftPlatform.definition(), DiscordPlatform.definition()),
+            source = YamlFileConfigSource(configPath)
+        )
+    )
 
     override fun onDisable() {
         getKoin().get<GatewayApp>().stop()

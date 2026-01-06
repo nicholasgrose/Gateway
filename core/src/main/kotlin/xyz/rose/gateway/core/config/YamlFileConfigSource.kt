@@ -15,6 +15,9 @@ import java.nio.file.Path
  * @param path The path to the YAML file
  */
 class YamlFileConfigSource<T>(path: Path) : GatewayConfigSource<T> {
+    /**
+     * The file to read and write config data from
+     */
     val file: File = path.toFile()
 
     override fun load(serializer: KSerializer<T>): GatewayConfigLoadResult<T> {

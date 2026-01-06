@@ -7,7 +7,7 @@ import kotlin.test.Test
  *
  * @constructor Create a new module extension test
  */
-class ModuleExtensionTest {
+class GatewayModuleExtensionTest {
     @Test
     fun placeholder() {
         TODO("Create this class")

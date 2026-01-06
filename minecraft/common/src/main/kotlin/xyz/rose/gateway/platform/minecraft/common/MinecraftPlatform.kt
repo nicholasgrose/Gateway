@@ -1,22 +1,21 @@
-package xyz.rose.gateway.platform.discord
+package xyz.rose.gateway.platform.minecraft.common
 
 import xyz.rose.gateway.core.platform.GatewayPlatform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
-import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
+import xyz.rose.gateway.platform.minecraft.common.config.MinecraftConfigSchema
 
 /**
- * The entry point for the Discord platform's connection logic.
+ * The entry point for the Minecraft platform's connection logic.
  *
- * @constructor Create a new Discord platform
+ * @constructor Create a new Minecraft platform
  */
-class DiscordPlatform : GatewayPlatform {
+class MinecraftPlatform : GatewayPlatform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
-            schema = DiscordConfigSchema(),
-            provider = { DiscordPlatformProvider() }
+            schema = MinecraftConfigSchema(),
+            provider = { MinecraftPlatformProvider() }
         )
-
     }
 
     override fun connect() {
