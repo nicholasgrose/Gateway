@@ -10,5 +10,6 @@ import net.fabricmc.api.ModInitializer
 class GatewayMod : ModInitializer {
     override fun onInitialize() {
         println("Hello Fabric world!")
+        FabricChatEventListeners.addChatListeners()
     }
 }

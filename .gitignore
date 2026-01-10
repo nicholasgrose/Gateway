@@ -110,3 +110,4 @@ run/
 .gradleDocker
 .idea/discord.xml
 .idea/material_theme_project_new.xml
+.idea/codeStyles/codeStyleConfig.xml

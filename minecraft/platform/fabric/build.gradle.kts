@@ -31,6 +31,7 @@ dependencies {
     mappings(fabricLibs.fabric.yarn.get().toString())
 
     modImplementation(fabricLibs.bundles.fabric)
+    modImplementation("net.kyori:adventure-platform-mod-shared-fabric-repack:6.7.0")
 }
 
 extensions.getByType<ExpandVersionsPluginExtension>().filePattern.set("fabric.mod.json")
