@@ -21,6 +21,7 @@ class CombinedGatewayConfigTest {
         serializer: KSerializer<Map<String, Any>> = mockk(),
         source: GatewayConfigSource<Map<String, Any>> = mockk {
             every { load(serializer) } returns loadResult
+            every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
         },
         schemas: List<GatewayConfigSchema<Any>> = emptyList(),
     ): CombinedGatewayConfig {
@@ -43,14 +44,36 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets config for schema 1 on successful load`() {
-        val config = testConfig(GatewayConfigLoadResult.Success(mapOf("schema1" to "hello")))
+        @Suppress("UNCHECKED_CAST")
+        val config = testConfig(
+            loadResult = GatewayConfigLoadResult.Success(mapOf("schema1" to "hello")),
+            schemas = listOf(
+                mockk {
+                    every { key } returns "schema1"
+                    every { injectableType } returns String::class as KClass<Any>
+                }
+            )
+        )
 
         assertEquals("hello", config.getConfig("schema1"))
     }
 
     @Test
     fun `gets config for schema 2 on successful load`() {
-        val config = testConfig(GatewayConfigLoadResult.Success(mapOf("schema1" to "hello", "schema2" to "world")))
+        @Suppress("UNCHECKED_CAST")
+        val config = testConfig(
+            loadResult = GatewayConfigLoadResult.Success(mapOf("schema1" to "hello", "schema2" to "world")),
+            schemas = listOf(
+                mockk {
+                    every { key } returns "schema1"
+                    every { injectableType } returns String::class as KClass<Any>
+                },
+                mockk {
+                    every { key } returns "schema2"
+                    every { injectableType } returns String::class as KClass<Any>
+                }
+            )
+        )
 
         assertEquals("world", config.getConfig("schema2"))
     }
@@ -96,12 +119,14 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets default config for schema 1 when source is uninitialized`() {
+        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Uninitialized(),
             schemas = listOf(
                 mockk {
                     every { key } returns "schema1"
                     every { default } returns "hello"
+                    every { injectableType } returns String::class as KClass<Any>
                 }
             )
         )
@@ -112,16 +137,19 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets default config for schema 2 when source is uninitialized`() {
+        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Uninitialized(),
             schemas = listOf(
                 mockk {
                     every { key } returns "schema1"
                     every { default } returns "hello"
+                    every { injectableType } returns String::class as KClass<Any>
                 },
                 mockk {
                     every { key } returns "schema2"
                     every { default } returns "world"
+                    every { injectableType } returns String::class as KClass<Any>
                 }
             )
         )
@@ -131,16 +159,20 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `saves default config to source on uninitialized load`() {
-        val source = mockk<GatewayConfigSource<Map<String, Any>>>(relaxed = true)
         val serializer = mockk<KSerializer<Map<String, Any>>>()
+        val source = mockk<GatewayConfigSource<Map<String, Any>>> {
+            every { load(serializer) } returns GatewayConfigLoadResult.Uninitialized()
+            every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
+        }
+        @Suppress("UNCHECKED_CAST")
         testConfig(
-            loadResult = GatewayConfigLoadResult.Uninitialized(),
             source = source,
             serializer = serializer,
             schemas = listOf(
                 mockk {
                     every { key } returns "schema1"
                     every { default } returns "hello"
+                    every { injectableType } returns String::class as KClass<Any>
                 }
             )
         )
