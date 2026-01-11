@@ -5,8 +5,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import java.io.IOException
-import kotlin.collections.associateBy
-import kotlin.collections.map
 
 /**
  * The config for the embedded Gateway app
@@ -35,14 +33,11 @@ class CombinedGatewayConfig(
     /**
      * The map of loaded schemas and their data
      */
-    val loadedConfig: Map<String, LoadedSchema>
-
-    init {
+    val loadedConfig: Map<String, LoadedSchema> = run {
         val schemas = platforms.map { it.schema }.associateBy { it.key }
         val serializer = serializer ?: CombinedGatewaySchemaSerializer(schemas)
-        val loadResult = source.load(serializer)
 
-        loadedConfig = when (loadResult) {
+        when (val loadResult = source.load(serializer)) {
             is GatewayConfigLoadResult.Success<Map<String, Any>> -> loadResult.data.mapValues {
                 LoadedSchema(
                     schemas[it.key] ?: throw IllegalArgumentException("No schema found for loaded key: ${it.key}"),
@@ -63,6 +58,9 @@ class CombinedGatewayConfig(
                 }
 
             is GatewayConfigLoadResult.Failure<*> -> schemas.mapValues { LoadedSchema(it.value, it.value.default) }
+                .also {
+                    logger.warn { "Failed to load config: ${loadResult.throwable.message}" }
+                }
         }
     }
 
@@ -70,8 +68,7 @@ class CombinedGatewayConfig(
         val schema = loadedConfig[key] ?: throw NoSuchElementException("No config found for key: $key")
         val data = schema.data
 
-        @Suppress("UNCHECKED_CAST")
-        if (data::class == schema.schema.injectableType) return data as T
+        @Suppress("UNCHECKED_CAST") if (data::class == schema.schema.injectableType) return data as T
 
         throw IllegalArgumentException("Config data type does not match schema type for key: $key")
     }
