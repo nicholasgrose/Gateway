@@ -37,6 +37,7 @@ class GatewayPlugin : JavaPlugin() {
 
         getKoin().get<GatewayApp>().start()
 
+        server.pluginManager.registerEvents(PaperEventListeners, this)
         pluginLogger.info { "Gateway started!" }
     }
 
