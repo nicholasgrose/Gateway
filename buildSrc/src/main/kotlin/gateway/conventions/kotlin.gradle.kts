@@ -1,8 +1,6 @@
 package gateway.conventions
 
 import gateway.libs
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -25,6 +23,7 @@ dependencies {
     implementation(libs.koin.core)
 
     implementation(libs.bundles.kotlinx)
+    implementation(libs.yamlkt)
 
     implementation(libs.kotlinLogging)
 
@@ -59,5 +58,7 @@ tasks {
 
     test {
         useJUnitPlatform()
+        // Mockk does some byte manipulation to work. This fixes or hides the warning that gneerates in the console.
+        jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
     }
 }

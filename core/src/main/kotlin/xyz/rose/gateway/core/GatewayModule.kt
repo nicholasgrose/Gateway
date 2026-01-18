@@ -1,6 +1,7 @@
 package xyz.rose.gateway.core
 
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 /**
@@ -18,6 +19,6 @@ fun gatewayModule(env: GatewayEnvironment) = module {
     singleOf(env.appProvider)
 
     env.platforms.forEach { platform ->
-        singleOf(platform.provider)
+        single(named(platform.schema.key)) { platform.provider(this) }
     }
 }

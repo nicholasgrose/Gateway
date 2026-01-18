@@ -4,11 +4,11 @@
 # https://www.minecraft.net/en-us/articles
 minecraft = "1.21.11"
 # https://github.com/FabricMC/yarn
-fabric-yarn = "1.21.11+build.3:v2"
+fabric-yarn = "1.21.11+build.4:v2"
 # https://github.com/FabricMC/fabric-loader
 fabric-loader = "0.18.4"
 # https://github.com/FabricMC/fabric
-fabric = "0.140.2+1.21.11"
+fabric = "0.141.1+1.21.11"
 
 # Build tools
 # https://github.com/FabricMC/fabric-loom

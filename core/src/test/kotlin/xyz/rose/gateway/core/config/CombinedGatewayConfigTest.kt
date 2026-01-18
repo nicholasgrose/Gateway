@@ -16,7 +16,18 @@ import kotlin.test.assertEquals
  * @constructor Create a new CombinedGatewayConfigTest
  */
 class CombinedGatewayConfigTest {
-    fun testConfig(
+    private fun createSchema(
+        key: String,
+        default: Any = "default",
+        type: KClass<*> = String::class
+    ): GatewayConfigSchema<Any> = mockk {
+        every { this@mockk.key } returns key
+        every { this@mockk.default } returns default
+        @Suppress("UNCHECKED_CAST")
+        every { this@mockk.injectableType } returns type as KClass<Any>
+    }
+
+    private fun testConfig(
         loadResult: GatewayConfigLoadResult<Map<String, Any>> = GatewayConfigLoadResult.Success(emptyMap()),
         serializer: KSerializer<Map<String, Any>> = mockk(),
         source: GatewayConfigSource<Map<String, Any>> = mockk {
@@ -24,35 +35,25 @@ class CombinedGatewayConfigTest {
             every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
         },
         schemas: List<GatewayConfigSchema<Any>> = emptyList(),
-    ): CombinedGatewayConfig {
-        val config = CombinedGatewayConfig(
-            source = source,
-            platforms = schemas.map { GatewayPlatformDefinition(it, mockk()) },
-            logger = mockk(relaxed = true),
-            serializer = serializer
-        )
-
-        return config
-    }
+    ): CombinedGatewayConfig = CombinedGatewayConfig(
+        source = source,
+        platforms = schemas.map { GatewayPlatformDefinition(it, mockk()) },
+        logger = mockk(relaxed = true),
+        serializer = serializer
+    )
 
     @Test
     fun `throws error when loading unregistered config`() {
-        val config = testConfig(GatewayConfigLoadResult.Success(emptyMap()))
+        val config = testConfig()
 
         assertThrows<NoSuchElementException> { config.getConfig<String>("unregistered") }
     }
 
     @Test
     fun `gets config for schema 1 on successful load`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Success(mapOf("schema1" to "hello")),
-            schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
-            )
+            schemas = listOf(createSchema("schema1"))
         )
 
         assertEquals("hello", config.getConfig("schema1"))
@@ -60,19 +61,9 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets config for schema 2 on successful load`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Success(mapOf("schema1" to "hello", "schema2" to "world")),
-            schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { injectableType } returns String::class as KClass<Any>
-                },
-                mockk {
-                    every { key } returns "schema2"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
-            )
+            schemas = listOf(createSchema("schema1"), createSchema("schema2"))
         )
 
         assertEquals("world", config.getConfig("schema2"))
@@ -80,16 +71,9 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets default config for schema 1 on unsuccessful load`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Failure(Exception("Failed to load config")),
-            schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { default } returns "hello"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
-            )
+            schemas = listOf(createSchema("schema1", default = "hello"))
         )
 
         assertEquals("hello", config.getConfig("schema1"))
@@ -97,20 +81,11 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets default config for schema 2 on unsuccessful load`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Failure(Exception("Failed to load config")),
             schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { default } returns "hello"
-                    every { injectableType } returns String::class as KClass<Any>
-                },
-                mockk {
-                    every { key } returns "schema2"
-                    every { default } returns "world"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
+                createSchema("schema1", default = "hello"),
+                createSchema("schema2", default = "world")
             )
         )
 
@@ -119,38 +94,21 @@ class CombinedGatewayConfigTest {
 
     @Test
     fun `gets default config for schema 1 when source is uninitialized`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Uninitialized(),
-            schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { default } returns "hello"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
-            )
+            schemas = listOf(createSchema("schema1", default = "hello"))
         )
 
         assertEquals("hello", config.getConfig("schema1"))
     }
 
-
     @Test
     fun `gets default config for schema 2 when source is uninitialized`() {
-        @Suppress("UNCHECKED_CAST")
         val config = testConfig(
             loadResult = GatewayConfigLoadResult.Uninitialized(),
             schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { default } returns "hello"
-                    every { injectableType } returns String::class as KClass<Any>
-                },
-                mockk {
-                    every { key } returns "schema2"
-                    every { default } returns "world"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
+                createSchema("schema1", default = "hello"),
+                createSchema("schema2", default = "world")
             )
         )
 
@@ -164,17 +122,11 @@ class CombinedGatewayConfigTest {
             every { load(serializer) } returns GatewayConfigLoadResult.Uninitialized()
             every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
         }
-        @Suppress("UNCHECKED_CAST")
+
         testConfig(
             source = source,
             serializer = serializer,
-            schemas = listOf(
-                mockk {
-                    every { key } returns "schema1"
-                    every { default } returns "hello"
-                    every { injectableType } returns String::class as KClass<Any>
-                }
-            )
+            schemas = listOf(createSchema("schema1", default = "hello"))
         )
 
         verify(exactly = 1) { source.save(serializer, mapOf("schema1" to "hello")) }

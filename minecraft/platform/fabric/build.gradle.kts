@@ -4,6 +4,8 @@ plugins {
     id("gateway.conventions.kotlin")
     id("gateway.conventions.expand-versions")
     id("gateway.conventions.dev")
+    id("gateway.conventions.discord")
+    id("gateway.conventions.package")
     alias(fabricLibs.plugins.fabric.loom)
 }
 

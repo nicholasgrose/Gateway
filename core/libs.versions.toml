@@ -1,7 +1,4 @@
 [versions]
 # Dependencies
-# https://github.com/him188/yamlkt
-yamlkt = "0.13.0"
 
 [libraries]
-yamlkt = { group = "net.mamoe.yamlkt", name = "yamlkt", version.ref = "yamlkt" }

@@ -8,8 +8,10 @@ koin = "4.1.1"
 kotlinx-coroutines = "1.10.2"
 # https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.7.1"
+# https://github.com/him188/yamlkt
+yamlkt = "0.13.0"
 # https://github.com/oshai/kotlin-logging
-kotlinLogging = "7.0.13"
+kotlinLogging = "7.0.14"
 
 # Test Dependencies
 # https://mockk.io
@@ -17,7 +19,7 @@ mockk = "1.14.7"
 
 # Build tools
 # https://github.com/GradleUp/shadow
-shadow = "9.3.0"
+shadow = "9.3.1"
 
 # Testing tools
 # https://github.com/klahap/dotenv
@@ -44,6 +46,7 @@ koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5", version = "koin
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
+yamlkt = { group = "net.mamoe.yamlkt", name = "yamlkt", version.ref = "yamlkt" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlinLogging" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -52,17 +55,17 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
-#plugin-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+plugin-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
 #plugin-dotenv = { group = "io.github.klahap.dotenv", name = "dotenv", version.ref = "dotenv" }
 plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref = "qodana" }
-#plugin-changelog = { group = "org.jetbrains.changelog", name = "", version.ref = "changelog" }
+#plugin-changelog = { group = "org.jetbrains.changelog", name = "org.jetbrains.changelog.gradle.plugin", version.ref = "changelog" }
 
 [plugins]
 #kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 #kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+#shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 #dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
 #kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 #detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

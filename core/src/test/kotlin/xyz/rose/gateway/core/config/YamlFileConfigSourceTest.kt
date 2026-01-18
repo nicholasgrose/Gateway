@@ -5,17 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.exists
-import kotlin.io.path.readText
-import kotlin.io.path.writeBytes
-import kotlin.io.path.writeText
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertTrue
+import kotlin.io.path.*
+import kotlin.test.*
 
 /**
  * Tests for [YamlFileConfigSource]
@@ -27,33 +18,32 @@ class YamlFileConfigSourceTest {
     @TempDir
     lateinit var tempDir: Path
 
+    private val configDir get() = tempDir.resolve("config")
+
     /**
      * Gets a YAML file config source for a given file.
      *
      * @param T The type of the config object
      * @param file The name of the file to load
      */
-    fun <T> getSource(file: String) = YamlFileConfigSource<T>(configPath(file))
+    private fun <T> getSource(file: String) = YamlFileConfigSource<T>(configPath(file))
 
     /**
      * The path to the config file
      *
      * @param file The file name
      */
-    fun configPath(file: String): Path = tempDir.resolve("config/$file")
+    private fun configPath(file: String): Path = configDir.resolve(file)
 
     @BeforeEach
     fun setup() {
         // Ensure the config directory exists in temp
-        tempDir.resolve("config").createDirectories()
+        configDir.createDirectories()
 
         // Seed resources from src/test/resources into the temp directory
         listOf("test1.yml", "test2.yml", "test3.yml", "invalid.yml").forEach { fileName ->
             val resource = this::class.java.classLoader.getResourceAsStream("config/$fileName")
-            if (resource != null) {
-                val target = configPath(fileName)
-                target.writeBytes(resource.readAllBytes())
-            }
+            resource?.use { configPath(fileName).writeBytes(it.readAllBytes()) }
         }
     }
 
@@ -66,38 +56,38 @@ class YamlFileConfigSourceTest {
         fun `source fails load with uninitialized result when file doesn't exist`() {
             val result = getSource<String>("does_not_exist.yml").load(String.serializer())
 
-            assertIs<GatewayConfigLoadResult.Uninitialized<String>>(result, "load result should be uninitialized")
+            assertIs<GatewayConfigLoadResult.Uninitialized<String>>(result)
         }
 
         @Test
         fun `source fails load with error result when file is invalid`() {
             val result = getSource<YamlTestSchema.Invalid>("invalid.yml").load(YamlTestSchema.Invalid.serializer())
 
-            assertIs<GatewayConfigLoadResult.Failure<YamlTestSchema.Invalid>>(result, "load result should be failure")
+            assertIs<GatewayConfigLoadResult.Failure<YamlTestSchema.Invalid>>(result)
         }
 
         @Test
         fun `source loads yaml schema test 1`() {
             val result = getSource<YamlTestSchema.Test1>("test1.yml").load(YamlTestSchema.Test1.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test1>>(result, "load result should be success")
-            assertEquals(YamlTestSchema.Test1.EXPECTED_VALUE, result.data, "loaded data should match test 1 schema")
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test1>>(result)
+            assertEquals(YamlTestSchema.Test1.EXPECTED_VALUE, result.data)
         }
 
         @Test
         fun `source loads yaml schema test 2`() {
             val result = getSource<YamlTestSchema.Test2>("test2.yml").load(YamlTestSchema.Test2.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test2>>(result, "load result should be success")
-            assertEquals(YamlTestSchema.Test2.EXPECTED_VALUE, result.data, "loaded data should match test 2 schema")
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test2>>(result)
+            assertEquals(YamlTestSchema.Test2.EXPECTED_VALUE, result.data)
         }
 
         @Test
-        fun `source loads yaml schema test3`() {
+        fun `source loads yaml schema test 3`() {
             val result = getSource<YamlTestSchema.Test3>("test3.yml").load(YamlTestSchema.Test3.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test3>>(result, "load result should be success")
-            assertEquals(YamlTestSchema.Test3.EXPECTED_VALUE, result.data, "loaded data should match test 3 schema")
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test3>>(result)
+            assertEquals(YamlTestSchema.Test3.EXPECTED_VALUE, result.data)
         }
     }
 
@@ -111,8 +101,8 @@ class YamlFileConfigSourceTest {
             val filePath = "does_not_exist/bad.yml"
             val result = getSource<String>(filePath).save(String.serializer(), "hello")
 
-            assertIs<GatewayConfigSaveResult.Failure>(result, "save result should be failure")
-            assertFalse(configPath(filePath).exists(), "file should not exist")
+            assertIs<GatewayConfigSaveResult.Failure>(result)
+            assertFalse(configPath(filePath).exists())
         }
 
         @Test
@@ -121,8 +111,8 @@ class YamlFileConfigSourceTest {
             configPath(filePath).deleteIfExists()
             val result = getSource<String>(filePath).save(String.serializer(), "hello")
 
-            assertIs<GatewayConfigSaveResult.Success>(result, "save result should be success")
-            assertTrue(configPath(filePath).exists(), "file should exist")
+            assertIs<GatewayConfigSaveResult.Success>(result)
+            assertTrue(configPath(filePath).exists())
         }
 
         @Test
@@ -133,9 +123,9 @@ class YamlFileConfigSourceTest {
             file.writeText("old data")
             val result = getSource<String>(filePath).save(String.serializer(), "hello")
 
-            assertIs<GatewayConfigSaveResult.Success>(result, "save result should be success")
-            assertTrue(configPath(filePath).exists(), "file should exist")
-            assertEquals("hello", file.readText(), "file content should be updated")
+            assertIs<GatewayConfigSaveResult.Success>(result)
+            assertTrue(configPath(filePath).exists())
+            assertEquals("hello", file.readText())
         }
 
         @Test
@@ -147,19 +137,12 @@ class YamlFileConfigSourceTest {
                 YamlTestSchema.Test1.EXPECTED_VALUE
             )
 
-            assertIs<GatewayConfigSaveResult.Success>(result, "save result should be success")
+            assertIs<GatewayConfigSaveResult.Success>(result)
 
             val savedFile = getSource<YamlTestSchema.Test1>(fileName).load(YamlTestSchema.Test1.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test1>>(
-                savedFile,
-                "loading saved file should be success"
-            )
-            assertEquals(
-                YamlTestSchema.Test1.EXPECTED_VALUE,
-                savedFile.data,
-                "saved file should not differ after reload"
-            )
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test1>>(savedFile)
+            assertEquals(YamlTestSchema.Test1.EXPECTED_VALUE, savedFile.data)
         }
 
         @Test
@@ -171,19 +154,12 @@ class YamlFileConfigSourceTest {
                 YamlTestSchema.Test2.EXPECTED_VALUE
             )
 
-            assertIs<GatewayConfigSaveResult.Success>(result, "save result should be success")
+            assertIs<GatewayConfigSaveResult.Success>(result)
 
             val savedFile = getSource<YamlTestSchema.Test2>(fileName).load(YamlTestSchema.Test2.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test2>>(
-                savedFile,
-                "loading saved file should be success"
-            )
-            assertEquals(
-                YamlTestSchema.Test2.EXPECTED_VALUE,
-                savedFile.data,
-                "saved file should match test 2 schema"
-            )
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test2>>(savedFile)
+            assertEquals(YamlTestSchema.Test2.EXPECTED_VALUE, savedFile.data)
         }
 
         @Test
@@ -195,19 +171,12 @@ class YamlFileConfigSourceTest {
                 YamlTestSchema.Test3.EXPECTED_VALUE
             )
 
-            assertIs<GatewayConfigSaveResult.Success>(result, "save result should be success")
+            assertIs<GatewayConfigSaveResult.Success>(result)
 
             val savedFile = getSource<YamlTestSchema.Test3>(fileName).load(YamlTestSchema.Test3.serializer())
 
-            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test3>>(
-                savedFile,
-                "loading saved file should be success"
-            )
-            assertEquals(
-                YamlTestSchema.Test3.EXPECTED_VALUE,
-                savedFile.data,
-                "saved file should match test 3 schema"
-            )
+            assertIs<GatewayConfigLoadResult.Success<YamlTestSchema.Test3>>(savedFile)
+            assertEquals(YamlTestSchema.Test3.EXPECTED_VALUE, savedFile.data)
         }
     }
 }
