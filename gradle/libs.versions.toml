@@ -1,9 +1,9 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.3.0"
+kotlin = "2.3.20"
 # https://insert-koin.io/docs/support/releases/
-koin = "4.1.1"
+koin = "4.2.0"
 # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.2"
 # https://github.com/Kotlin/kotlinx-datetime
@@ -11,15 +11,15 @@ kotlinx-datetime = "0.7.1"
 # https://github.com/him188/yamlkt
 yamlkt = "0.13.0"
 # https://github.com/oshai/kotlin-logging
-kotlinLogging = "7.0.14"
+kotlinLogging = "8.0.01"
 
 # Test Dependencies
 # https://mockk.io
-mockk = "1.14.7"
+mockk = "1.14.9"
 
 # Build tools
 # https://github.com/GradleUp/shadow
-shadow = "9.3.1"
+shadow = "9.4.1"
 
 # Testing tools
 # https://github.com/klahap/dotenv
@@ -27,11 +27,11 @@ shadow = "9.3.1"
 
 # Code analysis
 # https://github.com/Kotlin/kotlinx-kover
-kover = "0.9.4"
+kover = "0.9.8"
 # https://detekt.dev/
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.2"
 # https://www.jetbrains.com/help/qodana/deploy-qodana.html#Gradle+plugin
-qodana = "2025.3.1"
+qodana = "2025.3.2"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin
@@ -51,14 +51,14 @@ kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", versio
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
-detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+detekt-formatting = { group = "dev.detekt", name = "detekt-formatting", version.ref = "detekt" }
 
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 plugin-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
 #plugin-dotenv = { group = "io.github.klahap.dotenv", name = "dotenv", version.ref = "dotenv" }
 plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
-plugin-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+plugin-detekt = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref = "qodana" }
 #plugin-changelog = { group = "org.jetbrains.changelog", name = "org.jetbrains.changelog.gradle.plugin", version.ref = "changelog" }
 

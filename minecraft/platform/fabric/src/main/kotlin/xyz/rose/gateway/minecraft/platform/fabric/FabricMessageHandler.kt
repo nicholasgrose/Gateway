@@ -1,18 +1,16 @@
 package xyz.rose.gateway.minecraft.platform.fabric
 
 import net.kyori.adventure.text.Component
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.message.SignedMessage
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
+import net.minecraft.network.chat.PlayerChatMessage
+import net.minecraft.server.level.ServerPlayer
 
 class FabricMessageHandler {
     companion object {
-        fun processMessage(fabricMessage: SignedMessage, sender: ServerPlayerEntity) {
-            val adventureMessage = Component.text("<${sender.displayName?.string}> ${fabricMessage.content.string}")
+        fun processMessage(fabricMessage: PlayerChatMessage, sender: ServerPlayer) {
+            val adventureMessage = Component.text("<${sender.displayName.string}> ${fabricMessage.signedBody.content}")
         }
 
-        fun processMessage(fabricMessage: Text) {
+        fun processMessage(fabricMessage: net.minecraft.network.chat.Component) {
             val adventureMessage = Component.text(fabricMessage.string)
         }
     }

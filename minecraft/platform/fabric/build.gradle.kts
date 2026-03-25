@@ -28,12 +28,10 @@ dependencies {
     include(project(":minecraft:common"))
 
     minecraft(fabricLibs.minecraft)
-    // We need to do a little bit of manipulation because this uses a non-standard version format for v2
-    // https://wiki.fabricmc.net/tutorial:mappings
-    mappings(fabricLibs.fabric.yarn.get().toString())
 
-    modImplementation(fabricLibs.bundles.fabric)
-    modImplementation("net.kyori:adventure-platform-mod-shared-fabric-repack:6.7.0")
+    implementation(fabricLibs.bundles.fabric)
+
+    implementation(fabricLibs.adventure.platform.fabric)
 }
 
 extensions.getByType<ExpandVersionsPluginExtension>().filePattern.set("fabric.mod.json")
@@ -45,5 +43,9 @@ tasks {
 
     runServer {
         dependsOn("setupDevEnv")
+    }
+
+    java {
+        withSourcesJar()
     }
 }

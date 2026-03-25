@@ -6,8 +6,7 @@ pluginManagement {
         maven("https://maven.fabricmc.net/")
         maven("https://repo.jpenilla.xyz/snapshots/")
 
-        maven("https://snapshots-repo.kordex.dev")
-        maven("https://releases-repo.kordex.dev")
+        maven("https://snapshots.kord.dev")
     }
 }
 

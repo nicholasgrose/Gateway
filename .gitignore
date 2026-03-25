@@ -111,3 +111,8 @@ run/
 .idea/discord.xml
 .idea/material_theme_project_new.xml
 .idea/codeStyles/codeStyleConfig.xml
+
+# Agent CLI user files
+.junie/
+.claude/
+.codex/

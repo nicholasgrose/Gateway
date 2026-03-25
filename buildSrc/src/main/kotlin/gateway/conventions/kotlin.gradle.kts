@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
-    id("io.gitlab.arturbosch.detekt")
+    id("dev.detekt")
     id("org.jetbrains.qodana")
 }
 
@@ -34,6 +34,10 @@ dependencies {
     testImplementation(libs.mockk)
 }
 
+kotlin {
+    jvmToolchain(25)
+}
+
 detekt {
     buildUponDefaultConfig = true
     config.from(rootDir.path + "/detekt.yaml")
@@ -50,15 +54,9 @@ kover {
 }
 
 tasks {
-    compileKotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
-        }
-    }
-
     test {
         useJUnitPlatform()
-        // Mockk does some byte manipulation to work. This fixes or hides the warning that gneerates in the console.
+        // Mockk does some byte manipulation to work. This fixes or hides the warning that generates in the console.
         jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
     }
 }
