@@ -2,13 +2,13 @@
 
 ## Platforms, Plugins, and Capabilities
 
-The Gateway application uses various abstractions as ways to group related functionality and ensure portable logic
+The GatewayApp application uses various abstractions as ways to group related functionality and ensure portable logic
 between applications.
 The primary abstractions used are platforms, plugins, and capabilities.
 
-## Platforms
+## Platforms (GatewayPlatform)
 
-Platforms are "the things that connect to Gateway".
+Platforms are "the things that connect to GatewayApp".
 They could also be thought of as "third parties".
 
 ### Platform Examples
@@ -23,12 +23,12 @@ They could also be thought of as "third parties".
 title: Opening Platform Connection
 ---
 sequenceDiagram
-    box Platform
-        participant Pla as Platform
-        participant Plu as Plugin
+    box GatewayPlatform
+        participant Pla as GatewayPlatform
+        participant Plu as GatewayPlugin
     end
-    box Gateway
-        participant G as Gateway Application
+    box GatewayApp
+        participant G as GatewayApp Application
         participant P as Platform Registry
         participant R as Plugin Registry
         participant C as Capability Registry
@@ -61,12 +61,12 @@ sequenceDiagram
 title: Closing Platform Connection
 ---
 sequenceDiagram
-    box Platform
-        participant Pla as Platform
-        participant Plu as Plugin
+    box GatewayPlatform
+        participant Pla as GatewayPlatform
+        participant Plu as GatewayPlugin
     end
-    box Gateway
-        participant G as Gateway Application
+    box GatewayApp
+        participant G as GatewayApp Application
         participant P as Platform Registry
         participant R as Plugin Registry
         participant C as Capability Registry
@@ -88,7 +88,7 @@ sequenceDiagram
     G -->>- Pla: Connection closed
 ```
 
-## Capabilities
+## Capabilities (GatewayCapability)
 
 If platforms are "what are we connecting to", capabilities are "what can we do with this connection".
 Capabilities are how we access platform-specific as well as general functionality.
@@ -99,7 +99,7 @@ Capabilities are how we access platform-specific as well as general functionalit
 * Sending a message
 * Parsing a message from a particular platform
 
-## Plugins
+## Plugins (GatewayPlugin)
 
 Plugins are less directly tied to the concept of a platform.
 Plugins group related pieces of functionality together for ease of organization or reasoning.
@@ -109,28 +109,33 @@ Plugins group related pieces of functionality together for ease of organization 
 * Minecraft whitelist functionality
 * Handling of messages from a particular platform
 
+## Registry Management
+
+Gateway has transitioned to using [Koin](https://insert-koin.io/) for dependency injection and registry management. 
+Registries for platforms, plugins, and capabilities are now managed as Koin modules, providing a more robust and flexible way to handle component lifecycles and dependencies.
+
 ## Organization
 
-### Gateway App
+### GatewayApp App
 
 #### Overall
 
 ```mermaid
 classDiagram
-    class Gateway {
+    class GatewayApp {
         <<interface>>
-        +connect(platform: Platform)
-        +disconnect(platform: Platform)
+        +start()
+        +stop()
     }
 
-    Gateway *-- GatewayConfig
-    Gateway *-- PlatformRegistry
-    Gateway *-- PluginRegistry
-    Gateway *-- CapabilityRegistry
+    GatewayApp *-- GatewayConfig
+    GatewayApp *-- PlatformRegistry
+    GatewayApp *-- PluginRegistry
+    GatewayApp *-- CapabilityRegistry
 
     class GatewayConfig {
         <<interface>>
-        +List~Platform~ platforms
+        +List~GatewayPlatform~ platforms
     }
 
     GatewayConfig o-- GatewayPlatformConfig
@@ -139,48 +144,48 @@ classDiagram
         <<interface>>
     }
 
-    class Platform {
+    class GatewayPlatform {
         <<interface>>
     }
 
-    Platform --> RegistryItem
-    PlatformRegistry *-- Platform
+    GatewayPlatform --> RegistryItem
+    PlatformRegistry *-- GatewayPlatform
 
     class PlatformRegistry {
         <<interface>>
-        +register(platform: Platform): PlatformRegistrationData
-        +deregister(platform: Platform)
+        +register(platform: GatewayPlatform): PlatformRegistrationData
+        +deregister(platform: GatewayPlatform)
     }
 
-    class Plugin {
+    class GatewayPlugin {
         <<interface>>
     }
 
-    Plugin --> RegistryItem
-    PluginRegistry *-- Plugin
+    GatewayPlugin --> RegistryItem
+    PluginRegistry *-- GatewayPlugin
 
     class PluginRegistry {
         <<interface>>
-        +register(plugin: Plugin): PluginRegistrationData
-        +deregister(plugin: Plugin)
+        +register(plugin: GatewayPlugin): PluginRegistrationData
+        +deregister(plugin: GatewayPlugin)
     }
 
-    class Capability {
+    class GatewayCapability {
         <<interface>>
     }
 
-    Capability --> RegistryItem
-    CapabilityRegistry *-- Capability
+    GatewayCapability --> RegistryItem
+    CapabilityRegistry *-- GatewayCapability
 
     class CapabilityRegistry {
         <<interface>>
-        +register(capability: Capability): CapabilityRegistrationData
+        +register(capability: GatewayCapability): CapabilityRegistrationData
         +deregister()
     }
 
-    PlatformRegistry <|-- Registry~Platform~
-    PluginRegistry <|-- Registry~Plugin~
-    CapabilityRegistry <|-- Registry~Capability~
+    PlatformRegistry <|-- Registry~GatewayPlatform~
+    PluginRegistry <|-- Registry~GatewayPlugin~
+    CapabilityRegistry <|-- Registry~GatewayCapability~
 
     class Registry~I~ {
         <<interface>>
@@ -206,14 +211,14 @@ classDiagram
 
 ```mermaid
 classDiagram
-    SendMessageCapability <|-- Capability
-    MessageEventCapability <|-- Capability
-    AllowlistReadCapability <|-- Capability
-    AllowlistWriteCapability <|-- Capability
-    PerformanceReadCapability <|-- Capability
-    VersionInfoReadCapability <|-- Capability
-    OnlineCountCapability <|-- Capability
-    ConnectionInfoReadCapability <|-- Capability
+    SendMessageCapability <|-- GatewayCapability
+    MessageEventCapability <|-- GatewayCapability
+    AllowlistReadCapability <|-- GatewayCapability
+    AllowlistWriteCapability <|-- GatewayCapability
+    PerformanceReadCapability <|-- GatewayCapability
+    VersionInfoReadCapability <|-- GatewayCapability
+    OnlineCountCapability <|-- GatewayCapability
+    ConnectionInfoReadCapability <|-- GatewayCapability
 
     class SendMessageCapability {
         <<interface>>

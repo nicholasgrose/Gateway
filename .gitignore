@@ -116,3 +116,9 @@ run/
 .junie/
 .claude/
 .codex/
+
+# Zensical / Python
+.venv/
+site/
+__pycache__/
+.cache/

@@ -1,0 +1,18 @@
+[project]
+site_name = "Gateway"
+site_description = "A bridge between Minecraft and Discord."
+site_author = "Nicholas Rose"
+
+nav = [
+    { "Welcome" = "index.md" },
+    { "Quick Start" = "quick-start.md" },
+    { "Overview" = "overview.md" },
+    { "Architecture" = "architecture.md" },
+    { "Installation" = "installation.md" },
+    { "How-to" = "how-to.md" },
+    { "Fabric" = "fabric.md" },
+    { "Changelog" = "changelog.md" }
+]
+
+[theme]
+variant = "modern"

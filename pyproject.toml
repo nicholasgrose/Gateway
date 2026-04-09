@@ -1,0 +1,10 @@
+[project]
+name = "gateway"
+version = "0.1.0"
+description = "Gateway documentation"
+dependencies = [
+    "zensical",
+]
+
+[tool.uv]
+managed = true
