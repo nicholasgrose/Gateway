@@ -4,6 +4,12 @@ build:
 test:
     ./gradlew test
 
+lint:
+    ./gradlew detekt
+
+scan:
+    ./gradlew qodana
+
 server platform:
     ./gradlew :minecraft:platform:{{platform}}:runServer
 

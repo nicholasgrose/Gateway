@@ -90,6 +90,7 @@ fabric.properties
 **/.kotlin/
 **/build/
 !minecraft/platform/paper/src/**/build/
+.qodana
 
 # Ignore Gradle GUI config
 gradle-app.setting

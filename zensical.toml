@@ -1,7 +1,10 @@
 [project]
 site_name = "Gateway"
 site_description = "A bridge between Minecraft and Discord."
+repo_url = "https://github.com/nicholasgrose/Gateway"
+site_url = "https://nicholasgrose.github.io/Gateway/"
 site_author = "Nicholas Rose"
+copyright = "&copy; 2026 Nicholas Rose"
 
 nav = [
     { "Welcome" = "index.md" },
@@ -14,5 +17,47 @@ nav = [
     { "Changelog" = "changelog.md" }
 ]
 
-[theme]
-variant = "modern"
+[project.theme]
+features = [
+    "content.code.copy"
+]
+icon.logo = "lucide/messages-square"
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+palette.primary = "indigo"
+palette.accent = "deep orange"
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+palette.primary = "indigo"
+palette.accent = "deep orange"
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+palette.primary = "indigo"
+palette.accent = "deep orange"
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.snippets]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+    { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]

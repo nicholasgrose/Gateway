@@ -1,0 +1,18 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "junit",
+      "pattern": [
+        {
+          "regexp": "^\\s*(.*) > (.*) > (.*) FAILED$",
+          "message": 3
+        },
+        {
+          "regexp": "^\\s*(.*) at (.*):(\\d+)$",
+          "file": 2,
+          "line": 3
+        }
+      ]
+    }
+  ]
+}

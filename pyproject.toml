@@ -3,8 +3,10 @@ name = "gateway"
 version = "0.1.0"
 description = "Gateway documentation"
 dependencies = [
-    "zensical",
+    # https://github.com/zensical/zensical
+    "zensical>=0.0.46",
 ]
+requires-python = ">= 3.12"
 
 [tool.uv]
 managed = true

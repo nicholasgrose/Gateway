@@ -1,7 +1,6 @@
 package gateway.conventions
 
 import gateway.libs
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
@@ -27,7 +26,8 @@ dependencies {
 
     implementation(libs.kotlinLogging)
 
-    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.ktlint)
+    detektPlugins(libs.detekt.junit)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.bundles.koin.test)
@@ -58,5 +58,9 @@ tasks {
         useJUnitPlatform()
         // Mockk does some byte manipulation to work. This fixes or hides the warning that generates in the console.
         jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+    }
+
+    qodanaScan {
+        arguments.addAll("--config", rootDir.path + "/qodana.yaml")
     }
 }

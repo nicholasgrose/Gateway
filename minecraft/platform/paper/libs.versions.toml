@@ -1,7 +1,7 @@
 [versions]
 # Build tools
 # https://docs.papermc.io/paper/dev/project-setup
-paper-api = "26.1.1.build.+"
+paper-api = "26.1.2.build.+"
 
 # Testing tools
 # https://github.com/jpenilla/run-paper

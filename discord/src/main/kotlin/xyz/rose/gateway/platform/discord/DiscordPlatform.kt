@@ -16,7 +16,6 @@ class DiscordPlatform : GatewayPlatform {
             schema = DiscordConfigSchema(),
             provider = { DiscordPlatformProvider() }
         )
-
     }
 
     override fun connect() {

@@ -1,5 +1,4 @@
 import gateway.conventions.Expand_versions_gradle.ExpandVersionsPluginExtension
-import org.gradle.kotlin.dsl.getByType
 
 plugins {
     id("gateway.conventions.kotlin")
@@ -10,7 +9,7 @@ plugins {
     alias(paperLibs.plugins.run.paper)
 }
 
-val minecraftVersion: String by project
+val minecraftVersion = project.findProperty("versions.minecraft")?.toString()
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
