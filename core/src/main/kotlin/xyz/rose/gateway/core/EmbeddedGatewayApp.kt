@@ -3,9 +3,9 @@ package xyz.rose.gateway.core
 import io.github.oshai.kotlinlogging.KLogger
 import org.koin.core.module.Module
 import org.koin.mp.KoinPlatform.getKoin
-import xyz.rose.gateway.core.capability.GatewayCapability
-import xyz.rose.gateway.core.platform.GatewayPlatform
-import xyz.rose.gateway.core.platform.GatewayPlatformProvider
+import xyz.rose.gateway.core.capability.Capability
+import xyz.rose.gateway.core.platform.Platform
+import xyz.rose.gateway.core.platform.PlatformProvider
 import xyz.rose.gateway.core.plugin.GatewayPlugin
 
 /**
@@ -19,7 +19,7 @@ class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
      */
     val platformModules: List<Module> = run {
         val koin = getKoin()
-        val platformProviders = koin.getAll<GatewayPlatformProvider>()
+        val platformProviders = koin.getAll<PlatformProvider>()
 
         platformProviders.map { it.createRuntimeModule() }
     }
@@ -30,8 +30,12 @@ class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
         val koin = getKoin()
         koin.loadModules(platformModules)
 
-        koin.getAll<GatewayPlatform>().forEach { it.connect() }
-        koin.getAll<GatewayCapability>().forEach { it.onEnable() }
+        koin.getAll<Platform>().forEach { it.connect() }
+        koin.getAll<Capability>().forEach {
+            if (it is Capability.Enableable) {
+                it.onEnable()
+            }
+        }
         koin.getAll<GatewayPlugin>().forEach { it.onEnable() }
 
         logger.info { "Gateway started!" }
@@ -42,8 +46,12 @@ class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
 
         val koin = getKoin()
         koin.getAll<GatewayPlugin>().forEach { it.onDisable() }
-        koin.getAll<GatewayCapability>().forEach { it.onDisable() }
-        koin.getAll<GatewayPlatform>().forEach { it.disconnect() }
+        koin.getAll<Capability>().forEach {
+            if (it is Capability.Disableable) {
+                it.onDisable()
+            }
+        }
+        koin.getAll<Platform>().forEach { it.disconnect() }
 
         koin.unloadModules(platformModules)
 

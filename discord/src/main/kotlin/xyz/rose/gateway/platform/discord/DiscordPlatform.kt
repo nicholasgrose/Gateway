@@ -1,6 +1,6 @@
 package xyz.rose.gateway.platform.discord
 
-import xyz.rose.gateway.core.platform.GatewayPlatform
+import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
 import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
@@ -10,7 +10,7 @@ import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
  *
  * @constructor Create a new Discord platform
  */
-class DiscordPlatform : GatewayPlatform {
+class DiscordPlatform : Platform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
             schema = DiscordConfigSchema(),

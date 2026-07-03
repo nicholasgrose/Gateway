@@ -20,7 +20,7 @@ class CombinedGatewayConfigTest {
         key: String,
         default: Any = "default",
         type: KClass<*> = String::class
-    ): GatewayConfigSchema<Any> = mockk {
+    ): ConfigSchema<Any> = mockk {
         every { this@mockk.key } returns key
         every { this@mockk.default } returns default
         @Suppress("UNCHECKED_CAST")
@@ -30,11 +30,11 @@ class CombinedGatewayConfigTest {
     private fun testConfig(
         loadResult: GatewayConfigLoadResult<Map<String, Any>> = GatewayConfigLoadResult.Success(emptyMap()),
         serializer: KSerializer<Map<String, Any>> = mockk(),
-        source: GatewayConfigSource<Map<String, Any>> = mockk {
+        source: ConfigSource<Map<String, Any>> = mockk {
             every { load(serializer) } returns loadResult
             every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
         },
-        schemas: List<GatewayConfigSchema<Any>> = emptyList(),
+        schemas: List<ConfigSchema<Any>> = emptyList(),
     ): CombinedGatewayConfig = CombinedGatewayConfig(
         source = source,
         platforms = schemas.map { GatewayPlatformDefinition(it, mockk()) },
@@ -118,7 +118,7 @@ class CombinedGatewayConfigTest {
     @Test
     fun `saves default config to source on uninitialized load`() {
         val serializer = mockk<KSerializer<Map<String, Any>>>()
-        val source = mockk<GatewayConfigSource<Map<String, Any>>> {
+        val source = mockk<ConfigSource<Map<String, Any>>> {
             every { load(serializer) } returns GatewayConfigLoadResult.Uninitialized()
             every { save(serializer, any()) } returns GatewayConfigSaveResult.Success()
         }

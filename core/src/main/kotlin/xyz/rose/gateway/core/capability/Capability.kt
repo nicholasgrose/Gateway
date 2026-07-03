@@ -13,22 +13,26 @@ package xyz.rose.gateway.core.capability
  *
  * @constructor Create a new Gateway capability. This is called when the capability is first used.
  */
-interface GatewayCapability {
-    /**
-     * Called when the Gateway app is being started.
-     *
-     * This is notably called:
-     * - AFTER the platform is connected.
-     * - BEFORE any plugins are enabled.
-     */
-    fun onEnable()
+interface Capability {
+    interface Enableable : Capability {
+        /**
+         * Called when the Gateway app is being started.
+         *
+         * This is notably called:
+         * - AFTER the platform is connected.
+         * - BEFORE any plugins are enabled.
+         */
+        fun onEnable()
+    }
 
-    /**
-     * Called when the Gateway app is being shut down.
-     *
-     * This is notably called:
-     * - BEFORE the platform is disconnected.
-     * - AFTER all plugins are disabled.
-     */
-    fun onDisable()
+    interface Disableable : Capability {
+        /**
+         * Called when the Gateway app is being shut down.
+         *
+         * This is notably called:
+         * - BEFORE the platform is disconnected.
+         * - AFTER all plugins are disabled.
+         */
+        fun onDisable()
+    }
 }

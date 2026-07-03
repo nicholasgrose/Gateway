@@ -3,8 +3,8 @@ package xyz.rose.gateway.core
 import io.github.oshai.kotlinlogging.KLogger
 import org.koin.core.scope.Scope
 import xyz.rose.gateway.core.config.CombinedGatewayConfig
-import xyz.rose.gateway.core.config.GatewayConfig
-import xyz.rose.gateway.core.config.GatewayConfigSource
+import xyz.rose.gateway.core.config.Config
+import xyz.rose.gateway.core.config.ConfigSource
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 
 /**
@@ -18,8 +18,8 @@ import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 data class EmbeddedGatewayEnvironment(
     override val logger: KLogger,
     override val platforms: Collection<GatewayPlatformDefinition<*>>,
-    override val source: GatewayConfigSource<Map<String, Any>>
+    override val source: ConfigSource<Map<String, Any>>
 ) : GatewayEnvironment {
     override val appProvider: Scope.() -> GatewayApp = { EmbeddedGatewayApp(get()) }
-    override val configProvider: Scope.() -> GatewayConfig = { CombinedGatewayConfig(get(), get(), get()) }
+    override val configProvider: Scope.() -> Config = { CombinedGatewayConfig(get(), get(), get()) }
 }

@@ -5,8 +5,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import xyz.rose.gateway.core.capability.GatewayCapability
-import xyz.rose.gateway.core.platform.GatewayPlatform
+import xyz.rose.gateway.core.capability.Capability
+import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.plugin.GatewayPlugin
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -16,7 +16,7 @@ import kotlin.test.assertNotNull
  */
 class GatewayModuleExtensionTest : KoinTest {
 
-    interface TestPlatform : GatewayPlatform
+    interface TestPlatform : Platform
     class TestPlatformImpl : TestPlatform {
         override fun connect() {}
         override fun disconnect() {}
@@ -28,7 +28,7 @@ class GatewayModuleExtensionTest : KoinTest {
         override fun onDisable() {}
     }
 
-    interface TestCapability : GatewayCapability
+    interface TestCapability : Capability
     class TestCapabilityImpl : TestCapability {
         override fun onEnable() {}
         override fun onDisable() {}
@@ -47,7 +47,7 @@ class GatewayModuleExtensionTest : KoinTest {
             })
         }
 
-        assertNotNull(getKoin().get<GatewayPlatform>())
+        assertNotNull(getKoin().get<Platform>())
         assertNotNull(getKoin().get<TestPlatformImpl>())
     }
 
@@ -71,7 +71,7 @@ class GatewayModuleExtensionTest : KoinTest {
             })
         }
 
-        assertNotNull(getKoin().get<GatewayCapability>())
+        assertNotNull(getKoin().get<Capability>())
         assertNotNull(getKoin().get<TestCapabilityImpl>())
     }
 }

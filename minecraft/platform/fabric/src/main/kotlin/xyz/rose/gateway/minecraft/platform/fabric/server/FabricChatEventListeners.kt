@@ -1,7 +1,7 @@
-package xyz.rose.gateway.minecraft.platform.fabric
+package xyz.rose.gateway.minecraft.platform.fabric.server
 
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
-
+import xyz.rose.gateway.minecraft.platform.fabric.FabricMessageHandler
 
 class FabricChatEventListeners {
 

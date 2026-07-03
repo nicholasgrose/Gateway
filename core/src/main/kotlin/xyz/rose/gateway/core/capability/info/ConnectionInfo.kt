@@ -1,9 +1,11 @@
-package xyz.rose.gateway.core.capability
+package xyz.rose.gateway.core.capability.info
+
+import xyz.rose.gateway.core.capability.Capability
 
 /**
  * Platform connection information
  */
-interface ConnectionInfo : GatewayCapability {
+interface ConnectionInfo : Capability {
     /**
      * Hostname or IP address
      */

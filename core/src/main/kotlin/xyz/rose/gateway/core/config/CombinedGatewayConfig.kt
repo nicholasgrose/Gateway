@@ -16,11 +16,11 @@ import java.io.IOException
  * @constructor Create a new embedded Gateway config
  */
 class CombinedGatewayConfig(
-    val source: GatewayConfigSource<Map<String, Any>>,
+    val source: ConfigSource<Map<String, Any>>,
     platforms: Collection<GatewayPlatformDefinition<Any>>,
     logger: KLogger,
     serializer: KSerializer<Map<String, Any>>? = null
-) : GatewayConfig {
+) : Config {
     /**
      * A schema paired with its loaded data from the config source
      *
@@ -28,7 +28,7 @@ class CombinedGatewayConfig(
      * @property data The data loaded from the config source
      * @constructor Create a new loaded schema
      */
-    data class LoadedSchema(val schema: GatewayConfigSchema<Any>, val data: Any)
+    data class LoadedSchema(val schema: ConfigSchema<Any>, val data: Any)
 
     /**
      * The map of loaded schemas and their data

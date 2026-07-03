@@ -5,7 +5,7 @@ package xyz.rose.gateway.core.config
  *
  * @constructor Create a new Gateway config
  */
-interface GatewayConfig {
+interface Config {
     /**
      * Get a sub-config by key
      *

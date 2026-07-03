@@ -7,7 +7,7 @@ import kotlinx.serialization.KSerializer
  *
  * @constructor Create a new Gateway config file
  */
-interface GatewayConfigSource<T> {
+interface ConfigSource<T> {
     /**
      * Loads some data from this config source.
      *

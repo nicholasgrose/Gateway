@@ -10,7 +10,7 @@ import org.koin.core.module.Module
  *
  * @constructor Create a new Gateway platform provider
  */
-interface GatewayPlatformProvider {
+interface PlatformProvider {
     /**
      * Creates a module for the runtime environment of the platform.
      *

@@ -25,19 +25,19 @@ class CombinedGatewaySchemaSerializerTest {
         override val serializer: KSerializer<T>,
         override val injectableType: KClass<T>,
         override val default: T
-    ) : GatewayConfigSchema<T>
+    ) : ConfigSchema<T>
 
     @Suppress("UNCHECKED_CAST")
-    private val schema1: GatewayConfigSchema<Any> = TestSchema(
+    private val schema1: ConfigSchema<Any> = TestSchema(
         "test1",
         TestConfig1.serializer(),
         TestConfig1::class,
         TestConfig1("default", 0)
-    ) as GatewayConfigSchema<Any>
+    ) as ConfigSchema<Any>
 
     @Suppress("UNCHECKED_CAST")
-    private val schema2: GatewayConfigSchema<Any> =
-        TestSchema("test2", TestConfig2.serializer(), TestConfig2::class, TestConfig2(true)) as GatewayConfigSchema<Any>
+    private val schema2: ConfigSchema<Any> =
+        TestSchema("test2", TestConfig2.serializer(), TestConfig2::class, TestConfig2(true)) as ConfigSchema<Any>
 
     private val schemas = mapOf(
         "test1" to schema1,

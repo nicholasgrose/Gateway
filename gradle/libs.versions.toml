@@ -1,7 +1,7 @@
 [versions]
 # Dependencies
 # https://kotlinlang.org/
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 # https://insert-koin.io/docs/support/releases/
 koin = "4.2.1"
 # https://github.com/Kotlin/kotlinx.coroutines
@@ -19,11 +19,7 @@ mockk = "1.14.11"
 
 # Build tools
 # https://github.com/GradleUp/shadow
-shadow = "9.4.3"
-
-# Testing tools
-# https://github.com/klahap/dotenv
-#dotenv = "1.1.3"
+shadow = "9.6.0"
 
 # Code analysis
 # https://github.com/Kotlin/kotlinx-kover

@@ -7,10 +7,10 @@ import org.junit.jupiter.api.AfterEach
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import xyz.rose.gateway.core.config.GatewayConfigSchema
-import xyz.rose.gateway.core.config.GatewayConfigSource
+import xyz.rose.gateway.core.config.ConfigSchema
+import xyz.rose.gateway.core.config.ConfigSource
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
-import xyz.rose.gateway.core.platform.GatewayPlatformProvider
+import xyz.rose.gateway.core.platform.PlatformProvider
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
@@ -26,14 +26,14 @@ class GatewayModuleTest : KoinTest {
 
     @Test
     fun `test gatewayModule definitions`() {
-        val platformProvider = mockk<GatewayPlatformProvider>()
-        val schema = mockk<GatewayConfigSchema<Any>>(relaxed = true)
+        val platformProvider = mockk<PlatformProvider>()
+        val schema = mockk<ConfigSchema<Any>>(relaxed = true)
 
         // Use a simple function instead of Scope extension to avoid Koin trying to inject Scope
         val platformDefinition = GatewayPlatformDefinition(schema) { platformProvider }
 
         val logger = mockk<KLogger>(relaxed = true)
-        val configSource = mockk<GatewayConfigSource<*>>(relaxed = true)
+        val configSource = mockk<ConfigSource<*>>(relaxed = true)
 
         val env = mockk<GatewayEnvironment>(relaxed = true) {
             every { this@mockk.logger } returns logger

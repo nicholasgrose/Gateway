@@ -2,8 +2,8 @@ package xyz.rose.gateway.core
 
 import io.github.oshai.kotlinlogging.KLogger
 import org.koin.core.scope.Scope
-import xyz.rose.gateway.core.config.GatewayConfig
-import xyz.rose.gateway.core.config.GatewayConfigSource
+import xyz.rose.gateway.core.config.Config
+import xyz.rose.gateway.core.config.ConfigSource
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 
 
@@ -22,7 +22,7 @@ import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 interface GatewayEnvironment {
     val logger: KLogger
     val platforms: Collection<GatewayPlatformDefinition<*>>
-    val source: GatewayConfigSource<*>
+    val source: ConfigSource<*>
     val appProvider: Scope.() -> GatewayApp
-    val configProvider: Scope.() -> GatewayConfig
+    val configProvider: Scope.() -> Config
 }

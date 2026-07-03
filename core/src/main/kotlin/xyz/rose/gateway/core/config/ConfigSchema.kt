@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  *
  * @constructor Create a new Gateway config schema
  */
-interface GatewayConfigSchema<T : Any> {
+interface ConfigSchema<T : Any> {
     /**
      * The unique key for the configuration object.
      */

@@ -1,16 +1,20 @@
 package xyz.rose.gateway.core.platform
 
 import org.koin.core.scope.Scope
-import xyz.rose.gateway.core.config.GatewayConfigSchema
+import xyz.rose.gateway.core.config.ConfigSchema
 
 /**
  * Defines a Gateway platform and how to instantiate it.
  *
+ * @property type The type of platform this definition represents
+ * @property uid A unique identifier for this platform (must be unique for this platform type)
  * @property schema The schema for the configuration of this platform.
  * @property provider The Koin provider for this platform.
  * @constructor Create a new Gateway platform definition
  */
 data class GatewayPlatformDefinition<T : Any>(
-    val schema: GatewayConfigSchema<T>,
-    val provider: Scope.() -> GatewayPlatformProvider
+    val type: PlatformType,
+    val uid: String,
+    val schema: ConfigSchema<T>,
+    val provider: Scope.() -> PlatformProvider
 )

@@ -1,6 +1,6 @@
 package xyz.rose.gateway.platform.minecraft.common
 
-import xyz.rose.gateway.core.platform.GatewayPlatform
+import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
 import xyz.rose.gateway.platform.minecraft.common.config.MinecraftConfigSchema
@@ -10,7 +10,7 @@ import xyz.rose.gateway.platform.minecraft.common.config.MinecraftConfigSchema
  *
  * @constructor Create a new Minecraft platform
  */
-class MinecraftPlatform : GatewayPlatform {
+class MinecraftPlatform : Platform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
             schema = MinecraftConfigSchema(),

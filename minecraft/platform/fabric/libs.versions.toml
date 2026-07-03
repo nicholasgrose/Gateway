@@ -6,7 +6,7 @@ minecraft = "26.2"
 # https://github.com/FabricMC/fabric-loader
 fabric-loader = "0.19.3"
 # https://github.com/FabricMC/fabric
-fabric = "0.153.0+26.2"
+fabric = "0.155.0+26.2"
 
 # Build tools
 # https://github.com/FabricMC/fabric-loom
@@ -14,7 +14,7 @@ fabric-loom = "1.17-SNAPSHOT"
 
 # Mod Dependencies
 # https://github.com/PaperMC/adventure-platform-mod
-adventure-platform-fabric = "7.0.0"
+adventure-platform-fabric = "7.1.1"
 
 [libraries]
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }

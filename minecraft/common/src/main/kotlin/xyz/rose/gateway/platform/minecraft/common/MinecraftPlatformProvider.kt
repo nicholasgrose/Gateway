@@ -1,7 +1,7 @@
 package xyz.rose.gateway.platform.minecraft.common
 
 import org.koin.core.module.Module
-import xyz.rose.gateway.core.platform.GatewayPlatformProvider
+import xyz.rose.gateway.core.platform.PlatformProvider
 
 /**
  * The common Minecraft platform provider.
@@ -10,7 +10,7 @@ import xyz.rose.gateway.core.platform.GatewayPlatformProvider
  *
  * @constructor Create a new common Minecraft platform provider
  */
-class MinecraftPlatformProvider : GatewayPlatformProvider {
+class MinecraftPlatformProvider : PlatformProvider {
     override fun createRuntimeModule(): Module {
         TODO("Not yet implemented")
     }

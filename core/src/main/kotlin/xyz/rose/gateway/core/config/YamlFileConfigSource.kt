@@ -14,7 +14,7 @@ import java.nio.file.Path
  *
  * @param path The path to the YAML file
  */
-class YamlFileConfigSource<T>(path: Path) : GatewayConfigSource<T> {
+class YamlFileConfigSource<T>(path: Path) : ConfigSource<T> {
     /**
      * The file to read and write config data from
      */

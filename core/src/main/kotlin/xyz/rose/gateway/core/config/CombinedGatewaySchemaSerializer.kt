@@ -17,7 +17,7 @@ import kotlinx.serialization.encoding.encodeStructure
  * @constructor Create a new Combined gateway schema serializer
  */
 class CombinedGatewaySchemaSerializer(
-    private val schemas: Map<String, GatewayConfigSchema<Any>>
+    private val schemas: Map<String, ConfigSchema<Any>>
 ) : KSerializer<Map<String, Any>> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CombinedGatewayConfig") {

@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":discord"))
+    implementation(project(":minecraft:common"))
     include(project(":core"))
     include(project(":minecraft:common"))
 

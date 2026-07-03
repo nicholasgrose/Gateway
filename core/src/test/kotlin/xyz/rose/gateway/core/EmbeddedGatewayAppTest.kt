@@ -11,9 +11,9 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import xyz.rose.gateway.core.capability.GatewayCapability
-import xyz.rose.gateway.core.platform.GatewayPlatform
-import xyz.rose.gateway.core.platform.GatewayPlatformProvider
+import xyz.rose.gateway.core.capability.Capability
+import xyz.rose.gateway.core.platform.Platform
+import xyz.rose.gateway.core.platform.PlatformProvider
 import xyz.rose.gateway.core.plugin.GatewayPlugin
 import kotlin.test.Test
 
@@ -23,14 +23,14 @@ import kotlin.test.Test
 class EmbeddedGatewayAppTest : KoinTest {
 
     private val logger = mockk<io.github.oshai.kotlinlogging.KLogger>(relaxed = true)
-    private val platformProvider1 = mockk<GatewayPlatformProvider>()
-    private val platform1 = mockk<GatewayPlatform>(relaxed = true)
-    private val capability1 = mockk<GatewayCapability>(relaxed = true)
+    private val platformProvider1 = mockk<PlatformProvider>()
+    private val platform1 = mockk<Platform>(relaxed = true)
+    private val capability1 = mockk<Capability>(relaxed = true)
     private val plugin1 = mockk<GatewayPlugin>(relaxed = true)
 
-    private val platformProvider2 = mockk<GatewayPlatformProvider>()
-    private val platform2 = mockk<GatewayPlatform>(relaxed = true)
-    private val capability2 = mockk<GatewayCapability>(relaxed = true)
+    private val platformProvider2 = mockk<PlatformProvider>()
+    private val platform2 = mockk<Platform>(relaxed = true)
+    private val capability2 = mockk<Capability>(relaxed = true)
     private val plugin2 = mockk<GatewayPlugin>(relaxed = true)
 
     private val runtimeModule1: Module = module {

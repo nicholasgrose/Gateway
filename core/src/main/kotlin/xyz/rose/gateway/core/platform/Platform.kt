@@ -5,7 +5,7 @@ package xyz.rose.gateway.core.platform
  *
  * @constructor Create a new Gateway platform
  */
-interface GatewayPlatform {
+interface Platform {
     /**
      * Connect to the platform.
      *
