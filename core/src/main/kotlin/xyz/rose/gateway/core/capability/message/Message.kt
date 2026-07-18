@@ -3,6 +3,7 @@ package xyz.rose.gateway.core.capability.message
 import xyz.rose.gateway.core.Enrichable
 import xyz.rose.gateway.core.EnricherMetadata
 import xyz.rose.gateway.core.capability.message.segment.Segment
+import xyz.rose.gateway.core.platform.PlatformType
 import java.net.URL
 
 data class Message(
@@ -15,5 +16,5 @@ data class Sender(
     val username: String,
     val nickname: String = username,
     val style: Style = Style.NONE,
-    override val metadata: Map<String, EnricherMetadata> = emptyMap()
+    override val metadata: Map<PlatformType, Map<String, EnricherMetadata>> = emptyMap()
 ) : Enrichable

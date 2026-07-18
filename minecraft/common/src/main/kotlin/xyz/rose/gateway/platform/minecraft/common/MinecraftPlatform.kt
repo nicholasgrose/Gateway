@@ -3,6 +3,7 @@ package xyz.rose.gateway.platform.minecraft.common
 import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
+import xyz.rose.gateway.core.platform.PlatformType
 import xyz.rose.gateway.platform.minecraft.common.config.MinecraftConfigSchema
 
 /**
@@ -13,6 +14,8 @@ import xyz.rose.gateway.platform.minecraft.common.config.MinecraftConfigSchema
 class MinecraftPlatform : Platform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
+            uid = "minecraft",
+            type = PlatformType.Minecraft,
             schema = MinecraftConfigSchema(),
             provider = { MinecraftPlatformProvider() }
         )

@@ -3,6 +3,7 @@ package xyz.rose.gateway.platform.discord
 import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
+import xyz.rose.gateway.core.platform.PlatformType
 import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
 
 /**
@@ -13,6 +14,8 @@ import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
 class DiscordPlatform : Platform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
+            uid = "discord",
+            type = PlatformType.Discord,
             schema = DiscordConfigSchema(),
             provider = { DiscordPlatformProvider() }
         )

@@ -2,6 +2,7 @@ package xyz.rose.gateway.core.capability.message.segment
 
 import xyz.rose.gateway.core.EnricherMetadata
 import xyz.rose.gateway.core.capability.message.Style
+import xyz.rose.gateway.core.platform.PlatformType
 
 sealed interface MentionSegment : Segment {
     val prefix: String
@@ -13,7 +14,7 @@ data class UserMentionSegment(
     override val name: String,
     override val fallbackText: String,
     override val style: Style,
-    override val metadata: Map<String, EnricherMetadata> = emptyMap()
+    override val metadata: Map<PlatformType, Map<String, EnricherMetadata>> = emptyMap()
 ) : MentionSegment
 
 data class RoleMentionSegment(
@@ -21,7 +22,7 @@ data class RoleMentionSegment(
     override val name: String,
     override val fallbackText: String,
     override val style: Style,
-    override val metadata: Map<String, EnricherMetadata> = emptyMap()
+    override val metadata: Map<PlatformType, Map<String, EnricherMetadata>> = emptyMap()
 ) : MentionSegment
 
 data class ChannelMentionSegment(
@@ -29,5 +30,5 @@ data class ChannelMentionSegment(
     override val name: String,
     override val fallbackText: String,
     override val style: Style,
-    override val metadata: Map<String, EnricherMetadata> = emptyMap()
+    override val metadata: Map<PlatformType, Map<String, EnricherMetadata>> = emptyMap()
 ) : MentionSegment
