@@ -4,9 +4,9 @@ version = "0.1.0"
 description = "Gateway documentation"
 dependencies = [
     # https://github.com/zensical/zensical
-    "zensical>=0.0.50",
+    "zensical>=0.0.53",
 ]
-requires-python = ">= 3.12"
+requires-python = ">= 3.14"
 
 [tool.uv]
 managed = true
