@@ -7,10 +7,11 @@ import xyz.rose.gateway.core.capability.Capability
  */
 interface MessageEnricher : Capability {
     /**
-     * Enriches a message with platform-specific data
+     * Enriches a message with platform-specific data.
+     *
+     * Enrichers should add their data to the [GatewayMessage.metadata] map.
      *
      * @param message The message to enrich
-     * @return The enriched message
      */
-    fun enrich(message: Message): Message
+    suspend fun enrich(message: GatewayMessage)
 }

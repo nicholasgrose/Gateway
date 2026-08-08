@@ -1,14 +1,12 @@
 package xyz.rose.gateway.core.capability.message.segment
 
-import xyz.rose.gateway.core.EnricherMetadata
+import kotlinx.serialization.Serializable
 import xyz.rose.gateway.core.capability.message.Style
-import xyz.rose.gateway.core.platform.PlatformType
-import java.net.URL
 
+@Serializable
 data class UrlSegment(
     val displayText: String,
-    val url: URL,
+    val url: String,
     override val style: Style = Style.NONE,
-    override val fallbackText: String = url.toURI().toASCIIString(),
-    override val metadata: Map<PlatformType, Map<String, EnricherMetadata>> = emptyMap(),
+    override val fallbackText: String = url,
 ) : Segment

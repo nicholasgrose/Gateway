@@ -1,5 +1,8 @@
 package xyz.rose.gateway.core.capability.message
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Color(
     val red: Int,
     val green: Int,

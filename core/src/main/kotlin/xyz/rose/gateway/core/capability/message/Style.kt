@@ -1,5 +1,8 @@
 package xyz.rose.gateway.core.capability.message
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Style(
     val bold: Boolean,
     val italic: Boolean,

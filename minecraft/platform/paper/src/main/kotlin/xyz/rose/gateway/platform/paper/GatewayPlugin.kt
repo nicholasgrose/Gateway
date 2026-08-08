@@ -1,6 +1,7 @@
 package xyz.rose.gateway.platform.paper
 
 import io.github.oshai.kotlinlogging.slf4j.toKLogger
+import kotlinx.coroutines.runBlocking
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -15,8 +16,6 @@ import java.nio.file.Path
 
 /**
  * The Gateway Paper plugin
- *
- * @constructor Create a new Gateway Paper plugin
  */
 @Suppress("unused")
 class GatewayPlugin : JavaPlugin() {
@@ -35,7 +34,9 @@ class GatewayPlugin : JavaPlugin() {
             modules(gatewayModule)
         }
 
-        getKoin().get<GatewayApp>().start()
+        runBlocking {
+            getKoin().get<GatewayApp>().start()
+        }
 
         server.pluginManager.registerEvents(PaperEventListeners, this)
         pluginLogger.info { "Gateway started!" }
@@ -55,7 +56,9 @@ class GatewayPlugin : JavaPlugin() {
     )
 
     override fun onDisable() {
-        getKoin().get<GatewayApp>().stop()
+        runBlocking {
+            getKoin().get<GatewayApp>().stop()
+        }
         stopKoin()
 
         pluginLogger.info { "Gateway stopped!" }

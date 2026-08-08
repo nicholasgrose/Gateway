@@ -1,6 +1,9 @@
 package xyz.rose.gateway.core
 
 import io.github.oshai.kotlinlogging.KLogger
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.koin.core.module.Module
 import org.koin.mp.KoinPlatform.getKoin
 import xyz.rose.gateway.core.capability.Capability
@@ -24,34 +27,48 @@ class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
         platformProviders.map { it.createRuntimeModule() }
     }
 
-    override fun start() {
+    override suspend fun start() = coroutineScope {
         logger.info { "Starting Gateway..." }
 
         val koin = getKoin()
         koin.loadModules(platformModules)
 
-        koin.getAll<Platform>().forEach { it.connect() }
+        val platforms = koin.getAll<Platform>()
+        
+        // 1. Parallel connect
+        platforms.map { async { it.connect() } }.awaitAll()
+
+        // 2. Enable capabilities
         koin.getAll<Capability>().forEach {
             if (it is Capability.Enableable) {
                 it.onEnable()
             }
         }
+        
+        // 3. Enable plugins
         koin.getAll<GatewayPlugin>().forEach { it.onEnable() }
 
         logger.info { "Gateway started!" }
     }
 
-    override fun stop() {
+    override suspend fun stop() = coroutineScope {
         logger.info { "Stopping Gateway..." }
 
         val koin = getKoin()
+        
+        // 1. Disable plugins
         koin.getAll<GatewayPlugin>().forEach { it.onDisable() }
+        
+        // 2. Disable capabilities
         koin.getAll<Capability>().forEach {
             if (it is Capability.Disableable) {
                 it.onDisable()
             }
         }
-        koin.getAll<Platform>().forEach { it.disconnect() }
+        
+        // 3. Parallel disconnect
+        val platforms = koin.getAll<Platform>()
+        platforms.map { async { it.disconnect() } }.awaitAll()
 
         koin.unloadModules(platformModules)
 

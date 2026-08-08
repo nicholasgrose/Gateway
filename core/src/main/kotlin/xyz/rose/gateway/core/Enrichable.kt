@@ -1,17 +1,17 @@
 package xyz.rose.gateway.core
 
-import xyz.rose.gateway.core.platform.PlatformType
-
 /**
- * Data that can be enriched with additional information by a platform
- *
- * @property metadata A map of platform types to enricher metadata keyed by that platform's UID
+ * An object that can be enriched with data from other platforms.
  */
 interface Enrichable {
-    val metadata: Map<PlatformType, Map<String, EnricherMetadata>>
+    /**
+     * A map of metadata for this object.
+     * The key is a unique identifier for the enricher.
+     */
+    val metadata: MutableMap<String, EnricherMetadata>
 }
 
 /**
- * Metadata for enriching a message with additional information
+ * A marker interface for metadata that can be added to an [Enrichable] object.
  */
 interface EnricherMetadata

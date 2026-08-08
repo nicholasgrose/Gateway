@@ -1,9 +1,10 @@
 package xyz.rose.gateway.core.capability.message.segment
 
-import xyz.rose.gateway.core.Enrichable
+import kotlinx.serialization.Serializable
 import xyz.rose.gateway.core.capability.message.Style
 
-sealed interface Segment : Enrichable {
+@Serializable
+sealed interface Segment {
     val fallbackText: String
     val style: Style
 }
