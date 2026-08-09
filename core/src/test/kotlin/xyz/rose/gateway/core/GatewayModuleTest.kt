@@ -30,7 +30,7 @@ class GatewayModuleTest : KoinTest {
         val schema = mockk<ConfigSchema<Any>>(relaxed = true)
 
         // Use a simple function instead of Scope extension to avoid Koin trying to inject Scope
-        val platformDefinition = GatewayPlatformDefinition(schema) { platformProvider }
+        val platformDefinition = GatewayPlatformDefinition("test", "t1", schema) { platformProvider }
 
         val logger = mockk<KLogger>(relaxed = true)
         val configSource = mockk<ConfigSource<*>>(relaxed = true)

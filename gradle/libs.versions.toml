@@ -40,6 +40,7 @@ koin-test = { module = "io.insert-koin:koin-test", version = "koin" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5", version = "koin" }
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 yamlkt = { group = "net.mamoe.yamlkt", name = "yamlkt", version.ref = "yamlkt" }
@@ -53,7 +54,6 @@ detekt-ktlint = { group = "dev.detekt", name = "detekt-rules-ktlint-wrapper", ve
 plugin-kotlin-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-kotlin-serialization = { group = "org.jetbrains.kotlin.plugin.serialization", name = "org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 plugin-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
-#plugin-dotenv = { group = "io.github.klahap.dotenv", name = "dotenv", version.ref = "dotenv" }
 plugin-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 plugin-detekt = { group = "dev.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref = "qodana" }
@@ -63,7 +63,6 @@ plugin-qodana = { group = "org.jetbrains.qodana", name = "plugin", version.ref =
 #kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 #kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 #shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-#dotenv = { id = "io.github.klahap.dotenv", version.ref = "dotenv" }
 #kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 #detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 #qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
@@ -71,4 +70,4 @@ changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
 
 [bundles]
 koin-test = ["koin-test", "koin-test-junit5"]
-kotlinx = ["kotlinx-coroutines-core", "kotlinx-datetime"]
+kotlinx = ["kotlinx-coroutines-core", "kotlinx-coroutines-test", "kotlinx-datetime"]

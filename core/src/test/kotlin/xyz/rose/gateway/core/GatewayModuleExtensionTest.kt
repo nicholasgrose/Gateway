@@ -1,5 +1,6 @@
 package xyz.rose.gateway.core
 
+import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -18,8 +19,11 @@ class GatewayModuleExtensionTest : KoinTest {
 
     interface TestPlatform : Platform
     class TestPlatformImpl : TestPlatform {
-        override fun connect() {}
-        override fun disconnect() {}
+        override val id: String = "test"
+        override val info: xyz.rose.gateway.core.platform.PlatformInfo = mockk()
+        override val capabilities: List<Capability> = emptyList()
+        override suspend fun connect() {}
+        override suspend fun disconnect() {}
     }
 
     interface TestPlugin : GatewayPlugin
@@ -28,7 +32,7 @@ class GatewayModuleExtensionTest : KoinTest {
         override fun onDisable() {}
     }
 
-    interface TestCapability : Capability
+    interface TestCapability : Capability, Capability.Enableable, Capability.Disableable
     class TestCapabilityImpl : TestCapability {
         override fun onEnable() {}
         override fun onDisable() {}

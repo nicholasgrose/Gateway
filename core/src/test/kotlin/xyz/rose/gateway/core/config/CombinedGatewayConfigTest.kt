@@ -37,7 +37,7 @@ class CombinedGatewayConfigTest {
         schemas: List<ConfigSchema<Any>> = emptyList(),
     ): CombinedGatewayConfig = CombinedGatewayConfig(
         source = source,
-        platforms = schemas.map { GatewayPlatformDefinition(it, mockk()) },
+        platforms = schemas.map { GatewayPlatformDefinition("test", it.key, it, mockk()) },
         logger = mockk(relaxed = true),
         serializer = serializer
     )

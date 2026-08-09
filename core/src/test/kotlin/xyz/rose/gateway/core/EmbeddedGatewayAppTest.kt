@@ -1,5 +1,6 @@
 package xyz.rose.gateway.core
 
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -11,6 +12,7 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.test.KoinTest
+import kotlinx.coroutines.test.runTest
 import xyz.rose.gateway.core.capability.Capability
 import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.PlatformProvider
@@ -22,15 +24,17 @@ import kotlin.test.Test
  */
 class EmbeddedGatewayAppTest : KoinTest {
 
+    interface FullCapability : Capability.Enableable, Capability.Disableable
+
     private val logger = mockk<io.github.oshai.kotlinlogging.KLogger>(relaxed = true)
     private val platformProvider1 = mockk<PlatformProvider>()
     private val platform1 = mockk<Platform>(relaxed = true)
-    private val capability1 = mockk<Capability>(relaxed = true)
+    private val capability1 = mockk<FullCapability>(relaxed = true)
     private val plugin1 = mockk<GatewayPlugin>(relaxed = true)
 
     private val platformProvider2 = mockk<PlatformProvider>()
     private val platform2 = mockk<Platform>(relaxed = true)
-    private val capability2 = mockk<Capability>(relaxed = true)
+    private val capability2 = mockk<FullCapability>(relaxed = true)
     private val plugin2 = mockk<GatewayPlugin>(relaxed = true)
 
     private val runtimeModule1: Module = module {
@@ -64,31 +68,31 @@ class EmbeddedGatewayAppTest : KoinTest {
     }
 
     @Test
-    fun `test start enables all components from multiple platforms`() {
+    fun `test start enables all components from multiple platforms`() = runTest {
         val app = EmbeddedGatewayApp(logger)
         app.start()
 
-        verify { platform1.connect() }
+        coVerify { platform1.connect() }
         verify { capability1.onEnable() }
         verify { plugin1.onEnable() }
 
-        verify { platform2.connect() }
+        coVerify { platform2.connect() }
         verify { capability2.onEnable() }
         verify { plugin2.onEnable() }
     }
 
     @Test
-    fun `test stop disables all components from multiple platforms`() {
+    fun `test stop disables all components from multiple platforms`() = runTest {
         val app = EmbeddedGatewayApp(logger)
         app.start()
         app.stop()
 
         verify { plugin1.onDisable() }
         verify { capability1.onDisable() }
-        verify { platform1.disconnect() }
+        coVerify { platform1.disconnect() }
 
         verify { plugin2.onDisable() }
         verify { capability2.onDisable() }
-        verify { platform2.disconnect() }
+        coVerify { platform2.disconnect() }
     }
 }
