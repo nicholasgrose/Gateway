@@ -5,7 +5,7 @@ paper-api = "26.2.build.+"
 
 # Testing tools
 # https://github.com/jpenilla/run-paper
-run-paper = "3.0.2"
+run-paper = "3.1.0"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
