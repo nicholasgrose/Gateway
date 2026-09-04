@@ -1,7 +1,5 @@
 package xyz.rose.gateway.core.platform
 
-import xyz.rose.gateway.core.capability.Capability
-
 /**
  * A platform connection controller for Gateway.
  */
@@ -15,11 +13,6 @@ interface Platform {
      * Information about the platform.
      */
     val info: PlatformInfo
-
-    /**
-     * The capabilities provided by this platform.
-     */
-    val capabilities: List<Capability>
 
     /**
      * Connect to the platform.

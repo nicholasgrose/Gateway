@@ -1,6 +1,7 @@
 package xyz.rose.gateway.platform.minecraft.common
 
 import org.koin.core.module.Module
+import org.koin.dsl.ScopeDSL
 import xyz.rose.gateway.core.platform.PlatformProvider
 
 /**
@@ -11,7 +12,7 @@ import xyz.rose.gateway.core.platform.PlatformProvider
  * @constructor Create a new common Minecraft platform provider
  */
 class MinecraftPlatformProvider : PlatformProvider {
-    override fun createRuntimeModule(): Module {
+    override fun ScopeDSL.createRuntimeModule() {
         TODO("Not yet implemented")
     }
 }

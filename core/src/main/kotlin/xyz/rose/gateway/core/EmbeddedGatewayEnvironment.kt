@@ -20,6 +20,6 @@ data class EmbeddedGatewayEnvironment(
     override val platforms: Collection<GatewayPlatformDefinition<*>>,
     override val source: ConfigSource<Map<String, Any>>
 ) : GatewayEnvironment {
-    override val appProvider: Scope.() -> GatewayApp = { EmbeddedGatewayApp(get()) }
+    override val appProvider: Scope.() -> GatewayApp = { EmbeddedGatewayApp(get(), get()) }
     override val configProvider: Scope.() -> Config = { CombinedGatewayConfig(get(), get(), get()) }
 }

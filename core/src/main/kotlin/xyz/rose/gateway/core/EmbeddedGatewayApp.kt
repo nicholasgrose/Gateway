@@ -5,8 +5,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import org.koin.core.module.Module
+import org.koin.core.qualifier.Qualifier
+import org.koin.core.qualifier.QualifierValue
 import org.koin.mp.KoinPlatform.getKoin
 import xyz.rose.gateway.core.capability.Capability
+import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.PlatformProvider
 import xyz.rose.gateway.core.plugin.GatewayPlugin
@@ -16,37 +19,26 @@ import xyz.rose.gateway.core.plugin.GatewayPlugin
  *
  * @constructor Create a new embedded Gateway app
  */
-class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
-    /**
-     * The platforms' modules that will be loaded into Koin
-     */
-    val platformModules: List<Module> = run {
-        val koin = getKoin()
-        val platformProviders = koin.getAll<PlatformProvider>()
-
-        platformProviders.map { it.createRuntimeModule() }
-    }
-
+class EmbeddedGatewayApp(
+    val logger: KLogger,
+    val registry: GatewayRegistry
+) : GatewayApp {
     override suspend fun start() = coroutineScope {
         logger.info { "Starting Gateway..." }
 
-        val koin = getKoin()
-        koin.loadModules(platformModules)
-
-        val platforms = koin.getAll<Platform>()
-        
         // 1. Parallel connect
-        platforms.map { async { it.connect() } }.awaitAll()
+        registry.runtimes.map {
+            async { it.value.platform.connect() }
+        }.awaitAll()
 
         // 2. Enable capabilities
-        koin.getAll<Capability>().forEach {
-            if (it is Capability.Enableable) {
-                it.onEnable()
-            }
-        }
-        
+        registry.runtimes.flatMap { it.value.capabilities }
+            .filterIsInstance<Capability.Enableable>()
+            .forEach { it.onEnable() }
+
         // 3. Enable plugins
-        koin.getAll<GatewayPlugin>().forEach { it.onEnable() }
+        registry.runtimes.flatMap { it.value.plugins }
+            .forEach { it.onEnable() }
 
         logger.info { "Gateway started!" }
     }
@@ -54,23 +46,21 @@ class EmbeddedGatewayApp(val logger: KLogger) : GatewayApp {
     override suspend fun stop() = coroutineScope {
         logger.info { "Stopping Gateway..." }
 
-        val koin = getKoin()
-        
         // 1. Disable plugins
-        koin.getAll<GatewayPlugin>().forEach { it.onDisable() }
-        
-        // 2. Disable capabilities
-        koin.getAll<Capability>().forEach {
-            if (it is Capability.Disableable) {
-                it.onDisable()
-            }
-        }
-        
-        // 3. Parallel disconnect
-        val platforms = koin.getAll<Platform>()
-        platforms.map { async { it.disconnect() } }.awaitAll()
+        registry.runtimes.flatMap { it.value.plugins }
+            .forEach { it.onDisable() }
 
-        koin.unloadModules(platformModules)
+        // 2. Disable capabilities
+        registry.runtimes.flatMap { it.value.capabilities }
+            .filterIsInstance<Capability.Disableable>()
+            .forEach { it.onDisable() }
+
+        // 3. Parallel disconnect
+        registry.runtimes.map {
+            async { it.value.platform.disconnect() }
+        }.awaitAll()
+
+        registry.close()
 
         logger.info { "Gateway stopped!" }
     }

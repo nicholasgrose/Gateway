@@ -1,6 +1,8 @@
 package xyz.rose.gateway.core.platform
 
 import org.koin.core.module.Module
+import org.koin.core.qualifier.Qualifier
+import org.koin.dsl.ScopeDSL
 
 /**
  * Provides the necessary data to instantiate a Gateway platform.
@@ -24,5 +26,5 @@ interface PlatformProvider {
      *
      * @return The module for the runtime environment
      */
-    fun createRuntimeModule(): Module
+    fun ScopeDSL.createRuntimeModule()
 }

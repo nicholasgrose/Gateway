@@ -1,11 +1,8 @@
 package xyz.rose.gateway.platform.minecraft.common.info
 
-import xyz.rose.gateway.core.capability.info.VersionInfo
+import xyz.rose.gateway.core.capability.info.version.VersionRequestData
 
-class MinecraftVersionInfo(versionProvider: VersionProvider) : VersionInfo {
-    override val version: String = versionProvider.version
-
-    interface VersionProvider {
+class MinecraftVersionInfo(versionProvider: VersionProvider) {    interface VersionProvider {
         val version: String
     }
 }

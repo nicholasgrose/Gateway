@@ -27,7 +27,7 @@ kover = "0.9.9"
 # https://detekt.dev/
 detekt = "2.0.0-alpha.6"
 # https://www.jetbrains.com/help/qodana/quick-start.html#quickstart-gradle-plugin
-qodana = "2026.2.0"
+qodana = "2026.2.1"
 
 # Release tools
 # https://github.com/JetBrains/gradle-changelog-plugin

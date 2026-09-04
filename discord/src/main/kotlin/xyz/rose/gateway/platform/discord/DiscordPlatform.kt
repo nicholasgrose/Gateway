@@ -5,6 +5,7 @@ import xyz.rose.gateway.core.platform.Platform
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinitionProvider
 import xyz.rose.gateway.core.platform.PlatformInfo
+import xyz.rose.gateway.core.platform.PlatformType
 import xyz.rose.gateway.platform.discord.config.DiscordConfigSchema
 
 /**
@@ -14,9 +15,9 @@ class DiscordPlatform : Platform {
     companion object : GatewayPlatformDefinitionProvider {
         override fun definition() = GatewayPlatformDefinition(
             uid = "discord",
-            type = "discord",
+            type = PlatformType.DISCORD,
             schema = DiscordConfigSchema(),
-            provider = { DiscordPlatformProvider() }
+            provider = DiscordPlatformProvider()
         )
     }
 
@@ -24,10 +25,8 @@ class DiscordPlatform : Platform {
 
     override val info: PlatformInfo = PlatformInfo(
         name = "Discord",
-        version = "1.0.0" // TODO: Get version from build or environment
+        version = "1.0.0"
     )
-
-    override val capabilities: List<Capability> = emptyList() // TODO: Register Discord capabilities
 
     override suspend fun connect() {
         // TODO("Not yet implemented")

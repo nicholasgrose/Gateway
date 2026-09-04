@@ -1,13 +1,10 @@
 package xyz.rose.gateway.platform.discord.message
 
-import xyz.rose.gateway.core.capability.message.MessageSender
+import xyz.rose.gateway.core.capability.chat.ChatMessage
+import xyz.rose.gateway.core.capability.chat.ChatSend
 
-class DiscordMessageSender : MessageSender {
-    override fun registerListener(listener: MessageSender.Listener) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unregisterListener(listener: MessageSender.Listener) {
-        TODO("Not yet implemented")
+class DiscordMessageSender(val chatSender: ChatSend, val enricher: GatewayChatMessageEnricher) {
+    suspend fun send(message: ChatMessage) {
+        chatSender.send(message)
     }
 }

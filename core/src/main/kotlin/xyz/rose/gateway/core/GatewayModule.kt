@@ -3,7 +3,7 @@ package xyz.rose.gateway.core
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import xyz.rose.gateway.core.dispatcher.GatewayDispatcher
+import xyz.rose.gateway.core.capability.GatewayDispatcher
 
 /**
  * Creates the Koin module for the core Gateway app.
@@ -18,10 +18,7 @@ fun gatewayModule(env: GatewayEnvironment) = module {
 
     singleOf(env.configProvider)
     singleOf(env.appProvider)
-    
-    singleOf(::GatewayDispatcher)
 
-    env.platforms.forEach { platform ->
-        single(named(platform.schema.key)) { platform.provider(this) }
-    }
+    singleOf(::GatewayDispatcher)
+    singleOf(::GatewayRegistry)
 }

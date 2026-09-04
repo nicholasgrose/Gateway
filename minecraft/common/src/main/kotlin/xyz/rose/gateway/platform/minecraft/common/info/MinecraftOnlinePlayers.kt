@@ -1,10 +1,8 @@
 package xyz.rose.gateway.platform.minecraft.common.info
 
-import xyz.rose.gateway.core.capability.info.OnlineStats
+import xyz.rose.gateway.core.capability.info.online.OnlineStats
 
-class MinecraftOnlinePlayers(players: OnlinePlayers) : OnlineStats {
-    override val online: List<String> = players.players
-
+class MinecraftOnlinePlayers(players: OnlinePlayers) {
     interface OnlinePlayers {
         val players: List<String>
     }
