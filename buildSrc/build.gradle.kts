@@ -13,9 +13,6 @@ dependencies {
     implementation(libs.plugin.qodana)
     implementation(libs.plugin.shadow)
 
-    // https://github.com/gradle/gradle/issues/15383#issuecomment-779893192
-    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-
     // An example of a workaround for https://github.com/FabricMC/fabric-loom/issues/1020:
     // constraints { implementation("com.google.code.gson:gson:2.10.1") }
     // The above plugin version workaround can introduce issues like this,

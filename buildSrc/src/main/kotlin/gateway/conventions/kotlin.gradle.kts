@@ -1,5 +1,7 @@
 package gateway.conventions
 
+import gateway.bundle
+import gateway.library
 import gateway.libs
 
 plugins {
@@ -18,20 +20,20 @@ repositories {
 }
 
 dependencies {
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
+    implementation(platform(libs.library("koin-bom")))
+    implementation(libs.library("koin-core"))
 
-    implementation(libs.bundles.kotlinx)
-    implementation(libs.yamlkt)
+    implementation(libs.bundle("kotlinx"))
+    implementation(libs.library("yamlkt"))
 
-    implementation(libs.kotlinLogging)
+    implementation(libs.library("kotlinLogging"))
 
-    detektPlugins(libs.detekt.ktlint)
-    detektPlugins(libs.detekt.junit)
+    detektPlugins(libs.library("detekt-ktlint"))
+    detektPlugins(libs.library("detekt-junit"))
 
     testImplementation(kotlin("test"))
-    testImplementation(libs.bundles.koin.test)
-    testImplementation(libs.mockk)
+    testImplementation(libs.bundle("koin-test"))
+    testImplementation(libs.library("mockk"))
 }
 
 kotlin {
