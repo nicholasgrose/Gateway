@@ -102,9 +102,9 @@ class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
      * @param message The message to broadcast.
      * @return A list of results from the listeners.
      */
-    suspend fun <T : GatewayMessageData> broadcast(
+    suspend fun <T : GatewayMessageData, R: GatewayMessageResponse> broadcast(
         message: GatewayMessage<T>
-    ) = coroutineScope {
+    ): PlatformMap<R> = coroutineScope {
         logger.debug { "Broadcasting message: ${message.id}" }
 
         val listeners = findApplicableListeners(message)
@@ -154,10 +154,13 @@ class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
      * Dispatches a message for platform-shared enrichment and broadcasting.
      *
      * @param T The type of the message.
+     * @param R The type of the response.
      * @param message The message to dispatch.
      */
-    suspend fun <T : GatewayMessageData> dispatch(message: GatewayMessage<T>) {
+    suspend fun <T : GatewayMessageData, R: GatewayMessageResponse> dispatch(message: GatewayMessage<T>): PlatformMap<R> {
         val enriched = enrich(message)
-        broadcast(enriched)
+        val response = broadcast(enriched)
+
+        return response
     }
 }

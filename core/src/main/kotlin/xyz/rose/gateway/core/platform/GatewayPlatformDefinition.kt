@@ -23,6 +23,7 @@ data class GatewayPlatformDefinition<T : Any>(
  * The type of platform this definition represents
  */
 enum class PlatformType {
+    GATEWAY,
     DISCORD,
     MINECRAFT
 }

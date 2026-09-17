@@ -46,13 +46,13 @@ data class GatewayMessage<T : GatewayMessageData>(
     /**
      * A map of metadata for this message.
      */
-    val metadata: MessageMetadataMap
+    val metadata: PlatformMap<MessageMetadata>
 )
 
 /**
- * Map of metadata for a [GatewayMessage] object.
+ * Map of some data by platform type and platform ID.
  */
-typealias MessageMetadataMap = Map<PlatformType, Map<PlatformUID, List<@Polymorphic MessageMetadata>>>
+typealias PlatformMap<T> = Map<PlatformType, Map<PlatformUID, List<@Polymorphic T>>>
 
 /**
  * Marker interface for metadata that can be added to a [GatewayMessage] object.

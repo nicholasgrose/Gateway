@@ -1,6 +1,6 @@
 package xyz.rose.gateway.core.capability.info.connection
 
-import xyz.rose.gateway.core.PlatformGatewayClient
+import xyz.rose.gateway.core.capability.PlatformGatewayClient
 import xyz.rose.gateway.core.capability.MessageMetadataMap
 
 /**

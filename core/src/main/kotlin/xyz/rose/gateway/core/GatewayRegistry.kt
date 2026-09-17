@@ -9,6 +9,7 @@ import org.koin.mp.KoinPlatform.getKoin
 import xyz.rose.gateway.core.capability.Capability
 import xyz.rose.gateway.core.capability.MessageEnricher
 import xyz.rose.gateway.core.capability.MessageListener
+import xyz.rose.gateway.core.capability.PlatformGatewayClient
 import xyz.rose.gateway.core.capability.allowlist.AllowlistRead
 import xyz.rose.gateway.core.capability.allowlist.AllowlistWrite
 import xyz.rose.gateway.core.capability.chat.ChatSend
