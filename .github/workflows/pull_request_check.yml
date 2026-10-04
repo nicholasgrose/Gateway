@@ -95,7 +95,7 @@ jobs:
           echo "::add-matcher::.github/matchers/qodana.json"
       # https://github.com/marketplace/actions/qodana-scan
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2026.2.1
+        uses: JetBrains/qodana-action@v2026.2.2
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
