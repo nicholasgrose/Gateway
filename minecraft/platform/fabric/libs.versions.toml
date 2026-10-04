@@ -6,13 +6,13 @@ minecraft = "26.3"
 # https://github.com/FabricMC/fabric-loader
 fabric-loader = "0.19.5"
 # https://github.com/FabricMC/fabric
-fabric = "0.160.7+26.3"
+fabric = "0.161.0+26.3"
 # https://github.com/FabricMC/fabric-language-kotlin/blob/master/README.md
 fabric-kotlin = "1.14.1+kotlin.2.4.20"
 
 # Build tools
 # https://github.com/FabricMC/fabric-loom
-fabric-loom = "1.17-SNAPSHOT"
+fabric-loom = "1.18-SNAPSHOT"
 
 # Mod Dependencies
 # https://github.com/PaperMC/adventure-platform-mod
