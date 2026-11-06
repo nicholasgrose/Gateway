@@ -6,7 +6,7 @@ import net.fabricmc.api.ModInitializer
 import org.koin.core.context.startKoin
 import org.slf4j.LoggerFactory
 import xyz.rose.gateway.core.EmbeddedGatewayEnvironment
-import xyz.rose.gateway.core.config.YamlFileConfigSource
+import xyz.rose.gateway.core.config.TomlFileConfigSource
 import xyz.rose.gateway.core.gatewayModule
 import xyz.rose.gateway.minecraft.platform.fabric.server.FabricChatEventListeners
 import xyz.rose.gateway.platform.discord.DiscordPlatform
@@ -22,7 +22,7 @@ import kotlin.io.path.Path
 class GatewayMod : ModInitializer {
     override fun onInitialize() {
         val logger = LoggerFactory.getLogger("gateway").toKLogger()
-        val configPath = Path("config/gateway/config.yml")
+        val configPath = Path("config/gateway/config.toml")
 
         startKoin {
             modules(newGatewayModule(logger, configPath))
@@ -38,7 +38,7 @@ class GatewayMod : ModInitializer {
                 MinecraftPlatform.definition(),
                 DiscordPlatform.definition(),
             ),
-            source = YamlFileConfigSource(configPath)
+            source = TomlFileConfigSource(configPath)
         )
     )
 }

@@ -8,8 +8,8 @@ koin = "4.2.2"
 kotlinx-coroutines = "1.11.0"
 # https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.8.0"
-# https://github.com/him188/yamlkt
-yamlkt = "0.13.0"
+# https://github.com/akuleshov7/ktoml
+ktoml = "0.7.1"
 # https://github.com/oshai/kotlin-logging
 kotlinLogging = "8.0.4"
 
@@ -43,7 +43,8 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
-yamlkt = { group = "net.mamoe.yamlkt", name = "yamlkt", version.ref = "yamlkt" }
+ktoml-core = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
+ktoml-file = { group = "com.akuleshov7", name = "ktoml-file", version.ref = "ktoml" }
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlinLogging" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }

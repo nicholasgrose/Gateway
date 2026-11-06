@@ -1,9 +1,10 @@
 package xyz.rose.gateway.core.config
 
+import com.akuleshov7.ktoml.Toml
+import com.akuleshov7.ktoml.TomlInputConfig
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import net.mamoe.yamlkt.Yaml
 import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.KClass
 import kotlin.test.Test
@@ -45,6 +46,7 @@ class CombinedGatewaySchemaSerializerTest {
     )
 
     private val serializer = CombinedGatewaySchemaSerializer(schemas)
+    private val toml = Toml(inputConfig = TomlInputConfig(ignoreUnknownNames = true))
 
     @Test
     fun `test serialization`() {
@@ -53,22 +55,22 @@ class CombinedGatewaySchemaSerializerTest {
             "test2" to TestConfig2(false)
         )
 
-        val serialized = Yaml.encodeToString(serializer, data)
-        // YAML format might differ, but we can verify by decoding it back
-        val deserialized = Yaml.decodeFromString(serializer, serialized)
+        val serialized = toml.encodeToString(serializer, data)
+        val deserialized = toml.decodeFromString(serializer, serialized)
         assertEquals(data, deserialized)
     }
 
     @Test
     fun `test deserialization`() {
         val input = """
-            test1:
-              name: "world"
-              value: 456
-            test2:
-              enabled: true
+            [test1]
+            name = "world"
+            value = 456
+
+            [test2]
+            enabled = true
         """.trimIndent()
-        val deserialized = Yaml.decodeFromString(serializer, input)
+        val deserialized = toml.decodeFromString(serializer, input)
 
         assertEquals(2, deserialized.size)
         assertEquals(TestConfig1("world", 456), deserialized["test1"] as TestConfig1)
@@ -82,24 +84,25 @@ class CombinedGatewaySchemaSerializerTest {
         )
 
         assertThrows<SerializationException> {
-            Yaml.encodeToString(serializer, data)
+            toml.encodeToString(serializer, data)
         }
     }
 
     @Test
     fun `test deserialization unknown key`() {
         val input = """
-            test1:
-              name: "world"
-              value: 456
-            test2:
-              enabled: true
-            unknown:
-              foo: "bar"
+            [test1]
+            name = "world"
+            value = 456
+
+            [test2]
+            enabled = true
+
+            [unknown]
+            foo = "bar"
         """.trimIndent()
 
-        // YamlKt usually ignores unknown keys by default if they are not in the descriptor
-        val deserialized = Yaml.decodeFromString(serializer, input)
+        val deserialized = toml.decodeFromString(serializer, input)
         assertEquals(2, deserialized.size)
         assertEquals(TestConfig1("world", 456), deserialized["test1"] as TestConfig1)
         assertEquals(TestConfig2(true), deserialized["test2"] as TestConfig2)

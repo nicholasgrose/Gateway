@@ -3,22 +3,22 @@ package xyz.rose.gateway.core.config
 import kotlinx.serialization.Serializable
 
 /**
- * Schemas for testing the YAML file configuration source
+ * Schemas for testing the TOML file configuration source
  *
- * @constructor Create a new YAML test schema
+ * @constructor Create a new TOML test schema
  */
-sealed class YamlTestSchema {
+sealed class TomlTestSchema {
     /**
      * An invalid schema
      */
     @Serializable
-    data class Invalid(val nonexistentKey: String) : YamlTestSchema()
+    data class Invalid(val nonexistentKey: String) : TomlTestSchema()
 
     /**
      * Test some basic value types
      */
     @Serializable
-    data class Test1(val value1: String, val value2: Boolean, val value3: Int) : YamlTestSchema() {
+    data class Test1(val value1: String, val value2: Boolean, val value3: Int) : TomlTestSchema() {
         companion object {
             val EXPECTED_VALUE = Test1("value1", true, 123)
         }
@@ -28,7 +28,7 @@ sealed class YamlTestSchema {
      * Test a list
      */
     @Serializable
-    data class Test2(val valueList: List<String>) : YamlTestSchema() {
+    data class Test2(val valueList: List<String>) : TomlTestSchema() {
         companion object {
             val EXPECTED_VALUE = Test2(listOf("value1", "value2", "value3"))
         }
@@ -38,14 +38,13 @@ sealed class YamlTestSchema {
      * Test nested objects
      */
     @Serializable
-    data class Test3(val key1: Test1, val key2: List<Test1>, val key3: Test2) : YamlTestSchema() {
+    data class Test3(val key1: Test1, val key2: List<Test1>, val key3: Test2) : TomlTestSchema() {
         companion object {
             val EXPECTED_VALUE = Test3(
                 Test1("value1", true, 123),
                 listOf(Test1("value1", true, 123), Test1("value2", false, 456)),
                 Test2(listOf("value1", "value2", "value3"))
             )
-
         }
     }
 }

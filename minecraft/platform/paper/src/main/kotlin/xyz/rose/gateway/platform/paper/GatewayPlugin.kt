@@ -8,7 +8,7 @@ import org.koin.core.context.stopKoin
 import org.koin.mp.KoinPlatform.getKoin
 import xyz.rose.gateway.core.EmbeddedGatewayEnvironment
 import xyz.rose.gateway.core.GatewayApp
-import xyz.rose.gateway.core.config.YamlFileConfigSource
+import xyz.rose.gateway.core.config.TomlFileConfigSource
 import xyz.rose.gateway.core.gatewayModule
 import xyz.rose.gateway.platform.discord.DiscordPlatform
 import xyz.rose.gateway.platform.minecraft.common.MinecraftPlatform
@@ -25,9 +25,9 @@ class GatewayPlugin : JavaPlugin() {
     val pluginLogger = slF4JLogger.toKLogger()
 
     override fun onEnable() {
-        val configPath = dataFolder.toPath().resolve("config.yml")
+        val configPath = dataFolder.toPath().resolve("config.toml")
 
-        // This will eventually need to be saved off so we can "restart" Gateway by destroying and rebuilding this module
+        // This will eventually need to be saved off so we can restart Gateway by destroying and rebuilding this module
         val gatewayModule = newGatewayModule(configPath)
 
         startKoin {
@@ -51,7 +51,7 @@ class GatewayPlugin : JavaPlugin() {
         EmbeddedGatewayEnvironment(
             logger = pluginLogger,
             platforms = listOf(MinecraftPlatform.definition(), DiscordPlatform.definition()),
-            source = YamlFileConfigSource(configPath)
+            source = TomlFileConfigSource(configPath)
         )
     )
 

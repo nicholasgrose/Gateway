@@ -24,7 +24,8 @@ dependencies {
     implementation(libs.library("koin-core"))
 
     implementation(libs.bundle("kotlinx"))
-    implementation(libs.library("yamlkt"))
+    implementation(libs.library("ktoml-core"))
+    implementation(libs.library("ktoml-file"))
 
     implementation(libs.library("kotlinLogging"))
 
