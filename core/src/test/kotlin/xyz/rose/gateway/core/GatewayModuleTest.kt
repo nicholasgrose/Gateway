@@ -11,6 +11,7 @@ import xyz.rose.gateway.core.config.ConfigSchema
 import xyz.rose.gateway.core.config.ConfigSource
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
 import xyz.rose.gateway.core.platform.PlatformProvider
+import xyz.rose.gateway.core.platform.PlatformType
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
@@ -30,7 +31,7 @@ class GatewayModuleTest : KoinTest {
         val schema = mockk<ConfigSchema<Any>>(relaxed = true)
 
         // Use a simple function instead of Scope extension to avoid Koin trying to inject Scope
-        val platformDefinition = GatewayPlatformDefinition("test", "t1", schema) { platformProvider }
+        val platformDefinition = GatewayPlatformDefinition(PlatformType.MINECRAFT, "t1", schema, platformProvider)
 
         val logger = mockk<KLogger>(relaxed = true)
         val configSource = mockk<ConfigSource<*>>(relaxed = true)

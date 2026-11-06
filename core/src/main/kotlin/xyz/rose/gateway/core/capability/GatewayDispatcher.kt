@@ -1,14 +1,12 @@
 package xyz.rose.gateway.core.capability
 
-import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import org.koin.core.component.KoinComponent
 import xyz.rose.gateway.core.GatewayRegistry
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
-
-private val logger = KotlinLogging.logger {}
 
 /**
  * Orchestrates the lifecycle of a [GatewayMessage].
@@ -18,7 +16,10 @@ private val logger = KotlinLogging.logger {}
  * 2. Running all enrichers in parallel to enrich the message.
  * 3. Broadcasting the fully enriched message to all [MessageListener]s in parallel.
  */
-class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
+class GatewayDispatcher(
+    val registry: GatewayRegistry,
+    val logger: KLogger
+) : KoinComponent {
     /**
      * Grabs and applies metadata from all applicable enrichers to a message.
      *
@@ -97,35 +98,53 @@ class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
             }
 
     /**
+     * Aggregates the responses from a list of listener results into a map that matches the [PlatformMap] format.
+     *
+     * @param results The list of listener results to aggregate.
+     * @return A map containing the aggregated responses.
+     */
+    private fun <R : GatewayMessageResponse> aggregateResponses(
+        results: List<Pair<GatewayPlatformDefinition<*>, R>>
+    ): PlatformMap<R> =
+        results
+            .groupBy { (definition, _) -> definition.type }
+            .mapValues { (_, platformGroup) ->
+                platformGroup.groupBy { (definition, _) -> definition.uid }
+                    .mapValues { (_, entries) -> entries.map { (_, response) -> response } }
+            }
+
+    /**
      * Broadcasts a message to all matching [MessageListener]s in parallel.
      *
      * @param message The message to broadcast.
      * @return A list of results from the listeners.
      */
-    suspend fun <T : GatewayMessageData, R: GatewayMessageResponse> broadcast(
+    suspend fun <T : GatewayMessageData, R : GatewayMessageResponse> broadcast(
         message: GatewayMessage<T>
     ): PlatformMap<R> = coroutineScope {
         logger.debug { "Broadcasting message: ${message.id}" }
 
-        val listeners = findApplicableListeners(message)
-        listeners.map { listener ->
-            async { broadcastSafely(listener, message) }
+        val applicableListeners = findApplicableListeners<T, R>(message)
+        val broadcastResults = applicableListeners.map { (listener, definition) ->
+            async { broadcastSafely(listener, definition, message) }
         }.awaitAll()
+
+        aggregateResponses(broadcastResults)
     }
 
     /**
      * Finds all applicable [MessageListener]s for a given message.
      *
      * @param message The message to find listeners for.
-     * @return A list of applicable listeners.
+     * @return A list of applicable listeners and their platform definitions.
      */
-    fun <T : GatewayMessageData> findApplicableListeners(
+    fun <T : GatewayMessageData, R : GatewayMessageResponse> findApplicableListeners(
         message: GatewayMessage<T>
-    ): List<MessageListener<T>> =
-        registry.definitionsByListener.mapNotNull { (capability, _) ->
+    ): List<Pair<MessageListener<T, R>, GatewayPlatformDefinition<*>>> =
+        registry.definitionsByListener.mapNotNull { (capability, definition) ->
             if (capability.dataType.isInstance(message.data)) {
                 @Suppress("UNCHECKED_CAST")
-                capability as MessageListener<T>
+                (capability as MessageListener<T, R>) to definition
             } else {
                 null
             }
@@ -135,15 +154,20 @@ class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
      * Broadcasts a message to a listener safely.
      *
      * @param T The type of the message.
+     * @param R The type of the response.
      * @param listener The listener to broadcast to.
+     * @param definition The platform definition for the listener.
      * @param message The message to broadcast.
+     * @return A pair containing the platform definition and the response, or null if broadcasting fails.
      */
-    private suspend fun <T : GatewayMessageData> broadcastSafely(
-        listener: MessageListener<T>,
+    private suspend fun <T : GatewayMessageData, R : GatewayMessageResponse> broadcastSafely(
+        listener: MessageListener<T, R>,
+        definition: GatewayPlatformDefinition<*>,
         message: GatewayMessage<T>
-    ) =
+    ): Pair<GatewayPlatformDefinition<*>, R> =
         runCatching {
-            listener.onMessage(message)
+            val response = listener.onMessage(message)
+            definition to response
         }.onFailure {
             logger.error(it) {
                 "Failed to broadcast message ${message.id} to listener: ${listener::class.simpleName}"
@@ -157,9 +181,11 @@ class GatewayDispatcher(val registry: GatewayRegistry) : KoinComponent {
      * @param R The type of the response.
      * @param message The message to dispatch.
      */
-    suspend fun <T : GatewayMessageData, R: GatewayMessageResponse> dispatch(message: GatewayMessage<T>): PlatformMap<R> {
+    suspend fun <T : GatewayMessageData, R : GatewayMessageResponse> dispatch(
+        message: GatewayMessage<T>
+    ): PlatformMap<R> {
         val enriched = enrich(message)
-        val response = broadcast(enriched)
+        val response = broadcast<T, R>(enriched)
 
         return response
     }

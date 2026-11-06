@@ -6,6 +6,7 @@ import io.mockk.verify
 import kotlinx.serialization.KSerializer
 import org.junit.jupiter.api.assertThrows
 import xyz.rose.gateway.core.platform.GatewayPlatformDefinition
+import xyz.rose.gateway.core.platform.PlatformType
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -37,7 +38,7 @@ class CombinedGatewayConfigTest {
         schemas: List<ConfigSchema<Any>> = emptyList(),
     ): CombinedGatewayConfig = CombinedGatewayConfig(
         source = source,
-        platforms = schemas.map { GatewayPlatformDefinition("test", it.key, it, mockk()) },
+        platforms = schemas.map { GatewayPlatformDefinition(PlatformType.MINECRAFT, it.key, it, mockk()) },
         logger = mockk(relaxed = true),
         serializer = serializer
     )

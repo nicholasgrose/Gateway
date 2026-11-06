@@ -13,6 +13,7 @@ class PlatformGatewayClient(
      * Dispatches a message to Gateway for broadcast.
      *
      * @param T The type of the message data.
+     * @param R The type of the message response.
      * @param data The data to be sent.
      * @param metadata Additional metadata for the message.
      */
@@ -28,5 +29,27 @@ class PlatformGatewayClient(
         )
 
         return dispatcher.dispatch(message)
+    }
+
+    /**
+     * Queries Gateway for the metadata for a message.
+     *
+     * @param T The type of the message data.
+     * @param data The data to be sent.
+     * @param metadata Additional metadata for the message.
+     * @return The response message.
+     */
+    suspend fun <T : GatewayMessageData> query(
+        data: T,
+        metadata: MessageMetadataMap = emptyMap()
+    ): GatewayMessage<T> {
+        val message = GatewayMessage(
+            sourcePlatformType = definition.type,
+            sourcePlatformId = definition.uid,
+            data = data,
+            metadata = metadata
+        )
+
+        return dispatcher.enrich(message)
     }
 }

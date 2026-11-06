@@ -47,7 +47,7 @@ class GatewayRegistry(
     /**
      * Platform definitions indexed by message listener.
      */
-    val definitionsByListener: Map<MessageListener<*>, GatewayPlatformDefinition<*>>
+    val definitionsByListener: Map<MessageListener<*, *>, GatewayPlatformDefinition<*>>
 
     /**
      * Platform definitions indexed by platform.
@@ -132,7 +132,7 @@ class GatewayRegistry(
         val platform: Platform,
         val capabilities: List<Capability>,
         val enrichers: List<MessageEnricher<*>>,
-        val listeners: List<MessageListener<*>>,
+        val listeners: List<MessageListener<*, *>>,
         val plugins: List<GatewayPlugin>
     )
 

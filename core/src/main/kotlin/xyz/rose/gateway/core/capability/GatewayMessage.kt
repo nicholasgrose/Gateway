@@ -55,6 +55,11 @@ data class GatewayMessage<T : GatewayMessageData>(
 typealias PlatformMap<T> = Map<PlatformType, Map<PlatformUID, List<@Polymorphic T>>>
 
 /**
+ * A map of metadata for a [GatewayMessage].
+ */
+typealias MessageMetadataMap = PlatformMap<MessageMetadata>
+
+/**
  * Marker interface for metadata that can be added to a [GatewayMessage] object.
  */
 interface MessageMetadata
