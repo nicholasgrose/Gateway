@@ -6,7 +6,7 @@ minecraft = "26.3"
 # https://github.com/FabricMC/fabric-loader
 fabric-loader = "0.20.1"
 # https://github.com/FabricMC/fabric
-fabric = "0.165.0+26.3"
+fabric = "0.166.2+26.3"
 # https://github.com/FabricMC/fabric-language-kotlin/blob/master/README.md
 fabric-kotlin = "1.14.2+kotlin.2.4.21"
 
